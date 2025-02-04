@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharedStars Academy</title>
+
+    <!-- Tailwind CSS and DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+    <!-- Fonts & Animations -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="/css/ai-assistant.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-text {
+            font-size: clamp(4rem, 15vw, 12rem);
+            line-height: 1;
+        }
+        .cosmic-hover {
+            transition: all 0.3s ease;
+        }
+        .cosmic-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen bg-slate-900 font-inter">
+
+<!-- 🔹 Header --> 
+<header class="fixed top-0 left-0 w-full bg-gray-900/95 backdrop-blur-lg flex items-center justify-between px-8 py-4 z-50 border-b border-white/10">
+    <!-- Logo -->
+    <a href="/" class="flex items-center space-x-3 group">
+        <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300">
+    </a>
+
+    <!-- Navigation -->
+    <nav class="hidden md:flex items-center justify-center flex-grow">
+        <div class="flex items-center space-x-8">
+            <a href="/index.html" class="text-white hover:text-blue-400 transition-colors">Home</a>
+            <a href="/why-sharedstars.html" class="text-white hover:text-blue-400 transition-colors">Why SharedStars</a>
+            <a href="/about.html" class="text-white hover:text-blue-400 transition-colors">About</a>
+            <a href="/leaderboard.html" class="text-white hover:text-blue-400 transition-colors">Leaderboard</a>
+            <a href="/login.html" class="text-white hover:text-blue-400 transition-colors">Login</a>
+            <a href="/merchandise.html" class="text-white hover:text-blue-400 transition-colors">Retail Store</a>
+            <a href="/academy.html" class="text-white hover:text-blue-400 transition-colors">Academy</a>
+        </div>
+    </nav>
+</header>
+
+<!-- 🔹 Hero Video Section -->
+<section class="relative w-full min-h-screen overflow-hidden">
+    <div class="absolute inset-0">
+        <video id="heroVideo" autoplay muted loop playsinline class="w-full h-full object-cover">
+            <source src="/videos/signup1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/70 to-slate-900/90"></div>
+    </div>
+
+    <!-- Particle Effect Overlay -->
+    <div class="absolute inset-0 pointer-events-none">
+        <div id="particles-js"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 flex items-center justify-center min-h-screen">
+        <div class="text-center px-4 max-w-4xl mx-auto space-y-8">
+            <h1 class="text-6xl md:text-8xl font-bold text-white tracking-tight mb-8">
+                Join <span class="text-blue-400">SharedStars Academy</span>
+            </h1>
+            <p class="text-2xl md:text-3xl text-gray-300 font-light mb-12">
+                The most advanced <span class="text-primary">AI-powered</span> space training program, designed for the next generation of explorers.
+            </p>
+            <button id="openSignupModal" class="btn btn-primary btn-lg text-lg normal-case min-w-[200px] px-8 py-3">
+                Sign Up Now
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- 🔹 Signup Modal -->
+<dialog id="signup_modal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box bg-slate-800 text-white">
+        <h3 class="font-bold text-lg text-center mb-6">Join SharedStars Academy</h3>
+        <form method="POST" id="signup-form" class="space-y-6">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text text-gray-300">Username</span>
+                </label>
+                <input type="text" name="username" placeholder="Choose a username" class="input input-bordered bg-slate-700" required />
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text text-gray-300">Email</span>
+                </label>
+                <input type="email" name="email" placeholder="Enter your email" class="input input-bordered bg-slate-700" required />
+            </div>
+
+            <div class="modal-action flex gap-2">
+                <button type="submit" class="btn btn-primary flex-1">Sign Up</button>
+                <button type="button" class="btn" id="closeSignupModal">Close</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto">
+        <!-- Grid Layout -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <!-- About -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">About</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/about.html" class="hover:text-blue-400 transition-colors">Our Story</a></li>
+                    <li><a href="/academy.html" class="hover:text-blue-400 transition-colors">Space Academy</a></li>
+                </ul>
+            </div>
+            <!-- Community -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">Community</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/events.html" class="hover:text-blue-400 transition-colors">Events</a></li>
+                    <li><a href="/forums.html" class="hover:text-blue-400 transition-colors">Forums</a></li>
+                </ul>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">Resources</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/faq.html" class="hover:text-blue-400 transition-colors">FAQ</a></li>
+                    <li><a href="/support.html" class="hover:text-blue-400 transition-colors">Support</a></li>
+                </ul>
+            </div>
+            <!-- Legal -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">Legal</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/terms.html" class="hover:text-blue-400 transition-colors">Terms</a></li>
+                    <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="mt-12 text-center">
+            <h4 class="text-lg font-bold text-blue-400">Follow Us</h4>
+            <div class="flex justify-center gap-6 mt-4">
+                <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
+                    </svg>
+                </a>
+                <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
+                    </svg>
+                </a>
+                <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22 11.077v.82c0 4.842-3.705 10.423-10.423 10.423A10.386 10.386 0 010 18.9c.13.01.261.014.393.014 2.717 0 5.213-.913 7.204-2.449a3.677 3.677 0 01-3.434-2.553c.558.083 1.136.077 1.688-.027A3.675 3.675 0 012.68 9.9v-.047c.492.274 1.048.438 1.643.457a3.674 3.674 0 01-1.633-3.056c0-.014 0-.027.001-.041a3.65 3.65 0 001.667.46 3.671 3.671 0 01-1.144-4.901 10.428 10.428 0 007.571 3.841A3.675 3.675 0 0118.633 5.9a7.353 7.353 0 002.333-.894 3.673 3.673 0 01-1.612 2.025 7.308 7.308 0 002.102-.575A7.396 7.396 0 0122 11.077z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="text-center mt-8">
+            <p class="text-gray-400 text-sm">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- 🔹 Place Footer Before Closing `</body>` -->
+</body>
+</html>
+<!-- 🔹 JavaScript: Restored Full Functionality -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<!-- 🔹 JavaScript for Video Autoplay, Signup Modal, and Navigation -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("✅ JavaScript Loaded - Ensuring Full Functionality");
+    
+        /** ==========================
+         *  🔹 Fix Hero Video Autoplay
+         *  ========================== **/
+        const heroVideo = document.getElementById("heroVideo");
+        if (heroVideo) {
+            heroVideo.play().catch(error => {
+                console.warn("⚠️ Video autoplay blocked. Muting and retrying...");
+                heroVideo.muted = true;
+                heroVideo.play();
+            });
+        }
+    
+        /** ==========================
+         *  🔹 Fix Signup Modal
+         *  ========================== **/
+        const signupModal = document.getElementById("signup_modal");
+        const openSignupModal = document.getElementById("openSignupModal");
+        const closeSignupModal = document.getElementById("closeSignupModal");
+    
+        if (openSignupModal && signupModal) {
+            openSignupModal.addEventListener("click", () => {
+                console.log("🔹 Opening Signup Modal");
+                signupModal.showModal();
+            });
+        }
+    
+        if (closeSignupModal && signupModal) {
+            closeSignupModal.addEventListener("click", () => {
+                console.log("🔹 Closing Signup Modal");
+                signupModal.close();
+            });
+        }
+    
+        /** ==========================
+         *  🔹 Fix Navigation Buttons
+         *  ========================== **/
+        document.querySelectorAll("nav a").forEach(button => {
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+                console.log(`✅ Navigating to: ${this.href}`);
+                window.location.href = this.href;
+            });
+        });
+    
+        /** ==========================
+         *  🔹 Fix Mobile Menu
+         *  ========================== **/
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMobileMenuBtn = document.getElementById('close-mobile-menu');
+    
+        if (mobileMenuBtn && mobileMenu) {
+            let isMenuOpen = false;
+    
+            mobileMenuBtn.addEventListener('click', () => {
+                isMenuOpen = !isMenuOpen;
+                mobileMenu.classList.toggle('hidden');
+                mobileMenuBtn.classList.toggle('rotate-90', isMenuOpen);
+                document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+            });
+    
+            if (closeMobileMenuBtn) {
+                closeMobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    isMenuOpen = false;
+                    document.body.style.overflow = '';
+                });
+            }
+    
+            document.addEventListener('click', (e) => {
+                if (isMenuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    mobileMenu.classList.add('hidden');
+                    isMenuOpen = false;
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+    
+    });
+    </script>
+    
+</body>
+</html>
+

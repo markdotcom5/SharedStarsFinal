@@ -1,0 +1,291 @@
+/* public/css/ai-assistant.css */
+
+.ai-companion {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+
+.ai-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0055ff, #0099ff);
+    box-shadow: 0 0 20px rgba(0, 153, 255, 0.5);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.ai-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(0, 153, 255, 0.7);
+}
+
+.ai-avatar .core {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-icon {
+    color: #00ffff;
+    font-size: 24px;
+}
+
+.ai-message {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 300px;
+    background: rgba(0, 26, 54, 0.95);
+    border: 1px solid rgba(0, 153, 255, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    color: #fff;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.ai-message.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ai-message::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    width: 16px;
+    height: 16px;
+    background: inherit;
+    border-right: 1px solid rgba(0, 153, 255, 0.3);
+    border-bottom: 1px solid rgba(0, 153, 255, 0.3);
+    transform: rotate(45deg);
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 4px 0;
+}
+
+.typing-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #00ffff;
+    animation: typing-bounce 1s infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+}
+
+.ai-status {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #00ff00;
+    border: 2px solid #000;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 255, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); }
+}
+
+.neural-network-grid {
+    background: 
+        linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+    background-size: 8px 8px;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-8px, -8px); }
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 4px 0;
+}
+
+.typing-indicator .dot {
+    width: 4px;
+    height: 4px;
+    background: rgba(59, 130, 246, 0.7);
+    border-radius: 50%;
+    animation: typingBounce 1s infinite;
+}
+
+.typing-indicator .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+}
+
+.activity-ring {
+    transition: all 0.3s ease;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s forwards;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.ai-message-bubble {
+    transform-origin: bottom right;
+    animation: messageAppear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+/* ai-assistant.css */
+.ai-message-container {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1rem;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    backdrop-filter: blur(10px);
+    animation: slideIn 0.5s ease-out;
+}
+
+.ai-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+}
+
+.ai-message {
+    color: #93c5fd;
+    font-size: 1.2rem;
+    line-height: 1.5;
+}
+
+.ai-suggestions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.ai-suggestions button {
+    background: rgba(59, 130, 246, 0.2);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    color: #93c5fd;
+    transition: all 0.3s ease;
+}
+
+.ai-suggestions button:hover {
+    background: rgba(59, 130, 246, 0.4);
+    transform: translateY(-2px);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.ai-progress-update {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 10px;
+}
+
+.progress-bar {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin: 0.5rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+@media (max-width: 600px) {
+    .ai-companion {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    .ai-avatar {
+        width: 50px;
+        height: 50px;
+    }
+    .ai-message {
+        width: 260px;
+        font-size: 0.85rem;
+    }
+}

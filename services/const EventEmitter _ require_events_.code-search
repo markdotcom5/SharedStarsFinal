@@ -1,0 +1,28 @@
+# Query: const EventEmitter = require('events');\n
+# ContextLines: 1
+
+4 results - 4 files
+
+services/CommunityHubServices.js:
+  1  // services/CommunityHub.js
+  2: import EventEmitter from 'events';
+  3: 
+  3  const { StudyGroup, TrainingSession, Challenge, Discussion, PeerMatch } = require('../models/CommunityModels');
+
+services/GuidanceOverlayService.js:
+  1  // services/GuidanceOverlayService.js
+  2: cimport EventEmitter from 'events';
+  3: 
+  3  const User = require('../models/User');
+
+services/rankingService.js:
+  1  const User = require('../models/User');
+  2: import EventEmitter from 'events';
+  3: 
+  3  
+
+services/ServiceIntegrator.js:
+  1  // services/ServiceIntegrator.js
+  2: import EventEmitter from 'events';
+  3: 
+  3  const AISpaceCoach = require('./AISpaceCoach');

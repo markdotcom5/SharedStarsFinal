@@ -1,0 +1,155 @@
+<!-- views/leaderboard.ejs -->
+<!DOCTYPE html>
+<html lang="<%= locals.user?.settings?.language || 'en' %>">
+<%- include('partials/head', { title: 'SharedStars Leaderboard' }) %>
+
+<body class="bg-black min-h-screen">
+    <%- include('partials/nav') %>
+
+    <!-- Hero Section -->
+    <section class="hero-section min-h-screen flex items-center justify-center relative">
+        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-30">
+            <source src="./videos/leaderboard5.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-950/90 via-blue-900/80 to-blue-950/90"></div>
+
+        <!-- Stats Dashboard -->
+        <div class="relative z-10 container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h1 class="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-blue-500 mb-6 glow-text animate-pulse-slow">
+                    Stellar Rankings
+                </h1>
+                <p class="text-xl md:text-2xl text-blue-200 animate-fade-in">Your Gateway to Space Leadership</p>
+            </div>
+
+            <div class="stats shadow-xl bg-blue-950/30 backdrop-blur-md border border-blue-500/20 hover:border-blue-400/40 transition-all duration-500">
+                <div class="stat px-8 hover:bg-blue-900/20 transition-all duration-300">
+                    <div class="stat-title text-blue-400 text-lg font-bold">Elite Cadets</div>
+                    <div class="stat-value text-blue-500"><%= stats.activeCadets %></div>
+                    <div class="stat-desc text-blue-300">↗︎ 300 new this week</div>
+                </div>
+                
+                <div class="stat px-8 hover:bg-blue-900/20 transition-all duration-300">
+                    <div class="stat-title text-purple-400 text-lg font-bold">Credits Earned</div>
+                    <div class="stat-value text-blue-500"><%= stats.totalCredits %></div>
+                    <div class="stat-desc text-blue-300">↗︎ 23% increase</div>
+                </div>
+                
+                <div class="stat px-8 hover:bg-blue-900/20 transition-all duration-300">
+                    <div class="stat-title text-blue-400 text-lg font-bold">Success Rate</div>
+                    <div class="stat-value text-blue-500"><%= stats.successRate %></div>
+                    <div class="stat-desc text-blue-300">In career placement</div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Controls -->
+            <div class="mt-12 flex flex-col lg:flex-row gap-6 items-center justify-between">
+                <div class="relative flex-grow max-w-md w-full">
+                    <input type="search" 
+                           id="searchCadets" 
+                           placeholder="Search elite cadets..." 
+                           class="w-full h-12 bg-blue-900/40 text-white pl-12 pr-4 rounded-xl border border-blue-400/30 hover:border-blue-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center text-blue-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-4">
+                    <select id="timeRange" class="select select-primary bg-blue-900/40 border-blue-400/30">
+                        <option value="global">Global Elite</option>
+                        <option value="regional">Regional Champions</option>
+                        <option value="squad">Squadron Leaders</option>
+                        <option value="division">Division Masters</option>
+                    </select>
+
+                    <select id="periodFilter" class="select select-primary bg-blue-900/40 border-blue-400/30">
+                        <option value="allTime">All Time Legends</option>
+                        <option value="season">Season III Heroes</option>
+                        <option value="month">Monthly Stars</option>
+                        <option value="week">Weekly Risers</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Main Leaderboard Table -->
+            <div class="mt-8 overflow-x-auto">
+                <table class="table w-full text-gray-300 bg-blue-950/20 rounded-xl">
+                    <thead>
+                        <tr class="border-b border-blue-500/20 bg-blue-900/20">
+                            <th class="p-4">
+                                <div class="flex items-center space-x-2 text-blue-400 font-bold">
+                                    <span>RANK</span>
+                                    <div class="tooltip" data-tip="Updated every 24hrs">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="p-4 text-blue-400 font-bold">CADET</th>
+                            <th class="p-4 text-blue-400 font-bold">DIVISION</th>
+                            <th class="p-4 text-blue-400 font-bold">STAR CREDITS</th>
+                            <th class="p-4 text-blue-400 font-bold">LEVEL</th>
+                            <th class="p-4 text-blue-400 font-bold">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <!-- Dynamic content will be loaded here -->
+                        <tr>
+                            <td colspan="6" class="text-center py-8">
+                                <div class="animate-pulse flex justify-center items-center">
+                                    <div class="h-4 bg-blue-900/40 rounded w-32"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-8 bg-blue-900/30 rounded-xl border border-blue-500/20 backdrop-blur-lg p-6">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="text-sm text-blue-300">
+                        Showing <span id="pageStart" class="font-medium text-white">1</span> - 
+                        <span id="pageEnd" class="font-medium text-white">10</span> of 
+                        <span id="totalEntries" class="font-medium text-white">100</span> cadets
+                    </div>
+                    <div id="pagination" class="join">
+                        <!-- Pagination buttons will be dynamically inserted -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Position Section (Only shown when logged in) -->
+    <% if (locals.user) { %>
+    <section class="relative py-8 bg-blue-950/50">
+        <div class="container mx-auto px-4">
+            <div class="bg-blue-900/30 rounded-xl p-6 border border-blue-500/20">
+                <h3 class="text-xl font-semibold text-white mb-4">Your Position</h3>
+                <div id="userStats" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- User stats will be dynamically loaded -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <% } %>
+
+    <%- include('partials/footer') %>
+
+    <script type="module">
+        import { initializeLeaderboard } from '/js/modules/leaderboard/index.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeLeaderboard({
+                user: <%- locals.user ? JSON.stringify(user) : 'null' %>,
+                updateInterval: 30000, // Update every 30 seconds
+                wsEndpoint: '<%= process.env.WS_ENDPOINT || "ws://localhost:3000" %>'
+            });
+        });
+    </script>
+</body>
+</html>

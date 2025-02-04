@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SharedStars</title>
+  
+  <!-- Custom and Dependency CSS -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/ai-assistant.css" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+      background-color: #000;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Hero Section Formatting */
+    .hero-text {
+      font-size: clamp(3rem, 8vw, 8rem);
+      line-height: 1;
+    }
+
+    /* Header Styling */
+    header {
+      background-color: rgba(17, 24, 39, 0.95);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+    }
+
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* AI Assistant */
+    #ai-assistant {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 50;
+      display: none; /* Initially hidden until first interaction */
+    }
+
+    /* Responsive Navigation */
+    .mobile-menu {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu {
+        display: block;
+      }
+      .desktop-menu {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Load AOS script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1000, easing: 'ease', once: true });
+  </script>
+
+  <!-- HEADER -->
+  <header class="bg-gray-900/95">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Left: Logo -->
+      <div class="flex-shrink-0">
+        <a href="/" aria-label="SharedStars Homepage">
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 drop-shadow-lg transition duration-300">
+        </a>
+      </div>
+      
+      <!-- Center: Navigation -->
+      <nav class="desktop-menu hidden md:flex space-x-6">
+        <a href="/index" class="text-gray-300 hover:text-white">Home</a>
+        <a href="/academy" class="text-gray-300 hover:text-white">Academy</a>
+        <a href="/about" class="text-gray-300 hover:text-white">About</a>
+        <a href="/subscribe" class="text-gray-300 hover:text-white">Subscribe</a>
+      </nav>
+
+      <!-- Mobile Menu -->
+      <div class="mobile-menu md:hidden">
+        <button id="menuToggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- AI Assistant (Always Starts on Page Load) -->
+  <section id="ai-assistant" class="fixed bottom-10 right-10 z-50">
+    <div class="neural-network-grid p-6 rounded-lg shadow-lg bg-black/70 backdrop-blur-lg text-white text-center max-w-md">
+      <div class="ai-message-bubble bg-blue-900/30 p-4 rounded-lg mb-4">
+        <p id="aiGreeting">Hello! Ready to explore space? 🚀</p>
+      </div>
+      <div id="chatLog" class="h-32 overflow-y-auto mb-4 bg-gray-800/50 p-4 rounded-lg">
+        <!-- Chat messages will appear here -->
+      </div>
+      <div class="flex space-x-2">
+        <input id="chatInput" type="text" placeholder="Ask your AI assistant..." class="flex-1 p-2 rounded bg-gray-700 text-white" />
+        <button id="sendChat" class="btn btn-primary">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERO SECTION -->
+  <section id="hero" class="relative min-h-screen flex items-center justify-center text-center pt-20">
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+      <source src="/videos/academy10.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+    <div class="relative z-10 max-w-4xl px-4">
+      <h1 class="hero-text text-white mb-4">From Earth to Space in 36 Months</h1>
+      <p class="text-xl text-white mb-4">AI Guided to Get You to Space in 36 Months</p>
+      <a href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">Sign Up</a>
+    </div>
+  </section>
+
+  <script>
+    // Show AI Assistant on Page Load
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("ai-assistant").style.display = "block";
+    });
+
+    // Mobile menu toggle
+    document.getElementById("menuToggle").addEventListener("click", () => {
+      document.querySelector(".desktop-menu").classList.toggle("hidden");
+    });
+  </script>
+
+</body>
+</html>
+
+  <!-- COUNTDOWN & PRICE EVOLUTION SECTION -->
+  <section id="countdown-price" class="py-16 bg-gray-900 text-white text-center">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-6">🚀 Countdown to Affordable Space Travel</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Global Countdown -->
+        <div>
+          <h3 class="text-2xl font-semibold mb-2">Global Space Travel Countdown</h3>
+          <div id="globalCountdown" class="flex justify-center gap-4">
+            <div class="countdown-box">
+              <div class="value" id="global-years">0</div>
+              <div class="label">Years</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="global-months">0</div>
+              <div class="label">Months</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="global-days">0</div>
+              <div class="label">Days</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="global-hours">0</div>
+              <div class="label">Hours</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="global-minutes">0</div>
+              <div class="label">Minutes</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="global-seconds">0</div>
+              <div class="label">Seconds</div>
+            </div>
+          </div>
+        </div>
+        <!-- Personalized Countdown -->
+        <div>
+          <h3 class="text-2xl font-semibold mb-2">Your Personalized Space Travel Timeline</h3>
+          <div id="personalizedCountdown" class="flex justify-center gap-4">
+            <div class="countdown-box">
+              <div class="value" id="personalized-years">0</div>
+              <div class="label">Years</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="personalized-months">0</div>
+              <div class="label">Months</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="personalized-days">0</div>
+              <div class="label">Days</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="personalized-hours">0</div>
+              <div class="label">Hours</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="personalized-minutes">0</div>
+              <div class="label">Minutes</div>
+            </div>
+            <div class="countdown-box">
+              <div class="value" id="personalized-seconds">0</div>
+              <div class="label">Seconds</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Price Evolution Chart -->
+      <h3 class="text-3xl font-bold mt-12">Price Evolution Timeline</h3>
+      <div class="w-full max-w-lg mx-auto mt-6">
+        <canvas id="priceChart"></canvas>
+    </div>    
+    </div>
+  </section>
+
+  <!-- TRAINING MODE TOGGLE SECTION -->
+  <section id="training-mode-toggle" class="py-12 bg-gray-800 text-white text-center">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-6">Choose Your Training Mode</h2>
+      <div class="flex flex-col md:flex-row justify-center gap-6">
+        <!-- AI-Guided Training -->
+        <div class="toggle-option active cursor-pointer" id="ai-mode">
+          <h3 class="text-xl font-bold">🤖 AI-Guided Training</h3>
+          <p>Let our AI guide you through your training journey.</p>
+        </div>
+        <!-- Self-Paced Training -->
+        <div class="toggle-option cursor-pointer" id="self-paced-mode">
+          <h3 class="text-xl font-bold">🚀 Self-Paced Training</h3>
+          <p>Complete your training at your own speed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULES PREVIEW SECTION -->
+  <section id="modulesPreview" class="py-12 bg-gray-800 text-white text-center">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-6">Explore Our Training Modules</h2>
+      <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+        <button class="module-button bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg" data-module="physical">
+          Physical Training Module
+        </button>
+        <button class="module-button bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg" data-module="technical">
+          Technical Training Module
+        </button>
+        <button class="module-button bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg" data-module="simulation">
+          Space Simulation Module
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAINING DASHBOARD SECTION -->
+  <section id="training-dashboard" class="py-16 bg-gray-900 text-white text-center relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-blue-900/30"></div>
+    <div class="absolute inset-0 bg-[url('/images/constellation-pattern.svg')] opacity-10"></div>
+    <div class="relative z-10 container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-4">Ready to Start AI Training?</h2>
+      <p class="text-lg text-gray-400 mb-8">Begin your interactive, AI-powered space training today.</p>
+      <button class="begin-training-btn bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 px-8 rounded-lg shadow-lg hover:from-blue-500 hover:to-purple-500 transition-transform transform hover:scale-105 cosmic-hover">
+        BEGIN TRAINING
+      </button>
+    </div>
+  </section>
+
+  <!-- ACADEMY PREVIEW SECTION -->
+  <section id="academy-preview" class="relative">
+    <!-- Video Background -->
+    <div class="absolute inset-0">
+      <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+        <source src="/videos/academy10.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="absolute inset-0 bg-black opacity-30"></div>
+    </div>
+    <!-- Content Overlay -->
+    <div class="relative z-10 container mx-auto px-4 py-16 text-center text-white">
+      <span class="text-blue-400 uppercase font-semibold tracking-wide">SharedStars Academy</span>
+      <h2 class="text-4xl font-extrabold mt-4">Your Gateway to Space Exploration</h2>
+      <p class="text-gray-300 mt-4 max-w-3xl mx-auto">
+        Experience interactive AR/VR training, real-world simulations, and AI-guided certifications that prepare you for the next frontier: space.
+      </p>
+      <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/academy" class="btn-primary px-6 py-3">Explore the Academy</a>
+        <a href="/academy/tour" class="btn-secondary px-6 py-3">Take a Virtual Tour</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD PREVIEW SECTION -->
+  <section id="leaderboard-preview" class="relative py-16 bg-black text-white">
+    <div class="absolute inset-0">
+      <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+        <source src="/videos/leaderboard1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+    </div>
+    <div class="relative z-10 container mx-auto px-4 text-center">
+      <span class="text-purple-400 uppercase font-semibold tracking-wide">Global Rankings</span>
+      <h2 class="text-4xl font-extrabold mt-4">Top Space Pioneers</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
+        <!-- Ranking Cards -->
+        <div class="bg-black bg-opacity-50 p-6 rounded-lg">
+          <div class="text-5xl">🥈</div>
+          <h3 class="text-xl font-bold mt-4">David Kim</h3>
+          <p class="text-gray-300">97.2% - Final Phase</p>
+        </div>
+        <div class="bg-yellow-500 bg-opacity-20 p-6 rounded-lg">
+          <div class="text-5xl">🥇</div>
+          <h3 class="text-xl font-bold mt-4 text-yellow-300">Sarah Chen</h3>
+          <p class="text-gray-300 mt-2">98.5% - Mars Ready</p>
+          <div class="mt-4 flex flex-wrap justify-center gap-2">
+            <span class="bg-blue-200 text-blue-700 px-2 py-1 rounded">🏆 Physical Elite</span>
+            <span class="bg-green-200 text-green-700 px-2 py-1 rounded">⭐ Tech Master</span>
+          </div>
+        </div>
+        <div class="bg-black bg-opacity-50 p-6 rounded-lg">
+          <div class="text-5xl">🥉</div>
+          <h3 class="text-xl font-bold mt-4">James Wilson</h3>
+          <p class="text-gray-300">96.8% - Advanced</p>
+        </div>
+      </div>
+      <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/leaderboard" class="btn-primary px-6 py-3">View Full Rankings</a>
+        <a href="/profile/stats" class="btn-secondary px-6 py-3">Check Your Rank</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORIGIN STORY PREVIEW SECTION -->
+  <section id="origin-preview" class="py-16 bg-gray-900 text-white text-center">
+    <div class="container mx-auto px-4">
+      <span class="text-blue-400 uppercase font-semibold tracking-wide">OUR STORY</span>
+      <h2 class="text-4xl font-extrabold mt-4">How SharedStars Began</h2>
+      <div class="founder-quote bg-gray-800 bg-opacity-50 rounded-xl p-8 mt-6 shadow-lg inline-block">
+        <blockquote class="italic text-gray-300">
+          "Space travel shouldn't be reserved for the wealthy few. It should be accessible to everyone willing to dream, learn, and prepare."
+        </blockquote>
+        <div class="mt-4 text-blue-200 flex items-center justify-center gap-2">
+          <span class="text-xl">📚</span>
+          <span>Inspired by "The Three-Body Problem" trilogy</span>
+        </div>
+      </div>
+      <div class="mission-card bg-gray-800 bg-opacity-50 rounded-xl p-8 mt-8 shadow-lg inline-block">
+        <h3 class="text-2xl font-bold text-blue-400 mb-4">Our Mission</h3>
+        <p class="text-gray-300">
+          Democratizing space travel through accessible training, community support, and innovative technology.
+        </p>
+        <div class="mission-stats mt-4 flex justify-center gap-8">
+          <div class="stat">
+            <span class="text-3xl font-bold text-blue-300">2,500+</span>
+            <span class="block text-blue-200">Active Trainees</span>
+          </div>
+          <div class="stat">
+            <span class="text-3xl font-bold text-blue-300">$49.99</span>
+            <span class="block text-blue-200">Starting Monthly</span>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/about" class="primary-btn px-6 py-3">Read Our Full Story</a>
+        <a href="/founder" class="secondary-btn px-6 py-3">Meet the Founder</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOARD PREVIEW SECTION (Advisory Board) -->
+  <section id="board-preview" class="relative min-h-screen bg-black text-white">
+    <div class="absolute inset-0">
+      <video autoplay muted loop playsinline class="w-full h-full object-cover">
+        <source src="/videos/BOA1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+    </div>
+    <div class="relative z-10 container mx-auto px-4 py-16 text-center">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-blue-400 mb-12">Meet Our Advisors</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Advisor Cards -->
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+          <img src="/images/drmark.png" alt="Dr. Mark" class="mx-auto rounded-full mb-4 w-24 h-24">
+          <p class="text-center text-gray-300">Chief Medical Officer & Pilot</p>
+          <p class="text-sm text-center text-gray-300">NASA Medicine & Flight Safety</p>
+        </div>
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+          <img src="/images/travis.png" alt="Travis Talbot" class="mx-auto rounded-full mb-4 w-24 h-24">
+          <h3 class="text-2xl font-bold text-purple-400 text-center">Travis Talbot</h3>
+          <p class="text-center text-gray-300">Senior Manufacturing Engineer</p>
+          <p class="text-sm text-center text-gray-300">Built the Raptor Rocket</p>
+        </div>
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+          <img src="/images/laura.png" alt="Laura Anne Edwards" class="mx-auto rounded-full mb-4 w-24 h-24">
+          <h3 class="text-2xl font-bold text-green-400 text-center">Laura Anne Edwards</h3>
+          <p class="text-center text-gray-300">Global Innovation Leader</p>
+          <p class="text-sm text-center text-gray-300">NASA Datanaut & NSA Innovator</p>
+        </div>
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+          <img src="/images/edward.png" alt="Edward Moleam" class="mx-auto rounded-full mb-4 w-24 h-24">
+          <h3 class="text-2xl font-bold text-red-400 text-center">Edward Moleam</h3>
+          <p class="text-center text-gray-300">Founder & CEO</p>
+          <p class="text-sm text-center text-gray-300">Aerospace Engineer & Space Systems Expert</p>
+        </div>
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+          <img src="/images/erich.png" alt="Erich Spangenberg" class="mx-auto rounded-full mb-4 w-24 h-24">
+          <h3 class="text-2xl font-bold text-yellow-400 text-center">Erich Spangenberg</h3>
+          <p class="text-center text-gray-300">Chief Innovation Officer</p>
+          <p class="text-sm text-center text-gray-300">Pioneer in Rocket Propulsion Technologies</p>
+        </div>
+      </div>
+      <div class="mt-12 text-center">
+        <a href="/join-boa" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600 transition">
+          Ask to Join the BOA
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREDENTIALS SUMMARY -->
+  <section class="credentials-bar bg-gray-800 py-4">
+    <div class="container mx-auto flex justify-around text-white">
+      <div class="text-center">
+        <span class="text-2xl font-bold">50+</span>
+        <p class="text-sm">Years Combined Experience</p>
+      </div>
+      <div class="text-center">
+        <span class="text-2xl font-bold">3</span>
+        <p class="text-sm">Space Organizations</p>
+      </div>
+      <div class="text-center">
+        <span class="text-2xl font-bold">12</span>
+        <p class="text-sm">Industry Patents</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA SECTION -->
+  <section id="final-cta" class="py-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center relative">
+    <div class="relative z-10 container mx-auto px-4">
+      <span class="uppercase tracking-wide text-sm text-blue-200">Limited Time Offer</span>
+      <h2 class="text-4xl md:text-5xl font-extrabold mt-2">Secure Your Place in Space History</h2>
+      <p class="mt-4 text-lg text-blue-200">Join the Pioneer Program Today</p>
+      <div class="mt-8 flex flex-col md:flex-row items-center justify-center gap-4">
+        <button class="primary-btn pulse bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-lg shadow-lg">
+          Reserve Your Spot Now
+          <span class="block text-sm mt-1">Early Access Rate • $49.99/mo</span>
+        </button>
+        <button class="secondary-btn bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 px-8 rounded-lg shadow-lg">
+          Schedule Free Demo
+        </button>
+      </div>
+      <div class="mt-6 flex flex-col md:flex-row items-center justify-center gap-6 text-blue-200">
+        <div class="flex items-center gap-2">
+          <span class="check">✓</span>
+          <span>30-Day Money-Back Guarantee</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="check">✓</span>
+          <span>Lock In Founding Member Rate</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="check">✓</span>
+          <span>Priority Space Training Access</span>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-center gap-8 text-blue-200">
+        <div class="flex items-center gap-2">
+          <span class="lock-icon">🔒</span> Secure Payment
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="support-icon">💬</span> 24/7 Support
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="shield-icon">🛡️</span> Data Protection
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER SIGNUP -->
+  <section id="newsletter" class="py-12 bg-gray-900 text-center">
+    <div class="container mx-auto">
+      <form action="#" class="flex flex-col md:flex-row justify-center gap-4 w-full max-w-lg">
+        <input type="email" placeholder="Enter your email" class="px-4 py-2 rounded-lg w-full text-black" />
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-lg">
+          Subscribe
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer bg-gray-900 text-white py-12">
+    <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+      <!-- About -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">About</h3>
+        <ul class="mt-4 space-y-2">
+          <li><a href="/about" class="hover:text-blue-400 transition-colors">Our Story</a></li>
+          <li><a href="/academy" class="hover:text-blue-400 transition-colors">Space Academy</a></li>
+        </ul>
+      </div>
+      <!-- Community -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Community</h3>
+        <ul class="mt-4 space-y-2">
+          <li><a href="/events" class="hover:text-blue-400 transition-colors">Events</a></li>
+          <li><a href="/forums" class="hover:text-blue-400 transition-colors">Forums</a></li>
+        </ul>
+      </div>
+      <!-- Resources -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Resources</h3>
+        <ul class="mt-4 space-y-2">
+          <li><a href="/faq" class="hover:text-blue-400 transition-colors">FAQ</a></li>
+          <li><a href="/support" class="hover:text-blue-400 transition-colors">Support</a></li>
+        </ul>
+      </div>
+      <!-- Legal -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Legal</h3>
+        <ul class="mt-4 space-y-2">
+          <li><a href="/terms" class="hover:text-blue-400 transition-colors">Terms</a></li>
+          <li><a href="/privacy" class="hover:text-blue-400 transition-colors">Privacy</a></li>
+          <li><a href="/safety" class="hover:text-blue-400 transition-colors">Safety Guidelines</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 text-center">
+      <h4 class="text-lg font-bold text-blue-400">Follow Us</h4>
+      <div class="flex justify-center gap-6 mt-4">
+        <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
+          <!-- Twitter SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
+          </svg>
+        </a>
+        <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
+          <!-- Facebook SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
+          </svg>
+        </a>
+        <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
+          <!-- Instagram SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.5 11h-3.176c.12.272.176.563.176.865 0 .77-.622 1.397-1.4 1.397-.777 0-1.399-.627-1.399-1.397 0-.302.057-.593.176-.865H7.5v5h9v-5zm-4.5-7c.774 0 1.4.627 1.4 1.4s-.626 1.399-1.4 1.399c-.774 0-1.4-.626-1.4-1.399s.626-1.4 1.4-1.4zm5 5.5h-10v7h10v-7z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  <!-- Footer Section -->
+  <footer class="bg-gray-900 text-white py-6 text-center">
+    <div class="container mx-auto px-4">
+      <p class="text-sm">&copy; 2025 SharedStars. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const ctx = document.getElementById('priceChart');
+      if (!ctx) {
+        console.error("Chart canvas not found!");
+        return;
+      }
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['2022', '2024', '2029', '2034', '2049'],
+          datasets: [{
+            label: 'Space Travel Cost ($)',
+            data: [1000000, 250000, 75000, 17500, 5000],
+            borderColor: '#00bfff',
+            borderWidth: 3,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: false,
+              ticks: {
+                callback: val => '$' + val.toLocaleString()
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- Countdown Timer Script -->
+  <script>
+    function updateCountdowns() {
+      const now = new Date().getTime();
+      const globalTargetDate = new Date('2049-01-01T00:00:00').getTime();
+      const userCredits = 500;
+      let personalizedTargetDate = new Date('2049-01-01T00:00:00');
+      personalizedTargetDate.setDate(personalizedTargetDate.getDate() - Math.floor(userCredits / 100));
+      personalizedTargetDate = personalizedTargetDate.getTime();
+
+      function getTimeComponents(distance) {
+        let years = Math.floor(distance / (365 * 24 * 60 * 60 * 1000));
+        let months = Math.floor((distance % (365 * 24 * 60 * 60 * 1000)) / (30 * 24 * 60 * 60 * 1000));
+        let days = Math.floor((distance % (30 * 24 * 60 * 60 * 1000)) / (24 * 60 * 60 * 1000));
+        let hours = Math.floor((distance % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+        let minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
+        let seconds = Math.floor((distance % (60 * 1000)) / 1000);
+        return { years, months, days, hours, minutes, seconds };
+      }
+
+      function setCountdown(id, components) {
+        document.querySelector(`#${id}-years`).innerText = components.years;
+        document.querySelector(`#${id}-months`).innerText = components.months;
+        document.querySelector(`#${id}-days`).innerText = components.days;
+        document.querySelector(`#${id}-hours`).innerText = components.hours;
+        document.querySelector(`#${id}-minutes`).innerText = components.minutes;
+        document.querySelector(`#${id}-seconds`).innerText = components.seconds;
+      }
+
+      setCountdown('global', getTimeComponents(globalTargetDate - now));
+      setCountdown('personalized', getTimeComponents(personalizedTargetDate - now));
+    }
+    setInterval(updateCountdowns, 1000);
+    updateCountdowns();
+  </script>
+
+  <!-- Language Selection Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll(".lang-btn").forEach(button => {
+        button.addEventListener("click", function () {
+          const selectedLang = this.getAttribute("data-lang");
+          localStorage.setItem("selectedLang", selectedLang);
+          window.location.reload();
+        });
+      });
+
+      const savedLang = localStorage.getItem("selectedLang");
+      if (savedLang) {
+        console.log("Switching language to:", savedLang);
+      }
+    });
+  </script>
+
+  <!-- AI Greeting Message -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const aiGreeting = document.getElementById("aiGreeting");
+      if (aiGreeting) {
+        const hours = new Date().getHours();
+        let greetingMessage = hours < 12 ? "🌅 Good Morning, Space Explorer!" : hours < 18 ? "🌍 Good Afternoon, Future Astronaut!" : "🌌 Good Evening, Cosmic Pioneer!";
+        aiGreeting.innerText = greetingMessage;
+      }
+    });
+  </script>
+
+  <!-- Toggle Training Modes -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const aiMode = document.getElementById("ai-mode");
+      const selfPacedMode = document.getElementById("self-paced-mode");
+
+      function toggleModes(selected, unselected) {
+        selected.classList.add("active");
+        unselected.classList.remove("active");
+      }
+
+      aiMode?.addEventListener("click", () => toggleModes(aiMode, selfPacedMode));
+      selfPacedMode?.addEventListener("click", () => toggleModes(selfPacedMode, aiMode));
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+    const video = document.querySelector("video");
+    if (video) {
+        video.play().catch(error => console.error("Autoplay blocked:", error));
+    }
+});
+  </script>
+
+  <!-- Core Dependencies -->
+  <script src="/js/animations.js" defer></script>
+  <script src="/js/trialFlow.js" defer></script>
+  <script src="/js/leaderboard.js" defer></script>
+  <script src="/js/visualizations/ModuleHighlight.js" defer></script>
+
+  <!-- Highlight.js for Code Blocks -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.hljs) {
+        hljs.highlightAll();
+      } else {
+        console.error("❌ Highlight.js failed to load.");
+      }
+    });
+  </script>
+
+  <!-- Main Initialization Scripts -->
+  <script src="/js/ai-companion.js" defer></script>
+  <script src="/js/moduleModal.js" defer></script>
+
+<!-- Ensure JavaScript Modules Load Properly -->
+<script type="module">
+  import("/js/modules/core/index.js").catch(err => console.error("❌ Failed to load core module", err));
+  import("/js/modules/ui/index.js").catch(err => console.error("❌ Failed to load UI module", err));
+  import("/js/modules/training/index.js").catch(err => console.error("❌ Failed to load training module", err));
+  import("/js/modules/auth/index.js").catch(err => console.error("❌ Failed to load auth module", err));
+</script>
+
+<!-- Load main.js separately -->
+<script type="module" src="/js/modules/main.js"></script>
+
+</body>
+</html>
+

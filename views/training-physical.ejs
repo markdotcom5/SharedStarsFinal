@@ -1,0 +1,29 @@
+<%- include('partials/head', { title: title }) %>
+<%- include('partials/header') %>
+
+<section class="training-module py-8 bg-gray-900 text-white">
+  <div class="container mx-auto px-4">
+    <h1 class="text-4xl font-bold mb-4"><%= content.title %></h1>
+    <p class="mb-6"><%= content.description %></p>
+    
+    <h2 class="text-2xl font-semibold">Objectives:</h2>
+    <ul class="list-disc ml-6">
+      <% content.objectives.forEach(function(obj) { %>
+        <li><%= obj %></li>
+      <% }); %>
+    </ul>
+    
+    <!-- Interactive section -->
+    <div id="module-interactive">
+      <!-- This is a placeholder for interactive content -->
+      <p>Interactive content goes here...</p>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
+
+<!-- Include your training module script for interactive behavior -->
+<script src="/js/modules/training/index.js" type="module"></script>
+<script src="/js/training.js" type="module"></script>
+

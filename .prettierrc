@@ -1,0 +1,13 @@
+cat > .prettierrc << EOF
+{
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "semi": true,
+  "printWidth": 100
+}
+EOF
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx lint-staged

@@ -1,0 +1,40 @@
+<!-- views/insights/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Insights - SharedStars</title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    
+    <section class="insights-hero">
+        <h1>SharedStars Insights</h1>
+        <p>Exploring the Future of Space Travel</p>
+    </section>
+
+    <div class="insights-filters">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="news">News</button>
+        <button class="filter-btn" data-category="technology">Technology</button>
+        <button class="filter-btn" data-category="opinion">Opinion</button>
+        <button class="filter-btn" data-category="community">Community</button>
+    </div>
+
+    <section class="insights-grid">
+        <% insights.forEach(function(insight) { %>
+            <article class="insight-card">
+                <div class="insight-content">
+                    <span class="category"><%= insight.category %></span>
+                    <h2><%= insight.title %></h2>
+                    <p><%= insight.content.substring(0, 150) %>...</p>
+                    <div class="insight-meta">
+                        <span class="author"><%= insight.author %></span>
+                        <span class="date"><%= new Date(insight.publishDate).toLocaleDateString() %></span>
+                    </div>
+                </div>
+            </article>
+        <% }); %>
+    </section>
+</body>
+</html>

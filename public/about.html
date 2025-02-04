@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About - SharedStars</title>
+  <!-- Tailwind CSS & DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.0/dist/full.css" rel="stylesheet" />
+  <!-- AOS CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <!-- Custom AI Assistant CSS -->
+  <link rel="stylesheet" href="/css/ai-assistant.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    /* Optional: custom styling for founder journey section */
+    .founder-bg {
+      background: url('/css/images/founder-bg.jpg') no-repeat center center/cover;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- HEADER -->
+  <header class="fixed w-full bg-gray-900/90 backdrop-blur-lg z-50 shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="logo">
+        <a href="/index.html" aria-label="SharedStars Homepage">
+          <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-10" />
+        </a>
+      </div>
+      <nav class="hidden md:flex gap-8">
+        <a href="/index.html" class="text-gray-300 hover:text-white font-medium transition-colors">Home</a>
+        <a href="#mission" class="text-gray-300 hover:text-white font-medium transition-colors">Mission</a>
+        <a href="#vision" class="text-gray-300 hover:text-white font-medium transition-colors">Vision</a>
+        <a href="#founder-journey" class="text-gray-300 hover:text-white font-medium transition-colors">Founder Journey</a>
+        <a href="#board-preview" class="text-gray-300 hover:text-white font-medium transition-colors">Advisors</a>
+        <a href="#subscribe" class="text-gray-300 hover:text-white font-medium transition-colors">Subscribe</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO SECTION (Video Background) -->
+  <section id="about-hero" class="relative min-h-screen">
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+      <source src="/videos/academy11.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+    <div class="relative z-10 flex flex-col items-center justify-center min-h-screen text-center px-4" data-aos="fade-up">
+      <h1 class="text-5xl md:text-7xl font-extrabold">About SharedStars</h1>
+      <p class="mt-4 text-xl md:text-2xl">Making Space Accessible for Everyone</p>
+    </div>
+  </section>
+
+  <!-- MISSION SECTION -->
+  <section id="mission" class="py-16 bg-gray-900" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-blue-400 mb-8">Our Mission</h2>
+      <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
+        Our mission is to democratize space travel by equipping individuals with the knowledge, certifications, AR/VR experiences, and our comprehensive 10‑module program.
+      </p>
+      <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto mt-4">
+        SharedStars transforms space travel dreams into reality by building an inclusive community of Subscribing Space Travelers (SSTs) who are united in shaping the future of space exploration.
+      </p>
+    </div>
+  </section>
+
+  <!-- VISION SECTION -->
+  <section id="vision" class="py-16 bg-black" data-aos="fade-up">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-purple-400 mb-8">Our Vision</h2>
+      <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
+        To create a world where space travel is inclusive and attainable for all—fostering a global community united by the aspiration to explore beyond Earth.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOUNDER JOURNEY SECTION -->
+  <section id="founder-journey" class="py-16 founder-bg bg-fixed bg-center" data-aos="zoom-in">
+    <div class="container mx-auto px-4 bg-black bg-opacity-70 p-8 rounded-lg shadow-2xl">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-yellow-400 mb-6">My Journey</h2>
+      <p class="text-lg text-gray-200 leading-relaxed max-w-3xl mx-auto">
+        I started SharedStars with a vision to empower individuals with the tools and technology to reach for the stars. Combining years of expertise in tech startups, AI, and aerospace, I embarked on a mission to make space travel accessible for everyone. My journey wasn’t easy—it was built on relentless innovation, overcoming challenges, and a steadfast commitment to transforming dreams into reality.
+      </p>
+      <p class="mt-4 text-lg text-gray-200 leading-relaxed max-w-3xl mx-auto">
+        Today, our community continues to grow and evolve, driven by passion, innovation, and the belief that the future of space is for all of us.
+      </p>
+      <div class="mt-8 flex justify-center">
+        <a href="/founder.html" class="btn btn-primary text-white hover:bg-blue-600 transition-all">
+          Read My Full Story
+        </a>
+      </div>
+    </div>
+  </section>
+
+<!-- Board of Advisors Section -->
+<section id="board-preview" class="relative min-h-screen bg-black" data-aos="fade-up">
+    <!-- Video Background -->
+    <div class="absolute inset-0">
+      <video autoplay muted loop playsinline class="w-full h-full object-cover">
+        <source src="/videos/BOA1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+    </div>
+    <!-- Content Overlay -->
+    <div class="relative z-10 container mx-auto px-4 py-16">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-blue-400 mb-12">Meet Our Advisors</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Advisor 1 -->
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left">
+          <img src="/css/images/drmark.png" alt="Dr. Mark Prele" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
+          <h3 class="text-2xl font-bold text-blue-400 text-center">Dr. Mark Prele</h3>
+          <p class="text-center text-gray-300">Chief Medical Officer & Pilot</p>
+          <p class="text-sm text-center text-gray-300">Expert in NASA Medicine & Flight Safety</p>
+        </div>
+        <!-- Advisor 2 -->
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left" data-aos-delay="100">
+          <img src="/css/images/travis.png" alt="Travis Talbot" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
+          <h3 class="text-2xl font-bold text-purple-400 text-center">Travis Talbot</h3>
+          <p class="text-center text-gray-300">Senior Manufacturing Engineer</p>
+          <p class="text-sm text-center text-gray-300">Pioneer behind the Raptor Rocket</p>
+        </div>
+        <!-- Advisor 3 -->
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left" data-aos-delay="200">
+          <img src="/css/images/laura.png" alt="Laura Anne Edwards" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
+          <h3 class="text-2xl font-bold text-green-400 text-center">Laura Anne Edwards</h3>
+          <p class="text-center text-gray-300">Global Innovation Leader</p>
+          <p class="text-sm text-center text-gray-300">NASA Datanaut & NSA Innovator</p>
+        </div>
+        <!-- Advisor 4 -->
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left" data-aos-delay="300">
+          <img src="/css/images/edward.png" alt="Edward Moleam" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
+          <h3 class="text-2xl font-bold text-red-400 text-center">Edward Moleam</h3>
+          <p class="text-center text-gray-300">Founder & CEO</p>
+          <p class="text-sm text-center text-gray-300">Aerospace Engineer & Space Systems Expert</p>
+        </div>
+        <!-- Advisor 5 -->
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left" data-aos-delay="400">
+          <img src="/css/images/erich.png" alt="Erich Spangenberg" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
+          <h3 class="text-2xl font-bold text-yellow-400 text-center">Erich Spangenberg</h3>
+          <p class="text-center text-gray-300">Chief Innovation Officer</p>
+          <p class="text-sm text-center text-gray-300">Pioneer in Rocket Propulsion Technologies</p>
+        </div>
+      </div>
+      <div class="mt-12 text-center">
+        <a href="/join-boa.html" class="btn btn-primary text-white hover:bg-blue-600 transition">
+          Ask to Join the BOA
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+      <!-- About -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">About</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/about.html" class="hover:text-blue-400 transition">Our Story</a></li>
+          <li><a href="/academy.html" class="hover:text-blue-400 transition">Space Academy</a></li>
+        </ul>
+      </div>
+      <!-- Community -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Community</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/events.html" class="hover:text-blue-400 transition">Events</a></li>
+          <li><a href="/forums.html" class="hover:text-blue-400 transition">Forums</a></li>
+        </ul>
+      </div>
+      <!-- Resources -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Resources</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/faq.html" class="hover:text-blue-400 transition">FAQ</a></li>
+          <li><a href="/support.html" class="hover:text-blue-400 transition">Support</a></li>
+        </ul>
+      </div>
+      <!-- Legal -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Legal</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/terms.html" class="hover:text-blue-400 transition">Terms</a></li>
+          <li><a href="/privacy.html" class="hover:text-blue-400 transition">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 text-center">
+      <h4 class="text-lg font-bold text-blue-400">Follow Us</h4>
+      <div class="flex justify-center gap-6 mt-4">
+        <a href="#" class="hover:text-blue-400 transition" aria-label="Twitter">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
+          </svg>
+        </a>
+        <a href="#" class="hover:text-blue-400 transition" aria-label="Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
+          </svg>
+        </a>
+        <a href="#" class="hover:text-blue-400 transition" aria-label="Instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M22 11.077v.82c0 4.842-3.705 10.423-10.423 10.423A10.386 10.386 0 010 18.9c.13.01.261.014.393.014 2.717 0 5.213-.913 7.204-2.449a3.677 3.677 0 01-3.434-2.553c.558.083 1.136.077 1.688-.027A3.675 3.675 0 012.68 9.9v-.047c.492.274 1.048.438 1.643.457a3.674 3.674 0 01-1.633-3.056c0-.014 0-.027.001-.041a3.65 3.65 0 001.667.46 3.671 3.671 0 01-1.144-4.901 10.428 10.428 0 007.571 3.841A3.675 3.675 0 0118.633 5.9a7.353 7.353 0 002.333-.894 3.673 3.673 0 01-1.612 2.025 7.308 7.308 0 002.102-.575A7.396 7.396 0 0122 11.077z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="mt-12 pt-8 border-t border-blue-500/20 text-center">
+      <p class="text-gray-400 text-sm">© 2025 Celestial Technologies, LLC. All Rights Reserved.</p>
+    </div>
+    <!-- Language Selection -->
+    <script src="/js/languageSelection.js"></script>
+  </footer>
+
+  <!-- CORE DEPENDENCIES -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  
+  <!-- ES Module Imports for Custom JS -->
+  <script type="module">
+    import '/js/modules/core/index.js';
+    import '/js/modules/ui/index.js';
+    import '/js/modules/training/index.js';
+    import '/js/modules/auth/index.js';
+  </script>
+  
+  <!-- Legacy Scripts -->
+  <script src="/js/animations.js" defer></script>
+  <script src="/js/trialFlow.js" defer></script>
+  <script src="/js/leaderboard.js" defer></script>
+  <script src="/js/visualizations/ModuleHighlight.js" defer></script>
+  
+  <!-- Highlight.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  
+  <!-- Main Initialization Script -->
+  <script src="/js/main.js"></script>
+</body>
+</html>

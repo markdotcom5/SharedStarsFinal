@@ -1,0 +1,51 @@
+<!-- views/partials/ai-assistant.ejs -->
+<div class="mt-8 cosmic-card bg-blue-900/30 backdrop-blur-md rounded-xl p-8 border border-blue-500/20">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-white">AI Mission Assistant</h2>
+        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Online</span>
+    </div>
+
+    <!-- AI Chat Interface -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Main Chat -->
+        <div class="md:col-span-2 bg-gray-800/50 rounded-lg p-4">
+            <div class="h-96 overflow-y-auto space-y-4 mb-4" id="chatLog">
+                <!-- Chat messages will be dynamically inserted here -->
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400">AI</span>
+                    </div>
+                    <div class="bg-blue-900/30 rounded-lg p-3 max-w-[80%]">
+                        <p>Welcome <%= user.username %>. How can I assist with your mission today?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex space-x-2">
+                <input type="text" 
+                       id="aiChatInput"
+                       class="flex-1 bg-gray-700/50 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                       placeholder="Ask your AI assistant...">
+                <button class="btn btn-primary" onclick="sendAIMessage()">Send</button>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-gray-800/50 rounded-lg p-4">
+            <h3 class="text-blue-400 mb-4">Quick Commands</h3>
+            <div class="space-y-2">
+                <% const quickCommands = [
+                    'Mission Status Report',
+                    'System Diagnostics',
+                    'Emergency Protocols',
+                    'Navigation Assist'
+                ] %>
+                <% quickCommands.forEach(command => { %>
+                    <button onclick="sendQuickCommand('<%= command %>')"
+                            class="w-full text-left px-4 py-2 rounded bg-blue-900/30 hover:bg-blue-800/30">
+                        <%= command %>
+                    </button>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</div>

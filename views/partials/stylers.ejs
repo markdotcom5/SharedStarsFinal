@@ -1,0 +1,85 @@
+<!-- views/index.ejs -->
+<%- include('partials/header') %>
+
+<body class="bg-black">
+    <!-- Hero Section -->
+    <section class="hero-section min-h-screen flex items-center justify-center relative">
+        <div class="video-container">
+            <video id="heroVideo" class="video-background" autoplay muted loop playsinline>
+                <source src="./videos/academy10.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="hero-content text-center text-white max-w-4xl px-4">
+            <h1 class="text-6xl font-bold mb-4" data-i18n="heroTitle">From Earth to Space in 36 Months</h1>
+            <p class="text-xl mb-8" data-i18n="subtitle">Like Tesla's FSD for Space Training: Intelligent, Adaptive, Revolutionary</p>
+            
+            <!-- Training Mode Selection -->
+            <div class="training-modes grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Self-Paced Mode -->
+                <div class="mode-card bg-black/30 backdrop-blur p-6 rounded-xl border border-blue-500/20">
+                    <h3 class="text-2xl font-bold mb-3">Self-Paced Training</h3>
+                    <p class="mb-4">Learn at your own pace with structured modules</p>
+                    <button class="training-mode-btn" data-mode="self-paced">Start Journey</button>
+                </div>
+                
+                <!-- AI-Guided Mode -->
+                <div class="mode-card bg-black/30 backdrop-blur p-6 rounded-xl border border-purple-500/20">
+                    <h3 class="text-2xl font-bold mb-3">AI-Guided Path</h3>
+                    <p class="mb-4">Accelerated learning with FSD-style adaptive training</p>
+                    <button class="training-mode-btn" data-mode="ai-guided">Launch AI Training</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Training Dashboard -->
+    <section id="training-dashboard" class="py-16 bg-gray-900 hidden">
+        <div class="container mx-auto px-4">
+            <div class="progress-tracker mb-8">
+                <div class="progress-bar"></div>
+                <div id="progressDisplay">Progress: 0%</div>
+            </div>
+            
+            <div class="current-module bg-black/30 p-6 rounded-xl">
+                <h3 class="text-2xl font-bold text-white mb-4">Current Module</h3>
+                <div id="moduleContent"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Training Configuration -->
+    <script>
+        window.trainingConfig = {
+            userId: '<%= locals.user ? user.id : "guest" %>',
+            trainingMode: 'standard',
+            initialLevel: 1,
+            adaptiveEnabled: true,
+            checkpoints: {
+                attention: 0.7,
+                comprehension: 0.6,
+                performance: 0.8
+            },
+            modules: [
+                {
+                    id: 'basics',
+                    title: 'Space Fundamentals',
+                    difficulty: 1,
+                    prerequisites: []
+                },
+                {
+                    id: 'advanced',
+                    title: 'Advanced Concepts',
+                    difficulty: 2,
+                    prerequisites: ['basics']
+                }
+                // Add more modules as needed
+            ]
+        };
+    </script>
+<script src="/js/main.js" type="module"></script>
+
+    <%- include('partials/scripts') %>
+</body>
+</html>

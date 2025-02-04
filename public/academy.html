@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharedStars Academy</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/ai-assistant.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .space-gradient {
+            background: linear-gradient(to bottom, #0f172a, #1e293b);
+        }
+        .hero-text {
+            font-size: clamp(4rem, 15vw, 12rem);
+            line-height: 1;
+        }
+        .cosmic-hover {
+            transition: all 0.3s ease;
+        }
+        .cosmic-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+    <script src="/js/academy.js"></script>
+</head>
+<body>
+    <!-- AOS Initialization -->
+    <script>
+        AOS.init({
+            duration: 1000, // Animation duration in milliseconds
+            easing: 'ease', // Easing style for animations
+            once: true, // Whether animation should happen only once
+        });
+    </script>
+</body>
+</html>
+    <!-- AOS Initialization -->
+    <script>
+        AOS.init({
+            duration: 1000, // Animation duration in milliseconds
+            easing: 'ease', // Easing style for animations
+            once: true, // Whether animation should happen only once
+        });
+    </script>
+</body>
+</html>
+    <!-- Header -->
+    <header class="fixed w-full bg-gray-900/90 backdrop-blur-lg z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="logo">
+                <a href="/index.html" aria-label="SharedStars Homepage">
+                <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-10">
+                </a>
+            </div>
+            <nav class="hidden md:flex gap-8">
+                <a href="/index.html" class="text-gray-300 hover:text-white font-medium transition-colors">Home</a>
+                <a href="#solutions" class="text-gray-300 hover:text-white font-medium transition-colors">Solutions</a>
+                <a href="#services" class="text-gray-300 hover:text-white font-medium transition-colors">Services</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <a href="/subscribe.html" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">
+                    SPACE CONSULTATION
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex items-center justify-center relative bg-black">
+        <div class="absolute inset-0">
+            <video autoplay muted loop playsinline class="w-full h-full object-cover">
+                <source src="./videos/academy10.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-transparent"></div>
+        </div>
+        <div class="relative z-10 text-center text-white">
+            <h1 class="hero-text font-extrabold text-blue-400">Welcome to SharedStars Academy</h1>
+            <p class="mt-4 text-lg text-gray-300 max-w-xl mx-auto">
+                Begin your journey to the stars with advanced space training and astronaut preparation.
+            </p>
+            <div class="mt-6 flex justify-center gap-6">
+                <a href="./signup.html" class="bg-blue-500 text-white font-bold py-4 px-8 rounded-lg shadow-lg text-lg hover:bg-blue-600 transition cosmic-hover">
+                    Join Now
+                </a>
+                <a href="./subscribe.html" class="bg-gray-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg text-lg hover:bg-gray-800 transition cosmic-hover">
+                    Subscribe
+                </a>
+            </div>
+        </div>
+    </section>    
+</body>
+</html>
+<!-- Drop the Updated Space Section Code Here -->
+<section id="space-section" class="min-h-screen flex items-center justify-center relative bg-black">
+    <!-- Video Background -->
+    <div class="absolute inset-0">
+        <video autoplay muted loop playsinline loading="lazy" poster="./images/space-placeholder.jpg" class="w-full h-full object-cover">
+            <source src="./videos/space1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-transparent"></div>
+    </div>
+    <!-- Content Overlay -->
+    <div class="relative z-10 text-center text-white">
+        <h2 class="text-5xl md:text-6xl font-extrabold text-blue-400 drop-shadow-md">Explore the Cosmos</h2>
+        <p class="mt-4 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Take your first step into the infinite possibilities of space exploration. At SharedStars Academy, we prepare the next generation of pioneers through world-class training, immersive simulations, and a vibrant community.
+        </p>
+        <!-- Call-to-Action Button -->
+        <div class="mt-8">
+            <a href="#subscribe" class="bg-blue-500 text-white font-bold py-4 px-12 rounded-lg shadow-lg text-lg hover:bg-blue-600 transition cosmic-hover" aria-label="Subscribe to SharedStars">
+                Subscribe
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose SharedStars Academy? -->
+<section id="why-sharedstars" class="py-16 bg-gray-50 text-center">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800">Why Choose SharedStars Academy?</h2>
+        <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+            SharedStars Academy combines innovation, community, and personalized training to prepare you for the next frontier.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+            <!-- Card 1 -->
+            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition-transform transform hover:scale-105">
+                <div class="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <!-- Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7H9l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-blue-500">AI-Powered Learning</h3>
+                <p class="mt-4 text-gray-600">Personalized training paths powered by AI to optimize your learning journey.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition-transform transform hover:scale-105">
+                <div class="h-16 w-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <!-- Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7H9l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-purple-500">Immersive VR Simulations</h3>
+                <p class="mt-4 text-gray-600">Experience realistic space scenarios through cutting-edge VR modules.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition-transform transform hover:scale-105">
+                <div class="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <!-- Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7H9l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-green-500">Global Community</h3>
+                <p class="mt-4 text-gray-600">Connect, learn, and grow with a global network of space enthusiasts.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Mission and Vision Section -->
+<section id="mission-vision" class="py-16 bg-gray-900 text-white text-center relative">
+    <!-- Background Glow -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black via-gray-800 to-transparent"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <!-- Mission Section -->
+        <div class="mb-12">
+            <div class="flex justify-center items-center mb-6">
+                <div class="bg-blue-500/20 p-4 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11l3-3m0 0l-3-3m3 3H9m11 10H9l-3-3m0 0l3-3m-3 3h11" />
+                    </svg>
+                </div>
+            </div>
+            <h2 class="text-6xl md:text-8xl font-extrabold text-blue-400 drop-shadow-md">Our Mission</h2>
+            <p class="mt-6 text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                <span class="font-semibold">At SharedStars Academy</span>, our mission is to <span class="text-blue-400 font-bold">democratize space exploration</span> by providing accessible, cutting-edge education, training, and simulations. We empower individuals to <span class="italic">dream beyond the stars</span> and prepare for humanity’s next frontier with a strong foundation in innovation, community, and resilience.
+            </p>
+        </div>
+
+        <!-- Vision Section -->
+        <div class="mt-16">
+            <div class="flex justify-center items-center mb-6">
+                <div class="bg-purple-500/20 p-4 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m0 0l3-3m-3 3l3 3m-6 0l-3-3m3 3l-3 3" />
+                    </svg>
+                </div>
+            </div>
+            <h2 class="text-6xl md:text-8xl font-extrabold text-purple-400 drop-shadow-md">Our Vision</h2>
+            <p class="mt-6 text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                To create a world where <span class="text-purple-400 font-bold">space exploration is within reach for everyone</span>, SharedStars Academy will be the global leader in <span class="font-semibold">education, training, and experiential learning</span> for aspiring space travelers and enthusiasts, building a community driven by <span class="italic">passion, purpose, and possibility</span>.
+            </p>
+        </div>
+    </div>
+</section>
+
+              <!-- Training Modules Section -->
+<section id="training-modules" class="relative min-h-screen bg-black text-white">
+    <!-- Video Background -->
+    <div class="absolute inset-0">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover">
+            <source src="./videos/trainingmods1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+    </div>
+
+    <!-- Content Overlay -->
+    <div class="relative z-10 container mx-auto px-4 py-16">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-center text-blue-400 mb-12">Explore Our Training Modules</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Module 1 -->
+            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-1">
+                <div class="h-16 w-16 bg-blue-500/20 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-blue-400 mb-4">Physical Training</h3>
+                <p class="text-gray-300">Build strength, endurance, and flexibility to handle the physical demands of space travel.</p>
+            </div>
+            <!-- Module 2 -->
+            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-2">
+                <div class="h-16 w-16 bg-purple-500/20 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-purple-400 mb-4">Mental Development</h3>
+                <p class="text-gray-300">Sharpen your cognitive skills with memory games, problem-solving challenges, and simulations.</p>
+            </div>
+            <!-- Module 3 -->
+            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-3">
+                <div class="h-16 w-16 bg-green-500/20 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-green-400 mb-4">Psychological Preparation</h3>
+                <p class="text-gray-300">Enhance stress management, mindfulness, and resilience to thrive in challenging environments.</p>
+            </div>
+            <!-- Module 4 -->
+            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-4">
+                <div class="h-16 w-16 bg-yellow-500/20 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-yellow-400 mb-4">Spiritual Growth</h3>
+                <p class="text-gray-300">Engage in guided meditation, outdoor mindfulness, and reflection to maintain inner balance.</p>
+            </div>
+            <!-- Module 5 -->
+            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-5">
+                <div class="h-16 w-16 bg-red-500/20 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-red-400 mb-4">Technical Training</h3>
+                <p class="text-gray-300">Master coding, robotics, and spacecraft systems to develop technical expertise.</p>
+            </div>
+            <!-- Module 6 -->
+            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-6">
+                <div class="h-16 w-16 bg-indigo-500/20 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-indigo-400 mb-4">Community Engagement</h3>
+                <p class="text-gray-300">Participate in group challenges, mentorship programs, and collaborative projects.</p>
+            </div>
+            <!-- Module 7 -->
+            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-7">
+                <div class="h-16 w-16 bg-pink-500/20 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-pink-400 mb-4">Space Simulations</h3>
+                <p class="text-gray-300">Train in docking, landing, and mission-critical operations through immersive simulations.</p>
+            </div>
+            <!-- Module 8 -->
+            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-8">
+                <div class="h-16 w-16 bg-teal-500/20 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-teal-400 mb-4">Creative Contributions</h3>
+                <p class="text-gray-300">Earn rewards for writing blogs, creating tutorials, and proposing innovative solutions.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GSAP Animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        for (let i = 1; i <= 8; i++) {
+            gsap.fromTo(
+                `#module-${i}`,
+                { y: -50, scale: 0.9, opacity: 0 },
+                {
+                    y: 0,
+                    scale: 1,
+                    opacity: 1,
+                    duration: 0.8,
+                    delay: i * 0.2,
+                    scrollTrigger: {
+                        trigger: `#module-${i}`,
+                        start: "top 90%",
+                    },
+                }
+            );
+        }
+    });
+</script>
+
+<!-- Certification Paths -->
+<section id="certification-paths" class="py-32 bg-gray-900 text-center relative">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl md:text-6xl font-bold text-white mb-16">Certification Paths</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Level 1 -->
+            <div class="bg-black/50 backdrop-blur-lg p-8 rounded-2xl border border-gray-800 hover:shadow-xl transition-shadow">
+                <h3 class="text-2xl font-bold text-blue-400 mb-4">Level 1: Space Safety</h3>
+                <ul class="space-y-4 text-gray-400">
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        Basic Equipment Training
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        Safety Fundamentals
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        ISO 9001:2015 Standards
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Level 2 -->
+            <div class="bg-black/50 backdrop-blur-lg p-8 rounded-2xl border border-gray-800 hover:shadow-xl transition-shadow">
+                <h3 class="text-2xl font-bold text-green-400 mb-4">Level 2: Advanced Operations</h3>
+                <ul class="space-y-4 text-gray-400">
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        Spacecraft Systems Safety
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        Zero Gravity Operations
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        Emergency Protocols
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Level 3 -->
+            <div class="bg-black/50 backdrop-blur-lg p-8 rounded-2xl border border-gray-800 hover:shadow-xl transition-shadow">
+                <h3 class="text-2xl font-bold text-yellow-400 mb-4">Level 3: Professional Manager</h3>
+                <ul class="space-y-4 text-gray-400">
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                        Leadership Training
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                        Advanced Safety Management
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                        Audit Procedures
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Level 4 -->
+            <div class="bg-black/50 backdrop-blur-lg p-8 rounded-2xl border border-gray-800 hover:shadow-xl transition-shadow">
+                <h3 class="text-2xl font-bold text-red-400 mb-4">Level 4: Industry-Specific Certifications</h3>
+                <ul class="space-y-4 text-gray-400">
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                        Space Vehicle Operations
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                        EVA (Spacewalk) Safety
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                        Emergency Response
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Community Section -->
+<!-- Community Section -->
+<section id="community" class="py-16 bg-gray-900 text-white relative overflow-hidden">
+    <!-- Background Video -->
+    <div class="absolute inset-0 z-0">
+        <video class="w-full h-full object-cover opacity-20" autoplay muted loop playsinline>
+            <source src="./videos/sharedstars2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    </div>
+
+    <div class="relative z-10 container mx-auto px-4 text-center">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-blue-400">Join the SharedStars Community</h2>
+        <p class="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">
+            Engage with like-minded individuals, participate in challenges, and build lifelong connections.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+            <!-- Mentorship Programs -->
+            <div class="bg-gray-800 p-6 rounded-lg hover:shadow-xl transition-shadow">
+                <div class="h-12 w-12 bg-blue-500/20 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16l-4-4m0 0l4-4m-4 4h16" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold">Mentorship Programs</h3>
+                <p class="mt-2 text-gray-400">Learn from industry leaders and experienced space travelers.</p>
+            </div>
+            <!-- Group Challenges -->
+            <div class="bg-gray-800 p-6 rounded-lg hover:shadow-xl transition-shadow">
+                <div class="h-12 w-12 bg-purple-500/20 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l-4-4m0 0l4-4m-4 4h16" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold">Group Challenges</h3>
+                <p class="mt-2 text-gray-400">Collaborate on missions and earn rewards for teamwork.</p>
+            </div>
+            <!-- Global Events -->
+            <div class="bg-gray-800 p-6 rounded-lg hover:shadow-xl transition-shadow">
+                <div class="h-12 w-12 bg-green-500/20 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold">Global Events</h3>
+                <p class="mt-2 text-gray-400">Participate in webinars, workshops, and global meetups.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Leaderboard Section -->
+<section id="leaderboard" class="hero-section relative h-screen flex items-center justify-center text-center">
+    <!-- Video Background -->
+    <div class="video-container">
+        <video id="leaderboardVideo" class="video-background absolute inset-0 w-full h-full object-cover" autoplay muted loop playsinline>
+            <source src="/videos/leaderboard5.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <!-- Leaderboard Content -->
+    <div class="relative z-10 text-white">
+        <h2 class="text-4xl font-extrabold text-blue-400">Track Your Progress</h2>
+        <p class="mt-4 text-lg text-gray-300 max-w-xl mx-auto">
+            See how you stack up in the SharedStars community and showcase your achievements.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+            <!-- Global Rankings -->
+            <div class="p-6 bg-gray-800 shadow-lg rounded-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-2xl font-bold text-blue-500">Global Rankings</h3>
+                <p class="mt-2 text-gray-400">Compete with trainees worldwide and climb to the top of the leaderboard.</p>
+            </div>
+            <!-- Regional Rankings -->
+            <div class="p-6 bg-gray-800 shadow-lg rounded-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-2xl font-bold text-green-500">Regional Rankings</h3>
+                <p class="mt-2 text-gray-400">Showcase your achievements within your region and earn recognition.</p>
+            </div>
+            <!-- Achievement Display -->
+            <div class="p-6 bg-gray-800 shadow-lg rounded-lg hover:shadow-xl transition-shadow">
+                <h3 class="text-2xl font-bold text-yellow-500">Achievement Display</h3>
+                <p class="mt-2 text-gray-400">Highlight your milestones and badges for the community to see.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call-to-Action Section -->
+<section id="call-to-action" class="py-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center relative">
+    <!-- Title -->
+    <div class="relative z-10 container mx-auto">
+        <h2 class="text-4xl md:text-5xl font-extrabold">Ready to Begin Your Journey?</h2>
+        <p class="mt-4 text-lg text-blue-200 max-w-3xl mx-auto">
+            Join SharedStars Academy today and start your path toward the stars. Explore innovative training, certifications, and a global community!
+        </p>
+        <!-- Buttons with Icons -->
+        <div class="mt-8 flex justify-center gap-4">
+            <a href="/signup.html" class="bg-white text-blue-600 font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-100 transition flex items-center gap-2">
+                <!-- Icon for Join Now -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                </svg>
+                Join Now
+            </a>
+            <a href="/subscribe.html" class="bg-blue-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-900 transition flex items-center gap-2">
+                <!-- Icon for Subscribe -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
+                </svg>
+                Subscribe
+            </a>
+        </div>
+        <!-- Clickable Video Element -->
+        <div class="mt-8">
+            <a href="/videos/leaderboard5.mp4" target="_blank" class="inline-block">
+                <video class="w-20 h-20 object-cover rounded-full border-2 border-blue-500 shadow-lg" autoplay muted loop>
+                    <source src="/videos/leaderboard5.mp4" type="video/mp4">
+                </video>
+                <p class="text-blue-300 mt-2">Watch Leaderboard Highlights</p>
+            </a>
+        </div>
+    </div>
+</section>
+<div class="mt-12">
+    <form action="#" class="flex justify-center gap-4">
+        <input type="email" placeholder="Enter your email" class="px-4 py-2 rounded-lg w-1/2 text-black">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-lg">
+            Subscribe
+        </button>
+    </form>
+</div>
+<a href="#top" class="fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg">
+    ↑
+</a>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-16 bg-gray-900 text-white text-center">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-blue-400 mb-8">What Our Members Say</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Testimonial 1 -->
+            <div class="p-8 bg-gray-800 shadow-lg rounded-2xl hover:shadow-xl transition-shadow">
+                <div class="flex justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9l-2 2m0 0l-2-2m2 2V7m0 6l2-2m-2 2l-2-2" />
+                    </svg>
+                </div>
+                <p class="text-gray-300 italic">
+                    "SharedStars Academy gave me the tools and confidence to pursue my dreams of space exploration."
+                </p>
+                <h3 class="mt-6 font-bold text-blue-400">— Alex S., Trainee</h3>
+            </div>
+            <!-- Testimonial 2 -->
+            <div class="p-8 bg-gray-800 shadow-lg rounded-2xl hover:shadow-xl transition-shadow">
+                <div class="flex justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2m0 0l2-2m-2 2V8m0 6l2-2m-2 2l-2-2" />
+                    </svg>
+                </div>
+                <p class="text-gray-300 italic">
+                    "The VR simulations were so immersive; I felt like I was already in space!"
+                </p>
+                <h3 class="mt-6 font-bold text-purple-400">— Jamie L., Student</h3>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- FAQ Section -->
+<section id="faq" class="py-16 bg-gray-50 text-left">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-center text-gray-800 mb-8">Frequently Asked Questions</h2>
+        <div class="space-y-6">
+            <!-- Question 1 -->
+            <div class="collapse bg-white rounded-lg shadow-lg">
+                <input type="checkbox" class="peer hidden">
+                <div class="collapse-title text-xl font-bold text-blue-600">
+                    What is SharedStars Academy?
+                </div>
+                <div class="collapse-content text-gray-600 peer-checked:max-h-screen overflow-hidden transition-all duration-300">
+                    SharedStars Academy is a global training hub that prepares individuals for space exploration through innovative modules, certifications, and community engagement.
+                </div>
+            </div>
+            <!-- Question 2 -->
+            <div class="collapse bg-white rounded-lg shadow-lg">
+                <input type="checkbox" class="peer hidden">
+                <div class="collapse-title text-xl font-bold text-blue-600">
+                    How much does it cost to join?
+                </div>
+                <div class="collapse-content text-gray-600 peer-checked:max-h-screen overflow-hidden transition-all duration-300">
+                    We offer flexible subscription plans starting at $49.99/month. Discounts are available for families and annual subscriptions.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto">
+        <!-- Grid Layout -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <!-- About -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">About</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/about.html" class="hover:text-blue-400 transition-colors">Our Story</a></li>
+                    <li><a href="/academy.html" class="hover:text-blue-400 transition-colors">Space Academy</a></li>
+                </ul>
+            </div>
+            <!-- Community -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">Community</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/events.html" class="hover:text-blue-400 transition-colors">Events</a></li>
+                    <li><a href="/forums.html" class="hover:text-blue-400 transition-colors">Forums</a></li>
+                </ul>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">Resources</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/faq.html" class="hover:text-blue-400 transition-colors">FAQ</a></li>
+                    <li><a href="/support.html" class="hover:text-blue-400 transition-colors">Support</a></li>
+                </ul>
+            </div>
+            <!-- Legal -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">Legal</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/terms.html" class="hover:text-blue-400 transition-colors">Terms</a></li>
+                    <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="mt-12 text-center">
+            <h4 class="text-lg font-bold text-blue-400">Follow Us</h4>
+            <div class="flex justify-center gap-6 mt-4">
+                <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
+                    </svg>
+                </a>
+                <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
+                    </svg>
+                </a>
+                <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22 11.077v.82c0 4.842-3.705 10.423-10.423 10.423A10.386 10.386 0 010 18.9c.13.01.261.014.393.014 2.717 0 5.213-.913 7.204-2.449a3.677 3.677 0 01-3.434-2.553c.558.083 1.136.077 1.688-.027A3.675 3.675 0 012.68 9.9v-.047c.492.274 1.048.438 1.643.457a3.674 3.674 0 01-1.633-3.056c0-.014 0-.027.001-.041a3.65 3.65 0 001.667.46 3.671 3.671 0 01-1.144-4.901 10.428 10.428 0 007.571 3.841A3.675 3.675 0 0118.633 5.9a7.353 7.353 0 002.333-.894 3.673 3.673 0 01-1.612 2.025 7.308 7.308 0 002.102-.575A7.396 7.396 0 0122 11.077z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="text-center mt-8">
+            <p class="text-gray-400 text-sm">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="StelTrek Academy Training Modules" />
+    <meta http-equiv="Content-Security-Policy" content="
+            default-src 'self'; 
+            script-src 'self'; 
+            style-src 'self' 'unsafe-inline'; 
+            frame-src 'self' https://www.sora.com; 
+            child-src 'self' https://www.sora.com;
+    ">
+    <title data-i18n="training.title">Training Modules</title>
+    <!-- Tailwind CSS and DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/ai-assistant.css" />
+    <!-- Optional AOS CSS for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        scroll-behavior: smooth;
+      }
+    </style>
+    <!-- Include language selection script if not globally loaded -->
+    <script src="/js/languageSelection.js" defer></script>
+  </head>
+  <body class="bg-slate-900 text-white">
+    <!-- HEADER (consistent across pages) -->
+    <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg">
+      <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
+        <!-- Logo -->
+        <div class="flex items-center mb-2 md:mb-0">
+          <a href="/index.html" aria-label="SharedStars Homepage" class="group">
+            <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+          </a>
+        </div>
+        <!-- Navigation Links -->
+        <ul class="flex flex-wrap gap-4">
+          <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
+          <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
+          <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+          <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+          <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
+          <li><a href="/merchandise.html" data-i18n="nav.merchandise">Retail Store</a></li>
+          <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
+          <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
+          <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
+          <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
+          <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+        </ul>
+        <!-- Language Selector -->
+        <div class="language-selector flex gap-2">
+          <button class="language-flag" data-lang="en">🇺🇸</button>
+          <button class="language-flag" data-lang="zh">🇨🇳</button>
+          <button class="language-flag" data-lang="ko">🇰🇷</button>
+          <button class="language-flag" data-lang="es">🇪🇸</button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="pt-24 container mx-auto px-4">
+      <!-- Page Header -->
+      <header class="mb-12 text-center" data-aos="fade-up">
+        <h1 class="text-5xl font-bold mb-4" data-i18n="training.title">Training Modules</h1>
+        <p class="text-xl text-gray-300 max-w-3xl mx-auto" data-i18n="training.subtitle">
+          Explore various modules to enhance your physical, mental, and technical readiness for space exploration.
+        </p>
+      </header>
+
+      <!-- Modules Grid -->
+      <section class="module-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" data-aos="fade-up">
+        <!-- Physical Module -->
+        <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2">
+          <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.physical.title">Physical</h2>
+          <ul class="list-disc list-inside text-gray-300">
+            <li data-i18n="training.physical.fitness">Complete fitness tests or maintain workout streaks.</li>
+            <li data-i18n="training.physical.adventures">Earn credits for hiking, climbing, or other adventurous activities.</li>
+          </ul>
+        </div>
+
+        <!-- Mental Module -->
+        <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2">
+          <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.mental.title">Mental</h2>
+          <ul class="list-disc list-inside text-gray-300">
+            <li data-i18n="training.mental.cognitive">Solve puzzles, memory games, or mental agility tasks.</li>
+            <li data-i18n="training.mental.problemSolving">Earn credits for completing scenario-based problem-solving simulations.</li>
+          </ul>
+        </div>
+
+        <!-- Psychological Module -->
+        <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2">
+          <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.psychological.title">Psychological</h2>
+          <ul class="list-disc list-inside text-gray-300">
+            <li data-i18n="training.psychological.stress">Complete relaxation or mindfulness exercises.</li>
+            <li data-i18n="training.psychological.resilience">Maintain journaling or emotional self-reflection streaks.</li>
+            <li data-i18n="training.psychological.empathy">Participate in group empathy activities.</li>
+          </ul>
+        </div>
+
+        <!-- Spiritual Module -->
+        <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2">
+          <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.spiritual.title">Spiritual</h2>
+          <ul class="list-disc list-inside text-gray-300">
+            <li data-i18n="training.spiritual.meditation">Complete guided meditations.</li>
+            <li data-i18n="training.spiritual.nature">Engage in outdoor mindfulness exercises or gratitude reflections.</li>
+          </ul>
+        </div>
+
+        <!-- Technical Module -->
+        <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2">
+          <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.technical.title">Technical</h2>
+          <ul class="list-disc list-inside text-gray-300">
+            <li data-i18n="training.technical.skills">Complete coding, robotics, or engineering modules.</li>
+            <li data-i18n="training.technical.simulations">Practice space navigation, piloting, or system repair.</li>
+            <li data-i18n="training.technical.certifications">Earn certifications in technical fields.</li>
+          </ul>
+        </div>
+
+        <!-- Social & Community Module -->
+        <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2">
+          <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.social.title">Social & Community</h2>
+          <ul class="list-disc list-inside text-gray-300">
+            <li data-i18n="training.social.referrals">Earn points for referring new subscribers.</li>
+            <li data-i18n="training.social.challenges">Participate in team-based challenges or missions.</li>
+            <li data-i18n="training.social.mentorship">Guide newer subscribers.</li>
+          </ul>
+        </div>
+
+        <!-- Space Exploration Simulations -->
+        <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2">
+          <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.exploration.title">Space Exploration Simulations</h2>
+          <ul class="list-disc list-inside text-gray-300">
+            <li data-i18n="training.exploration.missions">Engage in virtual or live space mission simulations.</li>
+            <li data-i18n="training.exploration.landing">Practice docking and planet landing tasks.</li>
+          </ul>
+        </div>
+
+        <!-- Creative Contributions -->
+        <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2">
+          <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.creative.title">Creative Contributions</h2>
+          <ul class="list-disc list-inside text-gray-300">
+            <li data-i18n="training.creative.content">Publish blogs, tutorials, or videos on space training.</li>
+            <li data-i18n="training.creative.ideas">Propose innovative solutions to space challenges.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Progress and Training Content Sections -->
+      <section class="progress-section my-12" data-aos="fade-up">
+        <button id="fetch-progress" class="btn btn-outline mb-4">Analyze Progress</button>
+        <canvas id="progress-chart" width="400" height="200" class="mx-auto bg-gray-800 p-4 rounded"></canvas>
+        <div id="progress-analysis" class="mt-4 text-center text-gray-300"></div>
+      </section>
+      
+      <section class="training-content-section my-12" data-aos="fade-up">
+        <button id="fetch-training" class="btn btn-outline mb-4">Fetch Training Content</button>
+        <div id="training-content" class="mt-4 text-gray-300"></div>
+      </section>
+    </main>
+
+    <!-- FOOTER (consistent across pages) -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
+        <div>
+          <h3 class="font-bold text-lg text-blue-400">About</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/about.html" class="hover:text-blue-400 transition-colors">Our Story</a></li>
+            <li><a href="/academy.html" class="hover:text-blue-400 transition-colors">StelTrek Academy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-blue-400">Community</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/events.html" class="hover:text-blue-400 transition-colors">Events</a></li>
+            <li><a href="/forums.html" class="hover:text-blue-400 transition-colors">Forums</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-blue-400">Resources</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/faq.html" class="hover:text-blue-400 transition-colors">FAQ</a></li>
+            <li><a href="/support.html" class="hover:text-blue-400 transition-colors">Support</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-blue-400">Legal</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/terms.html" class="hover:text-blue-400 transition-colors">Terms</a></li>
+            <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 text-center">
+        <h4 class="text-lg font-bold text-blue-400">Follow Us</h4>
+        <div class="flex justify-center gap-6 mt-4">
+          <a href="#" class="hover:text-blue-400 transition" aria-label="Twitter">
+            <!-- Twitter Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
+            </svg>
+          </a>
+          <a href="#" class="hover:text-blue-400 transition" aria-label="Facebook">
+            <!-- Facebook Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
+            </svg>
+          </a>
+          <a href="#" class="hover:text-blue-400 transition" aria-label="Instagram">
+            <!-- Instagram Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22 11.077v.82c0 4.842-3.705 10.423-10.423 10.423A10.386 10.386 0 010 18.9c.13.01.261.014.393.014 2.717 0 5.213-.913 7.204-2.449a3.677 3.677 0 01-3.434-2.553c-.558.083-1.136.077-1.688-.027A3.675 3.675 0 012.68 9.9v-.047c.492.274 1.048.438 1.643.457a3.674 3.674 0 01-1.633-3.056c0-.014 0-.027.001-.041a3.65 3.65 0 001.667.46 3.671 3.671 0 01-1.144-4.901 10.428 10.428 0 007.571 3.841A3.675 3.675 0 0118.633 5.9a7.353 7.353 0 002.333-.894 3.673 3.673 0 01-1.612 2.025 7.308 7.308 0 002.102-.575A7.396 7.396 0 0122 11.077z"/>
+            </svg>
+          </a>
+        </div>
+        <div class="mt-8 text-center">
+          <p class="text-gray-400 text-sm">© 2024 StelTrek Academy. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <!-- Module System Imports -->
+    <script type="module">
+      import '/js/modules/core/index.js';
+      import '/js/modules/ui/index.js';
+      import '/js/modules/training/index.js';
+      import '/js/modules/auth/index.js';
+    </script>
+    <!-- Legacy Scripts (Deferred) -->
+    <script src="/js/animations.js" defer></script>
+    <script src="/js/trialFlow.js" defer></script>
+    <script src="/js/leaderboard.js" defer></script>
+    <script src="/js/visualizations/ModuleHighlight.js" defer></script>
+    <!-- Language Selection & Navigation -->
+    <script src="/js/language-switcher.js"></script>
+    <script src="/js/languageSelection.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log("✅ Language & Navigation Script Loaded");
+        const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+        document.documentElement.lang = savedLang;
+        applyTranslations(savedLang);
+        document.querySelectorAll('.language-flag').forEach(flag => {
+          flag.addEventListener('click', () => {
+            const selectedLang = flag.dataset.lang || 'en';
+            localStorage.setItem('preferredLanguage', selectedLang);
+            applyTranslations(selectedLang);
+          });
+        });
+        document.querySelectorAll("nav a").forEach(button => {
+          button.addEventListener("click", function (event) {
+            event.preventDefault();
+            console.log(`✅ Navigating to: ${this.href}`);
+            window.location.href = this.href;
+          });
+        });
+      });
+      function applyTranslations(lang) {
+        const translations = {
+          en: {
+            nav: {
+              home: "Home",
+              why: "Why SharedStars",
+              about: "About",
+              leaderboard: "Leaderboard",
+              login: "Login",
+              merchandise: "Retail Store",
+              profile: "Profile",
+              signup: "Sign Up",
+              academy: "StelTrek Academy",
+              welcome: "Welcome",
+              subscribe: "Subscribe"
+            },
+            training: {
+              title: "Training Modules",
+              subtitle: "Explore various modules to enhance your physical, mental, and technical readiness for space exploration.",
+              physical: {
+                title: "Physical",
+                fitness: "Complete fitness tests or maintain workout streaks.",
+                adventures: "Earn credits for hiking, climbing, or other adventurous activities."
+              },
+              mental: {
+                title: "Mental",
+                cognitive: "Solve puzzles, memory games, or mental agility tasks.",
+                problemSolving: "Earn credits for completing scenario-based problem-solving simulations."
+              },
+              psychological: {
+                title: "Psychological",
+                stress: "Complete relaxation or mindfulness exercises.",
+                resilience: "Maintain journaling or emotional self-reflection streaks.",
+                empathy: "Participate in group empathy activities."
+              },
+              spiritual: {
+                title: "Spiritual",
+                meditation: "Complete guided meditations.",
+                nature: "Engage in outdoor mindfulness or gratitude reflections."
+              },
+              technical: {
+                title: "Technical",
+                skills: "Complete coding, robotics, or engineering modules.",
+                simulations: "Practice space navigation and piloting tasks.",
+                certifications: "Earn technical certifications."
+              },
+              social: {
+                title: "Social & Community",
+                referrals: "Earn points for referring new subscribers.",
+                challenges: "Participate in team-based challenges or missions.",
+                mentorship: "Guide newer subscribers."
+              },
+              exploration: {
+                title: "Space Exploration Simulations",
+                missions: "Engage in virtual or live space mission simulations.",
+                landing: "Practice docking and planet landing tasks."
+              },
+              creative: {
+                title: "Creative Contributions",
+                content: "Publish blogs, tutorials, or videos on space training.",
+                ideas: "Propose innovative solutions to space challenges."
+              }
+            },
+            common: {
+              footer: "© 2024 StelTrek Academy. All rights reserved."
+            },
+            welcome: {
+              videoTagline: "Enough dreaming, let’s take a walk to show how we can get you up to space.",
+              ctaMessage: "Are you ready to begin your space journey?",
+              joinButton: "Join Now",
+              proceedButton: "Proceed"
+            }
+          },
+          zh: {
+            // Add Chinese translations here...
+          }
+          // Add other languages (ko, es) as needed.
+        };
+
+        document.querySelectorAll("[data-i18n]").forEach(element => {
+          const key = element.dataset.i18n;
+          const keys = key.split(".");
+          let translation = translations[lang];
+          keys.forEach(k => {
+            translation = translation ? translation[k] : null;
+          });
+          if (translation) {
+            element.textContent = translation;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

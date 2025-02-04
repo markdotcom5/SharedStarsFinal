@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sign up for SharedStars Academy and start your journey to space." />
+  <title>Sign Up - SharedStars Academy</title>
+  <!-- Tailwind CSS and DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
+  <!-- AOS CSS (For Animations) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/ai-assistant.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    /* You can add more custom styling as needed */
+  </style>
+</head>
+<body class="bg-slate-900 flex flex-col min-h-screen">
+
+  <!-- 🔹 Background Video -->
+  <!-- 🔹 Full-Page Video Background -->
+<section id="videoContainer" class="fixed inset-0 w-full h-full overflow-hidden z-[-1]">
+  <video id="heroVideo" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+      <source src="http://localhost:3000/videos/academy10.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+  </video>
+  <div class="absolute inset-0 bg-black/50"></div> <!-- Optional dark overlay for readability -->
+</section>
+
+
+
+  <!-- 🔹 Header -->
+  <header class="fixed top-0 left-0 w-full bg-gray-900/95 backdrop-blur-lg z-50 border-b border-white/10">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="/index.html" aria-label="SharedStars Homepage">
+        <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300" />
+      </a>
+      <!-- Navigation (Minimal on Signup Page) -->
+      <nav class="hidden md:flex gap-6">
+        <a href="/index.html" class="text-white hover:text-blue-400 transition-colors">Home</a>
+        <a href="/about.html" class="text-white hover:text-blue-400 transition-colors">About</a>
+        <a href="/academy.html" class="text-white hover:text-blue-400 transition-colors">Academy</a>
+      </nav>
+      <!-- Language Flags -->
+      <div class="flex gap-2">
+        <a href="#" class="language-flag" data-lang="en">🇺🇸</a>
+        <a href="#" class="language-flag" data-lang="zh">🇨🇳</a>
+        <a href="#" class="language-flag" data-lang="ko">🇰🇷</a>
+        <a href="#" class="language-flag" data-lang="es">🇪🇸</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 🔹 Signup Section -->
+  <main class="flex-grow flex flex-col items-center justify-center pt-32 pb-20 px-4">
+    <div class="bg-gray-800/90 p-12 rounded-lg shadow-2xl max-w-xl w-full backdrop-blur-md" data-aos="fade-up">
+      <h2 class="text-3xl font-bold text-center mb-8 text-blue-400">Create Your Account</h2>
+      <form id="signupForm" class="space-y-6">
+        <div class="form-control">
+          <label for="username" class="block text-lg font-medium text-white">Username</label>
+          <input type="text" id="username" name="username" class="w-full h-12 p-3 rounded bg-gray-700 border border-gray-600 text-white text-lg" required autocomplete="username" />
+        </div>
+        <div class="form-control">
+          <label for="email" class="block text-lg font-medium text-white">Email Address</label>
+          <input type="email" id="email" name="email" class="w-full h-12 p-3 rounded bg-gray-700 border border-gray-600 text-white text-lg" required autocomplete="email" />
+        </div>
+        <div class="form-control">
+          <label for="password" class="block text-lg font-medium text-white">Password</label>
+          <input type="password" id="password" name="password" class="w-full h-12 p-3 rounded bg-gray-700 border border-gray-600 text-white text-lg" required autocomplete="new-password" />
+        </div>
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded text-lg mt-6">
+          Sign Up
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- 🔹 Onboarding Wizard Modal (Hidden by Default) -->
+  <div id="onboardingModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-2xl max-w-2xl w-full">
+      <h2 class="text-3xl font-bold text-blue-400 mb-6">Complete Your Profile</h2>
+      <div id="onboardingContent">
+        <!-- Step content will be injected here -->
+      </div>
+      <div class="flex justify-between mt-6">
+        <button id="prevStep" class="btn btn-outline" disabled>Previous</button>
+        <button id="nextStep" class="btn btn-primary">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Footer -->
+  <footer class="bg-gray-900 text-white py-12 mt-auto">
+    <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">About</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/about.html" class="hover:text-blue-400 transition-colors">Our Story</a></li>
+          <li><a href="/academy.html" class="hover:text-blue-400 transition-colors">Space Academy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Community</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/events.html" class="hover:text-blue-400 transition-colors">Events</a></li>
+          <li><a href="/forums.html" class="hover:text-blue-400 transition-colors">Forums</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Resources</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/faq.html" class="hover:text-blue-400 transition-colors">FAQ</a></li>
+          <li><a href="/support.html" class="hover:text-blue-400 transition-colors">Support</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Legal</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/terms.html" class="hover:text-blue-400 transition-colors">Terms</a></li>
+          <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 text-center">
+      <p class="text-gray-400 text-sm">© 2024 SharedStars Academy. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Core Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <!-- Initialize AOS -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      AOS.init({
+        duration: 1000,
+        easing: 'ease',
+        once: true,
+      });
+    });
+  </script>
+  <!-- Language Selection Script -->
+  <script src="/js/languageSelection.js"></script>
+  <!-- Main Initialization Script -->
+  <script src="/js/main.js"></script>
+  <script>
+    // Signup Form Submission & Onboarding Wizard
+    document.addEventListener('DOMContentLoaded', () => {
+      const signupForm = document.getElementById('signupForm');
+      const onboardingModal = document.getElementById('onboardingModal');
+      const onboardingContent = document.getElementById('onboardingContent');
+      const prevStepBtn = document.getElementById('prevStep');
+      const nextStepBtn = document.getElementById('nextStep');
+      let currentStep = 0;
+      
+      // Define your onboarding steps as HTML strings or templates
+      const steps = [
+        `<div>
+            <h3 class="text-xl font-semibold text-white">Tell us about your training goals</h3>
+            <p class="text-gray-300 mt-2">What do you hope to achieve? (e.g., become NASA certified, learn advanced VR training techniques)</p>
+            <input type="text" id="goalInput" class="mt-4 w-full p-3 rounded bg-gray-700 border border-gray-600 text-white" placeholder="Enter your goal" />
+         </div>`,
+        `<div>
+            <h3 class="text-xl font-semibold text-white">What’s your experience level?</h3>
+            <p class="text-gray-300 mt-2">Select your current training level.</p>
+            <select id="experienceSelect" class="mt-4 w-full p-3 rounded bg-gray-700 border border-gray-600 text-white">
+              <option value="">Choose one...</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+         </div>`,
+        `<div>
+            <h3 class="text-xl font-semibold text-white">Your Interests</h3>
+            <p class="text-gray-300 mt-2">Select areas you're interested in:</p>
+            <div class="mt-4 space-y-2">
+              <label class="inline-flex items-center">
+                <input type="checkbox" value="physical" class="form-checkbox text-blue-500">
+                <span class="ml-2 text-white">Physical Training</span>
+              </label>
+              <label class="inline-flex items-center">
+                <input type="checkbox" value="technical" class="form-checkbox text-blue-500">
+                <span class="ml-2 text-white">Technical Skills</span>
+              </label>
+              <label class="inline-flex items-center">
+                <input type="checkbox" value="simulation" class="form-checkbox text-blue-500">
+                <span class="ml-2 text-white">Space Simulation</span>
+              </label>
+            </div>
+         </div>`,
+         `<div>
+            <h3 class="text-xl font-semibold text-white">Tell us about yourself</h3>
+            <p class="text-gray-300 mt-2">A few words about your background and why you're joining SharedStars.</p>
+            <textarea id="aboutYou" class="mt-4 w-full p-3 rounded bg-gray-700 border border-gray-600 text-white" rows="4" placeholder="Your story..."></textarea>
+         </div>`
+      ];
+      
+      function showStep(index) {
+        onboardingContent.innerHTML = steps[index];
+        prevStepBtn.disabled = index === 0;
+        nextStepBtn.textContent = index === steps.length - 1 ? 'Finish' : 'Next';
+      }
+      
+      signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // (Simulate signup success – in real implementation, call your signup API)
+        alert("✅ Signup Successful! Let's complete your profile.");
+        // Show the onboarding modal
+        onboardingModal.classList.remove('hidden');
+        showStep(currentStep);
+      });
+      
+      prevStepBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+          currentStep--;
+          showStep(currentStep);
+        }
+      });
+      
+      nextStepBtn.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) {
+          currentStep++;
+          showStep(currentStep);
+        } else {
+          // Final step completed – gather data and then redirect to dashboard
+          // You could gather values here from the inputs if needed
+          alert("✅ Profile Completed! Redirecting to your dashboard.");
+          onboardingModal.classList.add('hidden');
+          window.location.href = "/dashboard.html";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head', { title: 'SharedStars Home' }) %>
+    <script type="module" src="/js/homepage.js"></script>
+</head>
+<body class="bg-black">
+    <%- include('partials/header') %>
+
+    <!-- Hero Section with Video Background -->
+    <section class="hero-section min-h-screen flex items-center justify-center relative">
+        <div class="video-container">
+            <video id="heroVideo" class="video-background" autoplay muted loop playsinline>
+                <source src="/videos/academy10.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div id="progressDisplay">Progress: 0%</div>
+
+        <div class="hero-content text-center text-white max-w-4xl px-4">
+            <h1 class="hero-title mb-4" data-i18n="heroTitle">From Earth to Space in 36 Months</h1>
+            <p class="text-xl mb-4" data-i18n="subtitle">Like Tesla's FSD for Space Training: Intelligent, Adaptive, Revolutionary</p>
+            <p class="text-lg mb-8">Join 1,000+ certified space professionals on their journey to the stars</p>
+
+            <!-- AI/Self-Paced Training Options -->
+            <div class="ai-toggle-container bg-black/30 backdrop-blur-md p-8 rounded-2xl border border-blue-500/20 hover:border-blue-400/40 transition-all duration-500">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <button class="toggle-option manual relative overflow-hidden group" data-mode="manual">
+                        <div class="absolute inset-0 bg-gradient-to-br from-gray-900/90 to-blue-900/90 transition-all duration-300"></div>
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[url('/images/stars-pattern.svg')] mix-blend-overlay transition-opacity duration-500"></div>
+                        <div class="relative p-8 rounded-xl border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300">
+                            <h3 class="text-2xl font-bold mb-3 text-white group-hover:text-blue-300 transition-colors">Self-Paced Training</h3>
+                            <p class="text-gray-300 text-sm mb-4">Learn at your own speed with structured modules</p>
+                        </div>
+                    </button>
+
+                    <button class="toggle-option ai relative overflow-hidden group" data-mode="ai">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-purple-900/90 transition-all duration-300"></div>
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[url('/images/constellation-pattern.svg')] mix-blend-overlay transition-opacity duration-500"></div>
+                        <div class="relative p-8 rounded-xl border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300">
+                            <h3 class="text-2xl font-bold mb-3 text-white group-hover:text-purple-300 transition-colors">AI-Guided Path</h3>
+                            <p class="text-gray-300 text-sm mb-4">Accelerated learning with AI coaching & feedback</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Sections -->
+    <main class="container mx-auto py-8">
+        <section id="physical-training" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Physical Training</h2>
+            <div id="physical-content">Loading Physical Training Module...</div>
+        </section>
+
+        <section id="technical-training" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Technical Training</h2>
+            <div id="technical-content">Loading Technical Training Module...</div>
+        </section>
+
+        <section id="ai-guided-coaching" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">AI-Guided Coaching</h2>
+            <div id="ai-guided-content">Loading AI-Guided Coaching Module...</div>
+        </section>
+
+        <section id="visualizations" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Your Progress & Achievements</h2>
+            <div id="achievement-display"></div>
+            <div id="module-highlight"></div>
+            <div id="progress-tracker"></div>
+        </section>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <!-- JavaScript -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        async function fetchModule(url, elementId) {
+          try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+            const json = await response.json();
+            if (json.success && json.data) {
+              const container = document.getElementById(elementId);
+              if (container) {
+                container.innerHTML = `<h3 class="text-2xl font-semibold">${json.data.title}</h3>
+                  <p>${json.data.description}</p>
+                  ${json.data.objectives ? `<ul class="list-disc pl-5">${json.data.objectives.map(obj => `<li>${obj}</li>`).join('')}</ul>` : ''}`;
+              } else {
+                console.warn(`Element with ID '${elementId}' not found.`);
+              }
+            }
+          } catch (error) {
+            console.error('Error fetching module data:', error);
+          }
+        }
+
+        fetchModule('/api/training/modules/physical', 'physical-content');
+        fetchModule('/api/training/modules/technical', 'technical-content');
+        fetchModule('/api/training/modules/ai-guided', 'ai-guided-content');
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetSection = document.querySelector(link.getAttribute('href'));
+            if (targetSection) targetSection.scrollIntoView({ behavior: 'smooth' });
+          });
+        });
+      });
+    </script>
+</body>
+</html>
