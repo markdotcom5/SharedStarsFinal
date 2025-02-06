@@ -6,7 +6,7 @@
 │       └── steltrek-intro video
 ├── backup
 │   ├── app.js.backup.js
-│   └── dashboard.html
+│   └── mission-control.html
 ├── config
 │   ├── firebase-service-account.json
 │   ├── firebase.config.js
@@ -5057,7 +5057,7 @@
 │   │   │   └── travis.png
 │   │   ├── main.css
 │   │   └── styles.css
-│   ├── dashboard.html
+│   ├── mission-control.html
 │   ├── index.html
 │   ├── js
 │   │   ├── VideoPlayer.js
@@ -5133,7 +5133,7 @@
 ├── verifyToken.js
 └── views
     ├── about.ejs
-    ├── dashboard.html
+    ├── mission-control.html
     ├── index.ejs
     └── layouts
         └── base.html

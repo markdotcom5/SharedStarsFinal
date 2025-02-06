@@ -39,6 +39,7 @@
                 <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
                 <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
                 <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
+                <li><a href="/mission-control.html" data-i18n="nav.subscribe">Mission-Control</a></li>
                 <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
             </ul>
         </nav>
@@ -103,7 +104,7 @@
                     });
 
                     if (response.ok) {
-                        window.location.href = '/dashboard.html';
+                        window.location.href = '/mission-control.html';
                     } else {
                         const errorData = await response.json();
                         loginError.textContent = errorData.error || "Failed to log in. Please try again.";

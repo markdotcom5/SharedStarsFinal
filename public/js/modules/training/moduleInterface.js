@@ -6,6 +6,7 @@ class ModuleInterface {
         this.currentLevel = 0;
         this.moduleData = trainingModules[moduleId];
         this.aiAssistant = null;
+        this.biometricMonitor = null;
     }
 
     async initialize() {
@@ -18,6 +19,10 @@ class ModuleInterface {
         // Initialize AI Assistant
         this.aiAssistant = new AIAssistant();
         await this.aiAssistant.initialize();
+        
+        // Initialize Biometric Monitoring
+        this.biometricMonitor = new BiometricMonitor();
+        await this.biometricMonitor.startTracking();
         
         this.render();
     }
@@ -44,6 +49,20 @@ class ModuleInterface {
                         </div>
                     </div>
 
+                    <!-- AI Feedback Section -->
+                    <div class="bg-gray-800 p-4 rounded-lg mb-8" id="ai-feedback">
+                        <h3 class="text-blue-400 font-bold">AI Guidance</h3>
+                        <p class="text-gray-300" id="ai-guidance-text">Waiting for AI insights...</p>
+                    </div>
+
+                    <!-- Biometric Monitoring Section -->
+                    <div class="bg-gray-800 p-4 rounded-lg mb-8" id="biometric-monitor">
+                        <h3 class="text-green-400 font-bold">Biometric Tracking</h3>
+                        <p class="text-gray-300">Heart Rate: <span id="biometric-heart-rate">--</span> bpm</p>
+                        <p class="text-gray-300">Oxygen Level: <span id="biometric-oxygen-level">--</span>%</p>
+                        <p class="text-gray-300">Stress Level: <span id="biometric-stress-level">--</span></p>
+                    </div>
+
                     <!-- Levels Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         ${module.levels.map((level, index) => this.renderLevel(level, index)).join('')}
@@ -51,7 +70,6 @@ class ModuleInterface {
                 </div>
             </div>
         `;
-
         this.attachEventListeners();
     }
 
@@ -72,37 +90,6 @@ class ModuleInterface {
             </div>
         `;
     }
-
-    renderContent(content) {
-        switch (content.type) {
-            case 'video':
-                return this.renderVideoContent(content);
-            case 'interactive':
-                return this.renderInteractiveContent(content);
-            case 'program':
-                return this.renderProgramContent(content);
-            case 'scenario':
-                return this.renderScenarioContent(content);
-            default:
-                return '';
-        }
-    }
-
-    renderVideoContent(content) {
-        return `
-            <div class="video-content">
-                <h4 class="text-blue-400 font-bold">${content.title}</h4>
-                <p class="text-gray-400 text-sm">Duration: ${content.duration}</p>
-                <div class="mt-2">
-                    ${content.objectives.map(obj => 
-                        `<div class="text-gray-300 text-sm">• ${obj}</div>`
-                    ).join('')}
-                </div>
-            </div>
-        `;
-    }
-
-    // Add other render methods for different content types...
 
     attachEventListeners() {
         const levelButtons = this.container.querySelectorAll('[data-level]');
@@ -132,11 +119,10 @@ class ModuleInterface {
             case 'interactive':
                 await this.startInteractiveContent(content);
                 break;
-            // Add other content type handlers...
+            default:
+                console.warn('Unhandled content type:', content.type);
         }
     }
-
-    // Add methods for handling different content types...
 }
 
 export default ModuleInterface;

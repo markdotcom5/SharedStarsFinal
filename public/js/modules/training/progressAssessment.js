@@ -17,7 +17,8 @@ class ProgressAssessment {
             completionTime,
             accuracy,
             interactions,
-            challengesCompleted
+            challengesCompleted,
+            biometricData
         } = performanceData;
 
         // Calculate comprehensive score
@@ -25,23 +26,25 @@ class ProgressAssessment {
             completionTime,
             accuracy,
             interactions,
-            challengesCompleted
+            challengesCompleted,
+            biometricData
         });
 
         // Update module scores
         this.assessmentData.moduleScores[moduleId] = score;
 
-        // Get AI guidance based on performance
+        // Get AI guidance based on performance & biometric feedback
         const guidance = await this.aiGuidance.provideGuidance({
             focusTime: completionTime,
             interactionRate: interactions / completionTime,
             quizResults: [accuracy * 100],
             completionTime,
-            practiceResults: [score * 100]
+            practiceResults: [score * 100],
+            biometricData
         });
 
         // Check for achievements
-        const newAchievements = this.checkAchievements(moduleId, score);
+        const newAchievements = this.checkAchievements(moduleId, score, biometricData);
 
         return {
             score,
@@ -56,26 +59,42 @@ class ProgressAssessment {
             completionTime: 0.2,
             accuracy: 0.4,
             interactions: 0.2,
-            challengesCompleted: 0.2
+            challengesCompleted: 0.1,
+            biometricEfficiency: 0.1
         };
 
         // Normalize completion time (faster is better, up to a point)
         const normalizedTime = Math.min(1, 600 / Math.max(data.completionTime, 300));
+        
+        // Biometric efficiency score
+        const biometricScore = data.biometricData ? this.calculateBiometricScore(data.biometricData) : 1;
         
         // Calculate weighted score
         const score = 
             (normalizedTime * weights.completionTime) +
             (data.accuracy * weights.accuracy) +
             (Math.min(1, data.interactions / 10) * weights.interactions) +
-            (Math.min(1, data.challengesCompleted / 5) * weights.challengesCompleted);
+            (Math.min(1, data.challengesCompleted / 5) * weights.challengesCompleted) +
+            (biometricScore * weights.biometricEfficiency);
 
         return Math.round(score * 100) / 100;
     }
 
-    checkAchievements(moduleId, score) {
+    calculateBiometricScore(biometricData) {
+        const { heartRate, oxygenLevel, stressLevel } = biometricData;
+        let score = 1;
+
+        if (heartRate > 150) score -= 0.2;
+        if (oxygenLevel < 95) score -= 0.3;
+        if (stressLevel > 7) score -= 0.3;
+
+        return Math.max(0.5, score); // Ensure minimum threshold
+    }
+
+    checkAchievements(moduleId, score, biometricData) {
         const newAchievements = [];
 
-        // Check for various achievements
+        // Check for high-performance achievements
         if (score >= 0.9) {
             newAchievements.push({
                 type: 'excellence',
@@ -92,9 +111,16 @@ class ProgressAssessment {
             });
         }
 
-        // Add achievements to history
-        this.assessmentData.achievements.push(...newAchievements);
+        // Check for biometric efficiency achievements
+        if (biometricData && biometricData.heartRate < 120 && biometricData.stressLevel < 5) {
+            newAchievements.push({
+                type: 'calm_under_pressure',
+                title: 'Calm Under Pressure',
+                description: 'Maintained low stress and heart rate under training conditions'
+            });
+        }
 
+        this.assessmentData.achievements.push(...newAchievements);
         return newAchievements;
     }
 
@@ -117,13 +143,11 @@ class ProgressAssessment {
     }
 
     calculateSkillLevels() {
-        const skills = {
+        return {
             physical: this.calculateSkillLevel('physical'),
             technical: this.calculateSkillLevel('technical'),
             simulation: this.calculateSkillLevel('simulation')
         };
-
-        return skills;
     }
 
     calculateSkillLevel(skillType) {
@@ -141,39 +165,13 @@ class ProgressAssessment {
     getRecommendedFocus() {
         const skillLevels = this.calculateSkillLevels();
         const lowestSkill = Object.entries(skillLevels)
-            .reduce((acc, [skill, level]) => 
-                level < acc.level ? { skill, level } : acc,
-                { skill: '', level: Infinity }
-            );
+            .reduce((acc, [skill, level]) => level < acc.level ? { skill, level } : acc, { skill: '', level: Infinity });
 
         return {
             skill: lowestSkill.skill,
             currentLevel: lowestSkill.level,
             recommendedModules: this.getRecommendedModules(lowestSkill.skill)
         };
-    }
-
-    getRecommendedModules(skillType) {
-        // Module recommendations based on skill type
-        const recommendations = {
-            physical: [
-                "Zero-G Movement Mastery",
-                "Advanced Cardiovascular Training",
-                "Spatial Orientation Challenge"
-            ],
-            technical: [
-                "Systems Integration Advanced",
-                "Emergency Protocol Mastery",
-                "Navigation Systems Expert"
-            ],
-            simulation: [
-                "Complex Mission Scenarios",
-                "Advanced Docking Procedures",
-                "Crisis Management Simulation"
-            ]
-        };
-
-        return recommendations[skillType] || [];
     }
 }
 

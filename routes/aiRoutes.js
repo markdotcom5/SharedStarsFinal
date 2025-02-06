@@ -4,7 +4,6 @@ const router = express.Router();
 const WebSocket = require('ws');
 const ServiceIntegrator = require('../services/ServiceIntegrator');
 const AIGuidanceSystem = require('../services/AIGuidanceSystem');
-const AISpaceCoach = require('../services/AISpaceCoach');
 const aiGuidance = require('../services/aiGuidance');
 const aiAssistant = require('../services/aiAssistant');
 const { authenticate } = require('../middleware/authenticate');
@@ -13,8 +12,8 @@ const User = require('../models/User');
 const TrainingSession = require('../models/TrainingSession');
 const Session = require('../models/Session');
 const validateRequest = require('../middleware/validateRequest');
-const aiController = require('../controllers/aiController');
-
+const aiController = require('../controllers/AIController');
+const aiCoachInstance = require('../services/AISpaceCoach'); // Note the capital letters
 // Map to hold WebSocket clients
 const clients = new Map();
 
@@ -68,7 +67,7 @@ router.post('/training/start-assessment',
       });
   
       console.log('Getting initial assessment questions...');
-      const assessmentQuestions = await AISpaceCoach.getInitialAssessment();
+      const assessmentQuestions = await aiCoachInstance.getInitialAssessment();
       
       await session.save();
       
@@ -384,7 +383,7 @@ router.post('/training/modules/:moduleId/start', authenticate, async (req, res) 
       success: true,
       sessionId: session._id,
       module: await getModuleDetails(moduleId),
-      initialGuidance: await AISpaceCoach.generateInitialGuidance(req.user._id)
+      initialGuidance: await aiCoachInstance.generateInitialGuidance(req.user._id)
     });
   } catch (error) {
     handleError(res, error, 'Failed to start training module');
@@ -447,7 +446,7 @@ router.post('/initialize', authenticate, async (req, res) => {
     const { mode } = req.body;
     console.log('Initializing AI for user:', req.user._id, 'Mode:', mode);
   
-    const initResult = await AISpaceCoach.selectAIMode({
+    const initResult = await aiCoachInstance.selectAIMode({
       userId: req.user._id,
       preferredMode: mode || 'full_guidance'
     });
@@ -476,47 +475,30 @@ router.post('/initialize', authenticate, async (req, res) => {
       success: true,
       sessionId: session._id,
       aiMode: initResult,
-      guidance: await AISpaceCoach.generateInitialGuidance(req.user._id)
+      guidance: await aiCoachInstance.generateInitialGuidance(req.user._id)
     });
   } catch (err) {
     handleError(res, err, 'Failed to initialize AI systems');
   }
 });
   
-router.post('/ai-guidance', authenticate, async (req, res) => {
+router.post('/ai-guidance', async (req, res) => {
   try {
-    const { questionId, currentProgress, context } = req.body;
-    
-    const guidance = await AISpaceCoach.generateCoachingSuggestions({
-      userId: req.user._id,
-      questionId,
-      currentProgress,
-      context
-    });
-  
-    await TrainingSession.findOneAndUpdate(
-      { userId: req.user._id, status: 'in-progress' },
-      {
-        $push: {
-          aiInteractions: {
-            type: 'guidance',
-            content: {
-              prompt: questionId,
-              response: guidance
-            }
-          }
-        }
-      }
-    );
-  
-    res.json({
-      success: true,
-      guidance
-    });
-  } catch (err) {
-    handleError(res, err, 'Failed to generate AI guidance');
+      const { questionId, currentProgress, context } = req.body;
+      const suggestions = await aiCoachInstance.generateCoachingSuggestions({
+          questionId,
+          currentProgress,
+          context
+      });
+      res.json({ suggestions });
+  } catch (error) {
+      res.status(500).json({
+          error: "Failed to generate AI guidance",
+          message: error.message
+      });
   }
 });
+
 
 /* -------------------------------
    AI Controller Routes

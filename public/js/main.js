@@ -1,4 +1,61 @@
 // In js/main.js
+// public/js/main.js
+import * as Training from './modules/training/index.js';
+import * as Core from './modules/core/index.js';
+import * as Visualizations from './visualizations/index.js';
+import * as UI from './modules/ui/index.js';
+
+class SharedStarsApp {
+    constructor() {
+        this.training = {
+            handler: new Training.TrainingHandler(),
+            ai: new Training.AIGuidanceSystem(),
+            fsd: new Training.FSDTraining(),
+            interface: new Training.ModuleInterface(),
+            progress: new Training.ProgressAssessment()
+        };
+
+        this.core = {
+            timeline: new Core.SpaceTimelineManager(),
+            achievements: new Core.AchievementHandler()
+        };
+
+        this.visuals = {
+            ai: new Visualizations.AIAssistant(),
+            progress: new Visualizations.ProgressTracker(),
+            achievements: new Visualizations.AchievementDisplay()
+        };
+    }
+
+    async initialize() {
+        // Connect all systems
+        await this.training.handler.initialize();
+        await this.core.timeline.initialize();
+        await this.visuals.ai.initialize();
+
+        // Set up event listeners and connections
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        // Connect training progress to timeline
+        this.training.progress.onUpdate((progress) => {
+            this.core.timeline.updateProgress(progress);
+            this.visuals.progress.update(progress);
+        });
+
+        // Connect AI guidance to visual display
+        this.training.ai.onGuidance((guidance) => {
+            this.visuals.ai.displayGuidance(guidance);
+        });
+
+        // Connect achievements
+        this.core.achievements.onAchievement((achievement) => {
+            this.visuals.achievements.display(achievement);
+            this.core.timeline.awardCredits(achievement.credits);
+        });
+    }
+}
 import '/js/languageSelection.js';
 import { initAPI } from './modules/core/dashboard.js';
 import { initAuth } from './modules/auth/signup.js';
@@ -727,3 +784,8 @@ if (signupForm) {
 } else {
     console.warn("⚠️ Signup form not found!");
 }
+// Initialize when document loads
+document.addEventListener('DOMContentLoaded', async () => {
+    window.app = new SharedStarsApp();
+    await window.app.initialize();
+});

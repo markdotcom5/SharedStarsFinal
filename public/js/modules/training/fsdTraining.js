@@ -159,5 +159,5 @@ class SpaceTrainingFSD {
     }
   }
   
-  export default new SpaceTrainingFSD();
+  export default SpaceTrainingFSD;
   

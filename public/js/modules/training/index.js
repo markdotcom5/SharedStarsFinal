@@ -1,4 +1,13 @@
 // public/js/modules/training/index.js
+// public/js/modules/training/index.js
+export { default as AIHandler } from './AIHandler.js';
+export { default as TrainingHandler } from './TrainingHandler.js';
+export { default as AIGuidanceSystem } from './aiGuidanceSystem.js';
+export { default as FSDTraining } from './fsdTraining.js';
+export { default as ModuleContent } from './moduleContent.js';
+export { default as ModuleInterface } from './moduleInterface.js';
+export { default as ProgressAssessment } from './progressAssessment.js';
+
 import AIAssistant from '../../visualizations/AIAssistant.js';
 import AIHandler from './AIHandler.js';
 

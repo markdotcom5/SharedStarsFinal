@@ -641,5 +641,4 @@ function showError(message) {
 
 document.getElementById("closeModal")?.addEventListener("click", () => {
     document.getElementById("moduleModal")?.classList.add("hidden");
-});
-
+}); // Fixed: Added closing parenthesis here

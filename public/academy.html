@@ -1,42 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SharedStars Academy</title>
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Inter Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- AOS CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/ai-assistant.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-        }
-        .space-gradient {
-            background: linear-gradient(to bottom, #0f172a, #1e293b);
-        }
-        .hero-text {
-            font-size: clamp(4rem, 15vw, 12rem);
-            line-height: 1;
-        }
-        .cosmic-hover {
-            transition: all 0.3s ease;
-        }
-        .cosmic-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
-        }
-    </style>
-    <script src="/js/academy.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="StelTrek Academy Training Modules" />
+  <title>SharedStars Academy</title>
+
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        frame-src 'self' https://www.sora.com;
+        child-src 'self' https://www.sora.com;
+  ">
+
+  <!-- Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/ai-assistant.css" />
+
+  <!-- Include language selection script -->
+  <script src="/js/languageSelection.js" defer></script>
 </head>
+<body class="bg-slate-900 text-white min-h-screen">
+  <!-- HEADER (consistent across pages) -->
+  <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg">
+    <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
+      <!-- Logo -->
+      <div class="flex items-center mb-2 md:mb-0">
+        <a href="/index.html" aria-label="SharedStars Homepage" class="group">
+          <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+        </a>
+      </div>
+      <!-- Navigation Links -->
+      <ul class="flex flex-wrap gap-4">
+        <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
+        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
+        <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
+        <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
+        <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
+        <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
+        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
+        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+      </ul>
+      <!-- Language Selector in Header -->
+      <div class="language-selector flex gap-2">
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- AI Coach Status Bar -->
+  <div id="ai-status-bar" class="fixed top-0 w-full bg-gray-800/95 border-b border-blue-500/20 z-50">
+    <div class="container mx-auto px-4 py-2 flex items-center justify-between">
+      <div id="ai-status" class="flex items-center space-x-3">
+        <!-- Pulse Dot with Tailwind animate-ping -->
+        <div class="pulse-dot w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
+        <span>Initializing AI Coach...</span>
+      </div>
+      <div class="flex items-center space-x-6">
+        <div id="session-metrics" class="flex items-center space-x-6">
+          <div class="flex items-center space-x-2">
+            <span class="text-blue-400">Focus Score:</span>
+            <span id="focus-score">--</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-green-400">Progress:</span>
+            <span id="progress-percentage">0%</span>
+          </div>
+        </div>
+        <!-- Language Selector inside AI Coach Status Bar -->
+        <div class="language-selector flex gap-2">
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Include any additional page content below -->
+  <script src="/js/academy.js"></script>
+</body>
 <body>
     <!-- AOS Initialization -->
     <script>
@@ -58,27 +114,6 @@
     </script>
 </body>
 </html>
-    <!-- Header -->
-    <header class="fixed w-full bg-gray-900/90 backdrop-blur-lg z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="logo">
-                <a href="/index.html" aria-label="SharedStars Homepage">
-                <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-10">
-                </a>
-            </div>
-            <nav class="hidden md:flex gap-8">
-                <a href="/index.html" class="text-gray-300 hover:text-white font-medium transition-colors">Home</a>
-                <a href="#solutions" class="text-gray-300 hover:text-white font-medium transition-colors">Solutions</a>
-                <a href="#services" class="text-gray-300 hover:text-white font-medium transition-colors">Services</a>
-            </nav>
-            <div class="flex items-center gap-4">
-                <a href="/subscribe.html" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">
-                    SPACE CONSULTATION
-                </a>
-            </div>
-        </div>
-    </header>
-
     <!-- Hero Section -->
     <section id="hero" class="min-h-screen flex items-center justify-center relative bg-black">
         <div class="absolute inset-0">

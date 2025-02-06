@@ -1,5 +1,9 @@
-const signup = require('./signup');
-const profile = require('./profile');
-const achievementHandler = require('./achievementHandler');
+import { signup } from './signup.js';
+import { profile } from './profile.js';
+import { achievementHandler } from './achievementHandler.js';
 
-module.exports = { signup, profile, achievementHandler };
+export const ui = {
+    signup,
+    profile,
+    achievementHandler
+};

@@ -35,7 +35,7 @@
         <li><a href="/Why-StelTrek.html" data-i18n="nav.why" class="hover:text-blue-400 transition-colors">Why StelTrek</a></li>
         <li><a href="/about.html" data-i18n="nav.about" class="hover:text-blue-400 transition-colors">About</a></li>
         <li><a href="/leaderboard.html" data-i18n="nav.leaderboard" class="hover:text-blue-400 transition-colors">Leaderboard</a></li>
-        <li><a href="/merchandise.html" data-i18n="nav.merchandise" class="hover:text-blue-400 transition-colors">Retail Store</a></li>
+        <li><a href="/mission-control.html" data-i18n="nav.merchandise" class="hover:text-blue-400 transition-colors">Mission-Control</a></li>
         <li><a href="/profile.html" data-i18n="nav.profile" class="hover:text-blue-400 transition-colors">Profile</a></li>
         <li><a href="/signup.html" data-i18n="nav.signup" class="hover:text-blue-400 transition-colors">Sign Up</a></li>
         <li><a href="/academy.html" data-i18n="nav.academy" class="hover:text-blue-400 transition-colors">StelTrek Academy</a></li>
@@ -74,7 +74,70 @@
       </div>
     </section>
   </main>
+<!-- COUNTDOWN & PRICE EVOLUTION SECTION -->
+<section id="countdown-price" class="relative min-h-screen py-16 text-white text-center">
+  <!-- Video Background -->
+  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+      <source src="/videos/space-future.mp4" type="video/mp4">
+  </video>
+  <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/90"></div>
 
+  <!-- Content Container -->
+  <div class="relative z-10 container mx-auto px-4">
+      <!-- Problem Statement -->
+      <div class="mb-12">
+          <h2 class="text-4xl font-bold mb-6">Current Space Travel Reality</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+                  <h3 class="text-xl font-bold mb-3">Limited Access</h3>
+                  <p>Currently restricted to ultra-wealthy individuals and elite astronauts</p>
+              </div>
+              <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+                  <h3 class="text-xl font-bold mb-3">High Barriers</h3>
+                  <p>Prohibitively expensive with limited pathways for public participation</p>
+              </div>
+              <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+                  <h3 class="text-xl font-bold mb-3">Growing Demand</h3>
+                  <p>Increasing interest but insufficient options for space enthusiasts</p>
+              </div>
+          </div>
+      </div>
+
+      <!-- Stakes Section -->
+      <div class="mb-16">
+          <h2 class="text-5xl font-bold mb-6">What's at Stake?</h2>
+          <p class="text-2xl mb-8">Your Future. Your Family's Future. Humanity's Future.</p>
+      </div>
+
+      <!-- Countdowns Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+          <!-- Global Timeline -->
+          <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+              <h3 class="text-2xl font-bold mb-4">Global Space Travel Timeline</h3>
+              <div id="globalCountdown" class="flex flex-wrap justify-center gap-4">
+                  <!-- Countdown boxes here -->
+              </div>
+          </div>
+          
+          <!-- Personal Timeline -->
+          <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+              <h3 class="text-2xl font-bold mb-4">Your Accelerated Timeline</h3>
+              <div id="personalCountdown" class="flex flex-wrap justify-center gap-4">
+                  <!-- Countdown boxes here -->
+              </div>
+              <p class="mt-4 text-green-400">Your SharedStars Credits: 500</p>
+          </div>
+      </div>
+
+      <!-- Price Evolution Chart -->
+      <div class="bg-black/50 backdrop-blur-md p-8 rounded-lg">
+          <h3 class="text-3xl font-bold mb-6">Price Evolution Timeline</h3>
+          <div class="w-full max-w-4xl mx-auto">
+              <canvas id="priceChart"></canvas>
+          </div>
+      </div>
+  </div>
+</section>
   <!-- Footer -->
   <footer class="bg-gray-900 py-6 mt-12">
     <div class="container mx-auto text-center">
@@ -107,7 +170,7 @@
             body: JSON.stringify({ email, password })
           });
           if (response.ok) {
-            window.location.href = '/dashboard.html';
+            window.location.href = '/mission-control.html';
           } else {
             const errorData = await response.json();
             loginError.textContent = errorData.error || "Failed to log in. Please try again.";
@@ -118,6 +181,63 @@
         }
       });
     });
+  </script>
+   <!-- Countdown Timer Script -->
+  <script>
+    // Price Evolution Chart
+const ctx = document.getElementById('priceChart').getContext('2d');
+const baselineData = [
+    { year: 2022, price: 875000 }, // Average of 750k-1M
+    { year: 2024, price: 250000 },
+    { year: 2029, price: 75000 },  // Average of 50k-100k
+    { year: 2034, price: 17500 },  // Average of 10k-25k
+    { year: 2049, price: 5000 }
+];
+
+// Calculate personal timeline based on credits
+function calculatePersonalTimeline(credits) {
+    return baselineData.map(point => ({
+        year: point.year,
+        price: Math.max(point.price - (credits * 100), point.price * 0.2) // Minimum 20% of baseline
+    }));
+}
+
+const personalData = calculatePersonalTimeline(500);
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: baselineData.map(d => d.year),
+        datasets: [
+            {
+                label: 'Baseline Timeline',
+                data: baselineData.map(d => d.price),
+                borderColor: 'rgba(59, 130, 246, 1)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true
+            },
+            {
+                label: 'Your Personal Timeline',
+                data: personalData.map(d => d.price),
+                borderColor: 'rgba(16, 185, 129, 1)',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                fill: true
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                type: 'logarithmic',
+                title: {
+                    display: true,
+                    text: 'Price (USD)'
+                }
+            }
+        }
+    }
+});
   </script>
 </body>
 </html>

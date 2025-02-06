@@ -1,220 +1,175 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/authenticate');
-const rateLimit = require('express-rate-limit'); // Rate limiter
-const TrainingSession = require('../models/TrainingSession'); // Mongoose model
-const AISpaceCoach = require('../services/AISpaceCoach'); // AI Assistant service
+const rateLimit = require('express-rate-limit');
+const TrainingSession = require('../models/TrainingSession');
+const AISpaceCoach = require('../services/AISpaceCoach');
 const Joi = require('joi');
-const AIController = require('../controllers/aiController'); // or a dedicated TrainingController
-const Module = require("../models/Module"); // ✅ Use the correct model name
+const Module = require("../models/Module");
 const mongoose = require("mongoose");
-const progressTracker = require('../services/ProgressTracker'); // Centralized tracker
+const SpaceTimelineManager = require('../services/SpaceTimelineManager');
+const webSocketService = require('../services/webSocketService');
 
-// Pagination Schema
+// Initialize Services
+const timelineManager = new SpaceTimelineManager(webSocketService);
+
+// Rate Limiter Configuration
+const sessionLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: { error: 'Too many requests, please try again later.' }
+});
+
+// Validation Schemas
+const sessionSchema = Joi.object({
+    sessionType: Joi.string().required(),
+    dateTime: Joi.date().greater('now').required(),
+    participants: Joi.array().items(Joi.string()),
+    points: Joi.number().min(0).default(0)
+});
+
 const paginationSchema = Joi.object({
     page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).max(100).default(10),
+    limit: Joi.number().integer().min(1).max(100).default(10)
 });
 
-// Rate Limiter Middleware
-const sessionLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
-    message: { error: 'Too many requests, please try again later.' },
-});
+// ============================
+// Module Routes
+// ============================
 
-// Validate Input Middleware
-const validateSessionInput = (req, res, next) => {
-    const { sessionType, dateTime } = req.body;
-
-    if (!sessionType || typeof sessionType !== 'string') {
-        return res.status(400).json({ error: 'Invalid or missing session type.' });
-    }
-
-    const parsedDate = new Date(dateTime);
-    if (isNaN(parsedDate) || parsedDate < new Date()) {
-        return res.status(400).json({ error: 'Invalid or past date.' });
-    }
-
-    next();
-};
-// Get Available Training Modules (Existing endpoint)
+// Get All Modules
 router.get('/modules', authenticate, async (req, res) => {
     try {
-        const modules = [
-            { id: 'physical-001', name: 'Physical Training', description: 'Improve your physical readiness.' },
-            { id: 'technical-001', name: 'Technical Training', description: 'Boost your technical skills.' },
-            { id: 'simulation-001', name: 'Space Simulation', description: 'Experience simulated space missions.' },
-            { id: 'team-001', name: 'Team Dynamics', description: 'Enhance teamwork and leadership skills.' },
-        ];
-
+        const modules = await Module.find()
+            .select('id name description category')
+            .sort({ category: 1, name: 1 });
+        
         res.json({ success: true, modules });
     } catch (error) {
-        console.error('Error fetching modules:', error.message);
+        console.error('Error fetching modules:', error);
         res.status(500).json({ error: 'Failed to fetch training modules.' });
     }
 });
 
-// ✅ Get Physical Training Modules
+// Get Physical Training Modules
 router.get("/modules/physical", authenticate, async (req, res) => {
     try {
         const physicalModules = await Module.find({ category: "physical" });
         if (!physicalModules || physicalModules.length === 0) {
             return res.status(404).json({ error: "No physical modules found" });
         }
-        res.json(physicalModules);
+        res.json({ success: true, modules: physicalModules });
     } catch (error) {
-        console.error("Error fetching physical modules:", error.message);
+        console.error("Error fetching physical modules:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-  
-
-// Dedicated endpoint for Technical Training
+// Get Technical Training Modules
 router.get('/modules/technical', authenticate, async (req, res) => {
-  try {
-    const technicalData = {
-      id: 'technical-001',
-      title: 'Technical Training Module',
-      description: 'Develop essential technical skills for space operations.',
-      objectives: ['System operations', 'Emergency procedures', 'Navigation']
-    };
-    res.json({ success: true, data: technicalData });
-  } catch (err) {
-    console.error('Error fetching technical training data:', err);
-    res.status(500).json({ error: 'Failed to fetch technical training data.' });
-  }
+    try {
+        const technicalModules = await Module.find({ category: "technical" });
+        if (!technicalModules || technicalModules.length === 0) {
+            return res.status(404).json({ error: "No technical modules found" });
+        }
+        res.json({ success: true, modules: technicalModules });
+    } catch (error) {
+        console.error('Error fetching technical modules:', error);
+        res.status(500).json({ error: 'Failed to fetch technical modules.' });
+    }
 });
 
-// Dedicated endpoint for AI-Guided Training
+// Get AI-Guided Modules
 router.get('/modules/ai-guided', authenticate, async (req, res) => {
-  try {
-    // Use your aiGuidance service to get dynamic content.
-    // Ensure that your aiGuidance.getGuidanceData() method exists and returns data.
-    const aiData = await require('../services/aiGuidance').getGuidanceData();
-    res.json({ success: true, data: aiData });
-  } catch (err) {
-    console.error('Error fetching AI-guided training data:', err);
-    res.status(500).json({ error: 'Failed to fetch AI-guided training data.' });
-  }
-});
-
-// Route: Fetch Training Modules
-router.get('/modules', authenticate, async (req, res) => {
     try {
-        const modules = [
-            { id: 1, name: 'Physical Training', description: 'Improve your physical readiness.' },
-            { id: 2, name: 'Mental Training', description: 'Boost your mental strength and focus.' },
-            { id: 3, name: 'Space Simulation', description: 'Experience simulated space missions.' },
-            { id: 4, name: 'Technical Skills', description: 'Develop technical skills for space exploration.' },
-            { id: 5, name: 'Team Dynamics', description: 'Enhance teamwork and leadership skills.' },
-        ];
-
-        res.json({ success: true, modules });
+        const aiGuidedModules = await Module.find({ category: "ai-guided" });
+        if (!aiGuidedModules || aiGuidedModules.length === 0) {
+            return res.status(404).json({ error: "No AI-guided modules found" });
+        }
+        res.json({ success: true, modules: aiGuidedModules });
     } catch (error) {
-        console.error('Error fetching modules:', error.message);
-        res.status(500).json({ error: 'Failed to fetch training modules.' });
-    }
-});
-// Render Physical Training Module page
-router.get('/physical', async (req, res) => {
-    try {
-      // For MVP, you might simulate some training content here.
-      const trainingContent = {
-        module: 'physical-001',
-        title: 'Physical Training Module',
-        description: 'Prepare your body for space travel with focused physical training.',
-        objectives: ['Cardiovascular fitness', 'Strength training', 'Zero-G adaptation'],
-        // You can add more fields as needed.
-      };
-      // Render a view that displays this training content.
-      res.render('training-physical', { title: 'Physical Training', content: trainingContent });
-    } catch (error) {
-      console.error('Error rendering Physical Training module:', error);
-      res.status(500).send('Error rendering module.');
-    }
-  });
-  
-// Protected Route: Create a Training Session
-router.post('/sessions', authenticate, validateSessionInput, async (req, res) => {
-    const { sessionType, dateTime, participants, points = 0 } = req.body;
-
-    try {
-        const session = new TrainingSession({
-            userId: req.user._id,
-            sessionType,
-            dateTime,
-            participants,
-            points,
-            status: 'scheduled',
-        });
-        await session.save();
-        res.status(201).json({ message: 'Session created successfully', session });
-    } catch (error) {
-        console.error('Error creating session:', error.message);
-        res.status(500).json({ error: 'Failed to create session.' });
-    }
-});
-router.post('/training/progress', authenticate, async (req, res) => {
-    try {
-        const { progress } = req.body;
-        const result = await progressTracker.updateProgress(req.user._id, progress);
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-// Analyze Training Progress
-router.post('/progress', authenticate, async (req, res) => {
-    const { trainingData } = req.body;
-
-    try {
-        const analysis = await AISpaceCoach.analyzeProgress(trainingData);
-        res.status(200).json({ success: true, analysis });
-    } catch (error) {
-        console.error('Error analyzing progress:', error.message);
-        res.status(500).json({ success: false, error: 'Failed to analyze progress.' });
+        console.error('Error fetching AI-guided modules:', error);
+        res.status(500).json({ error: 'Failed to fetch AI-guided modules.' });
     }
 });
 
-// ✅ Route to Start a Training Module
-// ✅ Route to Start a Training Module
+// Start Module
 router.post("/modules/:moduleId/start", authenticate, async (req, res) => {
     try {
-        let { moduleId } = req.params;
-        console.log(`🔍 Received request to start module: ${moduleId}`);
-
-        // ✅ Validate ObjectId
+        const { moduleId } = req.params;
+        
         if (!mongoose.Types.ObjectId.isValid(moduleId)) {
-            console.error("🚨 Invalid moduleId format:", moduleId);
             return res.status(400).json({ error: "Invalid moduleId format" });
         }
 
-        // ✅ Fetch the module
         const module = await Module.findById(moduleId);
         if (!module) {
-            console.error("🚨 Module not found:", moduleId);
             return res.status(404).json({ error: "Module not found" });
         }
 
-        console.log("✅ Module found:", module);
+        // Create new training session
+        const session = new TrainingSession({
+            userId: req.user._id,
+            moduleId,
+            status: 'in-progress',
+            startedAt: new Date()
+        });
 
-        res.json({ message: `Module ${moduleId} started successfully`, module });
+        await session.save();
+
+        // Notify via WebSocket
+        webSocketService.sendToUser(req.user._id, 'module_started', {
+            moduleId,
+            sessionId: session._id,
+            moduleName: module.name
+        });
+
+        res.json({ 
+            success: true, 
+            message: `Module ${moduleId} started successfully`, 
+            session 
+        });
     } catch (error) {
-        console.error("🚨 Error starting module:", error);
-        res.status(500).json({ error: "Internal Server Error", details: error.message });
+        console.error("Error starting module:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-// Update a Training Session
-router.patch('/sessions/:sessionId', authenticate, sessionLimiter, async (req, res) => {
-    const { progress, status } = req.body;
+// ============================
+// Training Session Routes
+// ============================
 
+// Create Training Session
+router.post('/sessions', authenticate, async (req, res) => {
+    try {
+        await sessionSchema.validateAsync(req.body);
+        
+        const session = new TrainingSession({
+            userId: req.user._id,
+            ...req.body,
+            status: 'scheduled'
+        });
+        
+        await session.save();
+        
+        // Update timeline
+        await timelineManager.updatePersonalTimeline(req.user._id);
+        
+        webSocketService.sendToUser(req.user._id, 'session_created', { session });
+        
+        res.status(201).json({ success: true, session });
+    } catch (error) {
+        console.error('Error creating session:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Update Training Session
+router.patch('/sessions/:sessionId', authenticate, sessionLimiter, async (req, res) => {
     try {
         const session = await TrainingSession.findOneAndUpdate(
             { _id: req.params.sessionId, userId: req.user._id },
-            { $set: { progress, status } },
+            { $set: req.body },
             { new: true }
         );
 
@@ -222,53 +177,29 @@ router.patch('/sessions/:sessionId', authenticate, sessionLimiter, async (req, r
             return res.status(404).json({ error: 'Session not found.' });
         }
 
-        res.json({ message: 'Session updated successfully', session });
+        // Update timeline and notify
+        await timelineManager.updatePersonalTimeline(req.user._id);
+        webSocketService.sendToUser(req.user._id, 'session_updated', { session });
+
+        res.json({ success: true, session });
     } catch (error) {
-        console.error('Error updating session:', error.message);
-        res.status(500).json({ error: 'Failed to update session.' });
+        console.error('Error updating session:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 
-// Fetch Upcoming Training Sessions with Pagination
-router.get('/upcoming', authenticate, async (req, res) => {
-    try {
-        const { page, limit } = await paginationSchema.validateAsync(req.query);
-
-        const sessions = await TrainingSession.find({
-            userId: req.user._id,
-            dateTime: { $gt: new Date() },
-            status: 'scheduled',
-        })
-            .sort({ dateTime: 1 })
-            .skip((page - 1) * limit)
-            .limit(limit);
-
-        const totalSessions = await TrainingSession.countDocuments({
-            userId: req.user._id,
-            dateTime: { $gt: new Date() },
-            status: 'scheduled',
-        });
-
-        res.json({
-            totalSessions,
-            totalPages: Math.ceil(totalSessions / limit),
-            currentPage: page,
-            hasNextPage: page < Math.ceil(totalSessions / limit),
-            hasPrevPage: page > 1,
-            sessions,
-        });
-    } catch (error) {
-        console.error('Error fetching upcoming sessions:', error.message);
-        res.status(500).json({ error: 'Failed to fetch upcoming sessions.' });
-    }
-});
-
-// Complete a Training Session
+// Complete Training Session
 router.patch('/sessions/:sessionId/complete', authenticate, sessionLimiter, async (req, res) => {
     try {
         const session = await TrainingSession.findOneAndUpdate(
             { _id: req.params.sessionId, userId: req.user._id },
-            { $set: { status: 'completed', progress: 100 } },
+            { 
+                $set: { 
+                    status: 'completed', 
+                    progress: 100,
+                    completedAt: new Date()
+                } 
+            },
             { new: true }
         );
 
@@ -276,17 +207,24 @@ router.patch('/sessions/:sessionId/complete', authenticate, sessionLimiter, asyn
             return res.status(404).json({ error: 'Session not found.' });
         }
 
-        res.json({ message: 'Session completed successfully', session });
+        // Update timeline and notify
+        await timelineManager.updatePersonalTimeline(req.user._id);
+        webSocketService.sendToUser(req.user._id, 'session_completed', { session });
+
+        res.json({ success: true, session });
     } catch (error) {
-        console.error('Error completing session:', error.message);
-        res.status(500).json({ error: 'Failed to complete session.' });
+        console.error('Error completing session:', error);
+        res.status(500).json({ error: error.message });
     }
 });
-// AI Initialization Endpoint
+
+// ============================
+// Assessment Routes
+// ============================
+
+// Start Assessment
 router.post('/assessment/start', authenticate, sessionLimiter, async (req, res) => {
     try {
-        console.log('Starting new assessment session...');
-        
         const session = new TrainingSession({
             userId: req.user._id,
             sessionType: 'Assessment',
@@ -296,7 +234,7 @@ router.post('/assessment/start', authenticate, sessionLimiter, async (req, res) 
                 enabled: true,
                 lastGuidance: 'Starting initial assessment'
             },
-            assessment: {  // Explicit initialization for assessment
+            assessment: {
                 type: 'initial',
                 responses: [],
                 startedAt: new Date(),
@@ -309,63 +247,26 @@ router.post('/assessment/start', authenticate, sessionLimiter, async (req, res) 
             }
         });
 
-        console.log('Getting initial assessment questions...');
-        const assessmentQuestions = await AISpaceCoach.getInitialAssessment();
-        
         await session.save();
         
+        const assessmentQuestions = await AISpaceCoach.getInitialAssessment();
+        
+        webSocketService.sendToUser(req.user._id, 'assessment_started', {
+            sessionId: session._id,
+            questions: assessmentQuestions
+        });
+
         res.json({
             success: true,
             sessionId: session._id,
             questions: assessmentQuestions
         });
     } catch (error) {
-        console.error('Complete error object:', error);
-        res.status(500).json({ 
-            error: 'Failed to start assessment',
-            details: error.message 
-        });
+        console.error('Error starting assessment:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 
-  
-  // AI Guidance Endpoint
-  router.post("/ai-guidance", async (req, res) => {
-    try {
-      const { questionId, currentProgress } = req.body;
-      // Insert your AI guidance logic here.
-      // For now, just simulate a success response:
-      res.json({
-        success: true,
-        guidance: "Here is your guidance based on the question.",
-      });
-    } catch (error) {
-      console.error("Error in AI guidance:", error);
-      res.status(500).json({ error: "Failed to generate AI guidance", details: error.message });
-    }
-  });
-  
-  // Assessment Answer Submission Endpoint
-  router.post("/assessment/:sessionId/submit", async (req, res) => {
-    try {
-      const { sessionId } = req.params;
-      const { answer, questionIndex } = req.body;
-      if (!answer || typeof questionIndex === "undefined") {
-        return res.status(400).json({ error: "Missing required fields" });
-      }
-      // Insert logic to process the answer here.
-      // For now, simulate a success response:
-      res.json({
-        success: true,
-        sessionId,
-        message: "Answer submitted successfully",
-      });
-    } catch (error) {
-      console.error("Error submitting answer:", error);
-      res.status(500).json({ error: "Failed to submit answer", details: error.message });
-    }
-  });
-  
 // Submit Assessment Answer
 router.post('/assessment/:sessionId/submit', authenticate, sessionLimiter, async (req, res) => {
     try {
@@ -380,13 +281,12 @@ router.post('/assessment/:sessionId/submit', authenticate, sessionLimiter, async
             return res.status(404).json({ error: 'Assessment session not found' });
         }
 
-        // Record the response (ensure this method is defined in your model)
-        session.submitAssessmentResponse(question, answer);
-
-        // Get AI analysis of the answer
+        // Get AI analysis
         const aiAnalysis = await AISpaceCoach.analyzeResponse(question, answer);
         
-        // Update session with AI recommendations
+        // Update session
+        session.assessment.responses.push({ question, answer, analysis: aiAnalysis });
+        
         if (aiAnalysis.recommendations) {
             session.assessment.aiRecommendations = {
                 ...session.assessment.aiRecommendations,
@@ -396,8 +296,14 @@ router.post('/assessment/:sessionId/submit', authenticate, sessionLimiter, async
 
         await session.save();
 
-        // Check if this was the last question
         const isComplete = session.assessment.responses.length >= aiAnalysis.totalQuestions;
+
+        // Notify via WebSocket
+        webSocketService.sendToUser(req.user._id, 'assessment_progress', {
+            isComplete,
+            nextQuestion: isComplete ? null : aiAnalysis.nextQuestion,
+            progress: (session.assessment.responses.length / aiAnalysis.totalQuestions) * 100
+        });
 
         res.json({
             success: true,
@@ -406,13 +312,12 @@ router.post('/assessment/:sessionId/submit', authenticate, sessionLimiter, async
             immediateGuidance: aiAnalysis.immediateGuidance
         });
     } catch (error) {
-        console.error('Error submitting assessment answer:', error);
-        res.status(500).json({ error: 'Failed to submit answer' });
+        console.error('Error submitting assessment:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 
-
-// Complete Assessment and Generate Training Plan
+// Complete Assessment
 router.post('/assessment/:sessionId/complete', authenticate, sessionLimiter, async (req, res) => {
     try {
         const session = await TrainingSession.findOne({
@@ -425,12 +330,13 @@ router.post('/assessment/:sessionId/complete', authenticate, sessionLimiter, asy
             return res.status(404).json({ error: 'Assessment session not found' });
         }
 
-        // Generate final analysis and training plan using all responses
+        // Generate final analysis and training plan
         const finalAnalysis = await AISpaceCoach.generateTrainingPlan(session.assessment.responses);
         
-        // Update session with results using a custom method for clean encapsulation
-        session.completeAssessment(finalAnalysis.score, finalAnalysis.recommendations);
+        // Update session
         session.status = 'completed';
+        session.completedAt = new Date();
+        session.assessment.aiRecommendations = finalAnalysis.recommendations;
         session.metrics = {
             physicalReadiness: finalAnalysis.metrics.physical,
             mentalPreparedness: finalAnalysis.metrics.mental,
@@ -439,6 +345,14 @@ router.post('/assessment/:sessionId/complete', authenticate, sessionLimiter, asy
         };
 
         await session.save();
+
+        // Update timeline and notify
+        await timelineManager.updatePersonalTimeline(req.user._id);
+        webSocketService.sendToUser(req.user._id, 'assessment_completed', {
+            sessionId: session._id,
+            recommendations: finalAnalysis.recommendations,
+            metrics: session.metrics
+        });
 
         res.json({
             success: true,
@@ -452,57 +366,8 @@ router.post('/assessment/:sessionId/complete', authenticate, sessionLimiter, asy
         });
     } catch (error) {
         console.error('Error completing assessment:', error);
-        res.status(500).json({ error: 'Failed to complete assessment' });
+        res.status(500).json({ error: error.message });
     }
 });
 
-// Toggle AI Guidance
-router.post('/ai-guidance/toggle', authenticate, async (req, res) => {
-    try {
-        const { enabled } = req.body;
-        const session = await TrainingSession.findOne({
-            userId: req.user._id,
-            status: 'in-progress'
-        });
-
-        if (session) {
-            session.aiGuidance.enabled = enabled;
-            await session.save();
-        }
-
-        res.json({
-            success: true,
-            aiGuidanceEnabled: enabled
-        });
-    } catch (error) {
-        console.error('Error toggling AI guidance:', error);
-        res.status(500).json({ error: 'Failed to toggle AI guidance' });
-    }
-});
-
-// Get AI Recommendations
-router.get('/ai-recommendations', authenticate, async (req, res) => {
-    try {
-        const latestSession = await TrainingSession.findOne({
-            userId: req.user._id
-        }).sort({ createdAt: -1 });
-
-        if (!latestSession) {
-            return res.status(404).json({ error: 'No training sessions found' });
-        }
-
-        const recommendations = await AISpaceCoach.getPersonalizedRecommendations(
-            req.user._id,
-            latestSession.metrics
-        );
-
-        res.json({
-            success: true,
-            recommendations
-        });
-    } catch (error) {
-        console.error('Error getting AI recommendations:', error);
-        res.status(500).json({ error: 'Failed to get recommendations' });
-    }
-});
 module.exports = router;

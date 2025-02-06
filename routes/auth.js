@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // Import User model
+const User = require("../models/User");
 const router = express.Router();
 
 // =======================
@@ -64,7 +64,6 @@ router.post("/signup", async (req, res) => {
 
 // =======================
 // Login Route
-// =======================
 router.post("/login", async (req, res) => {
     try {
         console.log("🔍 Received login request:", req.body);
@@ -72,14 +71,17 @@ router.post("/login", async (req, res) => {
         const email = req.body.email.trim().toLowerCase();
         const user = await User.findOne({ email });
 
-        console.log("✅ Found User:", user ? "Yes" : "No");
+        console.log("✅ Found User:", user ? user.email : "No user found");
 
         if (!user) {
             console.error("🚨 User not found in database.");
             return res.status(400).json({ error: "Invalid email or password" });
         }
 
-        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        console.log("🔑 Stored Hashed Password:", user.password);
+        console.log("🔑 Entered Password:", req.body.password);
+
+        const isMatch = await bcrypt.compare(String(req.body.password), String(user.password));
         console.log("🔍 Password Match Result:", isMatch);
 
         if (!isMatch) {
@@ -90,12 +92,12 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
         res.json({
-            message: "Login successful",
+            success: true,
             token,
             user: {
                 id: user._id.toString(),
                 email: user.email,
-                name: user.username
+                name: user.name
             }
         });
     } catch (error) {
@@ -104,11 +106,80 @@ router.post("/login", async (req, res) => {
     }
 });
 
+// Register Route
+router.post("/register", async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        // Check if user exists
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ error: "User already exists" });
+        }
+
+        // Create new user
+        user = new User({
+            name,
+            email,
+            password
+        });
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+
+        await user.save();
+
+        // Generate JWT
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "24h" }
+        );
+
+        res.json({
+            success: true,
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name
+            }
+        });
+
+    } catch (error) {
+        console.error("Registration error:", error);
+        res.status(500).json({ error: "Registration failed", details: error.message });
+    }
+});
+
+// Get Current User
+router.get("/me", async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ error: "No token provided" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error("Auth error:", error);
+        res.status(401).json({ error: "Invalid token" });
+    }
+});
+
 // =======================
 // Logout Route
-// =======================
 router.post("/logout", (req, res) => {
-    res.status(200).json({ message: "Logout successful" });
+    res.clearCookie('token');
+    res.json({ success: true, message: "Logged out successfully" });
 });
 
 // =======================

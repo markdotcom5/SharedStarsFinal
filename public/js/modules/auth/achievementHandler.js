@@ -1,6 +1,6 @@
 // public/js/modules/auth/achievementHandler.js (as an ES Module)
-export default class AchievementDisplay {
-    constructor() {
+export const achievementHandler = {
+  constructor() {
       this.initializeAchievementContainer();
     }
   

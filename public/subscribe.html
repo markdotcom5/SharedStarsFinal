@@ -1,383 +1,510 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Subscribe - SharedStars</title>
-  
-  <!-- Tailwind CSS & DaisyUI -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.0/dist/full.css" rel="stylesheet" />
-  
-  <!-- Fonts & AOS -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-  
-  <!-- Custom AI Assistant CSS -->
-  <link rel="stylesheet" href="/css/ai-assistant.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="StelTrek Academy - Begin Your Journey to Space" />
+    <title data-i18n="subscribe.pageTitle">Sign Up - SharedStars Academy</title>
 
-  <!-- Inline styles for Stripe elements -->
-  <style>
-    .StripeElement {
-      background-color: #2A303C;
-      padding: 16px;
-      border-radius: 8px;
-      border: 1px solid #374151;
-    }
-    .StripeElement--focus {
-      border-color: #60A5FA;
-    }
-  </style>
-  
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <!-- Stripe JS -->
-  <script src="https://js.stripe.com/v3/"></script>
-  <script>
-    const stripe = Stripe('your_publishable_key'); 
-  </script>
-</head>
-<body class="min-h-screen bg-base-200">
-  <!-- NAVBAR -->
-  <div class="navbar bg-base-100 fixed top-0 z-50 shadow-lg">
-    <div class="container mx-auto flex items-center justify-between">
-      <div class="flex-1">
-        <a href="/index.html" aria-label="SharedStars Homepage">
-          <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-10" />
-        </a>
-      </div>
-      <div class="flex-none">
-        <ul class="menu menu-horizontal px-1">
-          <li><a href="/academy.html">Academy</a></li>
-          <li><a href="/about.html">About</a></li>
-          <li><a class="btn btn-primary">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
+    <!-- Tailwind CSS & DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
 
-  <!-- HERO SECTION -->
-  <div class="hero min-h-screen" style="background-image: url('/images/space-bg.jpg');">
-    <div class="hero-overlay bg-opacity-60"></div>
-    <div class="hero-content text-center text-neutral-content">
-      <div class="max-w-md">
-        <h1 class="mb-5 text-5xl font-bold">Chart Your Course to Space</h1>
-        <div class="alert alert-warning shadow-lg mb-6">
-          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          <span>Space Seats are Filling Up Fast!</span>
+    <!-- Fonts & AOS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/ai-assistant.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+
+    <!-- Inline styles for Stripe elements -->
+    <style>
+      .StripeElement {
+        background-color: #2A303C;
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid #374151;
+      }
+      .StripeElement--focus {
+        border-color: #60A5FA;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        scroll-behavior: smooth;
+      }
+    </style>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      // Replace 'your_publishable_key' with your actual publishable key
+      const stripe = Stripe('your_publishable_key'); 
+    </script>
+
+    <!-- Language Selection Script -->
+    <script src="/js/languageSelection.js" defer></script>
+  </head>
+  <body class="min-h-screen bg-base-200">
+    <!-- NAVBAR -->
+    <div class="navbar bg-base-100 fixed top-0 z-50 shadow-lg">
+      <div class="container mx-auto flex items-center justify-between">
+        <div class="flex-1">
+          <a href="/index.html" aria-label="SharedStars Homepage">
+            <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-10" />
+          </a>
         </div>
-
-        <!-- Stats Cards (Baseline Price & Target Price) -->
-        <div class="stats shadow bg-base-200 bg-opacity-80 backdrop-blur">
-          <div class="stat">
-            <div class="stat-title">Current Price</div>
-            <div class="stat-value text-primary">$450k</div>
-            <div class="stat-desc">Per space seat</div>
-          </div>
-          <div class="stat">
-            <div class="stat-title">Target Price</div>
-            <div class="stat-value text-secondary">$5k</div>
-            <div class="stat-desc">By 2039</div>
-          </div>
-        </div>
+        <nav class="desktop-menu hidden md:flex space-x-6">
+          <a href="/index.html" data-i18n="nav.home" class="text-gray-300 hover:text-white">Home</a>
+          <a href="/academy.html" data-i18n="nav.academy" class="text-gray-300 hover:text-white">Academy</a>
+          <a href="/about.html" data-i18n="nav.about" class="text-gray-300 hover:text-white">About</a>
+          <a href="/mission-control.html" data-i18n="nav.missionControl" class="text-gray-300 hover:text-white">Mission Control</a>
+          <a href="/subscribe.html" data-i18n="nav.subscribe" class="text-gray-300 hover:text-white">Subscribe</a>
+        </nav>
       </div>
     </div>
-  </div>
 
-  <!-- Price Evolution Graph Section -->
-  <div class="container mx-auto px-4 py-8">
-    <div class="card bg-base-100 shadow-xl">
-      <div class="card-body">
-        <h2 class="card-title text-center text-2xl font-bold mb-4">Your Path to Space</h2>
-        <div class="relative h-96">
-          <canvas id="priceEvolutionChart"></canvas>
+    <!-- HERO SECTION -->
+    <div class="hero min-h-screen" style="background-image: url('/images/space-bg.jpg');">
+      <div class="hero-overlay bg-opacity-60"></div>
+      <div class="hero-content text-center text-neutral-content" data-aos="fade">
+        <div class="max-w-md">
+          <h1 class="mb-5 text-5xl font-bold" data-i18n="subscribe.heroTitle">
+            Chart Your Course to Space
+          </h1>
+          <div class="alert alert-warning shadow-lg mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span data-i18n="subscribe.seatsWarning">
+              Space Seats are Filling Up Fast!
+            </span>
+          </div>
+          <!-- Stats Cards -->
+          <div class="stats shadow bg-base-200 bg-opacity-80 backdrop-blur">
+            <div class="stat">
+              <div class="stat-title" data-i18n="subscribe.currentPriceTitle">Current Price</div>
+              <div class="stat-value text-primary" data-i18n="subscribe.currentPriceValue">$450k</div>
+              <div class="stat-desc" data-i18n="subscribe.currentPriceDesc">Per space seat</div>
+            </div>
+            <div class="stat">
+              <div class="stat-title" data-i18n="subscribe.targetPriceTitle">Target Price</div>
+              <div class="stat-value text-secondary" data-i18n="subscribe.targetPriceValue">$5k</div>
+              <div class="stat-desc" data-i18n="subscribe.targetPriceDesc">By 2039</div>
+            </div>
+          </div>
         </div>
-        <p class="text-center text-sm opacity-70 mt-4">
-          *Based on market projections and your subscription plan
+      </div>
+    </div>
+
+    <!-- PRICE EVOLUTION GRAPH SECTION -->
+    <section class="container mx-auto px-4 py-8" data-aos="fade-up">
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title text-center text-2xl font-bold mb-4" data-i18n="subscribe.pathTitle">
+            Your Path to Space
+          </h2>
+          <div class="relative h-96">
+            <canvas id="priceEvolutionChart"></canvas>
+          </div>
+          <p class="text-center text-sm opacity-70 mt-4" data-i18n="subscribe.pathDesc">
+            *Based on market projections and your subscription plan
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRAPHS & COUNTDOWN SECTION -->
+    <section class="container mx-auto p-6 space-y-12" data-aos="fade-up">
+      <!-- Graphs Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Baseline Graph Card -->
+        <div class="card bg-gray-800 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-white" data-i18n="subscribe.baselineGraphTitle">
+              Baseline Ticket Price Projection
+            </h2>
+            <div class="w-full h-64 flex items-center justify-center">
+              <canvas id="baselineGraph"></canvas>
+            </div>
+            <p class="mt-4 text-gray-400 text-sm" data-i18n="subscribe.baselineGraphDesc">
+              2022: $750K, 2025: $500K, 2029: $125K, 2034: $60K, 2039: $5K.
+            </p>
+          </div>
+        </div>
+        <!-- Personalized Graph Card -->
+        <div class="card bg-gray-800 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-white" data-i18n="subscribe.personalGraphTitle">
+              Personalized Credits Projection
+            </h2>
+            <div class="w-full h-64 flex items-center justify-center">
+              <canvas id="personalGraph"></canvas>
+            </div>
+            <p class="mt-4 text-gray-400 text-sm" data-i18n="subscribe.personalGraphDesc">
+              This graph updates dynamically as you complete training modules and earn credits.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Countdown Timelines -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16" data-aos="fade-up">
+        <!-- Global Timeline -->
+        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+          <h3 class="text-2xl font-bold mb-4" data-i18n="subscribe.globalTimelineTitle">
+            Global Space Travel Timeline
+          </h3>
+          <div class="grid grid-cols-6 gap-2">
+            <div class="countdown-unit">
+              <div id="baseline-years" class="text-3xl font-bold">15</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.yearsLabel">Years</div>
+            </div>
+            <div class="countdown-unit">
+              <div id="baseline-months" class="text-3xl font-bold">00</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.monthsLabel">Months</div>
+            </div>
+            <div class="countdown-unit">
+              <div id="baseline-weeks" class="text-3xl font-bold">00</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.weeksLabel">Weeks</div>
+            </div>
+            <div class="countdown-unit">
+              <div id="baseline-days" class="text-3xl font-bold">00</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.daysLabel">Days</div>
+            </div>
+            <div class="countdown-unit">
+              <div id="baseline-hours" class="text-3xl font-bold">00</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.hoursLabel">Hours</div>
+            </div>
+            <div class="countdown-unit">
+              <div id="baseline-minutes" class="text-3xl font-bold">00</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.minutesLabel">Minutes</div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Personalized Timeline -->
+        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+          <h3 class="text-2xl font-bold mb-4" data-i18n="subscribe.personalTimelineTitle">
+            Your Accelerated Timeline
+          </h3>
+          <div class="grid grid-cols-6 gap-2">
+            <div class="countdown-unit highlight">
+              <div id="personal-years" class="text-3xl font-bold">--</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.yearsLabel">Years</div>
+            </div>
+            <div class="countdown-unit highlight">
+              <div id="personal-months" class="text-3xl font-bold">--</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.monthsLabel">Months</div>
+            </div>
+            <div class="countdown-unit highlight">
+              <div id="personal-weeks" class="text-3xl font-bold">--</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.weeksLabel">Weeks</div>
+            </div>
+            <div class="countdown-unit highlight">
+              <div id="personal-days" class="text-3xl font-bold">--</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.daysLabel">Days</div>
+            </div>
+            <div class="countdown-unit highlight">
+              <div id="personal-hours" class="text-3xl font-bold">--</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.hoursLabel">Hours</div>
+            </div>
+            <div class="countdown-unit highlight">
+              <div id="personal-minutes" class="text-3xl font-bold">--</div>
+              <div class="text-sm opacity-70" data-i18n="subscribe.minutesLabel">Minutes</div>
+            </div>
+          </div>
+          <div class="mt-4 text-green-400" id="credits-display" data-i18n="subscribe.creditsDisplay">
+            Your SharedStars Credits: 0
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- PAYMENT ELEMENTS (Stripe) -->
+    <section class="container mx-auto px-4 py-8" data-aos="fade-up">
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title text-center" data-i18n="subscribe.paymentTitle">
+            Secure Your Journey
+          </h2>
+          <div id="card-element" class="p-6 bg-base-200 rounded-lg mt-4"></div>
+          <div id="card-errors" class="text-error text-sm mt-2"></div>
+          <div id="payment-processing" class="hidden">
+            <span class="loading loading-spinner loading-lg"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- SUBSCRIPTION PLANS -->
+    <section class="container mx-auto px-4 py-8" data-aos="fade-up">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Individual Explorer -->
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+          <div class="card-body relative">
+            <div class="badge badge-primary absolute right-4 top-4" data-i18n="subscribe.plan.individual.badge">
+              15-year track
+            </div>
+            <h3 class="text-2xl font-bold" data-i18n="subscribe.plan.individual.title">
+              Individual Explorer
+            </h3>
+            <div class="text-4xl font-bold mt-4">
+              <span data-i18n="subscribe.plan.individual.price">$49.99</span>
+              <span class="text-lg" data-i18n="subscribe.perMonth">/mo</span>
+            </div>
+            <div class="divider"></div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.individual.feature1">
+                  Personal AI Coach
+                </span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.individual.feature2">
+                  10hrs Monthly VR
+                </span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.individual.feature3">
+                  100 Space Credits
+                </span>
+              </li>
+            </ul>
+            <button class="btn btn-primary mt-6 w-full" data-plan="individual" data-i18n="subscribe.plan.individual.cta">
+              Begin Journey
+            </button>
+          </div>
+        </div>
+        <!-- Family Pioneer -->
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+          <div class="card-body relative">
+            <div class="badge badge-secondary absolute right-4 top-4" data-i18n="subscribe.plan.family.badge">
+              10-year track
+            </div>
+            <h3 class="text-2xl font-bold" data-i18n="subscribe.plan.family.title">
+              Family Pioneer
+            </h3>
+            <div class="text-4xl font-bold mt-4">
+              <span data-i18n="subscribe.plan.family.price">$89.99</span>
+              <span class="text-lg" data-i18n="subscribe.perMonth">/mo</span>
+            </div>
+            <div class="divider"></div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.family.feature1">
+                  4 Member Access
+                </span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.family.feature2">
+                  Unlimited VR
+                </span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.family.feature3">
+                  250 Space Credits
+                </span>
+              </li>
+            </ul>
+            <button class="btn btn-secondary mt-6 w-full" data-plan="family" data-i18n="subscribe.plan.family.cta">
+              Secure Family Access
+            </button>
+          </div>
+        </div>
+        <!-- Galactic Elite -->
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+          <div class="card-body relative">
+            <div class="badge badge-accent absolute right-4 top-4" data-i18n="subscribe.plan.elite.badge">
+              1-year track
+            </div>
+            <h3 class="text-2xl font-bold" data-i18n="subscribe.plan.elite.title">
+              Galactic Elite
+            </h3>
+            <div class="text-4xl font-bold mt-4">
+              <span data-i18n="subscribe.plan.elite.price">$2,048</span>
+              <span class="text-lg" data-i18n="subscribe.perMonth">/mo</span>
+            </div>
+            <div class="divider"></div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.elite.feature1">
+                  Priority Access
+                </span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.elite.feature2">
+                  Private Facility
+                </span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.elite.feature3">
+                  1000 Space Credits
+                </span>
+              </li>
+            </ul>
+            <button class="btn btn-accent mt-6 w-full" data-plan="elite" data-i18n="subscribe.plan.elite.cta">
+              Launch Next Year
+            </button>
+          </div>
+        </div>
+        <!-- Custom Contributor -->
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+          <div class="card-body relative">
+            <div class="badge badge-ghost absolute right-4 top-4" data-i18n="subscribe.plan.custom.badge">
+              Flexible track
+            </div>
+            <h3 class="text-2xl font-bold" data-i18n="subscribe.plan.custom.title">
+              Custom Contributor
+            </h3>
+            <div class="text-4xl font-bold mt-4">
+              <input type="number" 
+                     class="input input-bordered w-full text-2xl" 
+                     placeholder="$ Amount"
+                     id="customAmount"
+                     min="10"
+                     step="1" />
+              <span class="text-lg" data-i18n="subscribe.perMonth">/mo</span>
+            </div>
+            <div class="divider"></div>
+            <ul class="space-y-2">
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span data-i18n="subscribe.plan.custom.feature1">
+                  Flexible Contribution
+                </span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span id="customCredits" data-i18n="subscribe.plan.custom.feature2">
+                  Credits Based on Contribution
+                </span>
+              </li>
+            </ul>
+            <button class="btn btn-ghost mt-6 w-full" id="customPlanBtn" data-i18n="subscribe.plan.custom.cta">
+              Start Contributing
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ONBOARDING WIZARD MODAL -->
+    <div id="onboardingModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+      <div class="bg-gray-800 p-8 rounded-lg shadow-2xl max-w-2xl w-full">
+        <h2 class="text-3xl font-bold text-blue-400 mb-6" data-i18n="onboarding.title">
+          Complete Your Profile
+        </h2>
+        <div id="onboardingContent">
+          <!-- Onboarding step content will be injected here -->
+        </div>
+        <div class="flex justify-between mt-6">
+          <button id="prevStep" class="btn btn-outline" disabled data-i18n="onboarding.prev">Previous</button>
+          <button id="nextStep" class="btn btn-primary" data-i18n="onboarding.next">Next</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- FOOTER -->
+    <footer class="footer bg-gray-900 text-white py-12" data-i18n>
+      <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
+        <!-- About -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+            <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">Space Academy</a></li>
+            <li><a href="/missions.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.missions">Missions</a></li>
+          </ul>
+        </div>
+        <!-- Community -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+            <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+            <li><a href="/teams.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.teams">Teams</a></li>
+          </ul>
+        </div>
+        <!-- Resources -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+            <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+            <li><a href="/docs.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.docs">Documentation</a></li>
+          </ul>
+        </div>
+        <!-- Legal -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+            <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 text-center">
+        <h4 class="text-lg font-bold text-blue-400" data-i18n="footer.followUs">Follow Us</h4>
+        <div class="flex justify-center gap-6 mt-4">
+          <a href="https://twitter.com" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
+            </svg>
+          </a>
+          <a href="https://facebook.com" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
+            </svg>
+          </a>
+          <a href="https://instagram.com" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.5 11h-3.176c.12.272.176.563.176.865 0 .77-.622 1.397-1.4 1.397-.777 0-1.399-.627-1.399-1.397 0-.302.057-.593.176-.865H7.5v5h9v-5zm-4.5-7c.774 0 1.4.627 1.4 1.4s-.626 1.399-1.4 1.399c-.774 0-1.4-.626-1.4-1.399s.626-1.4 1.4-1.4zm5 5.5h-10v7h10v-7z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="mt-12 pt-8 border-t border-blue-500/20 text-center">
+        <p class="text-blue-300 text-sm" data-i18n="footer.copyright">
+          © 2025 Celestial Technologies, LLC. All Rights Reserved.
         </p>
       </div>
     </div>
-  </div>
-
-  <!-- Graphs & Countdown Section -->
-  <div class="container mx-auto p-6 space-y-12">
-    <!-- Graphs Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Baseline Graph Card -->
-      <div class="card bg-gray-800 shadow-xl">
-        <div class="card-body">
-          <h2 class="card-title text-white">Baseline Ticket Price Projection</h2>
-          <div class="w-full h-64 flex items-center justify-center">
-            <canvas id="baselineGraph" class="w-full h-full"></canvas>
-          </div>
-          <p class="mt-4 text-gray-400 text-sm">
-            2022: $750K, 2025: $500K, 2029: $125K, 2034: $60K, 2039: $5K.
-          </p>
-        </div>
-      </div>
-      <!-- Personalized Graph Card -->
-      <div class="card bg-gray-800 shadow-xl">
-        <div class="card-body">
-          <h2 class="card-title text-white">Personalized Credits Projection</h2>
-          <div class="w-full h-64 flex items-center justify-center">
-            <canvas id="personalGraph" class="w-full h-full"></canvas>
-          </div>
-          <p class="mt-4 text-gray-400 text-sm">
-            This graph updates dynamically as you complete training modules and earn credits.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Countdown Timers Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Baseline Countdown Timer Card -->
-      <div class="card bg-gray-800 shadow-xl">
-        <div class="card-body">
-          <h2 class="card-title text-white">Baseline Countdown</h2>
-          <div class="grid grid-cols-6 gap-2 mt-4">
-            <div class="p-4 bg-blue-500 rounded text-center">
-              <span id="baselineYears" class="block text-3xl font-bold text-white">2022</span>
-              <span class="block text-xs text-white">Years</span>
-            </div>
-            <div class="p-4 bg-blue-500 rounded text-center">
-              <span id="baselineMonths" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Months</span>
-            </div>
-            <div class="p-4 bg-blue-500 rounded text-center">
-              <span id="baselineWeeks" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Weeks</span>
-            </div>
-            <div class="p-4 bg-blue-500 rounded text-center">
-              <span id="baselineDays" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Days</span>
-            </div>
-            <div class="p-4 bg-blue-500 rounded text-center">
-              <span id="baselineHours" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Hours</span>
-            </div>
-            <div class="p-4 bg-blue-500 rounded text-center">
-              <span id="baselineMinutes" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Minutes</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Personalized Countdown Timer Card -->
-      <div class="card bg-gray-800 shadow-xl">
-        <div class="card-body">
-          <h2 class="card-title text-white">Personalized Countdown</h2>
-          <div class="grid grid-cols-6 gap-2 mt-4">
-            <div class="p-4 bg-green-500 rounded text-center">
-              <span id="personalYears" class="block text-3xl font-bold text-white">2022</span>
-              <span class="block text-xs text-white">Years</span>
-            </div>
-            <div class="p-4 bg-green-500 rounded text-center">
-              <span id="personalMonths" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Months</span>
-            </div>
-            <div class="p-4 bg-green-500 rounded text-center">
-              <span id="personalWeeks" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Weeks</span>
-            </div>
-            <div class="p-4 bg-green-500 rounded text-center">
-              <span id="personalDays" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Days</span>
-            </div>
-            <div class="p-4 bg-green-500 rounded text-center">
-              <span id="personalHours" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Hours</span>
-            </div>
-            <div class="p-4 bg-green-500 rounded text-center">
-              <span id="personalMinutes" class="block text-3xl font-bold text-white">0</span>
-              <span class="block text-xs text-white">Minutes</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PAYMENT ELEMENTS (Stripe) -->
-  <div class="container mx-auto px-4 py-8">
-    <div class="card bg-base-100 shadow-xl">
-      <div class="card-body">
-        <h2 class="card-title justify-center">Secure Your Journey</h2>
-        <div id="card-element" class="p-6 bg-base-200 rounded-lg mt-4"></div>
-        <div id="card-errors" class="text-error text-sm mt-2"></div>
-        <div id="payment-processing" class="hidden">
-          <span class="loading loading-spinner loading-lg"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SUBSCRIPTION PLANS -->
-  <div class="container mx-auto px-4 py-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Individual Explorer -->
-      <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-        <div class="card-body relative">
-          <div class="badge badge-primary absolute right-4 top-4">15-year track</div>
-          <h3 class="text-2xl font-bold">Individual Explorer</h3>
-          <div class="text-4xl font-bold mt-4">$49.99<span class="text-lg">/mo</span></div>
-          <div class="divider"></div>
-          <ul class="space-y-2">
-            <li class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              Personal AI Coach
-            </li>
-            <li class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              10hrs Monthly VR
-            </li>
-            <li class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              100 Space Credits
-            </li>
-          </ul>
-          <button class="btn btn-primary mt-6 w-full" data-plan="individual">
-            Begin Journey
-          </button>
-        </div>
-      </div>
-      <!-- Family Pioneer -->
-      <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-        <div class="card-body relative">
-          <div class="badge badge-secondary absolute right-4 top-4">10-year track</div>
-          <h3 class="text-2xl font-bold">Family Pioneer</h3>
-          <div class="text-4xl font-bold mt-4">$89.99<span class="text-lg">/mo</span></div>
-          <div class="divider"></div>
-          <ul class="space-y-2">
-            <li class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              4 Member Access
-            </li>
-            <li class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              Unlimited VR
-            </li>
-            <li class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              250 Space Credits
-            </li>
-          </ul>
-          <button class="btn btn-secondary mt-6 w-full" data-plan="family">
-            Secure Family Access
-          </button>
-        </div>
-      </div>
-      <!-- Galactic Elite -->
-      <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-        <div class="card-body relative">
-          <div class="badge badge-accent absolute right-4 top-4">1-year track</div>
-          <h3 class="text-2xl font-bold">Galactic Elite</h3>
-          <div class="text-4xl font-bold mt-4">$2,048<span class="text-lg">/mo</span></div>
-          <div class="divider"></div>
-          <ul class="space-y-2">
-            <li class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              Priority Access
-            </li>
-            <li class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              Private Facility
-            </li>
-            <li class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              1000 Space Credits
-            </li>
-          </ul>
-          <button class="btn btn-accent mt-6 w-full" data-plan="elite">
-            Launch Next Year
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="footer bg-gray-900 text-white py-12">
-    <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-      <!-- About -->
-      <div>
-        <h3 class="font-bold text-lg text-blue-400">About</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/about.html" class="hover:text-blue-400 transition">Our Story</a></li>
-          <li><a href="/academy.html" class="hover:text-blue-400 transition">Space Academy</a></li>
-        </ul>
-      </div>
-      <!-- Community -->
-      <div>
-        <h3 class="font-bold text-lg text-blue-400">Community</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/events.html" class="hover:text-blue-400 transition">Events</a></li>
-          <li><a href="/forums.html" class="hover:text-blue-400 transition">Forums</a></li>
-        </ul>
-      </div>
-      <!-- Resources -->
-      <div>
-        <h3 class="font-bold text-lg text-blue-400">Resources</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/faq.html" class="hover:text-blue-400 transition">FAQ</a></li>
-          <li><a href="/support.html" class="hover:text-blue-400 transition">Support</a></li>
-        </ul>
-      </div>
-      <!-- Legal -->
-      <div>
-        <h3 class="font-bold text-lg text-blue-400">Legal</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/terms.html" class="hover:text-blue-400 transition">Terms</a></li>
-          <li><a href="/privacy.html" class="hover:text-blue-400 transition">Privacy</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="mt-12 text-center">
-      <h4 class="text-lg font-bold text-blue-400">Follow Us</h4>
-      <div class="flex justify-center gap-6 mt-4">
-        <a href="#" class="hover:text-blue-400 transition" aria-label="Twitter">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
-          </svg>
-        </a>
-        <a href="#" class="hover:text-blue-400 transition" aria-label="Facebook">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
-          </svg>
-        </a>
-        <a href="#" class="hover:text-blue-400 transition" aria-label="Instagram">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.5 11h-3.176c.12.272.176.563.176.865 0 .77-.622 1.397-1.4 1.397-.777 0-1.399-.627-1.399-1.397 0-.302.057-.593.176-.865H7.5v5h9v-5zm-4.5-7c.774 0 1.4.627 1.4 1.4s-.626 1.399-1.4 1.399c-.774 0-1.4-.626-1.4-1.399s.626-1.4 1.4-1.4zm5 5.5h-10v7h10v-7z"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-    <div class="mt-12 pt-8 border-t border-blue-500/20 text-center">
-      <p class="text-gray-400 text-sm">© 2025 Celestial Technologies, LLC. All Rights Reserved.</p>
-    </div>
   </footer>
-
+  
   <!-- CORE DEPENDENCIES -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
@@ -391,7 +518,7 @@
     import '/js/modules/auth/index.js';
   </script>
   
-  <!-- Legacy Scripts (Defer loading) -->
+  <!-- Legacy Scripts (Deferred) -->
   <script src="/js/animations.js" defer></script>
   <script src="/js/trialFlow.js" defer></script>
   <script src="/js/leaderboard.js" defer></script>
@@ -401,10 +528,167 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
   <script>hljs.highlightAll();</script>
   
-  <!-- Language System -->
+  <!-- Language Selection & Navigation Scripts -->
   <script src="/js/languageSelection.js"></script>
+  <script src="/js/language-switcher.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("✅ Language & Navigation Script Loaded");
+      const savedLang = localStorage.getItem("preferredLanguage") || "en";
+      document.documentElement.lang = savedLang;
+      applyTranslations(savedLang);
+      document.querySelectorAll(".language-flag").forEach((flag) => {
+        flag.addEventListener("click", () => {
+          const selectedLang = flag.dataset.lang || "en";
+          localStorage.setItem("preferredLanguage", selectedLang);
+          applyTranslations(selectedLang);
+        });
+      });
+      document.querySelectorAll("nav a").forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          console.log(`✅ Navigating to: ${this.href}`);
+          window.location.href = this.href;
+        });
+      });
+    });
+    
+    function applyTranslations(lang) {
+      const translations = {
+        en: {
+          nav: {
+            home: "Home",
+            why: "Why SharedStars",
+            about: "About",
+            leaderboard: "Leaderboard",
+            login: "Login",
+            "mission-control": "Mission Control",
+            profile: "Profile",
+            signup: "Sign Up",
+            academy: "StelTrek Academy",
+            welcome: "Welcome",
+            subscribe: "Subscribe"
+          },
+          welcome: {
+            videoTagline: "Enough dreaming, let’s take a walk to show how we can get you up to space.",
+            ctaMessage: "Are you ready to begin your space journey?",
+            joinButton: "Join Now",
+            proceedButton: "Proceed",
+            aiStatus: "Initializing AI Coach..."
+          },
+          subscribe: {
+            pageTitle: "Sign Up - SharedStars Academy",
+            heroTitle: "Chart Your Course to Space",
+            seatsWarning: "Space Seats are Filling Up Fast!",
+            currentPriceTitle: "Current Price",
+            currentPriceValue: "$450k",
+            currentPriceDesc: "Per space seat",
+            targetPriceTitle: "Target Price",
+            targetPriceValue: "$5k",
+            targetPriceDesc: "By 2039",
+            pathTitle: "Your Path to Space",
+            pathDesc: "*Based on market projections and your subscription plan",
+            baselineGraphTitle: "Baseline Ticket Price Projection",
+            baselineGraphDesc: "2022: $750K, 2025: $500K, 2029: $125K, 2034: $60K, 2039: $5K.",
+            personalGraphTitle: "Personalized Credits Projection",
+            personalGraphDesc: "This graph updates dynamically as you complete training modules and earn credits.",
+            yearsLabel: "Years",
+            monthsLabel: "Months",
+            weeksLabel: "Weeks",
+            daysLabel: "Days",
+            hoursLabel: "Hours",
+            minutesLabel: "Minutes",
+            personalTimelineTitle: "Your Accelerated Timeline",
+            creditsDisplay: "Your SharedStars Credits: 0",
+            paymentTitle: "Secure Your Journey",
+            perMonth: "/mo",
+            plan: {
+              individual: {
+                badge: "15-year track",
+                title: "Individual Explorer",
+                price: "$49.99",
+                feature1: "Personal AI Coach",
+                feature2: "10hrs Monthly VR",
+                feature3: "100 Space Credits",
+                cta: "Begin Journey"
+              },
+              family: {
+                badge: "10-year track",
+                title: "Family Pioneer",
+                price: "$89.99",
+                feature1: "4 Member Access",
+                feature2: "Unlimited VR",
+                feature3: "250 Space Credits",
+                cta: "Secure Family Access"
+              },
+              elite: {
+                badge: "1-year track",
+                title: "Galactic Elite",
+                price: "$2,048",
+                feature1: "Priority Access",
+                feature2: "Private Facility",
+                feature3: "1000 Space Credits",
+                cta: "Launch Next Year"
+              },
+              custom: {
+                badge: "Flexible track",
+                title: "Custom Contributor",
+                feature1: "Flexible Contribution",
+                feature2: "Credits Based on Contribution",
+                cta: "Start Contributing"
+              }
+            }
+          },
+          footer: {
+            about: {
+              title: "About",
+              ourStory: "Our Story",
+              academy: "Space Academy",
+              missions: "Missions"
+            },
+            community: {
+              title: "Community",
+              forums: "Forums",
+              events: "Events",
+              teams: "Teams"
+            },
+            resources: {
+              title: "Resources",
+              faq: "FAQ",
+              support: "Support",
+              docs: "Documentation"
+            },
+            legal: {
+              title: "Legal",
+              terms: "Terms",
+              privacy: "Privacy"
+            },
+            followUs: "Follow Us",
+            copyright: "© 2025 Celestial Technologies, LLC. All Rights Reserved."
+          }
+        },
+        zh: {
+          // Chinese translations here...
+        }
+        // Additional translations for ko and es as needed...
+      };
+
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.dataset.i18n;
+        const keys = key.split(".");
+        let translation = translations[lang];
+        keys.forEach((k) => {
+          translation = translation ? translation[k] : null;
+        });
+        if (translation) {
+          element.textContent = translation;
+        }
+      });
+    }
+  </script>
   
   <!-- Main Initialization Script -->
   <script src="/js/main.js"></script>
 </body>
 </html>
+

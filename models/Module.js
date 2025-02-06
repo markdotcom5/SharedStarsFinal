@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const { OpenAI } = require('openai');
+const { OpenAI } = require("openai");
+
+
 const Schema = mongoose.Schema;
 
 // OpenAI Configuration with robust error handling
