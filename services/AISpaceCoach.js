@@ -1,10 +1,8 @@
+// At the top of the file, fix the OpenAI initialization
 const { OpenAI } = require("openai");
-
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
-
-
 
 const EventEmitter = require('events');
 const Achievement = require('../models/Achievement');
@@ -79,7 +77,7 @@ class AISpaceCoach extends EventEmitter {
     }
 
     try {
-      const completion = await OpenAI.chat.completions.create({
+      const completion = await openai.chat.completions.create({
         model: this.config.model,
         messages: [
           {
@@ -288,7 +286,7 @@ class AISpaceCoach extends EventEmitter {
       // Generate personalized context
       const context = this.generateAIContext(user, progress, subscription);
 
-      const completion = await OpenAI.chat.completions.create({
+      const completion = await openai.chat.completions.create({
         model: this.config.model,
         messages: [
           {
@@ -351,7 +349,7 @@ class AISpaceCoach extends EventEmitter {
       const aiQualityLevel = this.getAIQualityLevel(subscription);
 
       // Generate AI evaluation
-      const completion = await OpenAI.chat.completions.create({
+      const completion = await openai.chat.completions.create({
         model: this.config.model,
         messages: [
           {

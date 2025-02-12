@@ -79,7 +79,7 @@ class AIGuidanceSystem {
     // ✅ Handle Training Interventions
     async handleIntervention(userId, moduleId, triggerType) {
         try {
-            const userProgress = await UserProgress.findOne({ userId });
+            const userProgress = await UserProgress.findOne({ userId: new mongoose.Types.ObjectId(userId) });
             const intervention = await this.createIntervention(userId, moduleId, triggerType);
 
             if (this.interventionTypes[triggerType]) {

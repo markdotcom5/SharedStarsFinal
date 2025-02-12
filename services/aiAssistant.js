@@ -1,286 +1,159 @@
-// services/aiAssistant.js
 const { OpenAI } = require("openai");
+const User = require('../models/User');
+const UserProgress = require('../models/UserProgress');
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+    apiKey: process.env.OPENAI_API_KEY
 });
-
-
-
-const User = require('../models/User');
 
 class AIAssistant {
     constructor() {
         this.openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY
         });
-        this.defaultModel = 'gpt-4-turbo-preview';
-        this.systemInstructions = {
-            certification: this.getCertificationPrompt(),
-            achievement: this.getAchievementPrompt()
-        };
+        this.defaultModel = "gpt-4-turbo-preview";
     }
 
-    // System prompts - keeping original implementation
-    getCertificationPrompt() {
-        return `As a space training certification analyst, evaluate:
-            - Current certification status and progress
-            - Key performance metrics and milestones
-            - Estimated completion timeline
-            - Critical skill gaps and recommendations
-            - Required actions for improvement
-            - Safety and compliance status`;
-    }
-
-    getAchievementPrompt() {
-        return `Analyze astronaut training achievements focusing on:
-            - Completion rates and success metrics
-            - Skill development trajectory
-            - Performance benchmarks
-            - Training efficiency metrics
-            - Peer group comparisons
-            - Safety protocol adherence`;
-    }
-
-    // Base helper methods - keeping original implementation
-    extractMetrics(data) {
+    /**
+     * 🎖 **Analyze User Achievements**
+     * - Evaluates achievement progress.
+     * - Identifies patterns and improvement areas.
+     */
+    async analyzeAchievementProgress(userId) {
         try {
-            return {
-                completionRate: this.calculateCompletionRate(data),
-                skillLevels: this.assessSkillLevels(data),
-                safetyCompliance: this.checkSafetyCompliance(data)
-            };
-        } catch (error) {
-            console.error('Metrics Extraction Error:', error);
-            return null;
-        }
-    }
-
-    calculateCompletionRate(data) {
-        const completed = data.filter(item => item.status === 'completed').length;
-        return (completed / data.length) * 100;
-    }
-
-    assessSkillLevels(data) {
-        return data.reduce((acc, item) => {
-            acc[item.skill] = item.level;
-            return acc;
-        }, {});
-    }
-
-    checkSafetyCompliance(data) {
-        return data.every(item => item.safetyProtocols === 'passed');
-    }
-
-    // Main analysis methods - keeping original implementation
-    async analyzeCertificationProgress(certifications) {
-        try {
-            const completion = await this.openai.chat.completions.create({
-                model: this.defaultModel,
-                messages: [
-                    {
-                        role: "system",
-                        content: this.systemInstructions.certification
-                    },
-                    {
-                        role: "user",
-                        content: `Analyze certification data: ${JSON.stringify(certifications)}`
-                    }
-                ]
-            });
-
-            const analysis = completion.choices[0].message.content;
+            console.log(`🔍 AI Analyzing Achievements for User: ${userId}`);
             
-            return {
-                analysis,
-                metrics: this.extractMetrics(certifications),
-                recommendations: this.generateRecommendations(analysis),
-                safetyStatus: this.checkSafetyCompliance(certifications),
-                timestamp: new Date(),
-                version: '2.0'
-            };
-        } catch (error) {
-            console.error('Certification Analysis Error:', error);
-            throw new Error('Failed to analyze certification progress');
-        }
-    }
+            const user = await UserProgress.findOne({ userId }).lean();
+            if (!user || !user.achievements.length) {
+                return { success: false, message: "No achievements found." };
+            }
 
-    async analyzeAchievementProgress(achievements) {
-        try {
             const completion = await this.openai.chat.completions.create({
                 model: this.defaultModel,
                 messages: [
-                    {
-                        role: "system",
-                        content: this.systemInstructions.achievement
-                    },
-                    {
-                        role: "user",
-                        content: `Analyze achievement data: ${JSON.stringify(achievements)}`
-                    }
-                ]
+                    { role: "system", content: "Analyze user achievements and suggest improvements." },
+                    { role: "user", content: `Achievements: ${JSON.stringify(user.achievements)}` }
+                ],
+                max_tokens: 500
             });
 
             return {
-                analysis: completion.choices[0].message.content,
-                metrics: this.extractMetrics(achievements),
-                trends: this.analyzePerformanceTrends(achievements),
-                nextMilestones: this.identifyNextMilestones(achievements),
-                safetyCompliance: this.checkSafetyCompliance(achievements),
-                timestamp: new Date(),
-                version: '2.0'
-            };
-        } catch (error) {
-            console.error('Achievement Analysis Error:', error);
-            throw new Error('Failed to analyze achievement progress');
-        }
-    }
-
-    // Adding the Leaderboard Analysis method
-    async generateLeaderboardStrategy(user, leaderboardData) {
-        try {
-            const completion = await this.openai.chat.completions.create({
-                model: this.defaultModel,
-                messages: [{
-                    role: "system",
-                    content: `Generate comprehensive leaderboard strategy including:
-                             - Current ranking analysis
-                             - Point gap analysis to next ranks
-                             - Performance comparison with top performers
-                             - Specific improvement opportunities
-                             - Timeline predictions for rank improvements`
-                }, {
-                    role: "user",
-                    content: `Generate detailed strategy for:
-                             User: ${JSON.stringify(user)}
-                             Leaderboard: ${JSON.stringify(leaderboardData)}`
-                }]
-            });
-
-            return {
-                strategy: completion.choices[0].message.content,
-                rankAnalysis: this.analyzeRankPosition(user, leaderboardData),
-                improvementPaths: this.identifyImprovementPaths(leaderboardData),
-                timeline: this.generateProgressionTimeline(user, leaderboardData),
+                success: true,
+                analysis: completion.choices[0]?.message?.content || "No AI insights available.",
+                insights: this.analyzePerformanceTrends(user.achievements),
+                nextMilestones: this.identifyNextMilestones(user.achievements),
                 timestamp: new Date()
             };
         } catch (error) {
-            console.error('Leaderboard Strategy Error:', error);
-            throw error;
+            console.error("❌ AI Achievement Analysis Error:", error);
+            return { success: false, message: "Failed to analyze achievement progress." };
         }
     }
 
-    // Helper Methods
+    /**
+     * 🏆 **AI Performance Trends**
+     * - Identifies patterns in training progress.
+     */
+    analyzePerformanceTrends(achievements) {
+        const totalAchievements = achievements.length;
+        const completed = achievements.filter(a => a.completed).length;
+        const completionRate = totalAchievements ? (completed / totalAchievements) * 100 : 0;
+
+        return {
+            trend: completionRate > 80 ? "Excellent" : completionRate > 50 ? "Improving" : "Needs Improvement",
+            insights: completionRate > 80 ? "You're mastering your training!" : "Focus on completing more tasks to level up!"
+        };
+    }
+
+    /**
+     * 🚀 **Identify Next Milestones**
+     * - Predicts next certification or training step.
+     */
+    identifyNextMilestones(achievements) {
+        if (!achievements.length) return ["Start Training"];
+        return achievements.length > 5 ? ["Advanced Simulation", "Elite Certification"] : ["Complete Next Training"];
+    }
+
+    /**
+     * 🏋️‍♂️ **Session Analysis & AI Feedback**
+     * - Evaluates user training sessions.
+     * - Recommends personalized regimens.
+     */
+    async analyzeSessionPerformance(userId) {
+        try {
+            console.log(`📊 AI Evaluating Training Session for: ${userId}`);
+
+            const user = await UserProgress.findOne({ userId }).lean();
+            if (!user) return { success: false, message: "No training data found." };
+
+            const sessionData = user.moduleProgress.map(module => ({
+                moduleId: module.moduleId,
+                completedSessions: module.completedSessions,
+                trainingLogs: module.trainingLogs.slice(-3) // Get last 3 logs for recent analysis
+            }));
+
+            const completion = await this.openai.chat.completions.create({
+                model: this.defaultModel,
+                messages: [
+                    { role: "system", content: "Analyze user training sessions and suggest personalized improvements." },
+                    { role: "user", content: `Training Data: ${JSON.stringify(sessionData)}` }
+                ],
+                max_tokens: 500
+            });
+
+            return {
+                success: true,
+                feedback: completion.choices[0]?.message?.content || "No AI insights available.",
+                timestamp: new Date()
+            };
+        } catch (error) {
+            console.error("❌ AI Session Analysis Failed:", error);
+            return { success: false, message: "Failed to analyze session performance." };
+        }
+    }
+
+    /**
+     * 🎯 **AI-Driven Recommendations**
+     * - Provides smart training suggestions.
+     */
     generateRecommendations(analysis) {
-        const recommendations = analysis
-            .split('\n')
-            .filter(line => line.includes('recommend') || line.includes('should'))
-            .map(line => line.trim());
-        
-        return recommendations.length > 0 ? recommendations : ['No specific recommendations found'];
+        return analysis
+            .split("\n")
+            .filter(line => line.includes("recommend") || line.includes("should"))
+            .map(line => line.trim()) || ["No specific recommendations found"];
     }
 
-    getMilestoneSequence() {
-        return [
-            { id: 'basic_training', name: 'Basic Training' },
-            { id: 'advanced_theory', name: 'Advanced Theory' },
-            { id: 'practical_skills', name: 'Practical Skills' },
-            { id: 'simulation_training', name: 'Simulation Training' },
-            { id: 'final_certification', name: 'Final Certification' }
-        ];
-    }
-
-    // Additional Helper Methods
-    extractCertificationMetrics(analysis) {
+    /**
+     * 📢 **Personalized Training Advice**
+     * - AI suggests the best learning path for the user.
+     */
+    async generateTrainingPlan(userId) {
         try {
+            console.log(`🔍 AI Generating Personalized Training for User: ${userId}`);
+
+            const user = await UserProgress.findOne({ userId }).lean();
+            if (!user) return { success: false, message: "User progress not found." };
+
+            const plan = await this.openai.chat.completions.create({
+                model: this.defaultModel,
+                messages: [
+                    { role: "system", content: "Generate an AI-personalized space training plan based on user progress." },
+                    { role: "user", content: `User Data: ${JSON.stringify(user)}` }
+                ],
+                max_tokens: 500
+            });
+
             return {
-                completionPercentages: {},
-                timeInvestment: {},
-                skillLevels: {}
+                success: true,
+                trainingPlan: plan.choices[0]?.message?.content || "AI training plan unavailable.",
+                timestamp: new Date()
             };
         } catch (error) {
-            console.error('Metric Extraction Error:', error);
-            return {};
-        }
-    }
-
-    extractCompletionPredictions(analysis) {
-        try {
-            return {
-                estimatedCompletionDates: {},
-                confidenceScores: {}
-            };
-        } catch (error) {
-            console.error('Prediction Extraction Error:', error);
-            return {};
-        }
-    }
-
-    extractSkillGaps(analysis) {
-        try {
-            return {
-                criticalGaps: [],
-                recommendedFocus: [],
-                priorityOrder: []
-            };
-        } catch (error) {
-            console.error('Gap Analysis Error:', error);
-            return {};
-        }
-    }
-
-    calculateCompletionRates(achievements) {
-        try {
-            return {
-                overall: 0,
-                byCategory: {},
-                byDifficulty: {}
-            };
-        } catch (error) {
-            console.error('Completion Rate Calculation Error:', error);
-            return {};
-        }
-    }
-
-    analyzeRankPosition(user, leaderboardData) {
-        try {
-            return {
-                currentRank: 0,
-                pointsToNextRank: 0,
-                competitorAnalysis: []
-            };
-        } catch (error) {
-            console.error('Rank Analysis Error:', error);
-            return {};
-        }
-    }
-
-    identifyImprovementPaths(leaderboardData) {
-        try {
-            return {
-                quickWins: [],
-                mediumTermGoals: [],
-                longTermStrategies: []
-            };
-        } catch (error) {
-            console.error('Improvement Path Error:', error);
-            return {};
-        }
-    }
-
-    generateProgressionTimeline(user, leaderboardData) {
-        try {
-            return {
-                milestones: [],
-                predictedDates: {},
-                requiredActions: []
-            };
-        } catch (error) {
-            console.error('Timeline Generation Error:', error);
-            return {};
+            console.error("❌ AI Training Plan Generation Error:", error);
+            return { success: false, message: "Failed to generate training plan." };
         }
     }
 }
 
-// Export a singleton instance
-module.exports = AIAssistant;
+// ✅ Export AI Assistant as a Singleton
+module.exports = new AIAssistant();

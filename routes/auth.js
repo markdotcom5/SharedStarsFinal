@@ -33,7 +33,9 @@ const authenticate = async (req, res, next) => {
 // =======================
 router.post("/signup", async (req, res) => {
     try {
-        const { username, email, password, spaceReadinessScore, division } = req.body;
+        console.log("Received signup data:", req.body);
+        // Destructure the correct fields that match what's being sent
+        const { name, email, password } = req.body;  // Changed from username to name
 
         let user = await User.findOne({ email: email.trim().toLowerCase() });
         if (user) {
@@ -42,18 +44,18 @@ router.post("/signup", async (req, res) => {
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 12);
+        
+        // Create new user with the correct fields
         user = new User({
-            username,
+            name,  // Use name directly, not username
             email: email.trim().toLowerCase(),
-            password: hashedPassword,
-            spaceReadinessScore,
-            division
+            password: hashedPassword
         });
 
         await user.save();
 
-        // Generate JWT Token
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        // In auth.js and signup.js, standardize all token generations to:
+          const token = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
         res.status(201).json({ message: "User created", token, user: user.toObject() });
     } catch (error) {
@@ -61,7 +63,6 @@ router.post("/signup", async (req, res) => {
         res.status(500).json({ error: "Server error" });
     }
 });
-
 // =======================
 // Login Route
 router.post("/login", async (req, res) => {
@@ -89,7 +90,12 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ error: "Invalid email or password" });
         }
 
-        const token = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        // In auth.js and signup.js, standardize all token generations to:
+const token = jwt.sign(
+    { userId: user._id.toString() },  // Always convert _id to string
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+);
 
         res.json({
             success: true,
@@ -130,12 +136,12 @@ router.post("/register", async (req, res) => {
 
         await user.save();
 
-        // Generate JWT
-        const token = jwt.sign(
-            { userId: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: "24h" }
-        );
+        // In auth.js and signup.js, standardize all token generations to:
+const token = jwt.sign(
+    { userId: user._id.toString() },  // Always convert _id to string
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+);
 
         res.json({
             success: true,
@@ -237,7 +243,8 @@ router.post("/create-admin", async (req, res) => {
 
         await adminUser.save();
 
-        const token = jwt.sign({ userId: adminUser._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        // In auth.js and signup.js, standardize all token generations to:
+        const token = jwt.sign({ userId: adminUser._id.toString() }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
         res.status(201).json({
             message: "Admin created successfully",

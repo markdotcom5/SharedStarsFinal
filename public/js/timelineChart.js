@@ -3,7 +3,7 @@ export function renderTimelineChart(elementId) {
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ["2024", "2029", "2034", "2049"],
+            labels: ["2024", "2029", "2034", "2043"],
             datasets: [
                 {
                     label: "Cost of Space Travel",

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="StelTrek Academy Training Modules" />
+  <meta name="description" content="SharedStars - AI-accelerated space training program" />
   <title>Space Training | SharedStars</title>
   
   <!-- Security Headers -->
@@ -15,7 +15,7 @@
     frame-src 'self' https://www.sora.com;
     child-src 'self' https://www.sora.com;
   ">
-
+  
   <!-- Stylesheets -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -23,11 +23,71 @@
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/ai-assistant.css" />
   
-  <!-- Include language selection script if not globally loaded -->
+  <!-- Language Selection Script -->
   <script src="/js/languageSelection.js" defer></script>
+  
+  <style>
+    /* Custom Styles for Training Page */
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .radial-progress {
+      position: relative;
+      display: inline-grid;
+      place-content: center;
+      border-radius: 50%;
+    }
+    .radial-progress::before {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      inset: 0;
+      background: conic-gradient(from 0deg, currentColor var(--value), transparent var(--value));
+      -webkit-mask: radial-gradient(transparent var(--hollow), #000 calc(var(--hollow) + 0.5px));
+      mask: radial-gradient(transparent var(--hollow), #000 calc(var(--hollow) + 0.5px));
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10B981;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(16,185,129,0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16,185,129,0);
+      }
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(31, 41, 55, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.5);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.7);
+    }
+  </style>
 </head>
 <body class="bg-slate-900 text-white min-h-screen">
-  <!-- HEADER (consistent across pages) -->
+  
+  <!-- HEADER -->
   <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg">
     <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
       <!-- Logo -->
@@ -52,19 +112,19 @@
       </ul>
       <!-- Language Selector -->
       <div class="language-selector flex gap-2">
-        <button class="language-flag" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-        <button class="language-flag" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-        <button class="language-flag" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-        <button class="language-flag" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
       </div>
     </nav>
   </header>
   
-  <!-- AI Coach Status Bar -->
+  <!-- AI COACH STATUS BAR -->
   <div id="ai-status-bar" class="fixed top-0 w-full bg-gray-800/95 border-b border-blue-500/20 z-50">
     <div class="container mx-auto px-4 py-2 flex items-center justify-between">
       <div id="ai-status" class="flex items-center space-x-3">
-        <div class="pulse-dot w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+        <div class="pulse-dot w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
         <span>Initializing AI Coach...</span>
       </div>
       <div class="flex items-center space-x-6">
@@ -78,206 +138,198 @@
             <span id="progress-percentage">0%</span>
           </div>
         </div>
-        <!-- Secondary Language Selector -->
         <div class="language-selector flex gap-2">
-          <button class="language-flag" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-          <button class="language-flag" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-          <button class="language-flag" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-          <button class="language-flag" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Updated Training Modules Section -->
-  <section class="relative min-h-screen py-16 text-white">
-    <!-- Video Background -->
+  
+  <!-- TRAINING MODULES SECTION -->
+  <section id="training-modules" class="relative min-h-screen py-16 overflow-hidden">
     <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-      <source src="/videos/training-bg.mp4" type="video/mp4">
+      <source src="/videos/trainingbg2.mp4" type="video/mp4">
     </video>
-    <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/90"></div>
-
-    <!-- Content Container -->
+    <div class="absolute inset-0 bg-gradient-to-b from-blue-950/90 via-blue-900/80 to-blue-950/90"></div>
     <div class="relative z-10 container mx-auto px-4">
-      <h1 class="text-5xl font-bold text-center mb-12">Elite Space Training Program</h1>
+      <!-- Section Header -->
+      <header class="mb-12 text-center" data-aos="fade-up">
+        <h2 class="text-4xl font-bold mb-4" data-i18n="trainingModules.title">Training Modules</h2>
+        <p class="text-lg text-gray-300" data-i18n="trainingModules.subtitle">
+          Choose a module to begin your space training journey.
+        </p>
+      </header>
       
-      <!-- Modules Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        <!-- Space Operations Module -->
-        <div class="bg-black/50 backdrop-blur-md p-6 rounded-xl border border-blue-500/20 hover:border-blue-500/50 transition-all">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-bold text-blue-400">Space Operations</h2>
-            <span class="text-green-400 font-bold">100-250 credits</span>
-          </div>
-          <div class="space-y-4">
-            <p class="text-gray-300">
-              Master the fundamentals of orbital mechanics, space environment adaptation, and mission control communications.
-            </p>
-            
-            <div class="space-y-2">
-              <h3 class="text-lg font-semibold text-blue-300">Key Learning Areas:</h3>
-              <ul class="list-disc list-inside text-gray-300 space-y-1">
-                <li>Orbital mechanics essentials</li>
-                <li>Space environment adaptation</li>
-                <li>Mission control protocols</li>
-                <li>Emergency procedures</li>
-              </ul>
+      <!-- Module Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Physical Training Module Card -->
+        <div class="card glass hover:-translate-y-2 transition-all duration-300">
+          <div class="card-body">
+            <div class="absolute top-4 right-4">
+              <div class="badge badge-primary">6-8 Months</div>
             </div>
-
-            <div class="bg-blue-900/30 p-4 rounded-lg">
-              <h4 class="font-semibold text-blue-300 mb-2">Module Highlights</h4>
-              <div class="grid grid-cols-2 gap-2 text-sm">
-                <div class="flex items-center">
-                  <svg class="w-4 h-4 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Interactive Sims
-                </div>
-                <div class="flex items-center">
-                  <svg class="w-4 h-4 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Real Audio Samples
-                </div>
-              </div>
+            <h3 class="card-title text-2xl text-blue-400 mb-4">Physical Training</h3>
+            <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
+              <span class="text-2xl text-white">0%</span>
             </div>
-
-            <button class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
-              Start Training
-            </button>
+            <div class="certification-badge mb-4">
+              <span class="text-xs text-blue-300">ISO-31000-ZG Certification</span>
+            </div>
+            <p class="text-blue-100">Master zero-gravity movement, biometric adaptation, and emergency procedures</p>
+            <div class="requirements text-xs text-gray-400 mt-2">
+              <p>Required: Medical Clearance, Basic Physics</p>
+            </div>
+            <div class="card-actions justify-between items-center mt-4">
+              <span class="text-sm text-blue-300">300 Training Hours Required</span>
+              <button class="btn btn-primary" data-module="physical">Begin Assessment</button>
+            </div>
           </div>
         </div>
-
-        <!-- (Optionally, add more module cards here for additional modules) -->
+        <!-- Technical Systems Module Card -->
+        <div class="card glass hover:-translate-y-2 transition-all duration-300">
+          <div class="card-body">
+            <div class="absolute top-4 right-4">
+              <div class="badge badge-secondary">4-6 Months</div>
+            </div>
+            <h3 class="card-title text-2xl text-purple-400 mb-4">Technical Systems</h3>
+            <div class="radial-progress text-purple-500 mx-auto my-6" style="--value:0; --size:8rem;">
+              <span class="text-2xl text-white">0%</span>
+            </div>
+            <div class="certification-badge mb-4">
+              <span class="text-xs text-purple-300">OSHA-ST-102 Certification</span>
+            </div>
+            <p class="text-blue-100">Master spacecraft systems, maintenance, and emergency protocols</p>
+            <div class="requirements text-xs text-gray-400 mt-2">
+              <p>Required: Physical Training Completion</p>
+            </div>
+            <div class="card-actions justify-between items-center mt-4">
+              <span class="text-sm text-blue-300">200 Simulation Hours Required</span>
+              <button class="btn btn-primary" data-module="technical">Begin Assessment</button>
+            </div>
+          </div>
+        </div>
+        <!-- Mission Simulation Module Card -->
+        <div class="card glass hover:-translate-y-2 transition-all duration-300">
+          <div class="card-body">
+            <div class="absolute top-4 right-4">
+              <div class="badge badge-accent">3-4 Months</div>
+            </div>
+            <h3 class="card-title text-2xl text-blue-400 mb-4">Mission Simulation</h3>
+            <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
+              <span class="text-2xl text-white">0%</span>
+            </div>
+            <div class="certification-badge mb-4">
+              <span class="text-xs text-blue-300">ISO-31010-MO Certification</span>
+            </div>
+            <p class="text-blue-100">Complete mission scenarios and team coordination exercises</p>
+            <div class="requirements text-xs text-gray-400 mt-2">
+              <p>Required: Technical Systems Completion</p>
+            </div>
+            <div class="card-actions justify-between items-center mt-4">
+              <span class="text-sm text-blue-300">100 Mission Hours Required</span>
+              <button class="btn btn-primary" data-module="simulation">Begin Assessment</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Detailed Module Overview Section -->
+      <section id="detailed-module" class="bg-gray-800 p-8 rounded-xl mb-16" data-aos="fade-up">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-3xl font-bold">Detailed Module Overview</h2>
+          <button id="refresh-module" class="text-sm text-blue-400 hover:underline focus:outline-none">
+            Refresh Details
+          </button>
+        </div>
+        <div id="module-details" class="transition-all duration-300 ease-in-out">
+          <p class="text-gray-400">Loading module details...</p>
+        </div>
+      </section>
+      
+      <!-- Call-to-Action -->
+      <div class="mt-12" data-aos="fade-up">
+        <a href="/training.html" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full transition" data-i18n="index.exploreTrainingCTA">
+          Explore Detailed Training
+        </a>
       </div>
     </div>
   </section>
-
-  <!-- Main Content (Additional Modules, Active Module Display, AI Guidance, etc.) -->
-  <main class="pt-24 pb-32">
-    <!-- Page Header -->
-    <header class="mb-12 text-center" data-aos="fade-up">
-      <h1 class="text-5xl font-bold mb-4" data-i18n="training.title">Training Modules</h1>
-      <p class="text-xl text-gray-300 max-w-3xl mx-auto" data-i18n="training.subtitle">
-        Explore various modules to enhance your readiness for space exploration.
-      </p>
-    </header>
-
-    <!-- Training Modules Grid (MVP: Physical, Technical, and Space Simulation) -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Module: Physical Training -->
-      <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2" data-aos="fade-up">
-        <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.physical.title">
-          Physical Training
-        </h2>
-        <p class="text-gray-300" data-i18n="training.physical.description">
-          Essential physical preparation for space environments.
-        </p>
-      </div>
-
-      <!-- Module: Technical Training -->
-      <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
-        <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.technical.title">
-          Technical Training
-        </h2>
-        <p class="text-gray-300" data-i18n="training.technical.description">
-          Master spacecraft systems and procedures.
-        </p>
-      </div>
-
-      <!-- Module: Space Simulation -->
-      <div class="module-card bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-transform transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
-        <h2 class="text-2xl font-bold text-blue-400 mb-3" data-i18n="training.simulation.title">
-          Space Simulation
-        </h2>
-        <p class="text-gray-300" data-i18n="training.simulation.description">
-          Real-world mission scenarios and operations.
-        </p>
-      </div>
+  
+  <!-- FOOTER -->
+  <footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+      <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+      <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
     </div>
-
-    <!-- Active Module & AI Guidance Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
-      <!-- Active Module Display -->
-      <div id="active-module" class="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm" data-aos="fade-up">
-        <div id="module-content" class="prose prose-invert max-w-none">
-          <!-- Dynamic module content will be loaded here -->
-          <div class="space-y-6">
-            <h2 class="text-2xl font-bold" data-i18n="training.gettingStartedTitle">
-              Getting Started
-            </h2>
-            <p data-i18n="training.gettingStartedSubtitle">
-              Welcome to your personalized space training program. Your AI coach will guide you through each step of your journey.
-            </p>
-            <button class="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-lg" onclick="startTraining()" data-i18n="training.beginTrainingButton">
-              Begin Training
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- AI Guidance Panel -->
-      <div id="ai-guidance" class="bg-blue-900/30 rounded-xl p-6 border border-blue-500/20" data-aos="fade-up" data-aos-delay="100">
-        <h3 class="text-xl font-semibold text-blue-400 mb-4" data-i18n="training.aiGuidanceTitle">
-          AI Coach Insights
-        </h3>
-        <div id="guidance-content" class="space-y-4">
-          <!-- Dynamic AI guidance messages will appear here -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Progress & Achievements Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
-      <!-- Progress Chart -->
-      <div class="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm" data-aos="fade-up">
-        <h3 class="text-xl font-bold mb-4" data-i18n="training.progressChartTitle">
-          Your Progress
-        </h3>
-        <canvas id="progress-chart" class="w-full h-64"></canvas>
-      </div>
-      <!-- Recent Achievements -->
-      <div class="bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm" data-aos="fade-up" data-aos-delay="100">
-        <h3 class="text-xl font-bold mb-4" data-i18n="training.recentAchievementsTitle">
-          Recent Achievements
-        </h3>
-        <div id="achievements-list" class="space-y-4">
-          <!-- Achievements will be dynamically added here -->
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Achievement Toast Notification -->
-  <div id="achievement-toast" class="fixed bottom-4 right-4 transform translate-y-full opacity-0 transition-all duration-300">
-    <div class="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg">
-      <div class="flex items-center space-x-3">
-        <div class="text-2xl">🏆</div>
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
+        <!-- About -->
         <div>
-          <div id="achievement-title" class="font-bold"></div>
-          <div id="achievement-description" class="text-sm"></div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+            <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">StelTrek Academy</a></li>
+          </ul>
+        </div>
+        <!-- Community -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+            <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+          </ul>
+        </div>
+        <!-- Resources -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+            <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+          </ul>
+        </div>
+        <!-- Legal -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+            <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+          </ul>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="bg-gray-900/80 backdrop-blur-sm border-t border-gray-800">
-    <div class="container mx-auto px-4 py-8 text-center text-gray-400">
-      <p data-i18n="footer.copyright">© 2024 SharedStars Academy. All rights reserved.</p>
+      <div class="mt-12 text-center">
+        <h4 class="text-lg font-bold text-blue-400" data-i18n="footer.followUs">Follow Us</h4>
+        <div class="flex justify-center gap-6 mt-4">
+          <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
+            <!-- Twitter SVG -->
+          </a>
+          <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
+            <!-- Facebook SVG -->
+          </a>
+          <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
+            <!-- Instagram SVG -->
+          </a>
+        </div>
+      </div>
+      <div class="mt-12 text-center">
+        <p data-i18n="footer.copyright">© 2024 SharedStars Academy. All rights reserved.</p>
+      </div>
     </div>
   </footer>
-
+  
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-  <!-- Example language-switcher script if needed -->
   <script src="/js/language-switcher.js"></script>
   <script>
-    // Basic language initialization
+    // Language initialization
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('preferredLanguage') || 'en';
       document.documentElement.lang = savedLang;
       applyTranslations(savedLang);
-
+  
       document.querySelectorAll('.language-flag').forEach(flag => {
         flag.addEventListener('click', () => {
           const selectedLang = flag.dataset.lang || 'en';
@@ -286,52 +338,24 @@
         });
       });
     });
-
+  
     function applyTranslations(lang) {
       const translations = {
         en: {
-          nav: {
-            home: "Home",
-            why: "Why StelTrek",
-            about: "About",
-            leaderboard: "Leaderboard",
-            login: "Login",
-            "mission-control": "Mission-Control",
-            profile: "Profile",
-            signup: "Sign Up",
-            academy: "StelTrek Academy",
-            welcome: "Welcome",
-            subscribe: "Subscribe"
-          },
-          training: {
-            title: "Training Modules",
-            subtitle: "Explore various modules to enhance your readiness for space exploration.",
-            gettingStartedTitle: "Getting Started",
-            gettingStartedSubtitle: "Welcome to your personalized space training program. Your AI coach will guide you through each step of your journey.",
-            beginTrainingButton: "Begin Training",
-            aiGuidanceTitle: "AI Coach Insights",
-            progressChartTitle: "Your Progress",
-            recentAchievementsTitle: "Recent Achievements",
-            physical: {
-              title: "Physical",
-              fitness: "Complete fitness tests or maintain workout streaks.",
-              adventures: "Earn credits for hiking, climbing, or other adventurous activities."
-            },
-            mental: {
-              title: "Mental",
-              cognitive: "Solve puzzles, memory games, or mental agility tasks.",
-              problemSolving: "Earn credits for completing scenario-based problem-solving simulations."
-            },
-            technical: {
-              title: "Technical",
-              skills: "Complete coding, robotics, or engineering modules.",
-              simulations: "Practice space navigation and piloting tasks.",
-              certifications: "Earn technical certifications."
+          news: {
+            headline: "Latest News & Insights",
+            subtitle: "Stay updated with the latest op-eds, articles, and insights in space exploration.",
+            oped: {
+              title: "It's Time to Make Space Exploration a Shared Frontier for All",
+              published: "Published in",
+              excerpt: "Discover how space exploration can be democratized and made accessible for everyone willing to reach for the stars.",
+              cta: "Read Full Article"
             }
           },
           footer: {
             copyright: "© 2024 SharedStars Academy. All rights reserved."
           }
+          // Additional keys...
         },
         zh: {
           // Chinese translations
@@ -343,7 +367,7 @@
           // Spanish translations
         }
       };
-
+  
       document.querySelectorAll("[data-i18n]").forEach(element => {
         const key = element.dataset.i18n;
         const keys = key.split(".");
@@ -360,141 +384,46 @@
   
   <!-- Module Scripts -->
   <script type="module">
-    import SpaceTrainingFSD from '/js/modules/training/fsdTraining.js';
-    import AIHandler from '/js/modules/training/AIHandler.js';
-    import AIGuidanceSystem from '/js/modules/training/aiGuidanceSystem.js';
-    import ProgressAssessment from '/js/modules/training/progressAssessment.js';
-    import { initModules, loadModuleContent } from '/js/modules/training/index.js';
-    import { setupWebSocket, handleWebSocketMessages } from '/js/modules/core/websocket.js';
+    import trainingModules from '/js/modules/training/moduleContent.js';
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        // Initialize core modules
-        await initModules();
-        const wsConnection = await setupWebSocket();
-
-        // Initialize AI systems
-        const aiGuidance = new AIGuidanceSystem(SpaceTrainingFSD);
-        const progressAssessment = new ProgressAssessment(SpaceTrainingFSD, aiGuidance);
-
-        // Initialize WebSocket event listeners
-        wsConnection.addEventListener('message', (event) => {
-          const data = JSON.parse(event.data);
-          handleWebSocketMessages(data, {
-            updateGuidance: updateGuidanceDisplay,
-            showAchievement: showAchievementToast,
-            updateProgress: updateProgressDisplay
-          });
-        });
-
-        // Update AI status to active
-        document.getElementById('ai-status').innerHTML = `
-          <div class="flex items-center space-x-2">
-            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-            <span>AI Coach Active</span>
-          </div>
-        `;
-
-        // Initialize AOS animations
-        AOS.init({
-          duration: 800,
-          easing: 'ease-out',
-          once: true
-        });
-
-        // Load initial module content
-        loadInitialModule();
-      } catch (error) {
-        console.error('Initialization error:', error);
-      }
-    });
-
-    function updateGuidanceDisplay(guidance) {
-      const guidanceContent = document.getElementById('guidance-content');
-      guidanceContent.innerHTML = `
-        <p class="text-gray-300">${guidance.message}</p>
-        ${guidance.nextSteps.map(step => `
-          <div class="flex items-center space-x-2 text-sm">
-            <span class="text-blue-400">•</span>
-            <span>${step.action}</span>
-          </div>
-        `).join('')}
-      `;
-    }
-
-    function showAchievementToast(achievement) {
-      const toast = document.getElementById('achievement-toast');
-      document.getElementById('achievement-title').textContent = achievement.title;
-      document.getElementById('achievement-description').textContent = achievement.description;
+    function renderModuleDetails(module) {
+      const detailsContainer = document.getElementById('module-details');
+      let html = `<h3 class="text-2xl font-bold">${module.title}</h3>
+      <p class="text-gray-300 mb-2">${module.description}</p>
+      <p class="text-blue-400">Duration: ${module.duration}</p>
+      <p class="text-blue-400">Certifications: ${module.certifications.join(', ')}</p>`;
       
-      toast.classList.remove('translate-y-full', 'opacity-0');
-      setTimeout(() => {
-        toast.classList.add('translate-y-full', 'opacity-0');
-      }, 5000);
+      if(module.levels && module.levels.length > 0) {
+        html += `<div class="levels mt-4">
+          <h4 class="text-xl font-semibold mb-2">Levels</h4>`;
+        module.levels.forEach(level => {
+          html += `<div class="level mb-4">
+            <h5 class="text-lg font-bold">${level.name}</h5>
+            <p>ID: ${level.id}</p>`;
+          if(level.content && level.content.length > 0) {
+            html += `<ul class="list-disc list-inside">`;
+            level.content.forEach(contentItem => {
+              html += `<li><strong>${contentItem.title}</strong> (${contentItem.type})</li>`;
+            });
+            html += `</ul>`;
+          }
+          html += `</div>`;
+        });
+        html += `</div>`;
+      }
+      detailsContainer.innerHTML = html;
     }
-
-    function updateProgressDisplay(progress) {
-      document.getElementById('progress-percentage').textContent = `${progress.overall}%`;
-      document.getElementById('focus-score').textContent = progress.focusScore;
-      // Update progress chart if implemented
-      updateProgressChart(progress.details);
-    }
-
-    async function loadInitialModule() {
-      const moduleContent = document.getElementById('module-content');
-      moduleContent.innerHTML = `
-        <div class="space-y-6">
-          <h2 class="text-2xl font-bold" data-i18n="training.gettingStartedTitle">Getting Started</h2>
-          <p data-i18n="training.gettingStartedSubtitle">
-            Welcome to your personalized space training program. Your AI coach will guide you through each step of your journey.
-          </p>
-          <button class="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-lg" onclick="startTraining()" data-i18n="training.beginTrainingButton">
-            Begin Training
-          </button>
-        </div>
-      `;
-    }
-  </script>
   
-  <!-- Custom Styles -->
-  <style>
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background-color: #10B981;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-      }
-      70% {
-        transform: scale(1);
-        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
-      }
-      100% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-      }
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(31, 41, 55, 0.5);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(59, 130, 246, 0.5);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(59, 130, 246, 0.7);
-    }
-  </style>
+    // Initially render physical training module details as an example
+    renderModuleDetails(trainingModules.physical);
+  
+    // Refresh button event
+    document.getElementById('refresh-module').addEventListener('click', () => {
+      document.getElementById('module-details').innerHTML = `<p class="text-gray-400">Reloading module details...</p>`;
+      setTimeout(() => {
+        renderModuleDetails(trainingModules.physical);
+      }, 500);
+    });
+  </script>
 </body>
 </html>

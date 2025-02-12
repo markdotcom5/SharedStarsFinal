@@ -1,10 +1,27 @@
 const User = require('../models/User');
 const EventEmitter = require('events');
+const UserProgress = require('../models/UserProgress');
 
 const cache = {
     data: new Map(),
     timeout: 5 * 60 * 1000 // 5 minutes
 };
+async function getLeaderboard() {
+    try {
+        const leaderboard = await UserProgress.find({})
+            .sort({ credits: -1 }) // Sort by highest credits
+            .limit(10); // Show top 10
+
+        return leaderboard.map((user, index) => ({
+            rank: index + 1,
+            userId: user.userId,
+            credits: user.credits
+        }));
+    } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+        throw error;
+    }
+}
 
 class RankingService extends EventEmitter {
     constructor(webSocketService) {

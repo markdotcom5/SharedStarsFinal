@@ -6,20 +6,35 @@ const logger = require('../utils/logger');
 
 class AIController {
   constructor() {
-    this.assistant = AIAssistant;
     this.cache = cache;
+    this.assistant = AIAssistant;
     this.retryAttempts = 3;
   }
+
+  // Remove one of the duplicate generateGreeting methods
   async generateGreeting(req, res) {
     try {
-      // You can add logic to personalize this message using req.user data if available.
-      const greeting = "Welcome back, Commander. Let's resume our Mission!";
-      res.json({ greeting });
+      const greetings = {
+        en: "Welcome back, Commander!",
+        zh: "欢迎回来，指挥官！",
+        ko: "다시 오신 것을 환영합니다, 지휘관님!",
+        es: "¡Bienvenido de nuevo, Comandante!"
+      };
+        
+      const language = req.headers['accept-language']?.split(',')[0] || 'en';
+      const baseLanguage = language.split('-')[0];
+        
+      res.json({ 
+        greeting: greetings[baseLanguage] || greetings.en 
+      });
     } catch (error) {
       console.error("Error generating greeting:", error);
-      res.status(500).json({ greeting: "Welcome back, Commander. Let's resume our Mission!" });
+      res.status(500).json({ 
+        greeting: "Welcome back, Commander!" 
+      });
     }
   }
+
   /**
    * Renders the AI Guidance view.
    * @param {object} req Express request
@@ -34,6 +49,7 @@ class AIController {
       res.status(500).send('Error rendering AI Guidance');
     }
   }
+
   /**
    * Launches an AI-guided training session.
    * @param {object} req Express request
@@ -188,24 +204,6 @@ class AIController {
       message: error.message,
       code: error.code || 'INTERNAL_ERROR'
     };
-  }
-
-  /**
-   * Generates a personalized greeting for the user.
-   * Example: "Welcome back, Commander. Let's resume our Mission..."
-   * @param {object} req Express request
-   * @param {object} res Express response
-   */
-  async generateGreeting(req, res) {
-    try {
-      // Use your assistant to generate a greeting.
-      // Make sure to implement generateGreeting in your AIAssistant.
-      const greeting = await this.assistant.generateGreeting(req.user);
-      res.json({ greeting });
-    } catch (error) {
-      logger.error("Error generating greeting:", error);
-      res.status(500).json({ greeting: "Welcome back, Commander. Let's resume our Mission!" });
-    }
   }
 }
 

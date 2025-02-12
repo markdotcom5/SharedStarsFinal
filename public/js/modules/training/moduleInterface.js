@@ -5,26 +5,94 @@ class ModuleInterface {
         this.moduleId = moduleId;
         this.currentLevel = 0;
         this.moduleData = trainingModules[moduleId];
-        this.aiAssistant = null;
-        this.biometricMonitor = null;
+        this.aiHandler = new AIHandler();
+        this.spaceTraining = new SpaceTrainingFSD();
+        this.biometricData = {
+            heartRate: [],
+            oxygenLevel: [],
+            stressLevel: [],
+            vestibularStability: []
+        };
+        this.certificationProgress = new Map();
     }
 
     async initialize() {
         this.container = document.querySelector('#training-container');
-        if (!this.container) {
-            console.error('Training container not found');
-            return;
-        }
+        if (!this.container) throw new Error('Training container not found');
 
-        // Initialize AI Assistant
-        this.aiAssistant = new AIAssistant();
-        await this.aiAssistant.initialize();
-        
-        // Initialize Biometric Monitoring
-        this.biometricMonitor = new BiometricMonitor();
-        await this.biometricMonitor.startTracking();
-        
+        await this.aiHandler.initialize(userId, 'full_guidance');
+        await this.startBiometricMonitoring();
+        this.setupEventListeners();
         this.render();
+    }
+
+    async startBiometricMonitoring() {
+        try {
+            // Start real-time biometric monitoring
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            this.heartRateMonitor = new HeartRateMonitor(stream);
+            this.vestibularMonitor = new VestibularMonitor();
+            
+            // Update interval for biometrics
+            setInterval(() => this.updateBiometrics(), 1000);
+        } catch (error) {
+            console.error('Biometric monitoring error:', error);
+        }
+    }
+
+    async updateBiometrics() {
+        const currentBiometrics = {
+            heartRate: await this.heartRateMonitor.getCurrentRate(),
+            vestibularStability: this.vestibularMonitor.getStability(),
+            oxygenLevel: await this.getOxygenLevel(),
+            stressLevel: this.calculateStressLevel()
+        };
+
+        // Update history
+        Object.keys(currentBiometrics).forEach(metric => {
+            this.biometricData[metric].push({
+                value: currentBiometrics[metric],
+                timestamp: Date.now()
+            });
+        });
+
+        // Check thresholds and notify AI
+        this.checkBiometricThresholds(currentBiometrics);
+        
+        // Update UI
+        this.updateBiometricDisplay(currentBiometrics);
+    }
+
+    checkBiometricThresholds(metrics) {
+        const thresholds = this.moduleData.biometricTargets;
+        const violations = [];
+
+        Object.entries(metrics).forEach(([metric, value]) => {
+            const threshold = thresholds[metric];
+            if (threshold) {
+                if (value < threshold.min || value > threshold.max) {
+                    violations.push({ metric, value, threshold });
+                }
+            }
+        });
+
+        if (violations.length > 0) {
+            this.handleBiometricViolations(violations);
+        }
+    }
+
+    async handleBiometricViolations(violations) {
+        // Notify AI Handler
+        await this.aiHandler.handleBiometricWarning(violations);
+        
+        // Adjust difficulty if needed
+        const adjustment = this.spaceTraining.adjustDifficulty({
+            biometricViolations: violations,
+            currentPerformance: this.getCurrentPerformance()
+        });
+
+        // Update module parameters
+        this.applyDifficultyAdjustment(adjustment);
     }
 
     render() {
@@ -36,31 +104,28 @@ class ModuleInterface {
                     <div class="mb-8">
                         <h1 class="text-4xl font-bold text-blue-400">${module.title}</h1>
                         <p class="text-gray-300 mt-2">${module.description}</p>
+                        <div class="mt-4 bg-blue-900/30 p-4 rounded-lg">
+                            <h3 class="text-blue-400 font-bold">Certification Progress</h3>
+                            <div class="grid grid-cols-2 gap-4 mt-2">
+                                ${this.renderCertificationRequirements()}
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Progress Tracker -->
+                    <!-- Biometric Monitoring -->
                     <div class="bg-gray-800 p-4 rounded-lg mb-8">
-                        <div class="flex justify-between items-center">
-                            <span class="text-white">Progress</span>
-                            <span class="text-blue-400" id="progress-display">0%</span>
-                        </div>
-                        <div class="w-full bg-gray-700 h-2 rounded-full mt-2">
-                            <div class="bg-blue-500 h-2 rounded-full" style="width: 0%" id="progress-bar"></div>
+                        <h3 class="text-green-400 font-bold mb-4">Real-time Biometrics</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="biometric-displays">
+                            ${this.renderBiometricDisplays()}
                         </div>
                     </div>
 
-                    <!-- AI Feedback Section -->
-                    <div class="bg-gray-800 p-4 rounded-lg mb-8" id="ai-feedback">
-                        <h3 class="text-blue-400 font-bold">AI Guidance</h3>
-                        <p class="text-gray-300" id="ai-guidance-text">Waiting for AI insights...</p>
-                    </div>
-
-                    <!-- Biometric Monitoring Section -->
-                    <div class="bg-gray-800 p-4 rounded-lg mb-8" id="biometric-monitor">
-                        <h3 class="text-green-400 font-bold">Biometric Tracking</h3>
-                        <p class="text-gray-300">Heart Rate: <span id="biometric-heart-rate">--</span> bpm</p>
-                        <p class="text-gray-300">Oxygen Level: <span id="biometric-oxygen-level">--</span>%</p>
-                        <p class="text-gray-300">Stress Level: <span id="biometric-stress-level">--</span></p>
+                    <!-- AI Guidance -->
+                    <div class="bg-blue-900/30 p-4 rounded-lg mb-8" id="ai-guidance">
+                        <h3 class="text-blue-400 font-bold mb-2">AI Coach</h3>
+                        <div id="ai-messages" class="space-y-2">
+                            <!-- AI messages will be inserted here -->
+                        </div>
                     </div>
 
                     <!-- Levels Grid -->
@@ -70,58 +135,47 @@ class ModuleInterface {
                 </div>
             </div>
         `;
-        this.attachEventListeners();
     }
 
     renderLevel(level, index) {
+        const isLocked = !this.checkLevelPrerequisites(level);
+        const statusClass = isLocked ? 'opacity-50 cursor-not-allowed' : 'hover:border-blue-500';
+        
         return `
-            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-blue-500 transition-all duration-300">
-                <h3 class="text-2xl font-bold text-white mb-4">${level.name}</h3>
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 ${statusClass}">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-white">${level.name}</h3>
+                    ${isLocked ? '<span class="text-red-400">🔒</span>' : ''}
+                </div>
                 <div class="space-y-4">
-                    ${level.content.map(content => this.renderContent(content)).join('')}
+                    ${this.renderLevelContent(level)}
                 </div>
                 <button 
-                    class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+                    class="mt-4 w-full ${isLocked ? 'bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'} 
+                           text-white py-2 px-4 rounded transition-colors"
                     data-level="${index}"
-                    onclick="startLevel(${index})"
+                    ${isLocked ? 'disabled' : ''}
                 >
-                    Start Level
+                    ${isLocked ? 'Complete Prerequisites' : 'Start Level'}
                 </button>
             </div>
         `;
     }
 
-    attachEventListeners() {
-        const levelButtons = this.container.querySelectorAll('[data-level]');
-        levelButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const levelIndex = parseInt(e.target.dataset.level);
-                this.startLevel(levelIndex);
-            });
+    setupEventListeners() {
+        // AI Handler events
+        this.aiHandler.on('guidance', (guidance) => {
+            this.updateAIGuidance(guidance);
         });
-    }
 
-    async startLevel(levelIndex) {
-        const level = this.moduleData.levels[levelIndex];
-        
-        // Show AI welcome message
-        await this.aiAssistant.showMessage(`Welcome to ${level.name}! I'll be your guide through this training level.`);
-        
-        // Start first content piece
-        this.startContent(level.content[0]);
-    }
+        this.aiHandler.on('achievement', (achievement) => {
+            this.showAchievement(achievement);
+        });
 
-    async startContent(content) {
-        switch (content.type) {
-            case 'video':
-                await this.startVideoContent(content);
-                break;
-            case 'interactive':
-                await this.startInteractiveContent(content);
-                break;
-            default:
-                console.warn('Unhandled content type:', content.type);
-        }
+        // Biometric events
+        document.addEventListener('biometricWarning', (e) => {
+            this.handleBiometricWarning(e.detail);
+        });
     }
 }
 

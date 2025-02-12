@@ -9,47 +9,53 @@ const SECRET_KEY = process.env.JWT_SECRET; // Ensure this is set in .env
 const authenticate = async (req, res, next) => {
     try {
         const authHeader = req.header("Authorization");
-        console.log("Auth header received:", authHeader); // Debug log
-
+        
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            console.error("Invalid auth header format");
-            return res.status(401).json({ error: "Authentication token must be Bearer token" });
+            return res.status(401).json({ 
+                error: "Authentication required",
+                message: "Please provide a valid Bearer token" 
+            });
         }
 
         const token = authHeader.replace("Bearer ", "").trim();
-        console.log("Token extracted:", token); // Debug log
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Token decoded:", decoded); // Debug log
-
-        req.user = {
-            _id: decoded._id || decoded.userId, // Handle both formats
-            role: decoded.role || "user",
-        };
-
-        console.log("User set in request:", req.user); // Debug log
-        next();
+        
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const { ObjectId } = require('mongodb');
+            req.user = { 
+                _id: new ObjectId(decoded.userId),
+                role: decoded.role 
+            };
+            next();
+        } catch (err) {
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ 
+                    error: "Token expired",
+                    message: "Your session has expired. Please log in again." 
+                });
+            }
+            throw err;
+        }
     } catch (error) {
-        console.error("Authentication error details:", {
-            message: error.message,
-            name: error.name,
-            stack: error.stack,
+        console.error("Authentication error:", error);
+        res.status(401).json({ 
+            error: "Authentication failed",
+            message: "Invalid authentication token" 
         });
-        res.status(401).json({ error: "Invalid or expired token." });
     }
 };
-
-// Middleware: Check User Role
-const requireRole = (roles = []) => (req, res, next) => {
+  
+  // Middleware: Check User Role
+  const requireRole = (roles = []) => (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
-        return res.status(403).json({
-            error: "Access denied",
-            message: `This resource requires one of the following roles: ${roles.join(", ")}`,
-        });
+      return res.status(403).json({
+        error: "Access denied",
+        message: `This resource requires one of the following roles: ${roles.join(", ")}`,
+      });
     }
     next();
-};
-
+  };
+    
 // WebSocket Authentication Function
 function authenticateWebSocket(req) {
     try {

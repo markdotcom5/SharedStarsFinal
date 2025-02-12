@@ -66,13 +66,12 @@ router.post('/join-now', async (req, res) => {
 
         await newUser.save();
 
-        // 🔹 Generate Secure JWT Token
-        const token = jwt.sign(
-            {
-                userId: newUser._id,
-                email: newUser.email,
-                aiGuidance: newUser.aiGuidance.mode
-            },
+        // In auth.js and signup.js, standardize all token generations to:
+const token = jwt.sign(
+    { userId: user._id.toString() },  // Always convert _id to string
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+);
             process.env.JWT_SECRET || 'default_secret_key',
             { expiresIn: '7d' }
         );

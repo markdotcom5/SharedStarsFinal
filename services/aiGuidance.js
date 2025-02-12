@@ -47,20 +47,12 @@ class AIGuidance {
       const completion = await this.openai.chat.completions.create({
         model: this.defaultModel,
         messages: [
-          {
-            role: "system",
-            content: this.systemPrompts.realTime
-          },
-          {
-            role: "user",
-            content: `Current Action: ${JSON.stringify(action, null, 2)}
-                      Training Progress: ${JSON.stringify(user.trainingProgress, null, 2)}
-                      AI Guidance Mode: ${user.aiGuidance.mode}`
-          }
+            { role: "system", content: "Analyze user achievements and suggest improvements." },
+            { role: "user", content: `Achievements: ${JSON.stringify(achievements)}` }
         ],
-        temperature: 0.7,
-        max_tokens: 500
-      });
+        max_tokens: 500  // ✅ Reduce response time by limiting output size
+    });
+    
 
       const guidance = completion.choices[0].message.content;
 
@@ -125,19 +117,14 @@ class AIGuidance {
       const completion = await this.openai.chat.completions.create({
         model: this.defaultModel,
         messages: [
-          {
-            role: "system",
-            content: this.systemPrompts.feedback
-          },
-          {
-            role: "user",
-            content: `Session Data: ${JSON.stringify(sessionData, null, 2)}
-                      Progress Overview: ${JSON.stringify(user.trainingProgress, null, 2)}
-                      Goals: ${JSON.stringify(user.spaceGoals, null, 2)}`
-          }
+            {
+                role: "system",
+                content: this.systemPrompts.feedback
+            }
         ],
-        temperature: 0.8
-      });
+        max_tokens: 500  // ✅ Optimized for faster processing
+    });
+    
 
       const feedback = completion.choices[0].message.content;
       

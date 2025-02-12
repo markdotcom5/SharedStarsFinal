@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const chatSchema = new mongoose.Schema({
-  userId: { type: String, required: true, unique: true },
+  userId: { type: String, required: true }, // ❌ Removed `unique: true`
   messages: [
     {
-      sender: { type: String, required: true }, // "user" or "ai"
-      text: { type: String, required: true },
+      sender: String,
+      text: String,
       timestamp: { type: Date, default: Date.now }
     }
   ]

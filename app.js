@@ -8,51 +8,119 @@ const express = require("express");
 const http = require("http");
 const path = require("path");
 const WebSocket = require("ws");
+
+// Route imports - Core
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/auth"); 
+const creditRoutes = require('./routes/credits');
+const paymentRoutes = require('./routes/payment');
 
-// Middleware
+// Route imports - Training & Progress
+const trainingRoutes = require('./routes/training');
+const leaderboardRoutes = require('./routes/leaderboard');
+const countdownRoutes = require("./routes/countdown");
+const progressRoutes = require("./routes/progress");
+const advancedRoutes = require('./routes/advancedTrainingRoutes');
+
+// Route imports - Simulation & Missions
+const simulationRoutes = require('./routes/simulation/simulation');
+const missionRoutes = require('./routes/simulation/missions');
+const scenarioRoutes = require('./routes/simulation/scenarios');
+const teamRoleRoutes = require('./routes/simulation/teamRoles');
+const { Simulation } = require('./models/simulation');
+const physicalRoutes = require('./routes/physical');
+
+// Module imports
+const physicalModule = require('./modules/core/physical');
+const technicalModule = require('./modules/core/technical');
+const simulationModule = require('./modules/core/simulation');
+
+// Service routes
+const missionControlRoutes = require('./routes/mission-control');
+const chatRoutes = require('./routes/chat');
+const stripeRoutes = require('./routes/stripe');
+const stripeWebhookRoutes = require('./webhooks/stripe');
+const subscriptionRoutes = require('./routes/subscription');
+const aiRoutes = require('./routes/aiRoutes');
+
+// Middleware imports
 const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const rateLimit = require("express-rate-limit");
-
 // Database
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 
-// Load MVP essential models
-console.log("\n📚 Loading Core Models...");
-try {
-    require('./models/Module');
-    console.log("✅ Module.js loaded successfully!");
-    require('./models/TrainingSession');
-    console.log("✅ TrainingSession.js loaded successfully!");
-    require('./models/User');
-    console.log("✅ User.js loaded successfully!");
-    require('./models/Subscription');
-    console.log("✅ Subscription.js loaded successfully!");
-    require('./models/UserProgress');
-    console.log("✅ UserProgress.js loaded successfully!");
-} catch (error) {
-    console.error("❌ Error loading models:", error.message);
-}
 // Custom middleware and services
 const { authenticateWebSocket } = require("./middleware/authenticate");
 const SpaceTimelineManager = require('./services/SpaceTimelineManager');
-
-// Initialize Express and HTTP server
+const { authenticate } = require('./middleware/authenticate');
+// Initialize Express and create HTTP server
 const app = express();
 const server = http.createServer(app);
 
 // ============================
-// 2. WEBSOCKET SETUP
+// 2. DATABASE CONNECTION
 // ============================
-const wss = new WebSocket.Server({ noServer: true });
+mongoose.set("strictQuery", true);
+mongoose.set("debug", process.env.NODE_ENV === "development");
 
-// WebSocket service wrapper
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: parseInt(process.env.MONGO_TIMEOUT, 10) || 5000,
+            autoIndex: process.env.MONGO_AUTO_INDEX === "true",
+            maxPoolSize: parseInt(process.env.MONGO_POOL_SIZE, 10) || 10,
+            socketTimeoutMS: parseInt(process.env.MONGO_SOCKET_TIMEOUT, 10) || 45000,
+            retryWrites: true,
+        });
+        console.log("✅ MongoDB Connected");
+
+        // Load essential models
+        console.log("\n📚 Loading Core Models...");
+        const models = ['Module', 'TrainingSession', 'User', 'Subscription', 'UserProgress', 'Simulation'];
+        for (const model of models) {
+            require(`./models/${model}`);
+            console.log(`✅ ${model}.js loaded successfully!`);
+        }
+
+        console.log(`\n🔢 Total Models Connected: ${models.length}\n`);
+
+        mongoose.connection.on("disconnected", () => {
+            console.warn("⚠️ MongoDB Disconnected. Attempting to reconnect...");
+            setTimeout(connectDB, 5000);
+        });
+
+        mongoose.connection.on("reconnected", () => {
+            console.log("🔄 MongoDB Reconnected Successfully");
+        });
+
+    } catch (error) {
+        console.error("❌ MongoDB Connection Error:", error);
+        process.exit(1);
+    }
+};
+
+// ============================
+// 3. WEBSOCKET SETUP
+// ============================
+let wss;
+try {
+    wss = new WebSocket.Server({ 
+        noServer: true,
+        // Remove direct port binding to avoid conflicts
+        // Will attach to HTTP server instead
+    });
+} catch (error) {
+    console.error('Error creating WebSocket server:', error);
+    process.exit(1);
+}
+
+const timelineManagers = new Map();
+
 const webSocketService = {
     broadcast: (type, data) => {
         wss.clients.forEach(client => {
@@ -70,10 +138,6 @@ const webSocketService = {
     }
 };
 
-// Store active timeline managers
-const timelineManagers = new Map();
-
-// WebSocket upgrade handling
 server.on("upgrade", (request, socket, head) => {
     wss.handleUpgrade(request, socket, head, (ws) => {
         const authData = authenticateWebSocket(request);
@@ -91,87 +155,34 @@ server.on("upgrade", (request, socket, head) => {
     });
 });
 
-// WebSocket connection handling
-wss.on("connection", (ws) => {
-    const { userId } = ws.authData;
-    
-    const timelineManager = timelineManagers.get(userId);
-    timelineManager.initialize().catch(error => {
-        console.error(`Failed to initialize timeline for user ${userId}:`, error);
-    });
-
-    ws.on("message", async (message) => {
-        try {
-            const data = JSON.parse(message);
-            const timelineManager = timelineManagers.get(userId);
-            
-            switch (data.type) {
-                case 'requestTimelineUpdate':
-                    await timelineManager.updatePersonalTimeline();
-                    break;
-                case 'updateTrainingProgress':
-                    await timelineManager.updateTrainingProgress(data.sessionId, data.progress);
-                    break;
-                case 'awardAchievement':
-                    await timelineManager.awardAchievement(data.achievementId);
-                    break;
-                default:
-                    console.log(`📩 WebSocket message from ${userId}:`, data);
-            }
-        } catch (error) {
-            console.error('WebSocket message error:', error);
-            ws.send(JSON.stringify({ type: 'error', error: 'Failed to process message' }));
-        }
-    });
-
-    ws.on("close", () => {
-        timelineManagers.delete(userId);
-    });
+// WebSocket error handling
+wss.on('error', (error) => {
+    console.error('WebSocket Server Error:', error);
 });
 
 // ============================
-// 3. DATABASE CONNECTION
-// ============================
-mongoose.set("strictQuery", true);
-mongoose.set("debug", process.env.NODE_ENV === "development");
-
-const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI, {
-            serverSelectionTimeoutMS: parseInt(process.env.MONGO_TIMEOUT, 10) || 5000,
-            autoIndex: process.env.MONGO_AUTO_INDEX === "true",
-            maxPoolSize: parseInt(process.env.MONGO_POOL_SIZE, 10) || 10,
-            socketTimeoutMS: parseInt(process.env.MONGO_SOCKET_TIMEOUT, 10) || 45000,
-            retryWrites: true,
-        });
-        console.log("✅ MongoDB Connected");
-
-        mongoose.connection.on("disconnected", () => {
-            console.warn("⚠️ MongoDB Disconnected. Attempting to reconnect...");
-            setTimeout(connectDB, 5000);
-        });
-    } catch (error) {
-        console.error("❌ MongoDB Connection Error:", error);
-        process.exit(1);
-    }
-};
-// ============================
 // 4. MIDDLEWARE SETUP
 // ============================
-// Security middleware first
+// Security middleware
 app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: { policy: "cross-origin" },
 }));
 app.use(cors());
+app.use(compression());
 
 // Body parsing middleware
-app.use(compression());
-app.use(express.json({ strict: false }));
+const jsonParser = express.json();
+app.use((req, res, next) => {
+    if (req.method === 'GET') {
+        next();
+    } else {
+        jsonParser(req, res, next);
+    }
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use("/api/auth", authRoutes); // ✅ Registers the authentication routes
 
 // Session handling
 app.use(session({
@@ -191,49 +202,225 @@ app.use(session({
     },
 }));
 
+// Debug middleware for development
+if (process.env.NODE_ENV === 'development') {
+    app.use((req, res, next) => {
+        console.log('Debug:', {
+            method: req.method,
+            path: req.url,
+            contentType: req.headers['content-type']
+        });
+        next();
+    });
+}
+
 // ============================
-// 5. STATIC FILES & ROUTES
+// 5. ROUTES SETUP
 // ============================
-// Static file middleware
+// Static file serving
 app.use("/js", express.static(path.join(__dirname, "public/js"), {
-    setHeaders: (res, path) => {
-        if (path.endsWith('.js')) {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.js')) {
             res.setHeader('Content-Type', 'application/javascript');
         }
     }
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Import and use routes
-const routes = {
-    missionControl: require('./routes/mission-control')(wss),
-    modules: require('./routes/modules'),
-    chat: require('./routes/chat'),
-    stripe: require('./routes/stripe'),
-    stripeWebhook: require('./webhooks/stripe'),
-    subscription: require('./routes/subscription'),
-    ai: require('./routes/aiRoutes').router,
-    leaderboard: require('./routes/leaderboard'),
-    training: require('./routes/training')
+// Core API Routes
+app.use("/api/auth", authRoutes);
+app.use('/api/credits', creditRoutes);
+app.use("/api/users", userRoutes);
+app.use('/api/payment', paymentRoutes);
+
+// Training & Progress Routes
+app.use('/api/training', trainingRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/countdown', countdownRoutes);
+app.use('/api/progress', progressRoutes);
+
+// Simulation & Mission Routes
+app.use('/api/simulation', simulationRoutes);
+app.use('/api/missions', missionRoutes);
+app.use('/api/scenarios', scenarioRoutes);
+app.use('/api/teamRoles', teamRoleRoutes);
+
+// Module Routes
+const modules = {
+    physical: physicalModule,
+    technical: technicalModule,
+    simulation: simulationModule
 };
 
-// Mount API routes
-app.use('/api/mission-control', routes.missionControl);
-app.use('/api/modules', routes.modules);
-app.use('/api/chat', routes.chat);
-app.use('/api/stripe', routes.stripe);
-app.use('/webhook/stripe', routes.stripeWebhook);
-app.use('/api/subscription', routes.subscription);
-app.use('/api/ai', rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: { error: "AI service rate limit exceeded" }
-}), routes.ai);
-app.use('/api/leaderboard', routes.leaderboard);
-app.use('/api/training', routes.training);
-app.use("/api/users", userRoutes); // Make sure this line exists!
+Object.entries(modules).forEach(([name, module]) => {
+    if (module) {
+        if (module.router) {
+            app.use(`/api/modules/${name}`, module.router);
+        } else if (typeof module === 'function') {
+            app.use(`/api/modules/${name}`, module);
+        } else {
+            console.warn(`⚠️ Warning: ${name} module is not a valid router or middleware`);
+        }
+    }
+});
 
-// Static page routes
+// Advanced Training Routes
+if (typeof advancedRoutes.upgradeConnection === 'function') {
+    advancedRoutes.upgradeConnection(server);
+}
+app.use('/api/advanced', advancedRoutes.router || advancedRoutes);
+
+// Service Routes with Rate Limiting
+app.use('/api/ai', 
+    rateLimit({
+        windowMs: 15 * 60 * 1000,
+        max: 100,
+        message: { error: "AI service rate limit exceeded" }
+    }),
+    aiRoutes.router || aiRoutes
+);
+
+app.use('/api/chat', chatRoutes);
+app.use('/api/stripe', stripeRoutes);
+app.use('/webhook/stripe', stripeWebhookRoutes);
+app.use('/api/subscription', subscriptionRoutes);
+app.use('/api/mission-control', missionControlRoutes(wss));
+
+// ============================
+// MODULE INITIALIZATION
+// ============================
+const initializeAllModules = async () => {
+    let modules = {};
+    let trainingModules = {};
+    let sharedModules = {};
+
+    try {
+        // First, load the ModuleLoader
+        const { ModuleLoader, moduleLoader } = require('./modules/moduleLoader');
+
+        // Define core modules that actually exist
+        modules = {
+            physical: {
+                main: require('./modules/core/physical/index.js'),
+                assessments: require('./modules/core/physical/assessments/index.js'),
+                tasks: require('./modules/core/physical/tasks/index.js'),
+                requirements: require('./modules/core/physical/requirements/index.js')
+            },
+            technical: {
+                main: require('./modules/core/technical/index.js'),
+                tasks: require('./modules/core/technical/tasks/index.js'),
+                systems: require('./modules/core/technical/systems/index.js'),
+                protocols: require('./modules/core/technical/protocols/index.js')
+            },
+            simulation: {
+                main: require('./modules/core/simulation/index.js'),
+                missions: require('./modules/core/simulation/missions/index.js'),
+                scenarios: require('./modules/core/simulation/scenarios/index.js'),
+                teamRoles: require('./modules/core/simulation/teamRoles/index.js')
+            }
+        };
+
+        // Training module types
+        trainingModules = {
+            physical: require('./models/PhysicalTraining'),
+            technical: require('./models/TechnicalTraining'),
+            simulation: require('./models/SimulationTraining')
+        };
+
+        // Load shared modules
+        sharedModules = {
+            types: {
+                moduleTypes: require('./modules/shared/types/ModuleTypes.js'),
+                baseModules: require('./modules/shared/types/baseModules.js'),
+                baseSession: require('./modules/shared/types/baseSession.js')
+            },
+            achievements: {
+                badges: require('./modules/shared/achievements/badges.js'),
+                certifications: require('./modules/shared/achievements/certifications.js')
+            },
+            progression: {
+                requirements: require('./modules/shared/progression/requirements.js'),
+                unlocks: require('./modules/shared/progression/unlocks.js')
+            },
+            credits: {
+                calculation: require('./modules/shared/credits/calculation.js'),
+                thresholds: require('./modules/shared/credits/thresholds.js')
+            }
+        };
+
+        console.log('\n🚀 Initializing Core Modules...');
+
+        // Validate module structures
+        Object.entries(modules).forEach(([name, moduleGroup]) => {
+            if (!moduleGroup.main) {
+                console.warn(`⚠️ Warning: ${name} module is missing main index.js`);
+                return;
+            }
+            console.log(`✅ ${name} module structure validated`);
+        });
+
+        // Initialize ModuleLoader with validated modules
+        if (moduleLoader && typeof moduleLoader.initializeModules === 'function') {
+            await moduleLoader.initializeModules();
+            console.log('✅ All modules initialized successfully');
+        }
+
+        // Mount module routes
+        Object.entries(modules).forEach(([name, moduleGroup]) => {
+            if (moduleGroup.main && moduleGroup.main.router) {
+                app.use(`/api/modules/${name}`, authenticate, moduleGroup.main.router);
+                console.log(`✅ Mounted ${name} module routes`);
+            }
+        });
+
+        // Initialize training modules
+        console.log('\n📚 Initializing Training Modules...');
+        for (const [type, TrainingModule] of Object.entries(trainingModules)) {
+            if (TrainingModule) {
+                try {
+                    if (typeof TrainingModule.initialize === 'function') {
+                        await TrainingModule.initialize();
+                    }
+                    console.log(`✅ ${type} training module initialized`);
+                } catch (error) {
+                    console.error(`❌ Error initializing ${type} training module:`, error);
+                }
+            }
+        }
+
+        // Setup module relationships
+        console.log('\n🔄 Setting up module relationships...');
+        await Promise.all(Object.values(modules).map(async (module) => {
+            if (module && typeof module.setupRelationships === 'function') {
+                try {
+                    await module.setupRelationships(modules);
+                    console.log(`✅ Relationships setup for ${module.moduleData.name}`);
+                } catch (error) {
+                    console.error(`❌ Error setting up relationships for ${module.moduleData.name}:`, error);
+                }
+            }
+        }));
+
+        console.log('\n✅ Core and shared modules loaded');
+
+    } catch (error) {
+        console.error('❌ Error during module initialization:', error);
+        if (process.env.NODE_ENV === 'development') {
+            console.error('Detailed error:', error.stack);
+        }
+    } finally {
+        console.log('\n📊 Module Initialization Summary:');
+        console.log(`Total Core Modules: ${Object.keys(modules || {}).length}`);
+        console.log(`Total Shared Modules: ${Object.keys(sharedModules || {}).length}`);
+        console.log(`Total Training Modules: ${Object.keys(trainingModules || {}).length}`);
+    }
+};
+
+// Export for testing purposes
+module.exports = {
+    initializeAllModules
+};
+// Static Pages
 const staticPages = [
     { route: "/", file: "index.html" },
     { route: "/welcome", file: "Welcome.html" },
@@ -258,45 +445,51 @@ staticPages.forEach(({ route, file }) => {
 // ============================
 // 6. ERROR HANDLING
 // ============================
-app.use((req, res) => {
+// 404 Handler
+app.use((req, res, next) => {
+    console.log(`⚠️ 404 Not Found: ${req.originalUrl}`);
     res.status(404).json({
         error: "Not Found",
-        path: req.path,
+        path: req.originalUrl,
     });
 });
 
+// Global Error Handler
 app.use((err, req, res, next) => {
-    console.error("Global Error:", {
-        message: err.message,
-        stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
-        path: req.path,
-        method: req.method,
-    });
-    
-    res.status(err.status || 500).json({
-        error: "Server Error",
-        message: process.env.NODE_ENV === "development" ? err.message : "An unexpected error occurred",
+    console.error("❌ Server Error:", err);
+    res.status(500).json({
+        error: "Internal Server Error",
+        message: process.env.NODE_ENV === 'development' ? err.message : 'An error occurred',
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
     });
 });
 
 // ============================
-// 7. SERVER STARTUP
+// 7. START SERVER & CONNECT DB
 // ============================
-const PORT = process.env.PORT || 3000;
-
-const startServer = async () => {
-    try {
-        await connectDB();
-        server.listen(PORT, () => {
-            console.log(`🚀 Server running on port ${PORT}`);
-            console.log(`✅ WebSocket server initialized`);
+connectDB()
+    .then(initializeAllModules)
+    .then(() => {
+        server.listen(process.env.PORT || 3000, () => {
+            console.log(`🚀 Server running on port ${process.env.PORT || 3000}`);
+            console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
+            console.log(`📡 WebSocket server initialized`);
         });
-    } catch (error) {
-        console.error("❌ Server startup error:", error);
+    })
+    .catch(error => {
+        console.error('❌ Failed to start server:', error);
         process.exit(1);
-    }
-};
+    });
 
-startServer();
+// Graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('🛑 SIGTERM received. Shutting down gracefully...');
+    server.close(() => {
+        mongoose.connection.close(false, () => {
+            console.log('💤 Server and MongoDB connection closed.');
+            process.exit(0);
+        });
+    });
+});
 
 module.exports = app;

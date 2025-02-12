@@ -6,6 +6,31 @@ const Leaderboard = require('../models/Leaderboard');
 const User = require('../models/User');
 const AISpaceCoach = require('../services/AISpaceCoach');
 
+router.get('/rankings', authenticate, async (req, res) => {
+    try {
+        const rankings = await User.find({})
+            .select('name leaderboard.score')
+            .sort({ 'leaderboard.score': -1 })
+            .limit(100);
+
+        const userRank = await User.countDocuments({
+            'leaderboard.score': { $gt: req.user.leaderboard.score }
+        });
+
+        res.json({
+            success: true,
+            rankings,
+            userStats: {
+                rank: userRank + 1,
+                score: req.user.leaderboard.score
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).json({ success: false, message: "Failed to fetch leaderboard" });
+    }
+});
+
 // Main leaderboard page render with AI insights
 router.get('/', authenticate, async (req, res) => {
     try {
