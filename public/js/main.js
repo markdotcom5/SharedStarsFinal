@@ -609,6 +609,28 @@ async function startLesson(lessonNumber) {
         });
     });
 
+      /** ==========================
+     *  🔹 Language Selection Dropdown
+     *  ========================== **/
+      document.addEventListener('DOMContentLoaded', () => {
+        const langBtn = document.querySelector('.lang-btn');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+    
+        langBtn.addEventListener('click', () => {
+          dropdownMenu.classList.toggle('hidden');
+        });
+    
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+          item.addEventListener('click', (e) => {
+            const lang = e.target.getAttribute('data-lang');
+            const flag = e.target.querySelector('span').textContent;
+            document.getElementById('selected-flag').textContent = flag;
+    
+            // Optionally, store selected language preference in local storage or perform other actions
+          });
+        });
+      });
+
     /** ==========================
      *  🔹 Signup Modal Controls
      *  ========================== **/
@@ -788,4 +810,4 @@ if (signupForm) {
 document.addEventListener('DOMContentLoaded', async () => {
     window.app = new SharedStarsApp();
     await window.app.initialize();
-});
+})});

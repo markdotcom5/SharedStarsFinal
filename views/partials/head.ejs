@@ -21,6 +21,7 @@
           userId: <%= locals.user ? `"${user._id}"` : 'null' %>,
           preferredLanguage: "<%= locals.user ? user.settings?.language || 'en' : 'en' %>"
       };
+    </script>
   </script>
 
   <!-- Feature Scripts (Defer for Performance) -->
