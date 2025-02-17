@@ -162,11 +162,23 @@ const token = jwt.sign(
         res.status(500).json({ error: "Registration failed", details: error.message });
     }
 });
+
 router.get("/linkedin/callback", async (req, res) => {
     const authorizationCode = req.query.code;
 
     if (!authorizationCode) {
         return res.status(400).json({ error: "Authorization code is missing" });
+    }
+
+    // Load LinkedIn OAuth credentials from environment variables
+    const CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
+    const CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
+    const REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI;
+
+    // Ensure environment variables are set
+    if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
+        console.error("❌ Missing LinkedIn OAuth environment variables!");
+        return res.status(500).json({ error: "Server misconfiguration: LinkedIn OAuth credentials missing" });
     }
 
     try {
@@ -175,22 +187,25 @@ router.get("/linkedin/callback", async (req, res) => {
             new URLSearchParams({
                 grant_type: "authorization_code",
                 code: authorizationCode,
-                redirect_uri: REDIRECT_URI,
-                client_id: CLIENT_ID,
-                client_secret: CLIENT_SECRET
+                redirect_uri: process.env.LINKEDIN_REDIRECT_URI,
+                client_id: process.env.LINKEDIN_CLIENT_ID,
+                client_secret: process.env.LINKEDIN_CLIENT_SECRET
             }),
             { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-        );
+        );        
 
         const accessToken = response.data.access_token;
-        console.log("✅ LinkedIn Access Token:", accessToken);
+        console.log("✅ LinkedIn Access Token retrieved successfully");
 
-        res.json({ access_token: accessToken }); // Return the token instead of redirecting
+        // Return the token securely (remove logging for production)
+        res.json({ access_token: accessToken });
+
     } catch (error) {
-        console.error("❌ Error exchanging code for token:", error.response ? error.response.data : error.message);
+        console.error("❌ Error exchanging code for token:", error.response?.data || error.message);
         res.status(500).json({ error: "Failed to exchange authorization code for access token" });
     }
 });
+
 
 // Get Current User
 router.get("/me", async (req, res) => {

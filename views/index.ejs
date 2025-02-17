@@ -2,33 +2,25 @@
 <html lang="en">
   <%- include('partials/head', { title: 'SharedStars Home' }) %>
   <body class="bg-black">
-    <!-- Header (Make sure your partial includes the language buttons and top navigation) -->
+    <!-- Header (Navigation & Language Selector) -->
     <%- include('partials/header') %>
 
     <!-- Hero Section -->
     <section class="hero-section min-h-screen flex items-center justify-center relative">
       <div class="video-container">
         <video id="heroVideo" class="video-background" autoplay muted loop playsinline>
-          <!-- Using absolute path for video -->
           <source src="/videos/academy10.mp4" type="video/mp4">
         </video>
       </div>
-
-      <!-- Hero Content -->
       <div class="hero-content text-center text-white max-w-4xl px-4">
         <h1 class="text-6xl font-bold mb-4" data-i18n="heroTitle">From Earth to Space in 36 Months</h1>
         <p class="text-xl mb-8" data-i18n="subtitle">Like Tesla's FSD for Space Training: Intelligent, Adaptive, Revolutionary</p>
-
-        <!-- Training Mode Selection -->
         <div class="training-modes grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Self-Paced Mode -->
           <div class="mode-card bg-black/30 backdrop-blur p-6 rounded-xl border border-blue-500/20">
             <h3 class="text-2xl font-bold mb-3">Self-Paced Training</h3>
             <p class="mb-4">Learn at your own pace with structured modules</p>
             <button class="training-mode-btn" data-mode="self-paced">Start Journey</button>
           </div>
-
-          <!-- AI-Guided Mode -->
           <div class="mode-card bg-black/30 backdrop-blur p-6 rounded-xl border border-purple-500/20">
             <h3 class="text-2xl font-bold mb-3">AI-Guided Path</h3>
             <p class="mb-4">Accelerated learning with FSD-style adaptive training</p>
@@ -38,7 +30,7 @@
       </div>
     </section>
 
-    <!-- Training Dashboard (hidden by default) -->
+    <!-- Training Dashboard (Hidden by Default) -->
     <section id="training-dashboard" class="py-16 bg-gray-900 hidden">
       <div class="container mx-auto px-4">
         <div class="progress-tracker mb-8">
@@ -52,6 +44,20 @@
       </div>
     </section>
 
+    <!-- Social Media Section -->
+    <section class="social-media-section bg-gray-900 py-6 text-white text-center">
+      <h2 class="text-2xl font-bold mb-4">Follow Us</h2>
+      <div class="flex justify-center gap-6">
+        <a href="#" id="twitter-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Twitter">🐦 Twitter</a>
+        <a href="#" id="facebook-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Facebook">📘 Facebook</a>
+        <a href="#" id="instagram-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Instagram">📷 Instagram</a>
+        <a href="#" id="linkedin-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="LinkedIn">💼 LinkedIn</a>
+        <a href="#" id="telegram-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Telegram">📢 Telegram</a>
+        <a href="#" id="tiktok-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="TikTok">🎵 TikTok</a>
+        <a href="#" id="youtube-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="YouTube">▶️ YouTube</a>
+      </div>
+    </section>
+
     <!-- Footer -->
     <%- include('partials/footer') %>
 
@@ -60,7 +66,6 @@
       import { initializeTrainingModules } from '/js/modules/training/index.js';
 
       document.addEventListener('DOMContentLoaded', () => {
-        // Initialize training modules with your configuration
         initializeTrainingModules({
           modules: ['physical', 'technical', 'simulation'],
           endpoints: {
@@ -69,14 +74,10 @@
             simulation: '/api/training/modules/simulation'
           }
         });
-
-        // Set the language attribute based on saved preference
         const currentLang = localStorage.getItem('preferredLanguage') || 'en';
         document.documentElement.setAttribute('lang', currentLang);
       });
     </script>
-
-    <!-- Load Core Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script type="module" src="/js/modules/core/index.js"></script>
   </body>

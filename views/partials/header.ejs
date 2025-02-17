@@ -1,92 +1,110 @@
-<!-- views/partials/header.ejs -->
 <header class="fixed w-full bg-gray-900/90 backdrop-blur-lg z-50">
-  <!-- Language Selection Bar -->
-  <div class="bg-gray-800 text-white py-2">
-      <div class="container mx-auto px-4 flex justify-end space-x-4">
-          <button class="language-btn hover:text-blue-400 transition-colors" data-lang="en">
-              🇺🇸 English
+    <!-- Top Bar with Language Selection -->
+    <div class="bg-gray-800 text-white py-2">
+      <div class="container mx-auto px-4 flex justify-end space-x-4 relative">
+        <div class="relative">
+          <button id="lang-dropdown-btn" class="bg-gray-800 px-4 py-2 rounded-lg">
+            🌐 Language
           </button>
-          <button class="language-btn hover:text-blue-400 transition-colors" data-lang="zh">
-              🇨🇳 中文
-          </button>
-          <button class="language-btn hover:text-blue-400 transition-colors" data-lang="ko">
-              🇰🇷 한국어
-          </button>
-          <button class="language-btn hover:text-blue-400 transition-colors" data-lang="es">
-              🇪🇸 Español
-          </button>
-      </div>
-  </div>
-
-  <!-- Main Navigation -->
-  <div class="container mx-auto px-4 py-4">
-      <nav class="flex items-center justify-between">
-          <!-- Logo -->
-          <a href="/" class="flex-shrink-0">
-            <img src="/images/SharedStars.svg" alt="SharedStars Logo">
-        </a>
-
-          <!-- Navigation Links -->
-          <div class="flex items-center space-x-8">
-              <a href="/" class="text-white hover:text-blue-400 transition-colors">Home</a>
-              <a href="/academy" class="text-white hover:text-blue-400 transition-colors">Academy</a>
-              <a href="/about" class="text-white hover:text-blue-400 transition-colors">About</a>
-              <a href="/leaderboard" class="text-white hover:text-blue-400 transition-colors">Leaderboard</a>
-              <a href="/subscribe" class="text-white hover:text-blue-400 transition-colors">Subscribe</a>
-              <!-- Auth Buttons -->
-              <a href="/login" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition-colors">Login</a>
-              <a href="/signup" class="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded transition-colors">Sign Up</a>
+          <div id="lang-dropdown-menu" class="hidden absolute bg-gray-900 p-2 rounded-lg mt-2 right-0 shadow-lg">
+            <button class="language-btn block w-full text-left px-4 py-2 hover:text-blue-400" data-lang="en">🇺🇸 English</button>
+            <button class="language-btn block w-full text-left px-4 py-2 hover:text-blue-400" data-lang="zh">🇨🇳 中文</button>
+            <button class="language-btn block w-full text-left px-4 py-2 hover:text-blue-400" data-lang="ko">🇰🇷 한국어</button>
+            <button class="language-btn block w-full text-left px-4 py-2 hover:text-blue-400" data-lang="es">🇪🇸 Español</button>
           </div>
-      </nav>
-  </div>
-</header>
-
-<!-- Language Handling Script -->
-<script>
-const translations = {
-  en: {
+        </div>
+      </div>
+    </div>
+  
+    <!-- Main Navigation -->
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="/" class="flex-shrink-0 hover:opacity-80 transition">
+        <img src="/images/SharedStars.svg" alt="SharedStars Logo">
+      </a>
+  
+      <!-- Navigation Links -->
+      <div class="flex items-center space-x-8">
+        <a href="/" class="text-white hover:text-blue-400 transition-colors">Home</a>
+        <a href="/academy" class="text-white hover:text-blue-400 transition-colors">Academy</a>
+        <a href="/about" class="text-white hover:text-blue-400 transition-colors">About</a>
+        <a href="/leaderboard" class="text-white hover:text-blue-400 transition-colors">Leaderboard</a>
+        <a href="/subscribe" class="text-white hover:text-blue-400 transition-colors">Subscribe</a>
+        <!-- Auth Buttons -->
+        <a href="/login" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition-colors">Login</a>
+        <a href="/signup" class="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded transition-colors">Sign Up</a>
+      </div>
+  
+      <!-- Dark Mode Toggle (Right-Aligned) -->
+      <button id="dark-mode-toggle" class="ml-4 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">
+        🌙 Dark Mode
+      </button>
+    </div>
+  </header>
+  
+  <!-- ✅ Language Dropdown Script -->
+  <script>
+    document.getElementById('lang-dropdown-btn').addEventListener('click', () => {
+      document.getElementById('lang-dropdown-menu').classList.toggle('hidden');
+    });
+  </script>
+  
+  <!-- ✅ Dark Mode Toggle Script -->
+  <script>
+    document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    });
+  
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+  
+  <!-- ✅ Multi-Language Handling -->
+  <script>
+  const translations = {
+    en: {
       heroTitle: "From Earth to Space in 36 Months",
       subtitle: "Like Tesla's FSD for Space Training: Intelligent, Adaptive, Revolutionary",
-      // Add more translations
-  },
-  zh: {
+    },
+    zh: {
       heroTitle: "36个月从地球到太空",
       subtitle: "像特斯拉FSD一样的太空训练：智能、适应性、革命性",
-      // Add more translations
-  },
-  ko: {
+    },
+    ko: {
       heroTitle: "지구에서 우주까지 36개월",
       subtitle: "테슬라 FSD와 같은 우주 훈련: 지능적, 적응적, 혁명적",
-      // Add more translations
-  },
-  es: {
+    },
+    es: {
       heroTitle: "De la Tierra al Espacio en 36 Meses",
       subtitle: "Como el FSD de Tesla para el entrenamiento espacial: Inteligente, Adaptativo, Revolucionario",
-      // Add more translations
-  }
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Set default language
-  let currentLang = localStorage.getItem('preferredLanguage') || 'en';
-  updateLanguage(currentLang);
-
-  // Language switcher
-  document.querySelectorAll('.language-btn').forEach(btn => {
+    }
+  };
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    let currentLang = localStorage.getItem('preferredLanguage') || 'en';
+    updateLanguage(currentLang);
+  
+    document.querySelectorAll('.language-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-          const lang = e.target.closest('button').dataset.lang;
-          updateLanguage(lang);
-          localStorage.setItem('preferredLanguage', lang);
+        const lang = e.target.closest('button').dataset.lang;
+        updateLanguage(lang);
+        localStorage.setItem('preferredLanguage', lang);
       });
-  });
-
-  function updateLanguage(lang) {
+    });
+  
+    function updateLanguage(lang) {
       document.querySelectorAll('[data-i18n]').forEach(element => {
-          const key = element.dataset.i18n;
-          if (translations[lang] && translations[lang][key]) {
-              element.textContent = translations[lang][key];
-          }
+        const key = element.dataset.i18n;
+        if (translations[lang] && translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        } else {
+          console.warn(`Missing translation: ${key} in ${lang}`);
+        }
       });
-  }
-});
-</script>
+    }
+  });
+  </script>
+  

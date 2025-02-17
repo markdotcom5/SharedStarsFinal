@@ -1,9 +1,5 @@
-// At the top of the file, fix the OpenAI initialization
+// Core dependencies
 const { OpenAI } = require("openai");
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
 const EventEmitter = require('events');
 const Achievement = require('../models/Achievement');
 const UserProgress = require('../models/UserProgress');
@@ -11,641 +7,813 @@ const User = require('../models/User');
 const Subscription = require('../models/Subscription');
 
 class AISpaceCoach extends EventEmitter {
-  constructor() {
-    super();
+    constructor() {
+        super();
+        this.openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY
+        });
+        this.initializeSystems();
+     // Bind event emitter methods
+     this.on = this.on.bind(this);
+     this.emit = this.emit.bind(this);
+ }
 
-    // Initialize systems
-    this.initializeAchievementSystem();
-    this.initializeLanguageSupport();
-    this.initializeWebSocketHandlers();
-
-    // Enhanced metrics tracking
-    this.performanceMetrics = {
-      trainingModulesCompleted: 0,
-      skillProgressTracking: new Map(),
-      userEngagementScore: 0,
-      achievements: new Map(),
-      progressHistory: new Map(),
-      realTimeMetrics: new Map(),
-      creditAccumulation: new Map()
-    };
-  }
-
-  // Sets up default configuration if none exists.
-  initializeLanguageSupport() {
-    this.config = this.config || {};
-    this.config.languages = this.config.languages || ['en'];
-    this.config.model = this.config.model || 'gpt-4';
-    this.config.subscriptionMultipliers = this.config.subscriptionMultipliers || {
-      premium: 1.5,
-      individual: 1,
-      family: 1,
-      galactic: 1,
-      custom: (amount) => (amount >= 100 ? 1.5 : 1)
-    };
-  }
-
-  // Achievement System Setup
-  initializeAchievementSystem() {
-    this.achievementTypes = {
-      ASSESSMENT_MASTER: {
-        id: 'assessment_master',
-        threshold: 90,
-        description: 'Score 90% or higher on assessments',
-        icon: '🎯'
-      },
-      QUICK_LEARNER: {
-        id: 'quick_learner',
-        threshold: 5,
-        description: 'Complete 5 modules in record time',
-        icon: '⚡'
-      },
-      CONSISTENCY_KING: {
-        id: 'consistency_king',
-        threshold: 7,
-        description: '7-day training streak',
-        icon: '👑'
-      }
-      // You can add more achievement types here as needed
-    };
-  }
-
-  // Translates text to a target language, maintaining technical accuracy.
-  async translateResponse(text, targetLang) {
-    if (!this.config.languages.includes(targetLang)) {
-      return text; // Default to original if language not supported
+    // =====================
+    // System Initialization
+    // =====================
+    
+    initializeSystems() {
+        this.initializeAchievementSystem();
+        this.initializeLanguageSupport();
+        this.initializeWebSocketHandlers();
+        this.initializeMetricsTracking();
+        this.initializeAdvancedLearning();
+        this.initializeAdvancedPerformance();
+        this.initializeAdvancedIntegration();
+        this.initializeRealTimeFeedback();
+        this.initializeGamificationSystem();
+        this.initializeStudyGroupSystem();
+        this.initializeAdaptiveTestingSystem();
+        
+        this.analytics = new AdvancedAnalytics(this);
+        this.adaptiveLearning = new AdaptiveLearningSystem(this);
     }
 
-    try {
-      const completion = await openai.chat.completions.create({
-        model: this.config.model,
-        messages: [
-          {
-            role: 'system',
-            content: `You are a translator. Translate the following text to ${targetLang}. Maintain the technical accuracy and tone.`
-          },
-          { role: 'user', content: text }
-        ],
-        temperature: 0.3
-      });
+    initializeSubsystems() {
+        // Initialize adaptive learning
+        this.adaptiveLearning = {
+            async adjustDifficulty(userId, performance) {
+                const currentState = await this.getCurrentState(userId);
+                const newDifficulty = this.calculateNewDifficulty(currentState, performance);
+                await this.updateLearningPath(userId, newDifficulty);
+                return newDifficulty;
+            },
 
-      return completion.choices[0]?.message?.content || text;
-    } catch (error) {
-      console.error('Translation error:', error);
-      return text;
-    }
-  }
+            async personalizeContent(userId, context) {
+                const learningStyle = await this.getLearningStyle(userId);
+                const adaptedContent = await this.adaptContentToStyle(context, learningStyle);
+                return adaptedContent;
+            },
 
-  // Calculates and awards credits based on user actions and subscription level.
-  async calculateCredits(userId, action, data) {
-    try {
-      const [user, subscription] = await Promise.all([
-        User.findById(userId),
-        Subscription.findOne({ userId, status: 'active' })
-      ]);
-
-      if (!user) throw new Error('User not found');
-
-      let creditsEarned = 0;
-      switch (action) {
-        case 'MODULE_COMPLETION':
-        case 'module_completion':
-          creditsEarned = 100;
-          break;
-        case 'ACHIEVEMENT_UNLOCKED':
-          creditsEarned = 50;
-          break;
-        case 'STREAK_BONUS':
-          creditsEarned = 25;
-          break;
-        case 'assessment_completion':
-          // Example: you can use data.score if needed
-          creditsEarned = 10;
-          break;
-        default:
-          creditsEarned = 10;
-      }
-
-      if (subscription) {
-        const subscriptionBonus =
-          subscription.type === 'premium' ? 1.5 : 1;
-        creditsEarned *= subscriptionBonus;
-      }
-
-      user.credits = (user.credits || 0) + creditsEarned;
-      await user.save();
-
-      return { success: true, newCreditBalance: user.credits };
-    } catch (error) {
-      console.error('Credit calculation error:', error);
-      return { success: false, error: error.message };
-    }
-  }
-
-  // Returns a subscription multiplier based on the plan.
-  getSubscriptionMultiplier(subscription) {
-    if (!subscription) return 1.0;
-
-    const multiplier = this.config.subscriptionMultipliers[subscription.plan];
-    if (subscription.plan === 'custom') {
-      return multiplier(subscription.amount);
-    }
-    return multiplier || 1.0;
-  }
-
-  // Calculate achievement bonus from user's progress
-  async calculateAchievementBonus(userId) {
-    const userProgress = await UserProgress.findOne({ userId }).populate(
-      'achievements'
-    );
-
-    if (!userProgress?.achievements?.length) return 0;
-
-    return userProgress.achievements.reduce((total, achievement) => {
-      return total + (achievement.bonusMultiplier || 0);
-    }, 0);
-  }
-
-  // Tracks achievement and awards credits if it's a new unlock.
-  async trackAchievement(userId, type, additionalData = {}) {
-    try {
-      const userProgress = await UserProgress.findOne({ userId }).populate(
-        'achievements'
-      );
-      if (!userProgress) return null;
-
-      const achievement = this.achievementTypes[type];
-      if (!achievement) return null;
-
-      if (!userProgress.achievements.includes(achievement.id)) {
-        userProgress.achievements.push(achievement.id);
-        await userProgress.save();
-
-        const credits = await this.calculateCredits(
-          userId,
-          'ACHIEVEMENT_UNLOCKED'
-        );
-        this.emit('achievement-unlocked', { userId, achievement, credits });
-        return { achievement, credits };
-      }
-      return null;
-    } catch (error) {
-      console.error('Achievement tracking error:', error);
-      throw error;
-    }
-  }
-
-  // Initialize WebSocket event handlers
-  initializeWebSocketHandlers() {
-    this.wsEvents = {
-      track_progress: async (ws, data) => {
-        try {
-          const progress = await this.trackProgress(
-            data.userId,
-            data.progressData
-          );
-          const credits = await this.calculateCredits(
-            data.userId,
-            'MODULE_COMPLETION',
-            data.progressData
-          );
-          ws.send(
-            JSON.stringify({ type: 'progress_update', progress, credits })
-          );
-        } catch (error) {
-          this.handleWebSocketError(ws, error);
-        }
-      },
-
-      request_coaching: async (ws, data) => {
-        try {
-          const userLang = await this.getUserLanguage(data.userId);
-          const suggestions = await this.generateCoachingSuggestions(
-            data.userProfile
-          );
-          const translatedSuggestions = await this.translateResponse(
-            suggestions,
-            userLang
-          );
-
-          ws.send(
-            JSON.stringify({
-              type: 'coaching_suggestions',
-              suggestions: translatedSuggestions
-            })
-          );
-        } catch (error) {
-          this.handleWebSocketError(ws, error);
-        }
-      },
-
-      start_assessment: async (ws, data) => {
-        try {
-          const userLang = await this.getUserLanguage(data.userId);
-          const assessment = await this.getInitialAssessment();
-          const translatedAssessment = await this.translateAssessment(
-            assessment,
-            userLang
-          );
-
-          ws.send(
-            JSON.stringify({
-              type: 'assessment_questions',
-              assessment: translatedAssessment
-            })
-          );
-        } catch (error) {
-          this.handleWebSocketError(ws, error);
-        }
-      }
-    };
-
-    // Error handling for WebSocket
-    this.wsErrorHandler = (ws, error) => {
-      console.error('WebSocket error:', error);
-      ws.send(
-        JSON.stringify({
-          type: 'error',
-          message: 'An error occurred processing your request'
-        })
-      );
-    };
-  }
-
-  // Enhanced AI Coaching Methods - Generates personalized coaching suggestions.
-  async generateCoachingSuggestions(userProfile) {
-    if (!userProfile) throw new Error('User profile is required');
-
-    try {
-      const [user, progress, subscription] = await Promise.all([
-        User.findById(userProfile.userId),
-        UserProgress.findOne({ userId: userProfile.userId }),
-        Subscription.findOne({ userId: userProfile.userId, status: 'active' })
-      ]);
-
-      // Generate personalized context
-      const context = this.generateAIContext(user, progress, subscription);
-
-      const completion = await openai.chat.completions.create({
-        model: this.config.model,
-        messages: [
-          {
-            role: 'system',
-            content:
-              'You are an expert space training coach providing personalized guidance.'
-          },
-          {
-            role: 'user',
-            content: `Generate coaching suggestions based on: ${JSON.stringify(
-              context
-            )}`
-          }
-        ],
-        temperature: 0.7
-      });
-
-      const suggestions = completion.choices[0]?.message?.content;
-
-      // Track AI interaction (stubbed for now)
-      await this.trackAIInteraction(userProfile.userId, 'coaching_suggestion', {
-        context,
-        suggestions
-      });
-
-      return suggestions;
-    } catch (error) {
-      console.error('Error generating coaching suggestions:', error);
-      throw error;
-    }
-  }
-
-  // Generates context for AI based on user progress and subscription.
-  generateAIContext(user, progress, subscription) {
-    return {
-      credits: user.credits,
-      achievements: progress.achievements.length,
-      completedModules: progress.moduleProgress.length,
-      subscriptionTier: subscription?.plan || 'none',
-      skillLevels: progress.skillLevels,
-      recentActivity: this.getRecentActivity(user._id)
-    };
-  }
-
-  // Processes an assessment answer, returns feedback, calculates score,
-  // and provides immediate guidance.
-  async processAssessmentAnswer(
-    userId,
-    questionIndex,
-    answer,
-    language = 'en'
-  ) {
-    try {
-      // Get user's subscription level for AI response quality
-      const subscription = await Subscription.findOne({
-        userId,
-        status: 'active'
-      });
-
-      const aiQualityLevel = this.getAIQualityLevel(subscription);
-
-      // Generate AI evaluation
-      const completion = await openai.chat.completions.create({
-        model: this.config.model,
-        messages: [
-          {
-            role: 'system',
-            content: `You are an expert space training evaluator. Quality Level: ${aiQualityLevel}`
-          },
-          {
-            role: 'user',
-            content: `Question Index: ${questionIndex}\nAnswer: ${answer}\nProvide detailed feedback.`
-          }
-        ],
-        temperature: 0.7
-      });
-
-      let feedback = completion.choices[0]?.message?.content;
-
-      // Translate feedback if needed
-      if (language !== 'en') {
-        feedback = await this.translateResponse(feedback, language);
-      }
-
-      const analysis = {
-        feedback,
-        score: this.calculateScore(feedback),
-        guidance: await this.generateImmediateGuidance(feedback, language)
-      };
-
-      // Track progress and check achievements
-      await Promise.all([
-        this.trackProgress(userId, {
-          type: 'ASSESSMENT',
-          score: analysis.score,
-          questionIndex
-        }),
-        this.checkAssessmentAchievements(userId, analysis.score)
-      ]);
-
-      // Calculate and award credits
-      const credits = await this.calculateCredits(userId, 'assessment_completion', {
-        score: analysis.score
-      });
-
-      return {
-        success: true,
-        analysis,
-        credits,
-        nextQuestionIndex: questionIndex + 1
-      };
-    } catch (error) {
-      console.error('Assessment processing error:', error);
-      throw error;
-    }
-  }
-
-  // Tracks user progress by updating metrics, streaks, and skill levels.
-  async trackProgress(userId, data) {
-    try {
-      // Get or initialize user metrics
-      const userMetrics =
-        this.performanceMetrics.realTimeMetrics.get(userId) || {
-          moduleProgress: {},
-          skillLevels: {},
-          achievements: [],
-          streakData: {
-            lastActivity: null,
-            currentStreak: 0
-          }
+            async trackProgress(userId, data) {
+                const analysis = await this.analyzeProgress(userId, data);
+                await this.updateLearningModel(userId, analysis);
+                return analysis;
+            }
         };
 
-      // Update metrics
-      userMetrics.lastUpdate = new Date();
-      userMetrics.currentProgress = data;
+        // Initialize predictive analytics
+        this.predictiveAnalytics = {
+            async predictPerformance(userId) {
+                const history = await this.getPerformanceHistory(userId);
+                return this.generatePrediction(history);
+            },
 
-      // Update streak data
-      const streakUpdated = this.updateStreak(userMetrics.streakData);
-      if (streakUpdated) {
-        await this.checkStreakAchievements(
-          userId,
-          userMetrics.streakData.currentStreak
-        );
-      }
+            async identifyWeaknesses(userId) {
+                const performance = await this.getDetailedPerformance(userId);
+                return this.analyzeWeaknesses(performance);
+            },
 
-      // Calculate skill improvements
-      const skillImprovements = this.calculateSkillImprovements(data);
-      Object.assign(userMetrics.skillLevels, skillImprovements);
-
-      // Store updated metrics
-      this.performanceMetrics.realTimeMetrics.set(userId, userMetrics);
-
-      // Emit progress update event
-      this.emit('progress-update', {
-        userId,
-        progress: data,
-        skillImprovements,
-        streak: userMetrics.streakData,
-        timestamp: new Date()
-      });
-
-      // Update database with the new progress
-      await UserProgress.findOneAndUpdate(
-        { userId },
-        {
-          $set: {
-            skillLevels: userMetrics.skillLevels,
-            lastActivity: new Date(),
-            currentStreak: userMetrics.streakData.currentStreak
-          },
-          $push: {
-            progressHistory: {
-              data,
-              timestamp: new Date()
+            async suggestImprovements(userId) {
+                const weaknesses = await this.identifyWeaknesses(userId);
+                return this.generateImprovementPlan(weaknesses);
             }
-          }
-        },
-        { upsert: true }
-      );
-
-      return userMetrics;
-    } catch (error) {
-      console.error('Progress tracking error:', error);
-      throw error;
+        };
     }
-  }
-
-  // Calculates skill improvements based on progress type and score.
-  calculateSkillImprovements(progressData) {
-    const improvements = {};
-    const skillWeights = {
-      ASSESSMENT: { technical: 0.6, theoretical: 0.8, practical: 0.4 },
-      MODULE_COMPLETION: { technical: 0.5, theoretical: 0.5, practical: 0.7 },
-      SIMULATION: { technical: 0.7, theoretical: 0.3, practical: 0.9 }
-    };
-
-    const weights = skillWeights[progressData.type] || {};
-    const baseImprovement = (progressData.score || 0) / 100;
-
-    for (const [skill, weight] of Object.entries(weights)) {
-      improvements[skill] = baseImprovement * weight;
+    initializeMetricsTracking() {
+        this.performanceMetrics = {
+            trainingModulesCompleted: 0,
+            skillProgressTracking: new Map(),
+            userEngagementScore: 0,
+            achievements: new Map(),
+            progressHistory: new Map(),
+            realTimeMetrics: new Map(),
+            creditAccumulation: new Map()
+        };
     }
 
-    return improvements;
-  }
-
-  // Retrieves the user's preferred language.
-  async getUserLanguage(userId) {
-    try {
-      const user = await User.findById(userId);
-      return user?.settings?.language || 'en';
-    } catch (error) {
-      console.error('Language fetch error:', error);
-      return 'en';
-    }
-  }
-
-  // Determines AI quality level based on subscription.
-  getAIQualityLevel(subscription) {
-    const qualityLevels = {
-      individual: 'standard',
-      family: 'enhanced',
-      galactic: 'premium',
-      custom: (amount) => (amount >= 100 ? 'premium' : 'enhanced')
-    };
-
-    if (!subscription) return 'standard';
-
-    const level = qualityLevels[subscription.plan];
-    return typeof level === 'function' ? level(subscription.amount) : level;
-  }
-
-  // Checks for assessment-related achievements.
-  async checkAssessmentAchievements(userId, score) {
-    const achievements = [];
-
-    if (score >= 90) {
-      achievements.push(await this.trackAchievement(userId, 'ASSESSMENT_MASTER', { score }));
-    }
-    if (score === 100) {
-      achievements.push(await this.trackAchievement(userId, 'PERFECT_SCORE', { score }));
+    initializeLanguageSupport() {
+        this.config = this.config || {};
+        this.config.languages = this.config.languages || ['en'];
+        this.config.model = this.config.model || 'gpt-4';
+        this.config.subscriptionMultipliers = this.config.subscriptionMultipliers || {
+            premium: 1.5,
+            individual: 1,
+            family: 1,
+            galactic: 1,
+            custom: (amount) => (amount >= 100 ? 1.5 : 1)
+        };
     }
 
-    return achievements.filter(Boolean);
-  }
-
-  // Updates the user's streak based on their last activity.
-  updateStreak(streakData) {
-    const now = new Date();
-    const lastActivity = streakData.lastActivity
-      ? new Date(streakData.lastActivity)
-      : null;
-
-    if (!lastActivity) {
-      streakData.currentStreak = 1;
-      streakData.lastActivity = now;
-      return true;
+    initializeAchievementSystem() {
+        this.achievementTypes = {
+            ASSESSMENT_MASTER: {
+                id: 'assessment_master',
+                threshold: 90,
+                description: 'Score 90% or higher on assessments',
+                icon: '🎯'
+            },
+            QUICK_LEARNER: {
+                id: 'quick_learner',
+                threshold: 5,
+                description: 'Complete 5 modules in record time',
+                icon: '⚡'
+            },
+            CONSISTENCY_KING: {
+                id: 'consistency_king',
+                threshold: 7,
+                description: '7-day training streak',
+                icon: '👑'
+            }
+        };
     }
 
-    const daysDiff = Math.floor((now - lastActivity) / (1000 * 60 * 60 * 24));
-
-    if (daysDiff === 0) return false;
-    if (daysDiff === 1) {
-      streakData.currentStreak++;
-      streakData.lastActivity = now;
-      return true;
+    initializeAdvancedLearning() {
+        this.learningState = {
+            userModels: new Map(),
+            adaptiveSettings: new Map(),
+            skillMatrix: new Map(),
+            learningPaths: new Map()
+        };
+        
+        this.advancedMetrics = {
+            ...this.performanceMetrics,
+            skillGrowth: new Map(),
+            learningVelocity: new Map(),
+            adaptiveScores: new Map(),
+            realTimePerformance: new Map()
+        };
     }
 
-    streakData.currentStreak = 1;
-    streakData.lastActivity = now;
-    return true;
-  }
-
-  // Handles WebSocket errors by logging and sending an error message.
-  handleWebSocketError(ws, error) {
-    console.error('WebSocket operation error:', error);
-    ws.send(
-      JSON.stringify({
-        type: 'error',
-        error: {
-          message: 'Operation failed',
-          code: error.code || 500,
-          details:
-            process.env.NODE_ENV === 'development' ? error.message : undefined
-        }
-      })
-    );
-  }
-
-  // Cleanup resources on process termination.
-  cleanup() {
-    if (this.metricsUpdateInterval) {
-      clearInterval(this.metricsUpdateInterval);
+    initializeAdvancedPerformance() {
+        this.performanceSystem = {
+            realTimeTracking: {
+                currentSessions: new Map(),
+                performanceMetrics: new Map(),
+                adaptiveThresholds: new Map()
+            },
+            predictiveModeling: {
+                performanceModels: new Map(),
+                learningCurves: new Map(),
+                progressionPaths: new Map()
+            },
+            feedbackSystems: {
+                personalizedFeedback: new Map(),
+                adaptiveGuidance: new Map(),
+                interventionStrategies: new Map()
+            }
+        };
     }
-    if (this.performanceMetrics.realTimeMetrics && this.performanceMetrics.realTimeMetrics.clear) {
-      this.performanceMetrics.realTimeMetrics.clear();
+
+    initializeAdvancedIntegration() {
+        this.learningIntegration = {
+            adaptiveSystem: {
+                difficultyMatrix: new Map(),
+                personalizedPaths: new Map(),
+                realTimeAdjustments: new Map()
+            },
+            performanceTracking: {
+                historicalData: new Map(),
+                predictionModels: new Map(),
+                skillCorrelations: new Map()
+            },
+            aiModels: {
+                personalizedCoaching: new Map(),
+                predictiveAnalysis: new Map(),
+                feedbackOptimization: new Map()
+            }
+        };
+        this.initializeSubsystems();
     }
-    if (this.performanceMetrics.achievements && this.performanceMetrics.achievements.clear) {
-      this.performanceMetrics.achievements.clear();
-    }
-    if (this.performanceMetrics.progressHistory && this.performanceMetrics.progressHistory.clear) {
-      this.performanceMetrics.progressHistory.clear();
-    }
-    this.removeAllListeners();
-  }
-
-  // Stub: Track AI interactions (for logging or analytics)
-  async trackAIInteraction(userId, interactionType, data) {
-    // In a real system, you'd record this interaction.
-    // For now, we'll simply resolve.
-    return;
-  }
-
-  // Stub: Returns an initial assessment.
-  async getInitialAssessment() {
-    // Return a default assessment structure.
-    return { questions: [] };
-  }
-
-  // Stub: Translates an assessment (currently a passthrough).
-  async translateAssessment(assessment, targetLang) {
-    // For now, just return the assessment unchanged.
-    return assessment;
-  }
-
-  // Stub: Returns recent activity for the user.
-  getRecentActivity(userId) {
-    // In a real system, you'd pull recent user activity.
-    return [];
-  }
-
-  // Stub: Calculates a score from feedback.
-  calculateScore(feedback) {
-    // Dummy score calculation.
-    return Math.min(100, Math.floor(Math.random() * 101));
-  }
-
-  // Stub: Generates immediate guidance based on feedback.
-  async generateImmediateGuidance(feedback, language) {
-    return 'Keep up the good work and review the feedback carefully.';
-  }
-
-  // Stub: Check streak achievements (if any) based on current streak.
-  async checkStreakAchievements(userId, currentStreak) {
-    // You could add logic here to award streak achievements.
-    return;
-  }
+ // Add explicit event methods here
+ emitEvent(eventName, data) {
+    this.emit(eventName, data);
 }
 
-// Create and export a singleton instance
+addListener(eventName, listener) {
+    this.on(eventName, listener);
+}
+    // =================
+    // Achievement & Credits System
+    // =================
+
+    async calculateCredits(userId, action, data) {
+        try {
+            const [user, subscription] = await Promise.all([
+                User.findById(userId),
+                Subscription.findOne({ userId, status: 'active' })
+            ]);
+
+            if (!user) throw new Error('User not found');
+
+            let creditsEarned = 0;
+            switch (action) {
+                case 'MODULE_COMPLETION':
+                case 'module_completion':
+                    creditsEarned = 100;
+                    break;
+                case 'ACHIEVEMENT_UNLOCKED':
+                    creditsEarned = 50;
+                    break;
+                case 'STREAK_BONUS':
+                    creditsEarned = 25;
+                    break;
+                case 'assessment_completion':
+                    creditsEarned = 10;
+                    break;
+                default:
+                    creditsEarned = 10;
+            }
+
+            if (subscription) {
+                const subscriptionBonus = subscription.type === 'premium' ? 1.5 : 1;
+                creditsEarned *= subscriptionBonus;
+            }
+
+            user.credits = (user.credits || 0) + creditsEarned;
+            await user.save();
+
+            return { success: true, newCreditBalance: user.credits };
+        } catch (error) {
+            console.error('Credit calculation error:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    async calculateAdvancedCredits(userId, action, data) {
+        try {
+            const [user, subscription] = await Promise.all([
+                User.findById(userId),
+                Subscription.findOne({ userId, status: 'active' })
+            ]);
+
+            const baseCredits = await this.calculateBaseCredits(action, data);
+            const performanceMultiplier = await this.calculatePerformanceMultiplier(userId);
+            const synergyBonus = await this.calculateSkillSynergyBonus(userId);
+            
+            const finalCredits = Math.round(
+                baseCredits * 
+                performanceMultiplier * 
+                synergyBonus * 
+                this.getSubscriptionMultiplier(subscription)
+            );
+
+            await this.updateUserCredits(user, finalCredits);
+
+            return {
+                credits: finalCredits,
+                multipliers: {
+                    performance: performanceMultiplier,
+                    synergy: synergyBonus,
+                    subscription: this.getSubscriptionMultiplier(subscription)
+                }
+            };
+        } catch (error) {
+            console.error('Advanced credit calculation error:', error);
+            throw error;
+        }
+    }
+
+    getSubscriptionMultiplier(subscription) {
+        if (!subscription) return 1.0;
+        const multiplier = this.config.subscriptionMultipliers[subscription.plan];
+        if (subscription.plan === 'custom') {
+            return multiplier(subscription.amount);
+        }
+        return multiplier || 1.0;
+    }
+
+    async trackAchievement(userId, type, additionalData = {}) {
+        try {
+            const userProgress = await UserProgress.findOne({ userId }).populate('achievements');
+            if (!userProgress) return null;
+
+            const achievement = this.achievementTypes[type];
+            if (!achievement) return null;
+
+            if (!userProgress.achievements.includes(achievement.id)) {
+                userProgress.achievements.push(achievement.id);
+                await userProgress.save();
+
+                const credits = await this.calculateCredits(userId, 'ACHIEVEMENT_UNLOCKED');
+                this.emit('achievement-unlocked', { userId, achievement, credits });
+                return { achievement, credits };
+            }
+            return null;
+        } catch (error) {
+            console.error('Achievement tracking error:', error);
+            throw error;
+        }
+    }
+
+        // =================
+    // Learning & Performance Systems
+    // =================
+    
+    async initializeUserLearningState(userId) {
+        const learningState = {
+            knowledgeMap: new Array(50).fill(0),
+            skillLevels: new Array(30).fill(0),
+            adaptiveFactors: {
+                learningRate: 0.1,
+                difficultyScale: 1.0,
+                focusAreas: []
+            }
+        };
+        this.learningState.userModels.set(userId, learningState);
+        return learningState;
+    }
+
+    async updateLearningState(userId, newInsights) {
+        const currentState = this.learningState.userModels.get(userId);
+        if (!currentState) return;
+
+        const knowledgeImpact = this.calculateKnowledgeImpact(newInsights);
+        currentState.knowledgeMap = currentState.knowledgeMap.map((k, i) => 
+            Math.min(1, k + (knowledgeImpact[i] || 0)));
+
+        const skillImpact = this.calculateSkillImpact(newInsights);
+        currentState.skillLevels = currentState.skillLevels.map((s, i) => 
+            Math.min(1, s + (skillImpact[i] || 0)));
+
+        currentState.adaptiveFactors = {
+            ...currentState.adaptiveFactors,
+            ...this.calculateNewAdaptiveFactors(currentState, newInsights)
+        };
+
+        this.learningState.userModels.set(userId, currentState);
+    }
+
+    async analyzeRealTimePerformance(userId, sessionData) {
+        try {
+            const currentState = this.performanceSystem.realTimeTracking.currentSessions.get(userId);
+            const analysis = await this.performAdvancedAnalysis(sessionData);
+            await this.updatePerformanceModels(userId, analysis);
+
+            return {
+                analysis,
+                recommendations: await this.generateRealTimeRecommendations(userId, analysis),
+                adaptiveChanges: await this.calculateAdaptiveChanges(userId, analysis)
+            };
+        } catch (error) {
+            console.error('Real-time analysis error:', error);
+            throw error;
+        }
+    }
+
+    // =================
+    // AI Integration Methods
+    // =================
+
+    async generateAdvancedCoachingSuggestions(userProfile) {
+        if (!userProfile) throw new Error('User profile is required');
+
+        try {
+            const [user, progress, subscription] = await Promise.all([
+                User.findById(userProfile.userId),
+                UserProgress.findOne({ userId: userProfile.userId }),
+                Subscription.findOne({ userId: userProfile.userId, status: 'active' })
+            ]);
+
+            const learningState = this.learningState.userModels.get(userProfile.userId) || 
+                               await this.initializeUserLearningState(userProfile.userId);
+
+            const enhancedContext = {
+                ...this.generateAIContext(user, progress, subscription),
+                learningState,
+                adaptiveMetrics: await this.getAdaptiveMetrics(userProfile.userId),
+                skillProgressions: await this.getSkillProgressions(userProfile.userId)
+            };
+
+            const completion = await this.openai.chat.completions.create({
+                model: this.config.model,
+                messages: [
+                    {
+                        role: 'system',
+                        content: `You are an advanced space training AI coach with deep understanding of 
+                                individual learning patterns and adaptive training methodologies.`
+                    },
+                    {
+                        role: 'user',
+                        content: `Generate personalized coaching plan based on: ${JSON.stringify(enhancedContext)}`
+                    }
+                ],
+                temperature: 0.7
+            });
+
+            const enhancedSuggestions = completion.choices[0]?.message?.content;
+            await this.updateLearningState(userProfile.userId, enhancedSuggestions);
+
+            return {
+                suggestions: enhancedSuggestions,
+                adaptiveSettings: this.calculateAdaptiveSettings(learningState),
+                nextMilestones: await this.predictNextMilestones(userProfile.userId)
+            };
+        } catch (error) {
+            console.error('Enhanced coaching error:', error);
+            throw error;
+        }
+    }
+    async generateEnhancedAIInsights(userId, progress) {
+        const completion = await this.openai.chat.completions.create({
+            model: this.config.model,
+            messages: [
+                {
+                    role: "system",
+                    content: "You are an advanced AI training analyst specialized in space training progression analysis."
+                },
+                {
+                    role: "user",
+                    content: `Analyze training progress and provide detailed insights: ${JSON.stringify(progress)}`
+                }
+            ],
+            temperature: 0.7
+        });
+    
+        return {
+            analysis: JSON.parse(completion.choices[0].message.content),
+            recommendations: await this.generatePersonalizedRecommendations(userId, progress),
+            adaptiveGuidance: await this.generateAdaptiveGuidance(userId, progress)
+        };
+    }
+    
+    initializeGamificationSystem() {
+        this.gamificationSystem = {
+            challenges: new Map(),
+            leaderboards: new Map(),
+            rewards: new Map(),
+            
+            enhancedAchievements: {
+                SPEED_DEMON: {
+                    id: 'speed_demon',
+                    threshold: 95,
+                    description: 'Complete module 50% faster than average',
+                    icon: '🚀',
+                    rewards: {
+                        credits: 500,
+                        badge: 'Speed Master'
+                    }
+                },
+                PERFECT_STREAK: {
+                    id: 'perfect_streak',
+                    threshold: 100,
+                    description: '10 perfect scores in a row',
+                    icon: '🌟',
+                    rewards: {
+                        credits: 1000,
+                        badge: 'Perfection Master'
+                    }
+                },
+                TEAM_PLAYER: {
+                    id: 'team_player',
+                    threshold: 50,
+                    description: 'Help 50 fellow astronauts in training',
+                    icon: '🤝',
+                    rewards: {
+                        credits: 750,
+                        badge: 'Community Leader'
+                    }
+                }
+            }
+        };
+    }
+    
+    async updateLeaderboard(userId, action, score) {
+        const leaderboard = this.gamificationSystem.leaderboards.get('global') || [];
+        const userIndex = leaderboard.findIndex(entry => entry.userId === userId);
+        
+        if (userIndex >= 0) {
+            leaderboard[userIndex].score += score;
+        } else {
+            leaderboard.push({ userId, score });
+        }
+        
+        this.gamificationSystem.leaderboards.set('global', 
+            leaderboard.sort((a, b) => b.score - a.score));
+        
+        return this.generateLeaderboardUpdate(userId);
+    }
+  
+      // =====================
+      // Study Groups System
+      // =====================
+      initializeStudyGroupSystem() {
+          this.studyGroups = {
+              activeGroups: new Map(),
+              groupMetrics: new Map(),
+              collaborationScores: new Map()
+          };
+      }
+  
+      async formStudyGroups(users) {
+          try {
+              const userProfiles = await Promise.all(
+                  users.map(userId => this.getUserCompleteProfile(userId))
+              );
+  
+              const groupFormation = await this.openai.chat.completions.create({
+                  model: this.config.model,
+                  messages: [
+                      {
+                          role: "system",
+                          content: "Form optimal study groups based on skill levels, learning styles, and progress rates"
+                      },
+                      {
+                          role: "user",
+                          content: `Analyze users and suggest optimal groups: ${JSON.stringify(userProfiles)}`
+                      }
+                  ]
+              });
+  
+              const suggestedGroups = JSON.parse(groupFormation.choices[0].message.content);
+              return await this.implementGroupSuggestions(suggestedGroups);
+          } catch (error) {
+              console.error('Error forming study groups:', error);
+              throw error;
+          }
+      }
+  
+      async implementGroupSuggestions(groups) {
+          const implementedGroups = [];
+          
+          for (const group of groups) {
+              const groupId = `group_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+              const newGroup = {
+                  id: groupId,
+                  members: group.members,
+                  focus: group.focus,
+                  schedule: await this.generateGroupSchedule(group),
+                  metrics: this.initializeGroupMetrics(group)
+              };
+              
+              this.studyGroups.activeGroups.set(groupId, newGroup);
+              implementedGroups.push(newGroup);
+          }
+          
+          return implementedGroups;
+      }
+  
+      // =====================
+      // Adaptive Testing System
+      // =====================
+      initializeAdaptiveTestingSystem() {
+          this.adaptiveTesting = {
+              questionBank: new Map(),
+              difficultyLevels: new Map(),
+              userPerformance: new Map()
+          };
+      }
+  
+      async implementAdaptiveTesting(userId) {
+          try {
+              const userLevel = await this.getCurrentUserLevel(userId);
+              const learningStyle = await this.detectLearningStyle(userId);
+              
+              return {
+                  dynamicQuestions: await this.generateDynamicQuestions(userLevel),
+                  difficultyAdjustment: await this.calculateNextQuestionDifficulty(userId),
+                  personalizedPrompts: await this.generateContextualPrompts(userLevel, learningStyle)
+              };
+          } catch (error) {
+              console.error('Error implementing adaptive testing:', error);
+              throw error;
+          }
+      }
+  
+      async generateDynamicQuestions(userLevel) {
+          const completion = await this.openai.chat.completions.create({
+              model: this.config.model,
+              messages: [
+                  {
+                      role: "system",
+                      content: "Generate space training questions adapted to the user's current level"
+                  },
+                  {
+                      role: "user",
+                      content: `Create questions for level: ${JSON.stringify(userLevel)}`
+                  }
+              ]
+          });
+  
+          return this.formatQuestions(JSON.parse(completion.choices[0].message.content));
+      }
+  
+      async calculateNextQuestionDifficulty(userId) {
+          const performance = this.adaptiveTesting.userPerformance.get(userId);
+          const currentLevel = await this.getCurrentUserLevel(userId);
+          
+          return {
+              difficulty: this.computeAdaptiveDifficulty(performance),
+              topics: await this.identifyNextTopics(currentLevel),
+              format: this.determineQuestionFormat(performance)
+          };
+      }
+  
+      // =====================
+      // Helper Methods
+      // =====================
+      async getUserCompleteProfile(userId) {
+          const [user, progress, metrics] = await Promise.all([
+              User.findById(userId),
+              UserProgress.findOne({ userId }),
+              this.getDetailedMetrics(userId)
+          ]);
+  
+          return {
+              userId,
+              level: this.calculateUserLevel(progress),
+              strengths: this.identifyStrengths(metrics),
+              learningStyle: await this.detectLearningStyle(userId),
+              progressRate: this.calculateProgressRate(progress)
+          };
+      }
+  
+      // Add this method to initialize all new systems
+      initializeEnhancedSystems() {
+          this.initializeGamificationSystem();
+          this.initializeStudyGroupSystem();
+          this.initializeAdaptiveTestingSystem();
+      }
+  
+      // Update your constructor or initializeSystems method to include:
+      initializeSystems() {
+          // ... existing initializations ...
+          this.initializeEnhancedSystems();
+      }
+  }
+ // =================
+/// =====================
+// WebSocket & Real-time Features
+// =====================
+
+initializeWebSocketHandlers = () => {
+    this.wsEvents = {
+        track_progress: async (ws, data) => {
+            try {
+                const progress = await this.trackProgress(data.userId, data.progressData);
+                const credits = await this.calculateCredits(data.userId, 'MODULE_COMPLETION', data.progressData);
+                ws.send(JSON.stringify({ type: 'progress_update', progress, credits }));
+            } catch (error) {
+                this.handleWebSocketError(ws, error);
+            }
+        },
+
+        request_coaching: async (ws, data) => {
+            try {
+                const userLang = await this.getUserLanguage(data.userId);
+                const suggestions = await this.generateCoachingSuggestions(data.userProfile);
+                const translatedSuggestions = await this.translateResponse(suggestions, userLang);
+                ws.send(JSON.stringify({ type: 'coaching_suggestions', suggestions: translatedSuggestions }));
+            } catch (error) {
+                this.handleWebSocketError(ws, error);
+            }
+        },
+
+        start_assessment: async (ws, data) => {
+            try {
+                const userLang = await this.getUserLanguage(data.userId);
+                const assessment = await this.getInitialAssessment();
+                const translatedAssessment = await this.translateAssessment(assessment, userLang);
+                ws.send(JSON.stringify({ type: 'assessment_questions', assessment: translatedAssessment }));
+            } catch (error) {
+                this.handleWebSocketError(ws, error);
+            }
+        }
+    };
+}
+
+// =====================
+// Assessment & Evaluation Systems 
+// =====================
+
+processAssessmentAnswer = async (userId, questionIndex, answer, language = 'en') => {
+    try {
+        const subscription = await Subscription.findOne({ userId, status: 'active' });
+        const aiQualityLevel = this.getAIQualityLevel(subscription);
+
+        const completion = await this.openai.chat.completions.create({
+            model: this.config.model,
+            messages: [
+                {
+                    role: 'system',
+                    content: `You are an expert space training evaluator. Quality Level: ${aiQualityLevel}`
+                },
+                {
+                    role: 'user',
+                    content: `Question Index: ${questionIndex}\nAnswer: ${answer}\nProvide detailed feedback.`
+                }
+            ],
+            temperature: 0.7
+        });
+
+        let feedback = completion.choices[0]?.message?.content;
+        if (language !== 'en') {
+            feedback = await this.translateResponse(feedback, language);
+        }
+
+        const analysis = {
+            feedback,
+            score: this.calculateScore(feedback),
+            guidance: await this.generateImmediateGuidance(feedback, language)
+        };
+
+        await Promise.all([
+            this.trackProgress(userId, {
+                type: 'ASSESSMENT',
+                score: analysis.score,
+                questionIndex
+            }),
+            this.checkAssessmentAchievements(userId, analysis.score)
+        ]);
+
+        const credits = await this.calculateCredits(userId, 'assessment_completion', {
+            score: analysis.score
+        });
+
+        return {
+            success: true,
+            analysis,
+            credits,
+            nextQuestionIndex: questionIndex + 1
+        };
+    } catch (error) {
+        console.error('Assessment processing error:', error);
+        throw error;
+    }
+}
+
+// =====================
+// Translation & Language Support
+// =====================
+
+translateResponse = async (text, targetLang) => {
+    if (!this.config.languages.includes(targetLang)) {
+        return text;
+    }
+
+    try {
+        const completion = await this.openai.chat.completions.create({
+            model: this.config.model,
+            messages: [
+                {
+                    role: 'system',
+                    content: `You are a translator. Translate the following text to ${targetLang}. Maintain the technical accuracy and tone.`
+                },
+                { role: 'user', content: text }
+            ],
+            temperature: 0.3
+        });
+
+        return completion.choices[0]?.message?.content || text;
+    } catch (error) {
+        console.error('Translation error:', error);
+        return text;
+    }
+}
+
+// =====================
+// Utility & Helper Methods
+// =====================
+
+cleanup = () => {
+    if (this.metricsUpdateInterval) {
+        clearInterval(this.metricsUpdateInterval);
+    }
+    
+    [
+        this.performanceMetrics.realTimeMetrics,
+        this.performanceMetrics.achievements,
+        this.performanceMetrics.progressHistory
+    ].forEach(map => map?.clear?.());
+    
+    this.removeAllListeners();
+}
+
+handleWebSocketError = (ws, error) => {
+    console.error('WebSocket operation error:', error);
+    ws.send(JSON.stringify({
+        type: 'error',
+        error: {
+            message: 'Operation failed',
+            code: error.code || 500,
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        }
+    }));
+}
+
+getUserLanguage = async (userId) => {
+    try {
+        const user = await User.findById(userId);
+        return user?.settings?.language || 'en';
+    } catch (error) {
+        console.error('Language fetch error:', error);
+        return 'en';
+    }
+}
+// Create singleton instance
 const aiCoachInstance = new AISpaceCoach();
 
-// Handle process termination gracefully.
-process.on('SIGTERM', () => {
-  aiCoachInstance.cleanup();
-});
-
-process.on('SIGINT', () => {
-  aiCoachInstance.cleanup();
-});
+// Verify it's an EventEmitter
+console.log('Is EventEmitter:', aiCoachInstance instanceof EventEmitter);
 
 module.exports = aiCoachInstance;

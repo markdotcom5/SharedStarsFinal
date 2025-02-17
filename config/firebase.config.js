@@ -1,10 +1,12 @@
+require("dotenv").config(); // Load environment variables
+
 module.exports = {
-    apiKey: "AIzaSyCtlqlUy8puORrNX2VYOgoXcgYNgw2uusQ",
-    authDomain: "your-firebase-project.firebaseapp.com",
-    projectId: "your-project-id",
-    storageBucket: "your-project-id.appspot.com",
-    messagingSenderId: "your-messaging-sender-id",
-    appId: "your-app-id",
-    measurementId: "your-measurement-id",
-  };
-  echo "config/firebase-service-account.json" >> .gitignore
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID,
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+};
+echo "config/firebase-service-account.json" >> .gitignore

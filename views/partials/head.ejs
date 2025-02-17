@@ -1,9 +1,12 @@
-<!-- views/partials/head.ejs -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
-
+  <meta name="description" content="Train for space with AI-powered modules at SharedStars Academy.">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
   <!-- Core Styles -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="/css/styles.css" rel="stylesheet">
@@ -11,27 +14,17 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Core Scripts -->
+  <!-- User Configuration -->
   <script>
       window.userConfig = {
-          isAuthenticated: <%- locals.user ? 'true' : 'false' %>,
-          userId: <%- locals.user ? `"${user._id}"` : 'null' %>,
-          preferredLanguage: <%- locals.user ? `"${user.settings?.language || 'en'}"` : '"en"' %>
+          isAuthenticated: <%= locals.user ? 'true' : 'false' %>,
+          userId: <%= locals.user ? `"${user._id}"` : 'null' %>,
+          preferredLanguage: "<%= locals.user ? user.settings?.language || 'en' : 'en' %>"
       };
   </script>
 
-  <!-- Feature Scripts -->
+  <!-- Feature Scripts (Defer for Performance) -->
   <script src="/js/leaderboard.js" defer></script>
   <script src="/js/dashboard.js" defer></script>
-  <script src="/js/main.js" type="module"></script>
-
-  <style>
-      body {
-          font-family: 'Inter', sans-serif;
-          scroll-behavior: smooth;
-      }
-      .space-gradient {
-          background: linear-gradient(to bottom, #0f172a, #1e293b);
-      }
-  </style>
+  <script src="/js/main.js" type="module" defer></script>
 </head>

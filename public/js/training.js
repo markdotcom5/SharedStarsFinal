@@ -4,6 +4,7 @@ class TrainingInterface {
         this.biometricMonitor = new BiometricMonitor();
         this.aiCoach = new AICoach();
         
+        // Existing module state
         this.moduleState = {
             currentPhase: null,
             failedAttempts: 0,
@@ -11,6 +12,7 @@ class TrainingInterface {
             performanceHistory: []
         };
 
+        // Keep existing requirement thresholds
         this.requirementThresholds = {
             physical: {
                 minSimulationHours: 300,
@@ -35,37 +37,112 @@ class TrainingInterface {
                 decisionAccuracy: 0.9
             }
         };
+
+        // Add new user-centric tracking
+        this.userProgress = {
+            subscriptionMetrics: {
+                startDate: new Date(),
+                investmentToDate: 0,
+                valueGained: 0,
+                skillsAcquired: new Set(),
+                certificationsEarned: new Set()
+            },
+            careerProgress: {
+                currentLevel: 'Trainee',
+                skillMatrix: new Map(),
+                industryRecognition: new Set(),
+                careerPathProgress: new Map()
+            },
+            personalMetrics: {
+                learningStyle: null,
+                peakPerformanceTimes: [],
+                strengthAreas: new Set(),
+                improvementAreas: new Set()
+            }
+        };
+
+        this.initializeUserDashboard();
+    }
+
+    async initializeUserDashboard() {
+        this.dashboard = {
+            async updateRealTimeMetrics() {
+                const metrics = await this.collectRealTimeMetrics();
+                const analysis = await this.aiCoach.analyzeProgress(metrics);
+                
+                return {
+                    dailyProgress: this.calculateDailyProgress(metrics),
+                    spaceReadiness: this.assessSpaceReadiness(analysis),
+                    valueMetrics: this.calculateValueMetrics(),
+                    timelineUpdates: await this.timelineManager.getUpdates()
+                };
+            },
+
+            async calculateValueMetrics() {
+                const subscription = this.userProgress.subscriptionMetrics;
+                return {
+                    invested: subscription.investmentToDate,
+                    skillsValue: await this.calculateSkillsMarketValue(),
+                    progressValue: this.calculateProgressValue(),
+                    certificationValue: this.calculateCertificationValue()
+                };
+            },
+
+            async getPersonalizedInsights() {
+                const biometrics = await this.biometricMonitor.getRecentData();
+                const performance = this.moduleState.performanceHistory;
+                
+                return this.aiCoach.generatePersonalizedInsights({
+                    biometrics,
+                    performance,
+                    learningStyle: this.userProgress.personalMetrics.learningStyle
+                });
+            }
+        };
     }
 
     async startModule(moduleId) {
+        // Keep existing module start logic
         const moduleData = await this.fetchModuleContent(moduleId);
         if (!this.validatePrerequisites(moduleData.prerequisites)) {
             throw new Error('Prerequisites not met');
         }
 
+        // Add value tracking
+        const moduleValue = await this.calculateModuleValue(moduleId);
+        this.userProgress.subscriptionMetrics.valueGained += moduleValue;
+
         this.currentModule = {
             ...moduleData,
             startTime: Date.now(),
             failurePoints: new Set(),
-            adaptiveDifficulty: this.calculateInitialDifficulty()
+            adaptiveDifficulty: this.calculateInitialDifficulty(),
+            valueMetrics: moduleValue
         };
 
-        await this.initializePhase(moduleData.phases[0]);
+        // Initialize with personal optimization
+        await this.initializePersonalizedPhase(moduleData.phases[0]);
     }
 
-    async initializePhase(phase) {
+    async initializePersonalizedPhase(phase) {
+        // Start biometric tracking
         const biometrics = await this.biometricMonitor.startTracking({
             interval: 1000,
             metrics: ['heartRate', 'oxygenLevel', 'stressLevel']
         });
 
+        // Get AI guidance with personal factors
         const aiGuidance = await this.aiCoach.analyzeLearnerState({
             historicalPerformance: this.moduleState.performanceHistory,
             currentBiometrics: biometrics,
-            phaseRequirements: phase.requirements
+            phaseRequirements: phase.requirements,
+            personalMetrics: this.userProgress.personalMetrics,
+            careerGoals: this.userProgress.careerProgress.careerPathProgress
         });
 
+        // Adjust for optimal learning
         this.adjustDifficulty(aiGuidance.recommendations);
+        this.updatePersonalMetrics(aiGuidance.personalInsights);
     }
 
     async evaluatePerformance() {
@@ -77,65 +154,73 @@ class TrainingInterface {
         }
 
         const progress = this.calculateProgress(metrics);
+        
+        // Update career progress
+        await this.updateCareerProgress(progress);
+
         if (progress.certificationType) {
             await this.initiateCertificationProcess(progress.certificationType);
         }
 
+        // Update value metrics
+        await this.updateValueMetrics(progress);
+
         this.updateUI(metrics, progress);
     }
 
-    checkFailureConditions(metrics) {
-        const thresholds = this.requirementThresholds[this.currentModule.type];
-        
-        return metrics.some(metric => 
-            metric.value < thresholds[metric.type].min ||
-            metric.value > thresholds[metric.type].max
-        );
-    }
-
-    async handleFailure(metrics) {
-        this.moduleState.failedAttempts++;
-        
-        const recoveryPlan = await this.aiCoach.generateRecoveryPlan({
-            failureMetrics: metrics,
-            attemptHistory: this.moduleState.failedAttempts,
-            learnerState: this.moduleState
-        });
-
-        this.updateDifficulty(recoveryPlan.adjustments);
-        this.renderRecoveryGuidance(recoveryPlan.guidance);
-    }
-
-    calculateProgress(metrics) {
-        const weights = {
-            practicalPerformance: 0.4,
-            theoreticalKnowledge: 0.3,
-            safetyAdherence: 0.3
+    async updateCareerProgress(progress) {
+        const careerImpact = await this.calculateCareerImpact(progress);
+        this.userProgress.careerProgress = {
+            ...this.userProgress.careerProgress,
+            ...careerImpact
         };
 
-        return Object.entries(weights).reduce((total, [metric, weight]) => {
-            return total + (metrics[metric] * weight);
-        }, 0);
+        // Update dashboard with career progress
+        await this.dashboard.updateRealTimeMetrics();
     }
 
-    async initiateCertificationProcess(type) {
-        const certificationRequirements = await this.fetchCertificationRequirements(type);
-        const eligibility = this.checkCertificationEligibility(certificationRequirements);
-
-        if (eligibility.isEligible) {
-            await this.startCertificationExam(type);
-        } else {
-            this.showRequirementGaps(eligibility.gaps);
-        }
+    async calculateCareerImpact(progress) {
+        const skillGains = this.mapProgressToSkills(progress);
+        const industryAlignment = await this.checkIndustryAlignment(skillGains);
+        
+        return {
+            skillsGained: skillGains,
+            newRecognitions: industryAlignment.recognitions,
+            careerLevelProgress: industryAlignment.levelProgress,
+            marketOpportunities: await this.findRelevantOpportunities(skillGains)
+        };
     }
-}
 
-class BiometricMonitor {
-    // Implementation
-}
+    async updateValueMetrics(progress) {
+        const valueGained = await this.calculateValueGained(progress);
+        this.userProgress.subscriptionMetrics.valueGained += valueGained;
+        
+        // Update ROI calculations
+        await this.dashboard.calculateValueMetrics();
+    }
 
-class AICoach {
-    // Implementation
+    // ... keep other existing methods ...
+
+    // Helper methods for new functionality
+    async calculateModuleValue(moduleId) {
+        // Implementation
+    }
+
+    async calculateSkillsMarketValue() {
+        // Implementation
+    }
+
+    async findRelevantOpportunities(skills) {
+        // Implementation
+    }
+
+    async mapProgressToSkills(progress) {
+        // Implementation
+    }
+
+    async checkIndustryAlignment(skills) {
+        // Implementation
+    }
 }
 
 export default TrainingInterface;
