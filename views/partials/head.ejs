@@ -13,11 +13,12 @@
   
   <!-- Core Scripts -->
   <script>
-      window.userConfig = {
-          isAuthenticated: <%- locals.user ? 'true' : 'false' %>,
-          userId: <%- locals.user ? `"${user._id}"` : 'null' %>,
-          preferredLanguage: <%- locals.user ? `"${user.settings?.language || 'en'}"` : '"en"' %>
+    window.userConfig = {
+        isAuthenticated: <%= user ? 'true' : 'false' %>,
+        userId: <%= user ? `"${user._id}"` : 'null' %>,
+          preferredLanguage: <%= user ? `"${user.settings?.language || 'en'}"` : '"en"' %>
       };
+    </script>
   </script>
 
   <!-- Feature Scripts -->

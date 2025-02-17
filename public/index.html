@@ -31,190 +31,121 @@
   </head>
   
 </head>
-<body class="bg-slate-900 text-white min-h-screen">
-  
+<body class="bg-black text-white min-h-screen">
   <!-- HEADER -->
-  <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg">
-    <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
+  <header class="site-header fixed w-full flex items-center justify-between z-50 py-8 px-28">
+
       <!-- Logo -->
-      <div class="flex items-center mb-2 md:mb-0">
+      <div>
         <a href="/index.html" aria-label="SharedStars Homepage" class="group">
-          <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
         </a>
       </div>
+
       <!-- Navigation Links -->
-      <ul class="flex flex-wrap gap-4">
-        <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
-        <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
-        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
-        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
-        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
+      <ul class="flex flex-wrap gap-2 text-xl md:justify-start">
+        <li><a href="/index.html" data-i18n="nav.home" class="px-4 py-6">Home</a></li>
+        <li><a href="/academy.html" data-i18n="nav.academy" class="px-4 py-6">Academy</a></li>
+        <li><a href="/about.html" data-i18n="nav.about" class="px-4 py-6">About</a></li>
+        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard" class="px-4 py-6">Leaderboard</a></li>
+        <li><a href="/subscribe.html" data-i18n="nav.subscribe" class="px-4 py-6">Subscribe</a></li>
+        
+        <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li> -->
+        <!-- <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
         <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
         <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
         <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-        <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
-        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
-        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
       </ul>
+
       <!-- Language Selector -->
-      <div class="language-selector flex gap-2">
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
-      </div>
-    </nav>
+       <div class="flex relative items-center justify-between gap-6">
+        <div class="gap-6">
+          <button class="lang-btn btn-ghost flex items-center justify-between gap-2 bg-gray-700 px-4 py-3 text-white text-xl rounded-full" aria-label="Language Selection">
+            <img src="/images/USflag.png" alt="US country flag" class="w-6" />
+            <img src="/icons/chevron-down.png" alt="DropeDOwn button" class="w-5 max-w-xl" />
+          </button>
+          <ul class="dropdown-menu absolute hidden bg-gray-800 text-white border w-40 mt-2">
+            <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="en"><span>🇺🇸</span> English</button></li>
+            <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="zh"><span>🇨🇳</span> 中文</button></li>
+            <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="ko"><span>🇰🇷</span> 한국어</button></li>
+            <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="es"><span>🇪🇸</span> Español</button></li>
+          </ul>
+        </div>
+         <!-- <div class="language-selector flex gap-2">
+           <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button> 
+           <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+           <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+           <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+         </div> -->
+          <button class="text-xl bg-blue-700 text-white px-6 py-3 rounded-full" data-i18n="nav.getStarted">
+            Get Started
+          </button>
+       </div>
   </header>
   
-  <!-- AI COACH STATUS BAR -->
-  <div id="ai-status-bar" class="fixed top-0 w-full bg-gray-800/95 border-b border-blue-500/20 z-50">
-    <div class="container mx-auto px-4 py-2 flex items-center justify-between">
-      <div id="ai-status" class="flex items-center space-x-3">
-        <!-- Pulse Dot with animation -->
-        <div class="pulse-dot w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
-        <span>Initializing AI Coach...</span>
-      </div>
-      <div class="flex items-center space-x-6">
-        <div id="session-metrics" class="flex items-center space-x-6">
-          <div class="flex items-center space-x-2">
-            <span class="text-blue-400">Focus Score:</span>
-            <span id="focus-score">--</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <span class="text-green-400">Progress:</span>
-            <span id="progress-percentage">0%</span>
-          </div>
-        </div>
-        <!-- Secondary Language Selector (optional redundancy) -->
-        <div class="language-selector flex gap-2">
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
   <!-- HERO SECTION -->
-  <section id="hero" class="relative min-h-screen flex items-center justify-center text-center pt-20">
+  <section id="hero" class="relative min-h-screen flex items-center justify-center text-center pt-24 z-40">
     <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
       <source src="/videos/academy10.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
-    <div class="relative z-10 max-w-4xl px-4">
-      <h1 data-i18n="heroTitle" class="hero-text text-white mb-4"></h1>
-      <p data-i18n="hero.subtitle" class="text-xl text-white mb-4"></p>
-      <a data-i18n="hero.beginTraining" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+
+ <div class="absolute n inset-0 w-full h-full bg-black pointer-events-none bg-opacity-30 z-20"></div>
+    <div class="relative flex flex-col items-center z-10 max-w-6xl px-4 z-20">
+      <h1 data-i18n="heroTitle" class="hero-text text-8xl text-black mb-4"></h1>
+      <p data-i18n="hero.subtitle" class="text-2xl max-w-4xl text-white mb-4"></p>
+      <div class="w-full space-x-4 pt-6">
+        <a data-i18n="hero.beginTraining" href="/signup" class="bg-gray-700 text-white text-xl px-6 py-3 z-30 rounded-full hover:bg-blue-700 transition"></a>
+        <a data-i18n="hero.yourCountdown" href="/signup" class="bg-gray-700 text-white text-xl px-6 py-3 rounded-full hover:bg-blue-700 transition"></a>
+        <a data-i18n="hero.membershipPlans" href="/signup" class="bg-gray-700 text-white text-xl px-6 py-3 rounded-full hover:bg-blue-700 transition"></a>
+      </div>
     </div>
   </section>
   <!-- Include any additional page scripts -->
   <script src="/js/modules/main.js" type="module"></script>
-  <script src="/js/ai-companion.js" defer></script>
+  <!-- <script src="/js/ai-companion.js" defer></script> -->
+   
   <!-- COUNTDOWN & PRICE EVOLUTION SECTION -->
-<section id="countdown-price" class="relative min-h-screen py-16 text-white text-center">
-  <!-- Background gradient overlay -->
-  <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/90"></div>
-
-  <!-- Main Content Container -->
-  <div class="relative z-10 container mx-auto px-4">
-    
-    <!-- Problem Statement -->
-    <div class="mb-12">
-      <h2 data-i18n="countdown.problemStatement.title" class="text-4xl font-bold mb-6">
-        Current Space Travel Reality
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 data-i18n="countdown.problemStatement.limitedAccess.title" class="text-xl font-bold mb-3">
-            Limited Access
-          </h3>
-          <p data-i18n="countdown.problemStatement.limitedAccess.description">
-            Currently restricted to ultra-wealthy individuals and elite astronauts
-          </p>
-        </div>
-        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 data-i18n="countdown.problemStatement.highBarriers.title" class="text-xl font-bold mb-3">
-            High Barriers
-          </h3>
-          <p data-i18n="countdown.problemStatement.highBarriers.description">
-            Prohibitively expensive with limited pathways for public participation
-          </p>
-        </div>
-        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 data-i18n="countdown.problemStatement.growingDemand.title" class="text-xl font-bold mb-3">
-            Growing Demand
-          </h3>
-          <p data-i18n="countdown.problemStatement.growingDemand.description">
-            Increasing interest but insufficient options for space enthusiasts
-          </p>
-        </div>
-      </div>
+<section id="countdown-price" class="relative flex flex-col min-h-screen py-16 text-white text-center">
+  <p>Progress</p>
+  <div class="flex justify-center items-center gap-4">
+    <div class="flex flex-col">
+      <p>Your Path to Success</p>
+      <p>In 36 months, humanity splits into two groups: Those who have prepared for space and those who watch from Earth.</p>
     </div>
-
-    <!-- Stakes Section -->
-    <div class="mb-16">
-      <h2 data-i18n="countdown.stakes.title" class="text-5xl font-bold mb-6">
-        What's at Stake?
-      </h2>
-      <p data-i18n="countdown.stakes.subtitle" class="text-2xl mb-8">
-        Your Future. Your Family's Future. Humanity's Future.
-      </p>
-    </div>
-
-    <!-- Countdowns Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-      <!-- Global Countdown Timer -->
-      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 class="text-2xl font-bold mb-4">Global Space Travel Timeline</h3>
-          <div id="globalCountdown" class="text-4xl font-bold text-white">Loading...</div>
-      </div>
-      
-      <!-- Personalized Countdown Timer -->
-      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 class="text-2xl font-bold mb-4">Your Accelerated Timeline</h3>
-          <div id="personalCountdown" class="text-4xl font-bold text-green-400">Loading...</div>
-          <p class="mt-4 text-green-400">Your SharedStars Credits: 500</p>
-      </div>
-  </div>  
-      
-      <!-- Personal Timeline -->
-      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-        <h3 data-i18n="countdown.personalTimeline.title" class="text-2xl font-bold mb-4">
-          Your Accelerated Timeline
-        </h3>
-        <div id="personalCountdown" class="flex flex-wrap justify-center gap-4">
-          <div class="countdown-box bg-gray-800/50 p-4 rounded-lg">
-            <div class="value text-3xl font-bold" id="personalized-years">12</div>
-            <div class="label text-sm" data-i18n="countdown.years">Years</div>
-          </div>
-          <div class="countdown-box bg-gray-800/50 p-4 rounded-lg">
-            <div class="value text-3xl font-bold" id="personalized-months">6</div>
-            <div class="label text-sm" data-i18n="countdown.months">Months</div>
-          </div>
-          <div class="countdown-box bg-gray-800/50 p-4 rounded-lg">
-            <div class="value text-3xl font-bold" id="personalized-days">15</div>
-            <div class="label text-sm" data-i18n="countdown.days">Days</div>
-          </div>
-        </div>
-        <p class="mt-4 text-green-400" data-i18n="countdown.personalCredits">
-          Your SharedStars Credits: 500
-        </p>
-      </div>
-    </div>
-
-    <!-- Price Evolution Chart -->
-    <div class="bg-black/50 backdrop-blur-md p-8 rounded-lg">
-      <h3 data-i18n="countdown.priceEvolution.title" class="text-3xl font-bold mb-6">
-        Price Evolution Timeline
-      </h3>
-      <div class="w-full max-w-4xl mx-auto h-96">
-        <canvas id="priceChart"></canvas>
-      </div>
-    </div>
-    
+    <button>Subscribe Now!</button>
   </div>
+  <div class="flex justify-center items-center gap-4 mt-8 pb-5">
+    <!-- Countdown Cards -->
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-years" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Years</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-months" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Months</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-days" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Days</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-hours" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Hours</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-minutes" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Minutes</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-seconds" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Seconds</div>
+    </div>
+  </div>
+  <hr>
+</div>
+
 </section>
 
 <!-- MISSION CONTROL SECTION -->

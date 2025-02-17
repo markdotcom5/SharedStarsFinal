@@ -11,14 +11,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       nav: {
         home: "Home",
         about: "About",
-        academy: "SharedStars Academy",
+        academy: "Academy",
         profile: "Profile",
-        subscribe: "SUBSCRIBE"
+        subscribe: "Subscribe",
+        leaderboard: "Leaderboard",
+        getStarted: "Get Started"
       },
       hero: {
-        beginTraining: "Begin Your Training",
+        beginTraining: "Start Training Now",
+        yourCountdown: "See Your Countdown to Space",
+        membershipPlans: "Explore Membership Plans",
         welcomeBack: "Welcome Back",
-        subtitle: "AI-accelerated space training program",
+        subtitle: "In 36 months, humanity splits into two groups: Those who have prepared for space and those who watch from Earth.",
         continueTraining: "Continue your training where you left off",
         exploreButton: "EXPLORE TRAINING PATHS",
         resumeButton: "RESUME TRAINING",
@@ -28,8 +32,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         title: "36 MONTHS TO SPACE:",
         subtitle: "Complete Training & Get Approved for Space Flight"
       },
+      countdown: {
+        
+      },
       // Additional top-level keys for simpler translations if needed
-      heroTitle: "From Earth to Space in 36 Months",
+      heroTitle: "World's Largest AI- Powered Space Training Program",
       subtitle: "Like Tesla's FSD for Space Training: Intelligent, Adaptive, Revolutionary",
       joinNow: "Join Now",
       communityHub: "Explore Community Hub"
