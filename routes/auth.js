@@ -3,6 +3,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const router = express.Router();
+const CLIENT_ID = "78o2w7lzi4ex8m";
+const CLIENT_SECRET = "WPL_AP1.d4V8I5a0ODdg8Sb7.+bUAig==";
+const REDIRECT_URI = "http://localhost:3000/api/auth/linkedin/callback";
+const axios = require("axios");
 
 // =======================
 // Authenticate Middleware
@@ -156,6 +160,35 @@ const token = jwt.sign(
     } catch (error) {
         console.error("Registration error:", error);
         res.status(500).json({ error: "Registration failed", details: error.message });
+    }
+});
+router.get("/linkedin/callback", async (req, res) => {
+    const authorizationCode = req.query.code;
+
+    if (!authorizationCode) {
+        return res.status(400).json({ error: "Authorization code is missing" });
+    }
+
+    try {
+        const response = await axios.post(
+            "https://www.linkedin.com/oauth/v2/accessToken",
+            new URLSearchParams({
+                grant_type: "authorization_code",
+                code: authorizationCode,
+                redirect_uri: REDIRECT_URI,
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET
+            }),
+            { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+        );
+
+        const accessToken = response.data.access_token;
+        console.log("✅ LinkedIn Access Token:", accessToken);
+
+        res.json({ access_token: accessToken }); // Return the token instead of redirecting
+    } catch (error) {
+        console.error("❌ Error exchanging code for token:", error.response ? error.response.data : error.message);
+        res.status(500).json({ error: "Failed to exchange authorization code for access token" });
     }
 });
 

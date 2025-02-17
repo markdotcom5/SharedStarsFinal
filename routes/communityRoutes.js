@@ -12,7 +12,7 @@ const Discussion = require('../models/discussion');
 const User = require('../models/User');
 
 // WebSocket setup
-const wss = new WebSocket.Server({ noServer: true });
+const { wss } = require("../app");  // ✅ Use the WebSocket instance from `app.js`
 const clients = new Map();
 
 // Validation Schemas

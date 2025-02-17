@@ -2,32 +2,17 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
-// Import all models with consistent PascalCase naming
+// Import all models
 const Certification = require("./models/Certification");
-const CommunityModels = require("./models/CommunityModels");
-const Insight = require("./models/Insight");
-const Intervention = require("./models/Intervention");
-const Module = require("./models/Module");
-const Session = require("./models/Session");
-const Subscription = require("./models/Subscription");
-const TrainingSession = require("./models/TrainingSession");
-const Trial = require("./models/Trial");
 const User = require("./models/User");
 const UserProgress = require("./models/UserProgress");
-const Video = require("./models/Video");
-const Achievement = require("./models/Achievement");
-const Challenge = require("./models/Challenge");
-const Dashboard = require("./models/Dashboard");
-const Discussion = require("./models/Discussion");
-const GroupSession = require("./models/GroupSession");
-const Leaderboard = require("./models/Leaderboard");
-const PeerMatch = require("./models/PeerMatch");
-const StudyGroup = require("./models/StudyGroup");
+const TrainingSession = require("./models/TrainingSession");
+const Module = require("./models/Module");
 
 // Import module configurations
-const { modules } = require('./modules/moduleLoader');
+const { modules } = require("./modules/moduleLoader");
 
-// Database connection with retry mechanism
+// ✅ Connect to MongoDB with Retry Mechanism
 const connectDB = async (retries = 5) => {
     try {
         await mongoose.connect(process.env.MONGO_URI, {
@@ -39,7 +24,7 @@ const connectDB = async (retries = 5) => {
         console.log("✅ MongoDB Connected Successfully");
     } catch (err) {
         if (retries > 0) {
-            console.warn(`⚠️ Retrying connection... (${retries} attempts remaining)`);
+            console.warn(`⚠️ Retrying MongoDB connection... (${retries} attempts left)`);
             await new Promise(resolve => setTimeout(resolve, 5000));
             return connectDB(retries - 1);
         }
@@ -48,15 +33,15 @@ const connectDB = async (retries = 5) => {
     }
 };
 
-// Clear existing data
+// ✅ Clear Existing Data in Development Mode
 const clearDatabase = async () => {
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== "production") {
         try {
-            const collections = Object.values(mongoose.connection.collections);
-            for (const collection of collections) {
-                await collection.deleteMany({});
-            }
-            console.log("🗑️ Database cleared successfully");
+            console.log("🗑️ Clearing existing database...");
+            await Promise.all(
+                Object.values(mongoose.connection.collections).map(collection => collection.deleteMany({}))
+            );
+            console.log("✅ Database cleared successfully.");
         } catch (err) {
             console.error("🚨 Error clearing database:", err);
             throw err;
@@ -64,12 +49,11 @@ const clearDatabase = async () => {
     }
 };
 
+// ✅ Create a Test User (if not already created)
 const createTestUser = async () => {
     try {
         const existingUser = await User.findOne({ email: "test@example.com" });
-        if (existingUser) {
-            return existingUser;
-        }
+        if (existingUser) return existingUser;
 
         return await User.create({
             name: "Test User",
@@ -89,8 +73,10 @@ const createTestUser = async () => {
     }
 };
 
+// ✅ Populate Training Modules
 const createModules = async () => {
     try {
+        console.log("🚀 Populating Training Modules...");
         const moduleEntries = Object.entries(modules);
         const createdModules = {};
 
@@ -98,11 +84,11 @@ const createModules = async () => {
             const moduleData = {
                 moduleId: moduleConfig.id,
                 title: moduleConfig.name,
-                type: 'training',
+                type: moduleConfig.type || "training",
                 category: moduleConfig.category || key,
-                difficulty: moduleConfig.difficulty || 'beginner',
-                description: moduleConfig.description,
-                prerequisites: moduleConfig.prerequisites || [],
+                difficulty: moduleConfig.difficulty || "beginner",
+                description: moduleConfig.description || "No description available",
+                prerequisites: await getValidPrerequisites(moduleConfig.prerequisites),
                 objectives: moduleConfig.objectives || [],
                 content: {
                     theory: moduleConfig.theory || [],
@@ -124,7 +110,11 @@ const createModules = async () => {
                 }
             };
 
-            createdModules[key] = await Module.create(moduleData);
+            createdModules[key] = await Module.findOneAndUpdate(
+                { moduleId: moduleConfig.id },
+                moduleData,
+                { upsert: true, new: true }
+            );
         }
 
         console.log("✅ Training Modules Created");
@@ -135,6 +125,7 @@ const createModules = async () => {
     }
 };
 
+// ✅ Create Training Sessions for the User
 const createTrainingSessions = async (user, modules) => {
     try {
         const sessions = Object.entries(modules).map(([type, module]) => ({
@@ -158,6 +149,7 @@ const createTrainingSessions = async (user, modules) => {
     }
 };
 
+// ✅ Create Certifications for the User
 const createCertifications = async (user, modules) => {
     try {
         await Certification.create({
@@ -177,10 +169,11 @@ const createCertifications = async (user, modules) => {
     }
 };
 
+// ✅ Create User Progress Tracking
 const createUserProgress = async (user, modules) => {
     try {
         const firstModule = Object.values(modules)[0];
-        
+
         await UserProgress.create({
             userId: user._id,
             moduleProgress: {
@@ -213,19 +206,19 @@ const createUserProgress = async (user, modules) => {
     }
 };
 
+// ✅ Execute Full Database Population
 const populateDatabase = async () => {
     try {
         console.log("🚀 Starting Database Population...");
         
-        // Clear existing data in development
-        await clearDatabase();
-
-        // Create core data
-        const user = await createTestUser();
-        const createdModules = await createModules();
-        await createTrainingSessions(user, createdModules);
-        await createCertifications(user, createdModules);
-        await createUserProgress(user, createdModules);
+        await clearDatabase(); // ✅ Clear existing data (dev mode only)
+        const user = await createTestUser(); // ✅ Create a test user
+        const createdModules = await createModules(); // ✅ Populate training modules
+        await Promise.all([
+            createTrainingSessions(user, createdModules),
+            createCertifications(user, createdModules),
+            createUserProgress(user, createdModules)
+        ]);
 
         console.log("✅ Database Population Completed Successfully!");
     } catch (err) {
@@ -234,7 +227,7 @@ const populateDatabase = async () => {
     }
 };
 
-// Execute population script with proper cleanup
+// ✅ Run Script
 (async () => {
     try {
         await connectDB();

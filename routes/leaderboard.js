@@ -5,7 +5,33 @@ const { authenticate } = require('../middleware/auth');
 const Leaderboard = require('../models/Leaderboard');
 const User = require('../models/User');
 const AISpaceCoach = require('../services/AISpaceCoach');
+const LeaderboardService = require("../services/LeaderboardService");
+// ✅ Get the top 10 leaderboard rankings
+router.get("/", async (req, res) => {
+    try {
+        const leaderboard = await LeaderboardService.getLeaderboard();
+        res.json(leaderboard);
+    } catch (error) {
+        console.error("❌ Error fetching leaderboard:", error);
+        res.status(500).json({ error: "Failed to fetch leaderboard" });
+    }
+});
 
+// ✅ Update leaderboard when a user's score changes
+router.post("/update", authenticate, async (req, res) => {
+    try {
+        const { userId, newScore } = req.body;
+        if (!userId || !newScore) {
+            return res.status(400).json({ error: "User ID and new score are required" });
+        }
+
+        const result = await LeaderboardService.updateLeaderboard(userId, newScore);
+        res.json(result);
+    } catch (error) {
+        console.error("❌ Error updating leaderboard:", error);
+        res.status(500).json({ error: "Failed to update leaderboard" });
+    }
+});
 router.get('/rankings', authenticate, async (req, res) => {
     try {
         const rankings = await User.find({})

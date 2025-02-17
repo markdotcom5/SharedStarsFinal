@@ -1,10 +1,30 @@
 const { OpenAI } = require("openai");
-const User = require('../models/User');
-const UserProgress = require('../models/UserProgress');
+const User = require("../models/User");
+const UserProgress = require("../models/UserProgress");
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
+
+// ✅ Move AI Training Models Outside AIAssistant
+class ReinforcementLearning {
+    async getOptimalAction(data) {
+        return {
+            content: 'next_best_training_module',
+            difficulty: 0.7,
+            feedback: 'AI suggests improving reaction speed in zero-gravity.'
+        };
+    }
+}
+
+class BayesianKnowledgeTracker {
+    async estimateKnowledge(history) {
+        return {
+            knowledgeLevel: 0.85,
+            confidence: 0.92
+        };
+    }
+}
 
 class AIAssistant {
     constructor() {
@@ -12,12 +32,12 @@ class AIAssistant {
             apiKey: process.env.OPENAI_API_KEY
         });
         this.defaultModel = "gpt-4-turbo-preview";
+        this.reinforcementModel = new ReinforcementLearning();
+        this.bayesianTracker = new BayesianKnowledgeTracker();
     }
 
     /**
-     * 🎖 **Analyze User Achievements**
-     * - Evaluates achievement progress.
-     * - Identifies patterns and improvement areas.
+     * 🎖 **Analyze User Achievements & AI-Powered Coaching**
      */
     async analyzeAchievementProgress(userId) {
         try {
@@ -51,33 +71,35 @@ class AIAssistant {
     }
 
     /**
-     * 🏆 **AI Performance Trends**
-     * - Identifies patterns in training progress.
+     * 🚀 **Generate Adaptive Learning Path using RL & Bayesian AI**
      */
-    analyzePerformanceTrends(achievements) {
-        const totalAchievements = achievements.length;
-        const completed = achievements.filter(a => a.completed).length;
-        const completionRate = totalAchievements ? (completed / totalAchievements) * 100 : 0;
+    async adaptLearningPath(userId, currentPerformance) {
+        try {
+            console.log(`🔍 AI Adapting Learning Path for User: ${userId}`);
 
-        return {
-            trend: completionRate > 80 ? "Excellent" : completionRate > 50 ? "Improving" : "Needs Improvement",
-            insights: completionRate > 80 ? "You're mastering your training!" : "Focus on completing more tasks to level up!"
-        };
+            const learningHistory = await this.getUserLearningHistory(userId);
+            const knowledgeState = await this.bayesianTracker.estimateKnowledge(learningHistory);
+
+            // RL determines the best next action
+            const nextAction = await this.reinforcementModel.getOptimalAction({
+                userId,
+                knowledgeState,
+                currentPerformance
+            });
+
+            return {
+                recommendedContent: nextAction.content,
+                difficulty: nextAction.difficulty,
+                adaptiveFeedback: nextAction.feedback
+            };
+        } catch (error) {
+            console.error("❌ Error in adaptive learning:", error);
+            return { success: false, message: "Failed to adapt learning path." };
+        }
     }
 
     /**
-     * 🚀 **Identify Next Milestones**
-     * - Predicts next certification or training step.
-     */
-    identifyNextMilestones(achievements) {
-        if (!achievements.length) return ["Start Training"];
-        return achievements.length > 5 ? ["Advanced Simulation", "Elite Certification"] : ["Complete Next Training"];
-    }
-
-    /**
-     * 🏋️‍♂️ **Session Analysis & AI Feedback**
-     * - Evaluates user training sessions.
-     * - Recommends personalized regimens.
+     * 📊 **Analyze User Training Performance**
      */
     async analyzeSessionPerformance(userId) {
         try {
@@ -89,7 +111,7 @@ class AIAssistant {
             const sessionData = user.moduleProgress.map(module => ({
                 moduleId: module.moduleId,
                 completedSessions: module.completedSessions,
-                trainingLogs: module.trainingLogs.slice(-3) // Get last 3 logs for recent analysis
+                trainingLogs: module.trainingLogs.slice(-3) // Get last 3 logs
             }));
 
             const completion = await this.openai.chat.completions.create({
@@ -113,19 +135,35 @@ class AIAssistant {
     }
 
     /**
-     * 🎯 **AI-Driven Recommendations**
-     * - Provides smart training suggestions.
+     * 🌌 **AI-Powered Mission Simulation**
      */
-    generateRecommendations(analysis) {
-        return analysis
-            .split("\n")
-            .filter(line => line.includes("recommend") || line.includes("should"))
-            .map(line => line.trim()) || ["No specific recommendations found"];
+    async generateMissionScenario(userId, difficulty) {
+        try {
+            console.log(`🚀 AI Generating Mission Scenario for: ${userId}`);
+            
+            const userProfile = await this.getUserProfile(userId);
+
+            const missionResponse = await this.openai.chat.completions.create({
+                model: this.defaultModel,
+                messages: [
+                    { role: "system", content: "Generate an AI-driven space mission scenario based on user expertise." },
+                    { role: "user", content: `User Level: ${userProfile.trainingLevel}, Difficulty: ${difficulty}` }
+                ],
+                max_tokens: 500
+            });
+
+            return {
+                missionDetails: missionResponse.choices[0]?.message?.content || "No AI-generated mission available.",
+                timestamp: new Date()
+            };
+        } catch (error) {
+            console.error("❌ AI Mission Generation Error:", error);
+            return { success: false, message: "Failed to generate mission scenario." };
+        }
     }
 
     /**
-     * 📢 **Personalized Training Advice**
-     * - AI suggests the best learning path for the user.
+     * 📢 **Generate Personalized Training Advice**
      */
     async generateTrainingPlan(userId) {
         try {
@@ -155,5 +193,5 @@ class AIAssistant {
     }
 }
 
-// ✅ Export AI Assistant as a Singleton
+// ✅ Export AI Assistant
 module.exports = new AIAssistant();

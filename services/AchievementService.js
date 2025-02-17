@@ -1,5 +1,19 @@
+const SocialPlatformIntegrator = require("../services/SocialPlatformIntegrator");
 
-// public/js/services/AchievementServices.js
+// ✅ When an achievement is earned
+const handleAchievementUnlock = async (user, achievementData) => {
+    try {
+        console.log(`🏆 Achievement Earned: ${achievementData.name} by ${user.name}`);
+        
+        await SocialPlatformIntegrator.shareEvent("achievement", {
+            user,
+            details: achievementData
+        });
+
+    } catch (error) {
+        console.error("❌ Error sharing achievement:", error);
+    }
+};
 class AchievementServices {
     constructor() {
         this.achievements = new Map();

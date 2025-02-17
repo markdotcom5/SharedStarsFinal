@@ -1,4 +1,4 @@
-// services/AIGuidanceSystem.js
+const EventEmitter = require("events");
 const OpenAI = require("openai");
 const User = require("../models/User");
 const TrainingSession = require("../models/TrainingSession");
@@ -6,8 +6,10 @@ const Intervention = require("../models/Intervention");
 const UserProgress = require("../models/UserProgress");
 const Achievement = require("../models/Achievement");
 
-class AIGuidanceSystem {
+class AIGuidanceSystem extends EventEmitter {
     constructor() {
+        super(); // ✅ Enables event-based communication
+
         // ✅ Initialize OpenAI Client
         this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -16,7 +18,7 @@ class AIGuidanceSystem {
 
         // ✅ AI Personality Traits
         this.aiPersonality = {
-            name: "STELLA", // Space Training Enhanced Learning Liaison Assistant
+            name: "STELLA",
             traits: ["encouraging", "detail-oriented", "safety-conscious"],
             experienceLevel: "veteran astronaut",
             specialties: ["crisis management", "psychological support", "technical guidance"]
@@ -52,7 +54,7 @@ class AIGuidanceSystem {
     // ✅ Generate Space Training Scenario
     async generateSpaceScenario(userId) {
         try {
-            const user = await User.findById(userId);
+            const user = await User.findById(userId).lean();
             if (!user) throw new Error(`User with ID ${userId} not found.`);
 
             const userLevel = this.calculateUserLevel(user.trainingProgress);
@@ -66,10 +68,7 @@ class AIGuidanceSystem {
                 temperature: 0.7
             });
 
-            const scenario = response.choices[0]?.message?.content;
-            if (!scenario) throw new Error("Empty response from OpenAI.");
-
-            return JSON.parse(scenario);
+            return JSON.parse(response.choices[0]?.message?.content || "{}");
         } catch (error) {
             console.error("❌ Error generating space scenario:", error);
             throw error;
@@ -79,8 +78,10 @@ class AIGuidanceSystem {
     // ✅ Handle Training Interventions
     async handleIntervention(userId, moduleId, triggerType) {
         try {
-            const userProgress = await UserProgress.findOne({ userId: new mongoose.Types.ObjectId(userId) });
-            const intervention = await this.createIntervention(userId, moduleId, triggerType);
+            const [userProgress, intervention] = await Promise.all([
+                UserProgress.findOne({ userId }),
+                this.createIntervention(userId, moduleId, triggerType)
+            ]);
 
             if (this.interventionTypes[triggerType]) {
                 await this.interventionTypes[triggerType](intervention, userProgress);
@@ -119,11 +120,7 @@ class AIGuidanceSystem {
                 ]
             });
 
-            return {
-                scenario: JSON.parse(response.choices[0]?.message?.content || '{}'),
-                timeLimit: 300, 
-                criticalPoints: ['immediate_actions', 'crew_safety', 'system_stabilization']
-            };
+            return JSON.parse(response.choices[0]?.message?.content || "{}");
         } catch (error) {
             console.error('❌ Error simulating emergency:', error);
             throw error;
@@ -133,8 +130,11 @@ class AIGuidanceSystem {
     // ✅ Virtual Mentoring
     async provideVirtualMentoring(userId) {
         try {
-            const user = await User.findById(userId);
-            const sessions = await TrainingSession.find({ userId });
+            const [user, sessions] = await Promise.all([
+                User.findById(userId),
+                TrainingSession.find({ userId })
+            ]);
+
             const recentChallenges = sessions[0]?.aiGuidance?.challenges || [];
 
             const response = await this.openai.chat.completions.create({
@@ -145,10 +145,7 @@ class AIGuidanceSystem {
                 ]
             });
 
-            return {
-                mentoring: JSON.parse(response.choices[0]?.message?.content || '{}'),
-                nextSession: new Date(Date.now() + 86400000)
-            };
+            return JSON.parse(response.choices[0]?.message?.content || "{}");
         } catch (error) {
             console.error('❌ Error providing mentoring:', error);
             throw error;
@@ -169,38 +166,9 @@ class AIGuidanceSystem {
                 ]
             });
 
-            const simulation = JSON.parse(response.choices[0]?.message?.content || '{}');
-
-            await TrainingSession.findOneAndUpdate(
-                { userId, status: 'in-progress' },
-                { $push: { 'missions': { type: missionType, simulation, startedAt: new Date() } } }
-            );
-
-            return simulation;
+            return JSON.parse(response.choices[0]?.message?.content || "{}");
         } catch (error) {
             console.error('❌ Error generating mission simulation:', error);
-            throw error;
-        }
-    }
-
-    // ✅ Provide Psychological Support
-    async providePsychologicalSupport(userId) {
-        try {
-            const user = await User.findById(userId);
-            const recentSessions = await TrainingSession.find({ userId }).sort({ createdAt: -1 }).limit(5);
-            const stressIndicators = this.analyzeStressIndicators(recentSessions);
-
-            const response = await this.openai.chat.completions.create({
-                model: this.defaultModel,
-                messages: [
-                    { role: "system", content: "Provide space psychology support focusing on mental resilience." },
-                    { role: "user", content: `Generate psychological support response. Stress indicators: ${JSON.stringify(stressIndicators)}.` }
-                ]
-            });
-
-            return JSON.parse(response.choices[0]?.message?.content || '{}');
-        } catch (error) {
-            console.error('❌ Error providing psychological support:', error);
             throw error;
         }
     }
@@ -209,15 +177,6 @@ class AIGuidanceSystem {
     determineMissionType(progress) {
         const missionTypes = ['orbital_insertion', 'lunar_landing', 'mars_approach', 'deep_space_exploration', 'space_station_docking'];
         return missionTypes[Math.floor((progress.overallScore || 0) / 20)] || missionTypes[0];
-    }
-
-    analyzeStressIndicators(sessions) {
-        return sessions.map(session => ({
-            date: session.createdAt,
-            performanceVariation: session.metrics?.performanceVariation || 0,
-            responseTime: session.metrics?.averageResponseTime || 0,
-            errorRate: session.metrics?.errorRate || 0
-        }));
     }
 
     calculateUserLevel(progress) {

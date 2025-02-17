@@ -80,7 +80,7 @@ function authenticateWebSocket(req) {
 
 // ✅ WebSocket Server Setup (UPDATED)
 const setupWebSocketServer = (server) => {
-    const wss = new WebSocket.Server({ noServer: true });
+    const { wss } = require("../app");  // ✅ Use the WebSocket instance from `app.js`
     const clients = new Map(); // Store userId to WebSocket instance
 
     wss.on("connection", (ws, req) => {

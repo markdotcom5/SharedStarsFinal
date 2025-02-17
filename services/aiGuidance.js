@@ -1,196 +1,206 @@
-const { OpenAI } = require("openai");
+const OpenAI = require("openai");
+const User = require("../models/User");
+const TrainingSession = require("../models/TrainingSession");
+const Intervention = require("../models/Intervention");
+const UserProgress = require("../models/UserProgress");
+const Achievement = require("../models/Achievement");
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+class AIGuidanceSystem {
+    constructor() {
+        // ✅ Initialize OpenAI Client
+        this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+        // ✅ Default AI Model
+        this.defaultModel = "gpt-4-turbo";
 
+        // ✅ AI Personality Traits
+        this.aiPersonality = {
+            name: "STELLA", // Space Training Enhanced Learning Liaison Assistant
+            traits: ["encouraging", "detail-oriented", "safety-conscious"],
+            experienceLevel: "veteran astronaut",
+            specialties: ["crisis management", "psychological support", "technical guidance"]
+        };
 
-const User = require('../models/User');
-const TrainingSession = require('../models/TrainingSession');
+        // ✅ Simulation Scenarios
+        this.simulationScenarios = {
+            emergencyResponses: [
+                "oxygen_system_failure",
+                "micrometeoroid_impact",
+                "solar_flare_warning",
+                "communication_loss",
+                "pressure_leak"
+            ],
+            spaceOperations: [
+                "docking_procedure",
+                "spacewalk_preparation",
+                "equipment_maintenance",
+                "navigation_challenge",
+                "resource_management"
+            ]
+        };
 
-class AIGuidance {
-  constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
-    this.defaultModel = 'gpt-4-turbo-preview';
-    this.systemPrompts = {
-      realTime: "You are StelTrek's advanced AI guidance system, specialized in real-time space training optimization. Your role is to provide immediate, actionable guidance that adapts to the user's current performance and progress.",
-      feedback: "You are an expert space training analyst, focused on providing detailed, constructive feedback to improve astronaut preparation. Consider both technical skills and psychological readiness.",
-      planning: "You are a strategic space training planner, responsible for creating comprehensive daily programs that balance physical, technical, and psychological preparation for space travel."
-    };
-  }
+        // ✅ Intervention Types
+        this.interventionTypes = {
+            TIME_BASED: this.handleTimeBasedIntervention,
+            ERROR_BASED: this.handleErrorBasedIntervention,
+            CONFIDENCE_BASED: this.handleConfidenceIntervention,
+            PROGRESS_BASED: this.handleProgressIntervention
+        };
+    }
 
-  // Corrected: Define getGuidanceData as a method, not a function inside the class
-  async getGuidanceData() {
-    // Simulate a delay for fetching data
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          message: 'Welcome to your AI Guidance dashboard! Here are your personalized tips:',
-          tips: [
-            { title: 'Tip 1', description: 'Focus on module 1 for a strong foundation.' },
-            { title: 'Tip 2', description: 'Review training videos for better retention.' },
-            { title: 'Tip 3', description: 'Practice with interactive quizzes.' }
-          ]
-        });
-      }, 500);
-    });
-  }
+    // ✅ Generate AI-Driven Space Training Scenario
+    async generateSpaceScenario(userId) {
+        try {
+            const user = await User.findById(userId);
+            if (!user) throw new Error(`User with ID ${userId} not found.`);
 
-  async processRealTimeAction(userId, action) {
-    try {
-      const user = await User.findById(userId).select('trainingProgress aiGuidance');
-      if (!user) throw new Error('User not found');
+            const userLevel = this.calculateUserLevel(user.trainingProgress);
 
-      const completion = await this.openai.chat.completions.create({
-        model: this.defaultModel,
-        messages: [
-            { role: "system", content: "Analyze user achievements and suggest improvements." },
-            { role: "user", content: `Achievements: ${JSON.stringify(achievements)}` }
-        ],
-        max_tokens: 500  // ✅ Reduce response time by limiting output size
-    });
-    
+            const response = await this.openai.chat.completions.create({
+                model: this.defaultModel,
+                messages: [
+                    { role: "system", content: `You are STELLA, an AI space training coach with ${this.aiPersonality.experienceLevel} experience.` },
+                    { role: "user", content: `Generate a space scenario for a ${userLevel} trainee. Include: Situation, Conditions, Critical Decisions, Success Criteria, and Learning Objectives.` }
+                ],
+                temperature: 0.7
+            });
 
-      const guidance = completion.choices[0].message.content;
+            const scenario = response.choices[0]?.message?.content;
+            if (!scenario) throw new Error("Empty response from OpenAI.");
 
-      // Create training session with enhanced tracking
-      const session = await TrainingSession.create({
-        userId,
-        actionType: action.type,
-        action,
-        guidance,
-        performance: {
-          completionRate: action.completionRate || 0,
-          accuracy: action.accuracy || 0,
-          timeSpent: action.timeSpent || 0
-        },
-        aiMetrics: {
-          modelUsed: this.defaultModel,
-          responseTokens: completion.usage.total_tokens,
-          guidanceQuality: action.success ? 'effective' : 'needs_improvement'
-        },
-        timestamp: new Date()
-      });
-
-      // Update user's guidance context
-      await User.findByIdAndUpdate(userId, {
-        $push: {
-          'aiGuidance.context.recentActions': {
-            action: action.type,
-            timestamp: new Date(),
-            success: action.success || false
-          }
-        },
-        $set: {
-          'aiGuidance.lastInteraction': new Date(),
-          'aiGuidance.context.currentPhase': this.determineTrainingPhase(user.trainingProgress)
+            return JSON.parse(scenario);
+        } catch (error) {
+            console.error("❌ Error generating space scenario:", error);
+            throw error;
         }
-      });
-
-      return {
-        guidance,
-        sessionId: session._id,
-        nextSteps: this.extractNextSteps(guidance),
-        performance: session.performance,
-        timestamp: new Date()
-      };
-
-    } catch (error) {
-      console.error('Real-time Processing Error:', {
-        userId,
-        action,
-        error: error.message,
-        stack: error.stack
-      });
-      throw new Error(`AI Guidance Error: ${error.message}`);
     }
-  }
 
-  async provideFeedback(userId, sessionData) {
-    try {
-      const user = await User.findById(userId).select('trainingProgress spaceGoals');
-      if (!user) throw new Error('User not found');
+    // ✅ Handle AI-Based Training Interventions
+    async handleIntervention(userId, moduleId, triggerType) {
+        try {
+            const userProgress = await UserProgress.findOne({ userId: new mongoose.Types.ObjectId(userId) });
+            const intervention = await this.createIntervention(userId, moduleId, triggerType);
 
-      const completion = await this.openai.chat.completions.create({
-        model: this.defaultModel,
-        messages: [
-            {
-                role: "system",
-                content: this.systemPrompts.feedback
+            if (this.interventionTypes[triggerType]) {
+                await this.interventionTypes[triggerType](intervention, userProgress);
             }
-        ],
-        max_tokens: 500  // ✅ Optimized for faster processing
-    });
-    
 
-      const feedback = completion.choices[0].message.content;
-      
-      return {
-        feedback,
-        recommendations: this.extractRecommendations(feedback),
-        strengths: this.extractStrengths(feedback),
-        areasForImprovement: this.extractAreasForImprovement(feedback),
-        nextMilestones: this.extractMilestones(feedback),
-        timestamp: new Date()
-      };
-    } catch (error) {
-      console.error('Feedback Generation Error:', error);
-      throw error;
+            await this.checkAchievementTriggers(userId, intervention);
+            return intervention;
+        } catch (error) {
+            console.error('❌ Error handling intervention:', error);
+            throw error;
+        }
     }
-  }
 
-  // Helper methods
-  determineTrainingPhase(progress) {
-    // Add your logic to determine training phase based on progress
-    return 'intermediate'; // Example return
-  }
-
-  extractNextSteps(guidance) {
-    try {
-      const steps = guidance.match(/Next Steps:(.*?)(?=\n\n|$)/s);
-      return steps ? 
-        steps[1].trim().split('\n').map(step => step.trim().replace(/^\d+\.\s*/, '')) : 
-        [];
-    } catch (error) {
-      return [];
+    async createIntervention(userId, moduleId, triggerType) {
+        return await Intervention.create({
+            userId,
+            moduleId,
+            triggerType,
+            status: 'PENDING',
+            duration: { started: new Date() }
+        });
     }
-  }
 
-  extractStrengths(feedback) {
-    try {
-      const strengths = feedback.match(/Strengths:(.*?)(?=\n\n|$)/s);
-      return strengths ? 
-        strengths[1].trim().split('\n').map(s => s.trim().replace(/^-\s*/, '')) : 
-        [];
-    } catch (error) {
-      return [];
-    }
-  }
+    // ✅ Emergency Response AI Simulation
+    async simulateEmergencyResponse(userId, scenarioType) {
+        try {
+            const scenario = this.simulationScenarios.emergencyResponses.includes(scenarioType)
+                ? scenarioType
+                : "oxygen_system_failure";
 
-  extractAreasForImprovement(feedback) {
-    try {
-      const areas = feedback.match(/Areas for Improvement:(.*?)(?=\n\n|$)/s);
-      return areas ? 
-        areas[1].trim().split('\n').map(a => a.trim().replace(/^-\s*/, '')) : 
-        [];
-    } catch (error) {
-      return [];
-    }
-  }
+            const response = await this.openai.chat.completions.create({
+                model: this.defaultModel,
+                messages: [
+                    { role: "system", content: "Simulate a critical space emergency scenario requiring immediate response." },
+                    { role: "user", content: `Create emergency scenario: ${scenario}. Include warning signs, system readings, crew status, resources, and time constraints.` }
+                ]
+            });
 
-  extractMilestones(feedback) {
-    try {
-      const milestones = feedback.match(/Milestones:(.*?)(?=\n\n|$)/s);
-      return milestones ? 
-        milestones[1].trim().split('\n').map(m => m.trim().replace(/^-\s*/, '')) : 
-        [];
-    } catch (error) {
-      return [];
+            return {
+                scenario: JSON.parse(response.choices[0]?.message?.content || '{}'),
+                timeLimit: 300, 
+                criticalPoints: ['immediate_actions', 'crew_safety', 'system_stabilization']
+            };
+        } catch (error) {
+            console.error('❌ Error simulating emergency:', error);
+            throw error;
+        }
     }
-  }
+
+    // ✅ Virtual Mentoring System
+    async provideVirtualMentoring(userId) {
+        try {
+            const user = await User.findById(userId);
+            const sessions = await TrainingSession.find({ userId });
+            const recentChallenges = sessions[0]?.aiGuidance?.challenges || [];
+
+            const response = await this.openai.chat.completions.create({
+                model: this.defaultModel,
+                messages: [
+                    { role: "system", content: `As STELLA, provide mentoring combining ${this.aiPersonality.traits.join(', ')} traits.` },
+                    { role: "user", content: `Address challenges: ${JSON.stringify(recentChallenges)}. Include insights, astronaut experiences, psychological support, and technical advice.` }
+                ]
+            });
+
+            return {
+                mentoring: JSON.parse(response.choices[0]?.message?.content || '{}'),
+                nextSession: new Date(Date.now() + 86400000)
+            };
+        } catch (error) {
+            console.error('❌ Error providing mentoring:', error);
+            throw error;
+        }
+    }
+
+    // ✅ Generate Mission Simulation AI
+    async generateMissionSimulation(userId) {
+        try {
+            const user = await User.findById(userId);
+            const missionType = this.determineMissionType(user.trainingProgress);
+
+            const response = await this.openai.chat.completions.create({
+                model: this.defaultModel,
+                messages: [
+                    { role: "system", content: "Generate a complete space mission simulation with multiple phases." },
+                    { role: "user", content: `Create ${missionType} mission simulation. Include launch sequence, objectives, challenges, and success criteria.` }
+                ]
+            });
+
+            const simulation = JSON.parse(response.choices[0]?.message?.content || '{}');
+
+            await TrainingSession.findOneAndUpdate(
+                { userId, status: 'in-progress' },
+                { $push: { 'missions': { type: missionType, simulation, startedAt: new Date() } } }
+            );
+
+            return simulation;
+        } catch (error) {
+            console.error('❌ Error generating mission simulation:', error);
+            throw error;
+        }
+    }
+
+    // ✅ Utility Functions
+    determineMissionType(progress) {
+        const missionTypes = ['orbital_insertion', 'lunar_landing', 'mars_approach', 'deep_space_exploration', 'space_station_docking'];
+        return missionTypes[Math.floor((progress.overallScore || 0) / 20)] || missionTypes[0];
+    }
+
+    analyzeStressIndicators(sessions) {
+        return sessions.map(session => ({
+            date: session.createdAt,
+            performanceVariation: session.metrics?.performanceVariation || 0,
+            responseTime: session.metrics?.averageResponseTime || 0,
+            errorRate: session.metrics?.errorRate || 0
+        }));
+    }
+
+    calculateUserLevel(progress) {
+        return ['rookie', 'intermediate', 'advanced', 'expert', 'mission-ready'][Math.floor((progress.overallScore || 0) / 20)] || 'rookie';
+    }
 }
 
-module.exports = new AIGuidance();
+// ✅ Export AI Guidance System
+module.exports = new AIGuidanceSystem();

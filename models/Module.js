@@ -1,4 +1,3 @@
-// models/Module.js
 const mongoose = require('mongoose');
 const { OpenAI } = require("openai");
 const Schema = mongoose.Schema;
@@ -13,28 +12,37 @@ try {
     console.error('OpenAI Initialization Error:', error.message);
 }
 
-// Single schema definition
+// ✅ Fixed Schema Definition
 const moduleSchema = new Schema({
     moduleId: {
         type: String,
         required: true,
-        unique: true  // Define unique index here only
+        unique: true,
+        trim: true
     },
     title: {
         type: String,
         required: [true, 'Module title is required'],
         trim: true,
-        minlength: [3, 'Title must be at least 3 characters'],
+        minlength: [3, 'Title must be at least 3 characters long'],
         maxlength: [100, 'Title cannot exceed 100 characters']
     },
     type: {
         type: String,
         enum: ['training', 'simulation', 'assessment', 'mission'],
-        required: true
+        required: [true, 'Module type is required']
     },
-    category: {
+    category: {  // ✅ Added 'eva' to enum
         type: String,
-        enum: ['technical', 'physical', 'psychological', 'teamwork', 'emergency', 'space-exploration'],
+        enum: [
+            'technical',
+            'physical',
+            'psychological',
+            'teamwork',
+            'emergency',
+            'space-exploration',
+            'eva'  // ✅ Fixed category validation issue
+        ],
         required: true
     },
     difficulty: {
@@ -42,6 +50,18 @@ const moduleSchema = new Schema({
         enum: ['beginner', 'intermediate', 'advanced', 'expert'],
         required: true
     },
+    prerequisites: [{  // ✅ Fixed prerequisites issue (must be an object)
+        module: {
+            type: Schema.Types.ObjectId,
+            ref: 'Module',
+            required: true
+        },
+        minimumScore: {
+            type: Number,
+            min: 0,
+            max: 100
+        }
+    }],
     status: {
         type: String,
         enum: ['draft', 'active', 'archived', 'deprecated'],
@@ -54,7 +74,8 @@ const moduleSchema = new Schema({
     prerequisites: [{
         module: {
             type: Schema.Types.ObjectId,
-            ref: 'Module'
+            ref: 'Module',
+            required: true  // ✅ Ensures valid reference
         },
         minimumScore: {
             type: Number,
@@ -62,6 +83,9 @@ const moduleSchema = new Schema({
             max: 100
         }
     }],
+      // ✅ Correctly closed array
+
+    // ✅ Fixing `content` section
     content: {
         theory: [{
             title: {
@@ -80,7 +104,7 @@ const moduleSchema = new Schema({
             }
         }],
         practice: [{
-            type: {
+            practiceType: {  // ✅ Fixed naming to avoid conflict with `type`
                 type: String,
                 enum: ['individual', 'group', 'simulation'],
                 required: true
@@ -331,6 +355,7 @@ const moduleSchema = new Schema({
 });
 
 // Enhanced Methods
+// ✅ Enhanced Methods
 moduleSchema.methods.generateAIContent = async function(prompt) {
     if (!openai) {
         throw new Error('OpenAI not initialized');
@@ -352,14 +377,14 @@ moduleSchema.methods.generateAIContent = async function(prompt) {
             max_tokens: 500
         });
 
-        return response.choices[0].message.content.trim();
+        return response.choices[0]?.message?.content?.trim() || "No AI content generated.";
     } catch (error) {
-        console.error("AI Content Generation Error:", error.message);
+        console.error("❌ AI Content Generation Error:", error.message);
         throw new Error("Failed to generate AI content");
     }
 };
 
-// Recommendation Method
+// ✅ AI-Powered Module Recommendation
 moduleSchema.methods.generateRecommendation = async function(userProfile) {
     if (!openai) {
         throw new Error('OpenAI not initialized');
@@ -382,55 +407,71 @@ moduleSchema.methods.generateRecommendation = async function(userProfile) {
         });
 
         return {
-            recommendation: response.choices[0].message.content.trim(),
+            recommendation: response.choices[0]?.message?.content?.trim() || "No AI recommendation available.",
             moduleId: this._id,
             moduleTitle: this.title,
             generatedAt: new Date()
         };
     } catch (error) {
-        console.error("AI Recommendation Generation Error:", error.message);
+        console.error("❌ AI Recommendation Generation Error:", error.message);
         throw new Error("Failed to generate module recommendation");
     }
 };
 
-// Time Completion Calculation Method
+// ✅ Time Completion Calculation Method
 moduleSchema.methods.calculateTimeToCompletion = function(userProfile) {
-    const baseTime = this.trainingStructure.duration.minimumCompletionTime;
-    const maxTime = this.trainingStructure.duration.maximumCompletionTime;
-    
+    if (!this.trainingStructure?.duration) {
+        return null; // Prevents crashes if duration is missing
+    }
+
+    const baseTime = this.trainingStructure.duration.minimumCompletionTime || 0;
+    const maxTime = this.trainingStructure.duration.maximumCompletionTime || baseTime * 2;
+
     let estimatedTime = baseTime;
-    
-    if (userProfile.skillLevel < this.difficulty) {
-        estimatedTime *= 1.5;
+
+    if (userProfile?.skillLevel && this.difficulty) {
+        const difficultyLevels = ['beginner', 'intermediate', 'advanced', 'expert'];
+        const userLevelIndex = difficultyLevels.indexOf(userProfile.skillLevel);
+        const moduleLevelIndex = difficultyLevels.indexOf(this.difficulty);
+
+        if (userLevelIndex < moduleLevelIndex) {
+            estimatedTime *= 1.5; // Increase time if user is below module level
+        }
     }
-    
-    if (userProfile.completedModules?.length > 0) {
-        estimatedTime *= 0.9;
+
+    if (userProfile?.completedModules?.length > 0) {
+        estimatedTime *= 0.9; // Reduce time for experienced users
     }
-    
+
     return Math.min(estimatedTime, maxTime);
 };
 
-// Static Methods for Discovery
+// ✅ Static Methods for Discovery
 moduleSchema.statics.getRecommendedModules = async function(userProfile, options = {}) {
     const { limit = 5, category } = options;
-    
-    const query = category 
+
+    const query = category
         ? { category, difficulty: { $lte: userProfile.skillLevel } }
         : { difficulty: { $lte: userProfile.skillLevel } };
 
     return this.find(query)
         .sort({ 'metrics.averageScore': -1 })
-        .limit(limit);
+        .limit(limit)
+        .exec();
 };
 
-// Add indexes for better query performance
+// ✅ Add indexes for better query performance
 moduleSchema.index({ category: 1, difficulty: 1 });
 moduleSchema.index({ 'metrics.averageScore': -1 });
 moduleSchema.index({ status: 1 });
-moduleSchema.index({ moduleId: 1 }, { unique: true }); // ✅ Keep unique constraint here ONLY
 
-// Validation Middleware
+// ✅ Remove duplicate index warning
+const existingIndexes = moduleSchema.indexes();
+if (!existingIndexes.some(index => JSON.stringify(index[0]) === JSON.stringify({ moduleId: 1 }))) {
+    moduleSchema.index({ moduleId: 1 }, { unique: true }); // ✅ Keep unique constraint here ONLY if not already defined
+}
+
+// ✅ Validation Middleware
 moduleSchema.pre('save', function(next) {
     if (this.prerequisites?.length > 5) {
         return next(new Error('Maximum of 5 prerequisites allowed'));
@@ -439,18 +480,18 @@ moduleSchema.pre('save', function(next) {
     next();
 });
 
-// Virtual for completion status
+// ✅ Virtual for completion status
 moduleSchema.virtual('isComplete').get(function() {
-    return this.progressTracking.mastery >= 100;
+    return this.progressTracking?.mastery >= 100;
 });
 
-// Additional virtuals for common calculations
+// ✅ Additional virtuals for common calculations
 moduleSchema.virtual('totalCreditsPossible').get(function() {
-    return this.creditSystem.totalCredits + 
-           this.creditSystem.creditDistribution.bonusActivities;
+    return (this.creditSystem?.totalCredits || 0) +
+           (this.creditSystem?.creditDistribution?.bonusActivities || 0);
 });
 
-// Model creation
+// ✅ Model creation
 const Module = mongoose.model('Module', moduleSchema);
 
 module.exports = Module;

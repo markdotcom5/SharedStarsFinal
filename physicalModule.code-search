@@ -1,0 +1,163 @@
+# Query: physicalModule
+# ContextLines: 1
+
+52 results - 7 files
+
+app.js:
+   33  // Module imports
+   34: const physicalModule = require('./modules/core/physical');
+   35  const technicalModule = require('./modules/core/technical');
+
+  276   const modules = {
+  277:     physical: physicalModule,
+  278      technical: technicalModule,
+
+error_log.txt:
+   7  /Users/marksendo/Desktop/SS2_Test/modules/core/physical/tasks/index.js:122
+   8: module.exports = physicalModule;
+   9                   ^
+  10  
+  11: ReferenceError: physicalModule is not defined
+  12      at Object.<anonymous> (/Users/marksendo/Desktop/SS2_Test/modules/core/physical/tasks/index.js:122:18)
+
+models/TrainingSession.js:
+   89  // ✅ Restore missing function to create and save a training session
+   90: async function saveTrainingSession(userId, intensity, duration, streakMultiplier, aiAnalysis, userProgress, physicalModule) {
+   91      const trainingSession = new mongoose.model("TrainingSession", trainingSessionSchema)({
+
+   98                  physical: intensity,
+   99:                 technical: calculatePhase(physicalModule.completedSessions) === 'Foundation' ? 1 : 2,
+  100:                 mental: physicalModule.streak > 7 ? 2 : 1
+  101              }
+
+modules/moduleLoader.js:
+   1  // modules/moduleLoader.js
+   2: const physicalModule = require('./core/physical');
+   3  const technicalModule = require('./core/technical');
+
+  24          this.modules = {
+  25:             physical: physicalModule,
+  26              technical: technicalModule,
+
+  31          this.moduleById = {
+  32:             'core-phys-001': physicalModule,
+  33              'core-tech-001': technicalModule,
+
+modules/core/physical/index.js:
+   13  // ✅ Module configuration with structured data
+   14: const physicalModule = {
+   15      id: 'core-phys-001',
+
+   55      try {
+   56:         const existingModule = await Module.findOne({ moduleId: physicalModule.id });
+   57          if (!existingModule) {
+   58              const newModule = new Module({
+   59:                 moduleId: physicalModule.id,
+   60                  type: 'training',  // Match schema enum
+   61                  category: 'physical',  // Match schema enum
+   62:                 title: physicalModule.name,
+   63:                 name: physicalModule.name,
+   64:                 description: physicalModule.description,
+   65:                 difficulty: physicalModule.difficulty,
+   66:                 prerequisites: physicalModule.prerequisites,
+   67:                 objectives: physicalModule.objectives,
+   68:                 tasks: physicalModule.tasks,
+   69:                 weeklyStructure: physicalModule.weeklyStructure,
+   70:                 certification: physicalModule.certification,
+   71                  trainingStructure: {
+   72                      duration: {
+   73:                         weeks: physicalModule.duration.weeks,
+   74                          minimumCompletionTime: 160,
+
+  105              userId: req.user._id,
+  106:             'moduleProgress.moduleId': physicalModule.id 
+  107          });
+
+  109          const moduleInfo = {
+  110:             ...physicalModule,
+  111              progress: userProgress ? 
+  112:                 userProgress.moduleProgress.find(p => p.moduleId === physicalModule.id)?.progress || 0 
+  113                  : 0
+
+  169              success: true,
+  170:             weeklyStructure: physicalModule.weeklyStructure,
+  171              progress: weeklyProgress
+
+  194  
+  195:         const physicalModule = userProgress.moduleProgress.find(m => 
+  196              m.moduleId === 'core-phys-001'
+
+  198  
+  199:         if (!physicalModule) {
+  200              return res.status(404).json({ 
+
+  207              success: true,
+  208:             progress: physicalModule
+  209          });
+
+  223          const hasCertification = userProgress.certifications.some(
+  224:             cert => cert.name === physicalModule.certification.name
+  225          );
+
+  229              success: true,
+  230:             certification: physicalModule.certification,
+  231              userStatus: {
+
+  249          const moduleProgress = userProgress?.moduleProgress?.find(
+  250:             p => p.moduleId === physicalModule.id
+  251          );
+
+  255          const tasksCompleted = moduleProgress.completedTasks?.length || 0;
+  256:         const totalTasks = Object.values(physicalModule.tasks).flat().length || 1;
+  257          const assessmentScore = moduleProgress.assessmentScore || 0;
+
+  272      router: router,
+  273:     moduleData: physicalModule,    // Add this
+  274      initializeModule              // Add this
+
+routes/training.js:
+  58      try {
+  59:         const physicalModules = await Module.find({ category: "physical" });
+  60:         if (!physicalModules || physicalModules.length === 0) {
+  61              return res.status(404).json({ error: "No physical modules found" });
+  62          }
+  63:         res.json({ success: true, modules: physicalModules });
+  64      } catch (error) {
+
+routes/physical/index.js:
+   61  
+   62:         const physicalModule = userProgress.moduleProgress.find(m => 
+   63              m.moduleId === 'core-phys-001'
+
+   65  
+   66:         if (!physicalModule) {
+   67              return res.status(404).json({ 
+
+   74              success: true,
+   75:             progress: physicalModule,
+   76              recentSessions: trainingSessions,
+
+  103  
+  104:         const physicalModule = userProgress.moduleProgress.find(m => m.moduleId === 'core-phys-001');
+  105  
+  106:         if (!physicalModule) {
+  107              console.error("❌ Physical module not found");
+
+  126          // Check if the milestone is already completed
+  127:         if (physicalModule.milestones.some(m => m.id === milestoneId)) {
+  128              return res.status(400).json({ success: false, message: "Milestone already completed" });
+
+  131          // Add the new milestone
+  132:         physicalModule.milestones.push({
+  133              ...milestone,
+
+  182  
+  183:         const physicalModule = userProgress.moduleProgress.find(m => m.moduleId === 'core-phys-001');
+  184:         if (physicalModule) {
+  185:             physicalModule.completedSessions += 1;
+  186:             physicalModule.trainingLogs.push({
+  187                  date: new Date(),
+
+  198              session: trainingSession,
+  199:             progress: physicalModule
+  200          });

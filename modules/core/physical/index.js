@@ -270,4 +270,6 @@ async function calculateCertificationProgress(userId) {
 // Export both the router and module data
 module.exports = {
     router: router,
+    moduleData: physicalModule,    // Add this
+    initializeModule              // Add this
 };

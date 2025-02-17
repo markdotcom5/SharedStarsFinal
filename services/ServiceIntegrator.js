@@ -270,7 +270,11 @@ class ServiceIntegrator extends EventEmitter {
             confidence: 90
         };
     }
-
+    async initialize() {
+        console.log("✅ Service Integrator Initialized");
+        return { status: "success" };
+    }
+    
     async updateUserProgress(userId, progressData) {
         // Update user progress
     }
