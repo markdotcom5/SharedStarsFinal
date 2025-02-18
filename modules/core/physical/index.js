@@ -13,14 +13,15 @@ const { authenticate } = require('../../../middleware/authenticate');
 // ✅ Module configuration with structured data
 const physicalModule = {
     id: 'core-phys-001',
-    type: 'training',  // Changed to match schema enum
-    category: 'physical',  // Changed to match schema enum
+    type: 'training', // Changed to match schema enum
+    category: 'physical', // Changed to match schema enum
     name: 'Physical Training',
-    description: 'Comprehensive space readiness physical preparation program designed to prepare astronauts for the challenges of space environment',
+    description:
+        'Comprehensive space readiness physical preparation program designed to prepare astronauts for the challenges of space environment',
     difficulty: 'beginner',
     duration: {
         weeks: 24,
-        hoursPerWeek: 15
+        hoursPerWeek: 15,
     },
     prerequisites: [],
     objectives: [
@@ -29,25 +30,24 @@ const physicalModule = {
         'Space suit mobility mastery',
         'Bone and muscle preservation',
         'Balance and coordination in variable gravity',
-        'Stress management and mental resilience'
+        'Stress management and mental resilience',
     ],
     tasks: typeof tasks.getTasks === 'function' ? tasks.getTasks() : [],
-    assessments: typeof assessments.getAssessments === 'function' ? assessments.getAssessments() : [],    
-    requirements: typeof requirements.getRequirements === 'function' ? requirements.getRequirements() : [],
+    assessments:
+        typeof assessments.getAssessments === 'function' ? assessments.getAssessments() : [],
+    requirements:
+        typeof requirements.getRequirements === 'function' ? requirements.getRequirements() : [],
     weeklyStructure: {
         week1: 'Foundation and Basic Adaptation',
         week2: 'Strength and Stability',
         week3: 'Endurance and Stress Management',
-        week4: 'Skills Integration and Assessment'
+        week4: 'Skills Integration and Assessment',
     },
     certification: {
         name: 'Space Physical Readiness Certification',
-        requirements: [
-            'Complete all tasks',
-            'Pass final assessment with 80% or higher'
-        ],
-        creditValue: 1000
-    }
+        requirements: ['Complete all tasks', 'Pass final assessment with 80% or higher'],
+        creditValue: 1000,
+    },
 };
 
 // ✅ Initialize module in MongoDB if it doesn't exist
@@ -57,8 +57,8 @@ async function initializeModule() {
         if (!existingModule) {
             const newModule = new Module({
                 moduleId: physicalModule.id,
-                type: 'training',  // Match schema enum
-                category: 'physical',  // Match schema enum
+                type: 'training', // Match schema enum
+                category: 'physical', // Match schema enum
                 title: physicalModule.name,
                 name: physicalModule.name,
                 description: physicalModule.description,
@@ -72,17 +72,17 @@ async function initializeModule() {
                     duration: {
                         weeks: physicalModule.duration.weeks,
                         minimumCompletionTime: 160,
-                        maximumCompletionTime: 480
+                        maximumCompletionTime: 480,
                     },
                     certificationRequirements: {
                         minimumSessionCompletions: 20,
                         minimumSuccessRate: 80,
                         timeRequirements: {
                             minimumWeeks: 12,
-                            maximumWeeks: 24
-                        }
-                    }
-                }
+                            maximumWeeks: 24,
+                        },
+                    },
+                },
             });
             await newModule.save();
             console.log('✅ Physical module initialized in MongoDB');
@@ -101,27 +101,28 @@ initializeModule().catch(console.error);
 // ✅ API Endpoint: Get module information
 router.get('/', authenticate, async (req, res) => {
     try {
-        const userProgress = await UserProgress.findOne({ 
+        const userProgress = await UserProgress.findOne({
             userId: req.user._id,
-            'moduleProgress.moduleId': physicalModule.id 
+            'moduleProgress.moduleId': physicalModule.id,
         });
 
         const moduleInfo = {
             ...physicalModule,
-            progress: userProgress ? 
-                userProgress.moduleProgress.find(p => p.moduleId === physicalModule.id)?.progress || 0 
-                : 0
+            progress: userProgress
+                ? userProgress.moduleProgress.find((p) => p.moduleId === physicalModule.id)
+                      ?.progress || 0
+                : 0,
         };
 
         res.json({
             success: true,
-            module: moduleInfo
+            module: moduleInfo,
         });
     } catch (error) {
         console.error('❌ Error fetching module info:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch module information' 
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch module information',
         });
     }
 });
@@ -130,14 +131,14 @@ router.get('/', authenticate, async (req, res) => {
 router.get('/debug/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        console.log("Debug - UserProgress model:", !!UserProgress);
-        console.log("Debug - userId:", userId);
-        
+        console.log('Debug - UserProgress model:', !!UserProgress);
+        console.log('Debug - userId:', userId);
+
         const raw = await UserProgress.collection.findOne({
-            userId: new mongoose.Types.ObjectId(userId)
+            userId: new mongoose.Types.ObjectId(userId),
         });
-        
-        console.log("Debug - Raw result:", raw);
+
+        console.log('Debug - Raw result:', raw);
         res.json({ result: raw });
     } catch (error) {
         console.error('Debug error:', error);
@@ -146,8 +147,8 @@ router.get('/debug/:userId', async (req, res) => {
 });
 // Add a test route first
 router.get('/test', (req, res) => {
-    console.log("Physical module test route hit!");
-    res.json({ message: "Physical module test route working" });
+    console.log('Physical module test route hit!');
+    res.json({ message: 'Physical module test route working' });
 });
 // Mount sub-modules with authentication
 router.use('/tasks', authenticate, tasks.router);
@@ -162,66 +163,67 @@ router.get('/weekly-structure', authenticate, async (req, res) => {
             week1: userProgress?.weeklyProgress?.week1 || 0,
             week2: userProgress?.weeklyProgress?.week2 || 0,
             week3: userProgress?.weeklyProgress?.week3 || 0,
-            week4: userProgress?.weeklyProgress?.week4 || 0
+            week4: userProgress?.weeklyProgress?.week4 || 0,
         };
 
         res.json({
             success: true,
             weeklyStructure: physicalModule.weeklyStructure,
-            progress: weeklyProgress
+            progress: weeklyProgress,
         });
     } catch (error) {
         console.error('❌ Error fetching weekly structure:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch weekly structure' 
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch weekly structure',
         });
     }
 });
 router.get('/progress/:userId', authenticate, async (req, res) => {
-    console.log("Progress route hit!"); // Add this log
+    console.log('Progress route hit!'); // Add this log
     try {
         const userProgress = await UserProgress.findOne({
-            userId: new mongoose.Types.ObjectId(req.params.userId)
+            userId: new mongoose.Types.ObjectId(req.params.userId),
         });
 
         if (!userProgress) {
-            return res.status(404).json({ 
-                success: false, 
-                message: "No training progress found" 
+            return res.status(404).json({
+                success: false,
+                message: 'No training progress found',
             });
         }
 
-        const physicalModule = userProgress.moduleProgress.find(m => 
-            m.moduleId === 'core-phys-001'
+        const physicalModule = userProgress.moduleProgress.find(
+            (m) => m.moduleId === 'core-phys-001'
         );
 
         if (!physicalModule) {
-            return res.status(404).json({ 
-                success: false, 
-                message: "Physical training module not found" 
+            return res.status(404).json({
+                success: false,
+                message: 'Physical training module not found',
             });
         }
 
         res.json({
             success: true,
-            progress: physicalModule
+            progress: physicalModule,
         });
-
     } catch (error) {
         console.error('Error fetching progress:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            error: error.message,
         });
     }
 });
 // ✅ API Endpoint: Get Certification Status
 router.get('/certification', authenticate, async (req, res) => {
     try {
-        const userProgress = await UserProgress.findOne({ userId: req.user._id }) || { certifications: [] };
+        const userProgress = (await UserProgress.findOne({ userId: req.user._id })) || {
+            certifications: [],
+        };
         const hasCertification = userProgress.certifications.some(
-            cert => cert.name === physicalModule.certification.name
+            (cert) => cert.name === physicalModule.certification.name
         );
         const progress = await calculateCertificationProgress(req.user._id);
 
@@ -230,14 +232,14 @@ router.get('/certification', authenticate, async (req, res) => {
             certification: physicalModule.certification,
             userStatus: {
                 certified: hasCertification,
-                progress
-            }
+                progress,
+            },
         });
     } catch (error) {
         console.error('❌ Error fetching certification status:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch certification status.' 
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch certification status.',
         });
     }
 });
@@ -247,7 +249,7 @@ async function calculateCertificationProgress(userId) {
     try {
         const userProgress = await UserProgress.findOne({ userId });
         const moduleProgress = userProgress?.moduleProgress?.find(
-            p => p.moduleId === physicalModule.id
+            (p) => p.moduleId === physicalModule.id
         );
 
         if (!moduleProgress) return { tasksProgress: 0, assessmentProgress: 0, overallProgress: 0 };
@@ -259,7 +261,8 @@ async function calculateCertificationProgress(userId) {
         return {
             tasksProgress: (tasksCompleted / totalTasks) * 100,
             assessmentProgress: assessmentScore,
-            overallProgress: ((tasksCompleted / totalTasks) * 0.6 + (assessmentScore / 100) * 0.4) * 100
+            overallProgress:
+                ((tasksCompleted / totalTasks) * 0.6 + (assessmentScore / 100) * 0.4) * 100,
         };
     } catch (error) {
         console.error('❌ Error calculating certification progress:', error);
@@ -270,6 +273,6 @@ async function calculateCertificationProgress(userId) {
 // Export both the router and module data
 module.exports = {
     router: router,
-    moduleData: physicalModule,    // Add this
-    initializeModule              // Add this
+    moduleData: physicalModule, // Add this
+    initializeModule, // Add this
 };

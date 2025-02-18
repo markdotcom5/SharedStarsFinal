@@ -12,8 +12,8 @@ const evaSafety = {
                         'Verify emergency oxygen supply',
                         'Check suit pressure readings',
                         'Initiate emergency return protocol',
-                        'Maintain communication with control'
-                    ]
+                        'Maintain communication with control',
+                    ],
                 },
                 {
                     type: 'Tether Break',
@@ -21,11 +21,11 @@ const evaSafety = {
                         'Activate backup tether',
                         'Use SAFER unit if necessary',
                         'Report situation to control',
-                        'Begin emergency return'
-                    ]
-                }
-            ]
-        }
+                        'Begin emergency return',
+                    ],
+                },
+            ],
+        },
     ],
     checkLists: [
         {
@@ -36,9 +36,9 @@ const evaSafety = {
                 'Communication systems check',
                 'Tether integrity confirmation',
                 'Tool inventory verification',
-                'Emergency systems test'
-            ]
-        }
+                'Emergency systems test',
+            ],
+        },
     ],
     hazards: [
         {
@@ -48,8 +48,8 @@ const evaSafety = {
             mitigation: [
                 'Maintain awareness of surroundings',
                 'Use proper shielding',
-                'Follow prescribed movement patterns'
-            ]
+                'Follow prescribed movement patterns',
+            ],
         },
         {
             id: 'eva-hazard-002',
@@ -58,15 +58,15 @@ const evaSafety = {
             mitigation: [
                 'Monitor radiation levels',
                 'Limit EVA duration',
-                'Use radiation-hardened equipment'
-            ]
-        }
-    ]
+                'Use radiation-hardened equipment',
+            ],
+        },
+    ],
 };
 
 const getSafetyProtocols = () => evaSafety;
 
 module.exports = {
     getSafetyProtocols,
-    evaSafety
+    evaSafety,
 };

@@ -4,12 +4,12 @@ const { authenticate } = require('../middleware/authenticate');
 const rateLimit = require('express-rate-limit');
 const AISpaceCoach = require('../services/AISpaceCoach');
 const Joi = require('joi');
-const Module = require("../models/Module");
-const mongoose = require("mongoose");
+const Module = require('../models/Module');
+const mongoose = require('mongoose');
 const SpaceTimelineManager = require('../services/SpaceTimelineManager');
 const webSocketService = require('../services/webSocketService');
-const { ObjectId } = require('mongodb');  // Import ObjectId for correct usage
-const TrainingSession = require('../models/TrainingSession');  // Adjust the path if needed
+const { ObjectId } = require('mongodb'); // Import ObjectId for correct usage
+const TrainingSession = require('../models/TrainingSession'); // Adjust the path if needed
 const ModuleCreditSystem = require('../services/ModuleCreditSystem');
 
 // Initialize Services
@@ -19,7 +19,7 @@ const timelineManager = new SpaceTimelineManager(webSocketService);
 const sessionLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
-    message: { error: 'Too many requests, please try again later.' }
+    message: { error: 'Too many requests, please try again later.' },
 });
 
 // Validation Schemas
@@ -27,12 +27,12 @@ const sessionSchema = Joi.object({
     sessionType: Joi.string().required(),
     dateTime: Joi.date().greater('now').required(),
     participants: Joi.array().items(Joi.string()),
-    points: Joi.number().min(0).default(0)
+    points: Joi.number().min(0).default(0),
 });
 
 const paginationSchema = Joi.object({
     page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).max(100).default(10)
+    limit: Joi.number().integer().min(1).max(100).default(10),
 });
 
 // ============================
@@ -45,7 +45,7 @@ router.get('/modules', authenticate, async (req, res) => {
         const modules = await Module.find()
             .select('id name description category')
             .sort({ category: 1, name: 1 });
-        
+
         res.json({ success: true, modules });
     } catch (error) {
         console.error('Error fetching modules:', error);
@@ -54,25 +54,25 @@ router.get('/modules', authenticate, async (req, res) => {
 });
 
 // Get Physical Training Modules
-router.get("/modules/physical", authenticate, async (req, res) => {
+router.get('/modules/physical', authenticate, async (req, res) => {
     try {
-        const physicalModules = await Module.find({ category: "physical" });
+        const physicalModules = await Module.find({ category: 'physical' });
         if (!physicalModules || physicalModules.length === 0) {
-            return res.status(404).json({ error: "No physical modules found" });
+            return res.status(404).json({ error: 'No physical modules found' });
         }
         res.json({ success: true, modules: physicalModules });
     } catch (error) {
-        console.error("Error fetching physical modules:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        console.error('Error fetching physical modules:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
 // Get Technical Training Modules
 router.get('/modules/technical', authenticate, async (req, res) => {
     try {
-        const technicalModules = await Module.find({ category: "technical" });
+        const technicalModules = await Module.find({ category: 'technical' });
         if (!technicalModules || technicalModules.length === 0) {
-            return res.status(404).json({ error: "No technical modules found" });
+            return res.status(404).json({ error: 'No technical modules found' });
         }
         res.json({ success: true, modules: technicalModules });
     } catch (error) {
@@ -84,9 +84,9 @@ router.get('/modules/technical', authenticate, async (req, res) => {
 // Get AI-Guided Modules
 router.get('/modules/ai-guided', authenticate, async (req, res) => {
     try {
-        const aiGuidedModules = await Module.find({ category: "ai-guided" });
+        const aiGuidedModules = await Module.find({ category: 'ai-guided' });
         if (!aiGuidedModules || aiGuidedModules.length === 0) {
-            return res.status(404).json({ error: "No AI-guided modules found" });
+            return res.status(404).json({ error: 'No AI-guided modules found' });
         }
         res.json({ success: true, modules: aiGuidedModules });
     } catch (error) {
@@ -97,46 +97,47 @@ router.get('/modules/ai-guided', authenticate, async (req, res) => {
 // Temporary Debug Route - Get All Sessions for a User
 router.get('/debug/sessions/:userId', async (req, res) => {
     try {
-        console.log("🚀 DEBUG: Fetching all sessions for user:", req.params.userId);
+        console.log('🚀 DEBUG: Fetching all sessions for user:', req.params.userId);
 
         // Convert userId to ObjectId only if it's 24 characters long
-        const userId = req.params.userId.match(/^[0-9a-fA-F]{24}$/) ? new ObjectId(req.params.userId) : req.params.userId;
-        
-        console.log("🔍 Using userId:", userId);
+        const userId = req.params.userId.match(/^[0-9a-fA-F]{24}$/)
+            ? new ObjectId(req.params.userId)
+            : req.params.userId;
+
+        console.log('🔍 Using userId:', userId);
 
         const sessions = await TrainingSession.find({ userId });
 
-        console.log("🔍 Sessions Found:", sessions);
+        console.log('🔍 Sessions Found:', sessions);
         res.json(sessions);
-
     } catch (error) {
-        console.error("❌ ERROR Fetching Sessions:", error);
+        console.error('❌ ERROR Fetching Sessions:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
 // Start Module
 // training.js
-router.post("/modules/:moduleId/start", authenticate, async (req, res) => {
+router.post('/modules/:moduleId/start', authenticate, async (req, res) => {
     try {
         console.log('Starting module with:', {
             moduleId: req.params.moduleId,
             body: req.body,
-            user: req.user._id
+            user: req.user._id,
         });
 
         const { moduleId } = req.params;
         const { moduleType } = req.body;
-        
+
         // Validate moduleId format
         console.log('Validating moduleId:', moduleId);
         const modulePattern = /^(physical|technical|simulation)-\d{3}$/;
         if (!modulePattern.test(moduleId)) {
             console.log('ModuleId validation failed:', moduleId);
-            return res.status(400).json({ 
-                error: "Invalid moduleId format",
-                expectedFormat: "type-number (e.g., physical-001)",
-                receivedId: moduleId
+            return res.status(400).json({
+                error: 'Invalid moduleId format',
+                expectedFormat: 'type-number (e.g., physical-001)',
+                receivedId: moduleId,
             });
         }
 
@@ -152,25 +153,25 @@ router.post("/modules/:moduleId/start", authenticate, async (req, res) => {
                 skillFactors: {
                     physical: 0,
                     technical: 0,
-                    mental: 0
-                }
-            }
+                    mental: 0,
+                },
+            },
         });
 
         console.log('Saving session:', session);
         await session.save();
 
-        res.json({ 
-            success: true, 
-            message: `Module ${moduleId} started successfully`, 
-            session 
+        res.json({
+            success: true,
+            message: `Module ${moduleId} started successfully`,
+            session,
         });
     } catch (error) {
-        console.error("Error starting module:", error);
-        res.status(500).json({ 
-            error: "Failed to start module",
+        console.error('Error starting module:', error);
+        res.status(500).json({
+            error: 'Failed to start module',
             details: error.message,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
         });
     }
 });
@@ -180,7 +181,7 @@ router.post('/modules/:moduleId/complete', authenticate, async (req, res) => {
             {
                 userId: req.user._id,
                 moduleId: req.params.moduleId,
-                status: 'in-progress'
+                status: 'in-progress',
             },
             {
                 $set: {
@@ -188,8 +189,8 @@ router.post('/modules/:moduleId/complete', authenticate, async (req, res) => {
                     completedAt: new Date(),
                     'metrics.completionRate': req.body.completionRate || 100,
                     'metrics.effectivenessScore': req.body.effectivenessScore || 100,
-                    'metrics.consistency': req.body.consistency || 100
-                }
+                    'metrics.consistency': req.body.consistency || 100,
+                },
             },
             { new: true }
         );
@@ -205,7 +206,7 @@ router.post('/modules/:moduleId/complete', authenticate, async (req, res) => {
         req.app.locals.webSocketService.sendToUser(req.user._id, 'module_completed', {
             moduleId: req.params.moduleId,
             creditResults,
-            newTimeline: creditResults.newTimeline
+            newTimeline: creditResults.newTimeline,
         });
 
         res.json({
@@ -214,29 +215,29 @@ router.post('/modules/:moduleId/complete', authenticate, async (req, res) => {
             session: {
                 id: session._id,
                 type: session.moduleType,
-                metrics: session.metrics
+                metrics: session.metrics,
             },
             credits: {
                 earned: creditResults.earnedCredits,
                 streak: creditResults.streak,
                 multipliers: {
                     performance: creditResults.performanceMultiplier,
-                    streak: creditResults.streakMultiplier
-                }
+                    streak: creditResults.streakMultiplier,
+                },
             },
             timelineImpact: {
                 yearsReduced: creditResults.timelineImpact,
-                newTimelineYears: creditResults.newTimeline
-            }
+                newTimelineYears: creditResults.newTimeline,
+            },
         });
     } catch (error) {
         console.error('Error completing module:', error);
         res.status(500).json({
             error: 'Failed to complete module',
-            message: error.message
+            message: error.message,
         });
     }
-})
+});
 // ============================
 // Training Session Routes
 // ============================
@@ -247,7 +248,7 @@ router.post('/sessions', authenticate, async (req, res) => {
         const { userId, moduleId, sessionData } = req.body;
 
         if (!userId || !moduleId || !sessionData) {
-            return res.status(400).json({ success: false, message: "Missing required fields." });
+            return res.status(400).json({ success: false, message: 'Missing required fields.' });
         }
 
         let userProgress = await UserProgress.findOne({ userId });
@@ -256,14 +257,14 @@ router.post('/sessions', authenticate, async (req, res) => {
             userProgress = new UserProgress({ userId, moduleProgress: [] });
         }
 
-        let moduleProgress = userProgress.moduleProgress.find(m => m.moduleId === moduleId);
+        let moduleProgress = userProgress.moduleProgress.find((m) => m.moduleId === moduleId);
 
         if (!moduleProgress) {
             moduleProgress = {
                 moduleId,
                 completedSessions: 0,
                 totalCreditsEarned: 0,
-                trainingLogs: []
+                trainingLogs: [],
             };
             userProgress.moduleProgress.push(moduleProgress);
         }
@@ -274,15 +275,15 @@ router.post('/sessions', authenticate, async (req, res) => {
             date: new Date(),
             exercisesCompleted: sessionData.exercisesCompleted || [],
             duration: sessionData.duration,
-            caloriesBurned: sessionData.caloriesBurned || 0
+            caloriesBurned: sessionData.caloriesBurned || 0,
         });
 
         await userProgress.save();
 
-        res.json({ success: true, message: "Training session logged successfully." });
+        res.json({ success: true, message: 'Training session logged successfully.' });
     } catch (error) {
-        console.error("Training session error:", error);
-        res.status(500).json({ success: false, message: "Failed to log training session." });
+        console.error('Training session error:', error);
+        res.status(500).json({ success: false, message: 'Failed to log training session.' });
     }
 });
 
@@ -315,12 +316,12 @@ router.patch('/sessions/:sessionId/complete', authenticate, sessionLimiter, asyn
     try {
         const session = await TrainingSession.findOneAndUpdate(
             { _id: req.params.sessionId, userId: req.user._id },
-            { 
-                $set: { 
-                    status: 'completed', 
+            {
+                $set: {
+                    status: 'completed',
                     progress: 100,
-                    completedAt: new Date()
-                } 
+                    completedAt: new Date(),
+                },
             },
             { new: true }
         );
@@ -349,12 +350,12 @@ router.post('/assessment/start', authenticate, sessionLimiter, async (req, res) 
     try {
         const session = new TrainingSession({
             userId: req.user._id,
-            moduleType: 'assessment',  // ✅ Correct
+            moduleType: 'assessment', // ✅ Correct
             dateTime: new Date(),
             status: 'in-progress',
             aiGuidance: {
                 enabled: true,
-                lastGuidance: 'Starting initial assessment'
+                lastGuidance: 'Starting initial assessment',
             },
             assessment: {
                 type: 'initial',
@@ -364,24 +365,24 @@ router.post('/assessment/start', authenticate, sessionLimiter, async (req, res) 
                     focusAreas: [],
                     suggestedModules: [],
                     personalizedFeedback: '',
-                    nextSteps: []
-                }
-            }
+                    nextSteps: [],
+                },
+            },
         });
 
         await session.save();
-        
+
         const assessmentQuestions = await AISpaceCoach.getInitialAssessment();
-        
+
         webSocketService.sendToUser(req.user._id, 'assessment_started', {
             sessionId: session._id,
-            questions: assessmentQuestions
+            questions: assessmentQuestions,
         });
 
         res.json({
             success: true,
             sessionId: session._id,
-            questions: assessmentQuestions
+            questions: assessmentQuestions,
         });
     } catch (error) {
         console.error('Error starting assessment:', error);
@@ -394,9 +395,8 @@ router.post('/assessment/:sessionId/submit', authenticate, sessionLimiter, async
     try {
         const { question, answer } = req.body;
         const session = await TrainingSession.findOne({
-            _id: new ObjectId(req.params.sessionId),  // Ensure ObjectId format
-        });               
-        
+            _id: new ObjectId(req.params.sessionId), // Ensure ObjectId format
+        });
 
         if (!session) {
             return res.status(404).json({ error: 'Assessment session not found' });
@@ -404,14 +404,14 @@ router.post('/assessment/:sessionId/submit', authenticate, sessionLimiter, async
 
         // Get AI analysis
         const aiAnalysis = await AISpaceCoach.analyzeResponse(question, answer);
-        
+
         // Update session
         session.assessment.responses.push({ question, answer, analysis: aiAnalysis });
-        
+
         if (aiAnalysis.recommendations) {
             session.assessment.aiRecommendations = {
                 ...session.assessment.aiRecommendations,
-                ...aiAnalysis.recommendations
+                ...aiAnalysis.recommendations,
             };
         }
 
@@ -423,14 +423,14 @@ router.post('/assessment/:sessionId/submit', authenticate, sessionLimiter, async
         webSocketService.sendToUser(req.user._id, 'assessment_progress', {
             isComplete,
             nextQuestion: isComplete ? null : aiAnalysis.nextQuestion,
-            progress: (session.assessment.responses.length / aiAnalysis.totalQuestions) * 100
+            progress: (session.assessment.responses.length / aiAnalysis.totalQuestions) * 100,
         });
 
         res.json({
             success: true,
             isComplete,
             nextQuestion: isComplete ? null : aiAnalysis.nextQuestion,
-            immediateGuidance: aiAnalysis.immediateGuidance
+            immediateGuidance: aiAnalysis.immediateGuidance,
         });
     } catch (error) {
         console.error('Error submitting assessment:', error);
@@ -442,10 +442,8 @@ router.post('/assessment/:sessionId/submit', authenticate, sessionLimiter, async
 router.post('/assessment/:sessionId/complete', authenticate, sessionLimiter, async (req, res) => {
     try {
         const session = await TrainingSession.findOne({
-            _id: new ObjectId(req.params.sessionId),  // Ensure ObjectId format
+            _id: new ObjectId(req.params.sessionId), // Ensure ObjectId format
         });
-                
-        
 
         if (!session) {
             return res.status(404).json({ error: 'Assessment session not found' });
@@ -453,7 +451,7 @@ router.post('/assessment/:sessionId/complete', authenticate, sessionLimiter, asy
 
         // Generate final analysis and training plan
         const finalAnalysis = await AISpaceCoach.generateTrainingPlan(session.assessment.responses);
-        
+
         // Update session
         session.status = 'completed';
         session.completedAt = new Date();
@@ -462,7 +460,7 @@ router.post('/assessment/:sessionId/complete', authenticate, sessionLimiter, asy
             physicalReadiness: finalAnalysis.metrics.physical,
             mentalPreparedness: finalAnalysis.metrics.mental,
             technicalProficiency: finalAnalysis.metrics.technical,
-            overallScore: finalAnalysis.metrics.overall
+            overallScore: finalAnalysis.metrics.overall,
         };
 
         await session.save();
@@ -472,7 +470,7 @@ router.post('/assessment/:sessionId/complete', authenticate, sessionLimiter, asy
         webSocketService.sendToUser(req.user._id, 'assessment_completed', {
             sessionId: session._id,
             recommendations: finalAnalysis.recommendations,
-            metrics: session.metrics
+            metrics: session.metrics,
         });
 
         res.json({
@@ -481,9 +479,9 @@ router.post('/assessment/:sessionId/complete', authenticate, sessionLimiter, asy
                 recommendedModules: finalAnalysis.recommendations.suggestedModules,
                 focusAreas: finalAnalysis.recommendations.focusAreas,
                 timeline: finalAnalysis.recommendations.timeline,
-                nextSteps: finalAnalysis.recommendations.nextSteps
+                nextSteps: finalAnalysis.recommendations.nextSteps,
             },
-            metrics: session.metrics
+            metrics: session.metrics,
         });
     } catch (error) {
         console.error('Error completing assessment:', error);

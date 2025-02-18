@@ -14,21 +14,21 @@ class QuestVRModule extends EventEmitter {
         // Initialize WebSocket server for Quest connection
         if (!global.wssQuest) {
             global.wssQuest = new WebSocket.Server({ noServer: true });
-            console.log("✅ WebSocket Server Created for Quest Module");
+            console.log('✅ WebSocket Server Created for Quest Module');
         }
         this.wss = global.wssQuest;
-                this.setupWebSocketHandlers();
-        
+        this.setupWebSocketHandlers();
+
         // Load Quest-specific configurations
         await this.loadDeviceConfigs();
-        
+
         console.log('✅ Quest VR Module initialized');
     }
 
     setupWebSocketHandlers() {
         this.wss.on('connection', (ws, req) => {
             const sessionId = this.generateSessionId();
-            
+
             ws.on('message', async (message) => {
                 try {
                     const data = JSON.parse(message);
@@ -69,14 +69,14 @@ class QuestVRModule extends EventEmitter {
 
         // Process hand tracking data
         const processedData = await this.processTrackingData(tracking);
-        
+
         // Update session state
         session.handTracking = processedData;
-        
+
         // Emit tracking update
         this.emit('hand_tracking_update', {
             sessionId,
-            tracking: processedData
+            tracking: processedData,
         });
     }
 
@@ -86,14 +86,14 @@ class QuestVRModule extends EventEmitter {
 
         // Process controller input
         const processedInput = await this.processInputData(input);
-        
+
         // Update session state
         session.controllerInput = processedInput;
-        
+
         // Emit input update
         this.emit('controller_input_update', {
             sessionId,
-            input: processedInput
+            input: processedInput,
         });
     }
 
@@ -103,18 +103,18 @@ class QuestVRModule extends EventEmitter {
             features: {
                 handTracking: true,
                 eyeTracking: false,
-                roomScale: true
+                roomScale: true,
             },
             display: {
                 resolution: { width: 1832, height: 1920 },
                 refreshRate: 90,
-                fov: 90
+                fov: 90,
             },
             controllers: {
                 type: 'touch',
                 haptics: true,
-                buttons: ['trigger', 'grip', 'thumbstick', 'x', 'y', 'a', 'b']
-            }
+                buttons: ['trigger', 'grip', 'thumbstick', 'x', 'y', 'a', 'b'],
+            },
         });
 
         this.deviceConfigs.set('quest_pro', {
@@ -122,18 +122,18 @@ class QuestVRModule extends EventEmitter {
                 handTracking: true,
                 eyeTracking: true,
                 faceTracking: true,
-                roomScale: true
+                roomScale: true,
             },
             display: {
                 resolution: { width: 1800, height: 1920 },
                 refreshRate: 90,
-                fov: 106
+                fov: 106,
             },
             controllers: {
                 type: 'touch_pro',
                 haptics: true,
-                buttons: ['trigger', 'grip', 'thumbstick', 'x', 'y', 'a', 'b']
-            }
+                buttons: ['trigger', 'grip', 'thumbstick', 'x', 'y', 'a', 'b'],
+            },
         });
     }
 
@@ -152,7 +152,7 @@ class QuestVRModule extends EventEmitter {
             metrics: this.initializeMetrics(),
             roomSetup: null,
             handTracking: null,
-            controllerInput: null
+            controllerInput: null,
         };
 
         this.sessions.set(session.id, session);
@@ -164,18 +164,18 @@ class QuestVRModule extends EventEmitter {
             performance: {
                 fps: [],
                 latency: [],
-                dropFrames: 0
+                dropFrames: 0,
             },
             tracking: {
                 quality: [],
                 confidence: [],
-                lostTracking: 0
+                lostTracking: 0,
             },
             interaction: {
                 successful: 0,
                 failed: 0,
-                accuracy: []
-            }
+                accuracy: [],
+            },
         };
     }
 
@@ -185,19 +185,19 @@ class QuestVRModule extends EventEmitter {
             timestamp: Date.now(),
             leftHand: this.processHandData(tracking.leftHand),
             rightHand: this.processHandData(tracking.rightHand),
-            confidence: tracking.confidence
+            confidence: tracking.confidence,
         };
     }
 
     processHandData(handData) {
         return {
-            joints: handData.joints.map(joint => ({
+            joints: handData.joints.map((joint) => ({
                 position: joint.position,
                 rotation: joint.rotation,
-                confidence: joint.confidence
+                confidence: joint.confidence,
             })),
             gesture: this.recognizeGesture(handData.joints),
-            velocity: this.calculateVelocity(handData.joints)
+            velocity: this.calculateVelocity(handData.joints),
         };
     }
 
@@ -205,7 +205,7 @@ class QuestVRModule extends EventEmitter {
         // Implement gesture recognition
         return {
             type: 'unknown',
-            confidence: 0
+            confidence: 0,
         };
     }
 
@@ -213,7 +213,7 @@ class QuestVRModule extends EventEmitter {
         // Implement velocity calculation
         return {
             linear: { x: 0, y: 0, z: 0 },
-            angular: { x: 0, y: 0, z: 0 }
+            angular: { x: 0, y: 0, z: 0 },
         };
     }
 

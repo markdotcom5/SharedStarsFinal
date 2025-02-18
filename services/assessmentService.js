@@ -22,10 +22,7 @@ class AssessmentService extends EventEmitter {
             };
 
             // Push assessment and update only the needed field
-            await UserProgress.updateOne(
-                { userId },
-                { $push: { assessments: newAssessment } }
-            );
+            await UserProgress.updateOne({ userId }, { $push: { assessments: newAssessment } });
 
             return newAssessment;
         } catch (error) {
@@ -43,7 +40,7 @@ class AssessmentService extends EventEmitter {
             }
 
             const assessment = progress.assessments.find(
-                a => a.moduleId.equals(moduleId) && a.type === type
+                (a) => a.moduleId.equals(moduleId) && a.type === type
             );
 
             if (!assessment) {
@@ -73,7 +70,9 @@ class AssessmentService extends EventEmitter {
 
     async checkCertificationEligibility(userId, moduleId) {
         try {
-            console.log(`🔍 Checking certification eligibility for user ${userId}, module ${moduleId}`);
+            console.log(
+                `🔍 Checking certification eligibility for user ${userId}, module ${moduleId}`
+            );
             // Add certification logic here if needed
         } catch (error) {
             console.error(`❌ Error checking certification eligibility for user ${userId}:`, error);

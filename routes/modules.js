@@ -6,8 +6,11 @@ const { authenticate } = require('../middleware/authenticate');
 const User = require('../models/User');
 const Module = require('../models/Module');
 const TrainingSession = require('../models/TrainingSession');
-const { generateTrainingContent, provideProblemSolvingScenario } = require('../services/AISpaceCoach');
-const { ObjectId } = require('mongodb');  // Import ObjectId for correct usage
+const {
+    generateTrainingContent,
+    provideProblemSolvingScenario,
+} = require('../services/AISpaceCoach');
+const { ObjectId } = require('mongodb'); // Import ObjectId for correct usage
 
 // Debugging Log
 console.log('Authenticate Middleware:', typeof authenticate);
@@ -37,30 +40,32 @@ router.get('/all', authenticate, async (req, res) => {
 
         // ✅ Ensure modules is defined and not empty before using .map()
         if (!modules || !Array.isArray(modules) || modules.length === 0) {
-            console.error('❌ Error: modules is undefined, not an array, or empty in routes/modules.js');
+            console.error(
+                '❌ Error: modules is undefined, not an array, or empty in routes/modules.js'
+            );
             return res.status(404).json({ success: false, error: 'No modules found.' });
         }
 
         // ✅ Fetch user progress in one optimized query
-        const moduleIds = modules.map(m => m._id);
+        const moduleIds = modules.map((m) => m._id);
         const userProgress = await TrainingSession.find({
             userId: req.user._id,
-            module: { $in: moduleIds }
-        }).lean();  // ✅ Using .lean() for performance optimization
+            module: { $in: moduleIds },
+        }).lean(); // ✅ Using .lean() for performance optimization
 
         // ✅ Convert modules into enhancedModules with user progress
-        const enhancedModules = modules.map(module => ({
+        const enhancedModules = modules.map((module) => ({
             ...module.toObject(),
-            userProgress: userProgress.find(up => String(up.module) === String(module._id)) || null
+            userProgress:
+                userProgress.find((up) => String(up.module) === String(module._id)) || null,
         }));
 
         // ✅ Send response with properly defined enhancedModules
         res.status(200).json({
             success: true,
             count: enhancedModules.length,
-            modules: enhancedModules
+            modules: enhancedModules,
         });
-
     } catch (error) {
         console.error('❌ Error fetching modules:', error.message);
         res.status(500).json({ error: 'Failed to fetch modules.' });
@@ -70,8 +75,9 @@ router.get('/all', authenticate, async (req, res) => {
 // Route: Get All Sessions
 router.get('/sessions', authenticate, async (req, res) => {
     try {
-        const sessions = await TrainingSession.find({ userId: req.user._id })
-            .sort({ dateTime: -1 });
+        const sessions = await TrainingSession.find({ userId: req.user._id }).sort({
+            dateTime: -1,
+        });
         res.status(200).json(sessions);
     } catch (error) {
         console.error('Error fetching sessions:', error.message);
@@ -127,11 +133,10 @@ router.patch('/sessions/:sessionId', authenticate, async (req, res) => {
 // Route: AI-Generated Session Insights
 router.post('/sessions/:sessionId/insights', authenticate, async (req, res) => {
     try {
-        const session = await TrainingSession.findOne({ 
-            _id: new ObjectId(req.params.sessionId),  // Ensure ObjectId format
-        });                
-        
-        
+        const session = await TrainingSession.findOne({
+            _id: new ObjectId(req.params.sessionId), // Ensure ObjectId format
+        });
+
         if (!session) {
             return res.status(404).json({ error: 'Session not found.' });
         }
@@ -200,29 +205,29 @@ router.get('/recommendations', authenticate, async (req, res) => {
     try {
         const completedSessions = await TrainingSession.find({
             userId: req.user._id,
-            status: 'completed'
+            status: 'completed',
         }).distinct('module');
 
         const availableModules = await Module.find({
-            _id: { $nin: completedSessions }
+            _id: { $nin: completedSessions },
         }).limit(5);
 
         const recommendations = await Promise.all(
-            availableModules.map(async module => {
+            availableModules.map(async (module) => {
                 const content = await generateTrainingContent(
                     module.name,
                     req.user.skillLevel || 'beginner'
                 );
                 return {
                     module,
-                    recommendation: content
+                    recommendation: content,
                 };
             })
         );
 
         res.status(200).json({
             success: true,
-            recommendations
+            recommendations,
         });
     } catch (error) {
         console.error('Error getting recommendations:', error.message);
@@ -233,44 +238,49 @@ router.get('/recommendations', authenticate, async (req, res) => {
 router.get('/:moduleType/details', authenticate, async (req, res) => {
     try {
         const moduleType = req.params.moduleType.toLowerCase();
-        
+
         const moduleDetails = {
             physical: {
-                name: "Zero-G Adaptation",
-                content: "This module focuses on adapting your muscles and balance for zero-gravity conditions.",
+                name: 'Zero-G Adaptation',
+                content:
+                    'This module focuses on adapting your muscles and balance for zero-gravity conditions.',
                 subModules: [
-                    "Zero-G Adaptation drills",
-                    "Cardiovascular conditioning routines",
-                    "Strength training sessions",
-                    "Spatial orientation challenges"
-                ]
+                    'Zero-G Adaptation drills',
+                    'Cardiovascular conditioning routines',
+                    'Strength training sessions',
+                    'Spatial orientation challenges',
+                ],
             },
             technical: {
-                name: "Systems Operations",
-                content: "In this module, you'll master the critical systems that power spacecraft.",
+                name: 'Systems Operations',
+                content:
+                    "In this module, you'll master the critical systems that power spacecraft.",
                 subModules: [
-                    "Systems operations overview",
-                    "Emergency procedures walkthrough",
-                    "Navigation systems simulations",
-                    "Equipment maintenance tutorials"
-                ]
+                    'Systems operations overview',
+                    'Emergency procedures walkthrough',
+                    'Navigation systems simulations',
+                    'Equipment maintenance tutorials',
+                ],
             },
             simulation: {
-                name: "Mission Scenarios",
-                content: "Prepare for real-life scenarios in space with simulations of docking procedures, EVA operations, and emergency responses.",
+                name: 'Mission Scenarios',
+                content:
+                    'Prepare for real-life scenarios in space with simulations of docking procedures, EVA operations, and emergency responses.',
                 subModules: [
-                    "Mission scenario simulations",
-                    "Docking procedures practice",
-                    "EVA operations training",
-                    "Emergency response drills"
-                ]
-            }
+                    'Mission scenario simulations',
+                    'Docking procedures practice',
+                    'EVA operations training',
+                    'Emergency response drills',
+                ],
+            },
         };
 
         // ✅ Check if the module exists before sending response
         if (!moduleDetails[moduleType]) {
             console.error(`❌ Error: Module '${moduleType}' not found.`);
-            return res.status(404).json({ success: false, error: `Module '${moduleType}' not found.` });
+            return res
+                .status(404)
+                .json({ success: false, error: `Module '${moduleType}' not found.` });
         }
 
         res.status(200).json({ success: true, module: moduleDetails[moduleType] });

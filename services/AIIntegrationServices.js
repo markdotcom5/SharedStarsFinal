@@ -14,7 +14,7 @@ class AIIntegrationService extends EventEmitter {
         this.spaceCoach = new AISpaceCoach();
         this.progressTracker = new ProgressTracker();
         this.assessment = new AssessmentService();
-        
+
         this.setupEventListeners();
         this.dataCollectionQueue = [];
         this.analyticsBuffer = new Map();
@@ -41,10 +41,10 @@ class AIIntegrationService extends EventEmitter {
         try {
             // Collect progress data
             const enrichedData = await this.enrichProgressData(data);
-            
+
             // Queue for batch processing
             this.dataCollectionQueue.push(enrichedData);
-            
+
             // Process queue if threshold reached
             if (this.dataCollectionQueue.length >= 10) {
                 await this.processDataQueue();
@@ -67,7 +67,7 @@ class AIIntegrationService extends EventEmitter {
             timestamp: new Date(),
             assessments: assessmentData,
             recommendations: aiRecommendations,
-            performanceMetrics: await this.calculatePerformanceMetrics(data)
+            performanceMetrics: await this.calculatePerformanceMetrics(data),
         };
     }
 
@@ -75,7 +75,7 @@ class AIIntegrationService extends EventEmitter {
         const metrics = {
             completionRate: 0,
             accuracyScore: 0,
-            engagementLevel: 0
+            engagementLevel: 0,
         };
 
         // Calculate completion rate
@@ -93,32 +93,32 @@ class AIIntegrationService extends EventEmitter {
 
     calculateAccuracyScore(assessments) {
         if (!assessments.length) return 0;
-        
+
         const totalScore = assessments.reduce((sum, assessment) => {
             return sum + (assessment.score || 0);
         }, 0);
-        
+
         return totalScore / assessments.length;
     }
 
     async calculateEngagementScore(userId) {
         const activityData = await this.progressTracker.getUserActivity(userId);
-        
+
         // Factors in frequency, duration, and variety of activities
         let engagementScore = 0;
-        
+
         if (activityData.frequency > 0) {
             engagementScore += activityData.frequency * 0.4;
         }
-        
+
         if (activityData.duration > 0) {
             engagementScore += Math.min(activityData.duration / 3600, 1) * 0.3;
         }
-        
+
         if (activityData.uniqueModules > 0) {
             engagementScore += Math.min(activityData.uniqueModules / 5, 1) * 0.3;
         }
-        
+
         return Math.min(engagementScore, 1);
     }
 
@@ -131,7 +131,7 @@ class AIIntegrationService extends EventEmitter {
             this.dataCollectionQueue = [];
 
             // Aggregate analytics
-            batch.forEach(data => {
+            batch.forEach((data) => {
                 this.updateAnalyticsBuffer(data);
             });
 
@@ -140,7 +140,6 @@ class AIIntegrationService extends EventEmitter {
 
             // Update AI models
             await this.updateAIModels(batch);
-
         } catch (error) {
             console.error('Error processing data queue:', error);
             // Requeue failed items
@@ -153,7 +152,7 @@ class AIIntegrationService extends EventEmitter {
         if (!this.analyticsBuffer.has(userId)) {
             this.analyticsBuffer.set(userId, {
                 recentActivity: [],
-                performanceHistory: []
+                performanceHistory: [],
             });
         }
 
@@ -161,7 +160,7 @@ class AIIntegrationService extends EventEmitter {
         userBuffer.recentActivity.push({
             timestamp: data.timestamp,
             action: data.type,
-            metrics: data.performanceMetrics
+            metrics: data.performanceMetrics,
         });
 
         // Keep buffer size manageable
@@ -180,10 +179,10 @@ class AIIntegrationService extends EventEmitter {
         try {
             // Update AI guidance system
             await this.guidance.updateModel(batch);
-            
+
             // Update space coach recommendations
             await this.spaceCoach.updateRecommendations(batch);
-            
+
             // Update orchestrator patterns
             await this.orchestrator.updatePatterns(batch);
         } catch (error) {
@@ -199,7 +198,7 @@ class AIIntegrationService extends EventEmitter {
         return {
             recentActivity: buffer.recentActivity,
             performanceMetrics: await this.calculatePerformanceMetrics({ userId }),
-            recommendations: await this.guidance.getRecommendations(userId)
+            recommendations: await this.guidance.getRecommendations(userId),
         };
     }
 
@@ -211,8 +210,8 @@ class AIIntegrationService extends EventEmitter {
             systemHealth: {
                 guidance: await this.guidance.getHealth(),
                 orchestrator: await this.orchestrator.getHealth(),
-                spaceCoach: await this.spaceCoach.getHealth()
-            }
+                spaceCoach: await this.spaceCoach.getHealth(),
+            },
         };
     }
 }

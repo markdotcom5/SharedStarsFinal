@@ -15,7 +15,7 @@ class QuestVRFeatures extends EventEmitter {
             grab: this.handleGrabGesture.bind(this),
             point: this.handlePointGesture.bind(this),
             wave: this.handleWaveGesture.bind(this),
-            thumbsUp: this.handleThumbsUpGesture.bind(this)
+            thumbsUp: this.handleThumbsUpGesture.bind(this),
         });
 
         // Eye Tracking
@@ -23,14 +23,14 @@ class QuestVRFeatures extends EventEmitter {
             gazeFocus: this.handleGazeFocus.bind(this),
             blinkRate: this.handleBlinkRate.bind(this),
             pupilDilation: this.handlePupilDilation.bind(this),
-            eyeStrain: this.handleEyeStrain.bind(this)
+            eyeStrain: this.handleEyeStrain.bind(this),
         });
 
         // Face Tracking (Quest Pro)
         this.features.set('faceTracking', {
             expressions: this.handleFacialExpressions.bind(this),
             emotion: this.handleEmotionDetection.bind(this),
-            fatigue: this.handleFatigueDetection.bind(this)
+            fatigue: this.handleFatigueDetection.bind(this),
         });
 
         // Environmental Understanding
@@ -38,14 +38,14 @@ class QuestVRFeatures extends EventEmitter {
             roomMapping: this.handleRoomMapping.bind(this),
             obstacleDetection: this.handleObstacleDetection.bind(this),
             boundarySetup: this.handleBoundarySetup.bind(this),
-            lightingEstimation: this.handleLightingEstimation.bind(this)
+            lightingEstimation: this.handleLightingEstimation.bind(this),
         });
 
         // Haptic Feedback
         this.features.set('haptics', {
             pulsePatterns: this.getHapticPatterns(),
             intensityLevels: this.getIntensityLevels(),
-            customFeedback: this.generateCustomHaptics.bind(this)
+            customFeedback: this.generateCustomHaptics.bind(this),
         });
 
         // Multiplayer Features
@@ -53,7 +53,7 @@ class QuestVRFeatures extends EventEmitter {
             avatarSync: this.handleAvatarSync.bind(this),
             voiceChat: this.handleVoiceChat.bind(this),
             spatialAudio: this.handleSpatialAudio.bind(this),
-            interactions: this.handleMultiplayerInteractions.bind(this)
+            interactions: this.handleMultiplayerInteractions.bind(this),
         });
 
         // Social Features
@@ -61,7 +61,7 @@ class QuestVRFeatures extends EventEmitter {
             presence: this.handleSocialPresence.bind(this),
             emotes: this.handleEmotes.bind(this),
             groupActivities: this.handleGroupActivities.bind(this),
-            spectatorMode: this.handleSpectatorMode.bind(this)
+            spectatorMode: this.handleSpectatorMode.bind(this),
         });
 
         // Training Scenarios
@@ -69,7 +69,7 @@ class QuestVRFeatures extends EventEmitter {
             simulations: this.handleSimulations.bind(this),
             tutorials: this.handleTutorials.bind(this),
             assessments: this.handleAssessments.bind(this),
-            feedback: this.handleFeedback.bind(this)
+            feedback: this.handleFeedback.bind(this),
         });
 
         // Performance Monitoring
@@ -77,7 +77,7 @@ class QuestVRFeatures extends EventEmitter {
             fpsMonitoring: this.handleFPSMonitoring.bind(this),
             latencyTracking: this.handleLatencyTracking.bind(this),
             batteryManagement: this.handleBatteryManagement.bind(this),
-            thermalMonitoring: this.handleThermalMonitoring.bind(this)
+            thermalMonitoring: this.handleThermalMonitoring.bind(this),
         });
     }
 
@@ -87,7 +87,7 @@ class QuestVRFeatures extends EventEmitter {
             type: 'pinch',
             strength: data.strength,
             position: data.position,
-            duration: data.duration
+            duration: data.duration,
         };
     }
 
@@ -96,7 +96,7 @@ class QuestVRFeatures extends EventEmitter {
             type: 'grab',
             grip: data.gripStrength,
             position: data.position,
-            object: data.targetObject
+            object: data.targetObject,
         };
     }
 
@@ -105,7 +105,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             target: data.focusPoint,
             duration: data.focusDuration,
-            intensity: data.focusIntensity
+            intensity: data.focusIntensity,
         };
     }
 
@@ -113,7 +113,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             rate: data.blinksPerMinute,
             pattern: data.blinkPattern,
-            fatigue: this.calculateFatigue(data)
+            fatigue: this.calculateFatigue(data),
         };
     }
 
@@ -122,7 +122,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             expression: data.currentExpression,
             confidence: data.confidence,
-            intensity: data.intensity
+            intensity: data.intensity,
         };
     }
 
@@ -130,7 +130,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             emotion: data.detectedEmotion,
             confidence: data.confidence,
-            transitions: data.emotionTransitions
+            transitions: data.emotionTransitions,
         };
     }
 
@@ -139,7 +139,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             dimensions: data.roomDimensions,
             surfaces: data.detectedSurfaces,
-            obstacles: data.obstacles
+            obstacles: data.obstacles,
         };
     }
 
@@ -147,7 +147,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             intensity: data.lightIntensity,
             direction: data.lightDirection,
-            ambientLight: data.ambientLight
+            ambientLight: data.ambientLight,
         };
     }
 
@@ -157,17 +157,17 @@ class QuestVRFeatures extends EventEmitter {
             tap: { duration: 50, intensity: 0.5 },
             buzz: { duration: 200, intensity: 0.7 },
             pulse: { duration: 100, intensity: 0.3, repeat: 3 },
-            custom: this.generateCustomHaptics
+            custom: this.generateCustomHaptics,
         };
     }
 
     async generateCustomHaptics(pattern) {
         return {
-            pattern: pattern.map(p => ({
+            pattern: pattern.map((p) => ({
                 duration: p.duration,
                 intensity: p.intensity,
-                delay: p.delay
-            }))
+                delay: p.delay,
+            })),
         };
     }
 
@@ -177,7 +177,7 @@ class QuestVRFeatures extends EventEmitter {
             position: data.position,
             rotation: data.rotation,
             animation: data.currentAnimation,
-            networkLatency: data.latency
+            networkLatency: data.latency,
         };
     }
 
@@ -185,7 +185,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             audioStream: data.stream,
             volume: data.volume,
-            spatialPosition: data.position
+            spatialPosition: data.position,
         };
     }
 
@@ -194,7 +194,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             users: data.nearbyUsers,
             interactions: data.recentInteractions,
-            groups: data.activeGroups
+            groups: data.activeGroups,
         };
     }
 
@@ -202,7 +202,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             activity: data.currentActivity,
             participants: data.participants,
-            progress: data.groupProgress
+            progress: data.groupProgress,
         };
     }
 
@@ -212,7 +212,7 @@ class QuestVRFeatures extends EventEmitter {
             scenario: data.currentScenario,
             difficulty: data.difficulty,
             progress: data.progress,
-            metrics: data.performanceMetrics
+            metrics: data.performanceMetrics,
         };
     }
 
@@ -220,7 +220,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             type: data.feedbackType,
             message: data.feedbackMessage,
-            suggestions: data.improvements
+            suggestions: data.improvements,
         };
     }
 
@@ -229,7 +229,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             currentFPS: data.fps,
             frameTime: data.frameTime,
-            drops: data.droppedFrames
+            drops: data.droppedFrames,
         };
     }
 
@@ -237,7 +237,7 @@ class QuestVRFeatures extends EventEmitter {
         return {
             level: data.batteryLevel,
             temperature: data.batteryTemp,
-            estimatedRemaining: data.timeRemaining
+            estimatedRemaining: data.timeRemaining,
         };
     }
 }

@@ -10,7 +10,7 @@ class TrainingEventHandler {
     initializeWebSocket() {
         this.socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            switch(data.type) {
+            switch (data.type) {
                 case 'progress_update':
                     this.progressTracker.updateProgress(data.progress);
                     break;

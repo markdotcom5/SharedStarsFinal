@@ -1,14 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         welcome: {
-            videoTagline: "Enough dreaming, let’s take a walk to show how we can get you up to space.",
-            ctaMessage: "Are you ready to begin your space journey?",
-            joinButton: "Join Now",
-            proceedButton: "Proceed"
+            videoTagline:
+                'Enough dreaming, let’s take a walk to show how we can get you up to space.',
+            ctaMessage: 'Are you ready to begin your space journey?',
+            joinButton: 'Join Now',
+            proceedButton: 'Proceed',
         },
         common: {
-            footer: "© 2024 StelTrek Academy. All rights reserved."
-        }
+            footer: '© 2024 StelTrek Academy. All rights reserved.',
+        },
     };
 
     // Language Setup
@@ -41,12 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Apply Translations
     function applyTranslations(lang) {
         const elements = document.querySelectorAll('[data-i18n]');
-        elements.forEach(element => {
+        elements.forEach((element) => {
             const key = element.dataset.i18n;
             const keys = key.split('.');
             let translation = translations[lang];
 
-            keys.forEach(k => {
+            keys.forEach((k) => {
                 translation = translation ? translation[k] : null;
             });
 

@@ -8,8 +8,8 @@ class AchievementTracker {
     initializeEventListeners() {
         this.ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            
-            switch(data.type) {
+
+            switch (data.type) {
                 case 'achievement-unlocked':
                     this.displayAchievement(data.achievement);
                     break;
@@ -30,7 +30,7 @@ class AchievementTracker {
         const progressElements = {
             moduleProgress: document.querySelector('.module-progress'),
             skillLevels: document.querySelector('.skill-levels'),
-            metrics: document.querySelector('.performance-metrics')
+            metrics: document.querySelector('.performance-metrics'),
         };
 
         if (progressElements.moduleProgress) {

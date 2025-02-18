@@ -9,60 +9,57 @@ const ASSESSMENTS = {
         criteria: [
             'Run 1.5 miles under 12 minutes',
             'Complete 30 pushups in a row',
-            'Hold plank position for 2 minutes'
-        ]
+            'Hold plank position for 2 minutes',
+        ],
     },
     agilityTest: {
         name: 'Agility and Coordination',
         duration: '45 minutes',
-        criteria: [
-            'Complete shuttle run under 10 seconds',
-            'Balance test on unstable surface'
-        ]
-    }
+        criteria: ['Complete shuttle run under 10 seconds', 'Balance test on unstable surface'],
+    },
 };
 
 const PHYSICAL_ASSESSMENTS = {
-    'cardio': {
+    cardio: {
         name: 'Cardiovascular Fitness Assessment',
         duration: 30, // minutes
         metrics: ['heartRate', 'recoveryTime', 'endurance'],
         requirements: ['heart rate monitor', 'treadmill/track'],
         passingCriteria: {
             heartRateRecovery: '< 120bpm within 5 minutes',
-            enduranceTime: '> 20 minutes at target zone'
-        }
+            enduranceTime: '> 20 minutes at target zone',
+        },
     },
-    'strength': {
+    strength: {
         name: 'Strength Baseline Assessment',
         duration: 45,
         metrics: ['maxLoad', 'repetitions', 'form'],
         requirements: ['weight equipment', 'spotter'],
         passingCriteria: {
             bodyweightSquats: '> 20 with proper form',
-            pushups: '> 15 consecutive'
-        }
+            pushups: '> 15 consecutive',
+        },
     },
-    'flexibility': {
+    flexibility: {
         name: 'Flexibility and Mobility Assessment',
         duration: 30,
         metrics: ['rangeOfMotion', 'jointMobility', 'balance'],
         requirements: ['mobility measurement tools'],
         passingCriteria: {
             trunkFlexion: '> 10cm past toes',
-            shoulderMobility: 'full overhead range'
-        }
-    }
+            shoulderMobility: 'full overhead range',
+        },
+    },
 };
 
 // Get available assessments
 router.get('/', authenticate, (req, res) => {
     res.json({
         success: true,
-        assessments: Object.keys(PHYSICAL_ASSESSMENTS).map(key => ({
+        assessments: Object.keys(PHYSICAL_ASSESSMENTS).map((key) => ({
             id: key,
-            ...PHYSICAL_ASSESSMENTS[key]
-        }))
+            ...PHYSICAL_ASSESSMENTS[key],
+        })),
     });
 });
 
@@ -76,8 +73,8 @@ router.get('/:assessmentId', authenticate, (req, res) => {
         success: true,
         assessment: {
             id: req.params.assessmentId,
-            ...assessment
-        }
+            ...assessment,
+        },
     });
 });
 
@@ -97,8 +94,8 @@ router.post('/:assessmentId/start', authenticate, async (req, res) => {
             status: 'in-progress',
             metrics: {
                 completionRate: 0,
-                effectivenessScore: 0
-            }
+                effectivenessScore: 0,
+            },
         });
 
         await session.save();
@@ -110,8 +107,8 @@ router.post('/:assessmentId/start', authenticate, async (req, res) => {
                 id: session._id,
                 assessmentType: req.params.assessmentId,
                 duration: assessment.duration,
-                metrics: assessment.metrics
-            }
+                metrics: assessment.metrics,
+            },
         });
     } catch (error) {
         console.error('Error starting assessment:', error);
@@ -123,6 +120,6 @@ function getAssessments() {
 }
 
 module.exports = {
-    router,  // ✅ Exporting Express routes
-    getAssessments
+    router, // ✅ Exporting Express routes
+    getAssessments,
 };

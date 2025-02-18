@@ -9,18 +9,18 @@ class AIGuidanceSystem {
             'space-ops': {
                 baseCredits: 100,
                 maxCredits: 250,
-                difficultyLevels: ['basic', 'advanced', 'expert']
+                difficultyLevels: ['basic', 'advanced', 'expert'],
             },
             'zero-g': {
                 baseCredits: 150,
                 maxCredits: 375,
-                difficultyLevels: ['basic', 'advanced', 'expert']
+                difficultyLevels: ['basic', 'advanced', 'expert'],
             },
             'mission-planning': {
                 baseCredits: 200,
                 maxCredits: 500,
-                difficultyLevels: ['basic', 'advanced', 'expert']
-            }
+                difficultyLevels: ['basic', 'advanced', 'expert'],
+            },
         };
 
         this.currentModule = moduleMap[moduleId];
@@ -33,7 +33,7 @@ class AIGuidanceSystem {
         return {
             nextSteps: this.determineNextSteps(userProfile),
             creditsPotential: this.calculatePotentialCredits(userProfile),
-            recommendations: this.generateRecommendations(userProfile)
+            recommendations: this.generateRecommendations(userProfile),
         };
     }
 

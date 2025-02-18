@@ -21,16 +21,16 @@ class AchievementsController {
     async loadAchievements() {
         try {
             const response = await fetch('/api/achievements', {
-                headers: { 
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json'
-                }
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json',
+                },
             });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             this.achievements = await response.json();
             this.emit('achievementsLoaded', this.achievements);
         } catch (error) {
@@ -42,11 +42,11 @@ class AchievementsController {
     setupWebSocket() {
         try {
             this.socket = new WebSocket(`wss://${window.location.host}/ws/achievements`);
-            
+
             this.socket.onmessage = (event) => this.handleAchievementUpdate(JSON.parse(event.data));
             this.socket.onerror = (error) => this.handleError(error);
             this.socket.onclose = () => this.handleDisconnect();
-            
+
             // Heartbeat to keep connection alive
             setInterval(() => {
                 if (this.socket.readyState === WebSocket.OPEN) {
@@ -60,18 +60,18 @@ class AchievementsController {
     }
 
     handleAchievementUpdate(data) {
-        switch(data.type) {
+        switch (data.type) {
             case 'new':
                 this.achievements.push(data.achievement);
                 break;
             case 'update':
-                const index = this.achievements.findIndex(a => a.id === data.achievement.id);
+                const index = this.achievements.findIndex((a) => a.id === data.achievement.id);
                 if (index !== -1) {
                     this.achievements[index] = data.achievement;
                 }
                 break;
             case 'delete':
-                this.achievements = this.achievements.filter(a => a.id !== data.achievementId);
+                this.achievements = this.achievements.filter((a) => a.id !== data.achievementId);
                 break;
         }
         this.renderAchievements();
@@ -82,7 +82,9 @@ class AchievementsController {
         const container = document.getElementById('achievements-container');
         if (!container) return;
 
-        container.innerHTML = this.achievements.map(achievement => `
+        container.innerHTML = this.achievements
+            .map(
+                (achievement) => `
             <div class="achievement-card cosmic-card" data-id="${achievement.id}">
                 <div class="achievement-icon">
                     ${this.sanitizeHTML(achievement.icon)}
@@ -101,14 +103,16 @@ class AchievementsController {
                     </div>
                 </div>
             </div>
-        `).join('');
+        `
+            )
+            .join('');
 
         this.setupAchievementCardListeners();
     }
 
     setupAchievementCardListeners() {
         const cards = document.querySelectorAll('.achievement-card');
-        cards.forEach(card => {
+        cards.forEach((card) => {
             card.addEventListener('click', () => {
                 const achievementId = card.dataset.id;
                 this.showAchievementDetails(achievementId);
@@ -117,7 +121,7 @@ class AchievementsController {
     }
 
     showAchievementDetails(achievementId) {
-        const achievement = this.achievements.find(a => a.id === achievementId);
+        const achievement = this.achievements.find((a) => a.id === achievementId);
         if (!achievement) return;
 
         // Implementation for showing achievement details modal
@@ -134,7 +138,7 @@ class AchievementsController {
 
     emit(event, data) {
         if (this.eventListeners.has(event)) {
-            this.eventListeners.get(event).forEach(callback => callback(data));
+            this.eventListeners.get(event).forEach((callback) => callback(data));
         }
     }
 

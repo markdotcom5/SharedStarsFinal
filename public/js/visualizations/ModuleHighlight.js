@@ -20,14 +20,14 @@ class AIVisualizationSystem {
             absolute rounded-lg border-2 transition-all duration-300
             ${this.getStatusStyle(status)}
         `;
-        
+
         // Position highlight over module
         const bounds = module.getBoundingClientRect();
         Object.assign(highlight.style, {
             left: `${bounds.left}px`,
             top: `${bounds.top}px`,
             width: `${bounds.width}px`,
-            height: `${bounds.height}px`
+            height: `${bounds.height}px`,
         });
 
         this.canvas.appendChild(highlight);

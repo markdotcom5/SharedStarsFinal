@@ -24,5 +24,5 @@ export const signup = {
 
     init() {
         console.log('UI signup module initialized');
-    }
+    },
 };

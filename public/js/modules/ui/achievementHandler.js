@@ -11,10 +11,11 @@ export const achievementHandler = {
 
     showNotification(achievement) {
         const notification = document.createElement('div');
-        notification.className = 'fixed top-4 right-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 rounded-lg shadow-lg z-50 transform translate-y-0 transition-transform duration-300';
+        notification.className =
+            'fixed top-4 right-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 rounded-lg shadow-lg z-50 transform translate-y-0 transition-transform duration-300';
         notification.innerHTML = this.renderAchievement(achievement);
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
             notification.style.transform = 'translateY(-100%)';
             setTimeout(() => notification.remove(), 300);
@@ -23,5 +24,5 @@ export const achievementHandler = {
 
     init() {
         console.log('UI achievement handler initialized');
-    }
+    },
 };

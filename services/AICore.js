@@ -1,4 +1,4 @@
-const { OpenAI } = require("openai");
+const { OpenAI } = require('openai');
 const EventEmitter = require('events');
 const tf = require('@tensorflow/tfjs-node');
 
@@ -6,21 +6,21 @@ class AICore extends EventEmitter {
     constructor() {
         super();
         this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY
+            apiKey: process.env.OPENAI_API_KEY,
         });
-        
+
         // State space definition
         this.stateSpace = {
             knowledge: new Array(100).fill(0), // Knowledge state vector
-            skills: new Array(50).fill(0),     // Skills state vector
-            performance: new Array(30).fill(0)  // Performance state vector
+            skills: new Array(50).fill(0), // Skills state vector
+            performance: new Array(30).fill(0), // Performance state vector
         };
 
         // Action space definition
         this.actionSpace = {
             difficulty: ['easy', 'medium', 'hard'],
             taskTypes: ['theory', 'practical', 'assessment'],
-            adaptationTypes: ['increase', 'decrease', 'maintain']
+            adaptationTypes: ['increase', 'decrease', 'maintain'],
         };
 
         // Initialize TensorFlow model for RL
@@ -30,7 +30,7 @@ class AICore extends EventEmitter {
         this.bayesianModel = {
             priorKnowledge: new Map(),
             learningRates: new Map(),
-            confidenceScores: new Map()
+            confidenceScores: new Map(),
         };
     }
 
@@ -39,26 +39,26 @@ class AICore extends EventEmitter {
             this.rlModel = tf.sequential({
                 layers: [
                     tf.layers.dense({
-                        inputShape: [180],  // Combined state vector size
+                        inputShape: [180], // Combined state vector size
                         units: 128,
-                        activation: 'relu'
+                        activation: 'relu',
                     }),
                     tf.layers.dense({
                         units: 64,
-                        activation: 'relu'
+                        activation: 'relu',
                     }),
                     tf.layers.dense({
-                        units: this.actionSpace.difficulty.length * 
-                               this.actionSpace.taskTypes.length,
-                        activation: 'softmax'
-                    })
-                ]
+                        units:
+                            this.actionSpace.difficulty.length * this.actionSpace.taskTypes.length,
+                        activation: 'softmax',
+                    }),
+                ],
             });
 
             this.rlModel.compile({
                 optimizer: tf.train.adam(0.001),
                 loss: 'categoricalCrossentropy',
-                metrics: ['accuracy']
+                metrics: ['accuracy'],
             });
 
             console.log('✅ RL Model Initialized');
@@ -76,8 +76,8 @@ class AICore extends EventEmitter {
 
         // Bayesian update
         const likelihood = this.calculateLikelihood(performance);
-        const posterior = (prior * likelihood) / 
-            ((prior * likelihood) + ((1 - prior) * (1 - likelihood)));
+        const posterior =
+            (prior * likelihood) / (prior * likelihood + (1 - prior) * (1 - likelihood));
 
         this.bayesianModel.priorKnowledge.set(key, posterior);
         this.bayesianModel.confidenceScores.set(key, this.calculateConfidence(posterior));
@@ -90,10 +90,10 @@ class AICore extends EventEmitter {
         try {
             const stateTensor = tf.tensor2d([this.flattenState(newState)]);
             const actionProbabilities = this.rlModel.predict(stateTensor);
-            
+
             // Get action with highest probability
             const action = await this.selectAction(actionProbabilities);
-            
+
             // Update learning rates based on action success
             this.updateLearningRates(userId, action, newState.performance);
 
@@ -114,27 +114,23 @@ class AICore extends EventEmitter {
     }
 
     flattenState(state) {
-        return [
-            ...state.knowledge,
-            ...state.skills,
-            ...state.performance
-        ];
+        return [...state.knowledge, ...state.skills, ...state.performance];
     }
 
     async selectAction(actionProbabilities) {
         const probArray = await actionProbabilities.array();
         const maxIndex = probArray[0].indexOf(Math.max(...probArray[0]));
-        
+
         return {
             difficulty: this.actionSpace.difficulty[Math.floor(maxIndex / 3)],
-            taskType: this.actionSpace.taskTypes[maxIndex % 3]
+            taskType: this.actionSpace.taskTypes[maxIndex % 3],
         };
     }
 
     updateLearningRates(userId, action, performance) {
         const currentRate = this.bayesianModel.learningRates.get(userId) || 0.1;
         const performanceImpact = (performance - 0.5) * 0.1;
-        
+
         this.bayesianModel.learningRates.set(
             userId,
             Math.max(0.01, Math.min(0.5, currentRate + performanceImpact))

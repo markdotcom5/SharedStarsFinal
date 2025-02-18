@@ -6,8 +6,8 @@ class ProgressTracker extends EventEmitter {
         super();
         this.achievementService = achievementService;
         this.progressCache = new Map();
-        this.moduleProgress = new Map();  // For module-specific tracking
-        this.vrProgress = new Map();      // For VR session tracking
+        this.moduleProgress = new Map(); // For module-specific tracking
+        this.vrProgress = new Map(); // For VR session tracking
     }
 
     // Existing methods
@@ -17,7 +17,7 @@ class ProgressTracker extends EventEmitter {
                 this.progressCache.set(userId, {
                     currentProgress: 0,
                     lastUpdated: new Date(),
-                    achievements: []
+                    achievements: [],
                 });
             }
             return this.progressCache.get(userId);
@@ -34,23 +34,23 @@ class ProgressTracker extends EventEmitter {
             const updatedProgress = {
                 ...currentData,
                 currentProgress: progress,
-                lastUpdated: new Date()
+                lastUpdated: new Date(),
             };
 
             this.emit('progress-update', { userId, progress: updatedProgress });
 
-            const newAchievements = await this.achievementService.checkAchievements(userId, progress);
+            const newAchievements = await this.achievementService.checkAchievements(
+                userId,
+                progress
+            );
             if (newAchievements.length > 0) {
-                updatedProgress.achievements = [
-                    ...currentData.achievements,
-                    ...newAchievements
-                ];
+                updatedProgress.achievements = [...currentData.achievements, ...newAchievements];
             }
 
             this.progressCache.set(userId, updatedProgress);
             return {
                 progress: updatedProgress,
-                newAchievements
+                newAchievements,
             };
         } catch (error) {
             console.error('Error updating progress:', error);
@@ -65,19 +65,19 @@ class ProgressTracker extends EventEmitter {
             let sessionData = userVRProgress.get(sessionId) || {
                 startTime: new Date(),
                 metrics: {},
-                events: []
+                events: [],
             };
 
             // Update session data
             sessionData.events.push({
                 timestamp: new Date(),
-                ...data
+                ...data,
             });
 
             // Update metrics
             sessionData.metrics = {
                 ...sessionData.metrics,
-                ...this.calculateVRMetrics(sessionData.events)
+                ...this.calculateVRMetrics(sessionData.events),
             };
 
             userVRProgress.set(sessionId, sessionData);
@@ -86,7 +86,7 @@ class ProgressTracker extends EventEmitter {
             this.emit('vr-progress-update', {
                 userId,
                 sessionId,
-                data: sessionData
+                data: sessionData,
             });
 
             return sessionData;
@@ -103,19 +103,19 @@ class ProgressTracker extends EventEmitter {
             let moduleData = userModuleProgress.get(moduleId) || {
                 history: [],
                 metrics: {},
-                achievements: []
+                achievements: [],
             };
 
             // Update history
             moduleData.history.push({
                 timestamp: new Date(),
-                ...data
+                ...data,
             });
 
             // Update metrics
             moduleData.metrics = {
                 ...moduleData.metrics,
-                ...this.calculateModuleMetrics(moduleData.history)
+                ...this.calculateModuleMetrics(moduleData.history),
             };
 
             userModuleProgress.set(moduleId, moduleData);
@@ -125,7 +125,7 @@ class ProgressTracker extends EventEmitter {
             this.emit('module-progress-update', {
                 userId,
                 moduleId,
-                data: moduleData
+                data: moduleData,
             });
 
             return moduleData;
@@ -154,7 +154,7 @@ class ProgressTracker extends EventEmitter {
             const initialProgress = {
                 currentProgress: 0,
                 lastUpdated: new Date(),
-                achievements: []
+                achievements: [],
             };
             this.progressCache.set(userId, initialProgress);
             return initialProgress;
@@ -179,7 +179,7 @@ class ProgressTracker extends EventEmitter {
         return {
             performance: this.calculateVRPerformance(events),
             engagement: this.calculateEngagement(events),
-            technicalMetrics: this.calculateTechnicalMetrics(events)
+            technicalMetrics: this.calculateTechnicalMetrics(events),
         };
     }
 
@@ -187,23 +187,23 @@ class ProgressTracker extends EventEmitter {
         return {
             completionRate: this.calculateCompletionRate(history),
             accuracy: this.calculateAccuracy(history),
-            timeSpent: this.calculateTimeSpent(history)
+            timeSpent: this.calculateTimeSpent(history),
         };
     }
 
     // Helper methods
     calculateVRPerformance(events) {
-        const performanceEvents = events.filter(e => e.type === 'performance');
+        const performanceEvents = events.filter((e) => e.type === 'performance');
         return performanceEvents.length > 0
             ? performanceEvents.reduce((sum, e) => sum + e.score, 0) / performanceEvents.length
             : 0;
     }
 
     calculateEngagement(events) {
-        const interactionEvents = events.filter(e => e.type === 'interaction');
+        const interactionEvents = events.filter((e) => e.type === 'interaction');
         return {
             frequency: interactionEvents.length,
-            intensity: this.calculateInteractionIntensity(interactionEvents)
+            intensity: this.calculateInteractionIntensity(interactionEvents),
         };
     }
 

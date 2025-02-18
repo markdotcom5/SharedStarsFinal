@@ -70,7 +70,7 @@ router.post('/process-payment', [authenticate, paymentLimiter], async (req, res)
     try {
         // Simulate payment processing (replace with actual payment logic, e.g., Stripe or PayPal)
         console.log(`Processing payment: ${amount} ${currency} for user ${req.user._id}`);
-        
+
         // Placeholder for payment result
         const paymentResult = {
             status: 'success',
@@ -94,4 +94,3 @@ router.post('/process-payment', [authenticate, paymentLimiter], async (req, res)
 });
 
 module.exports = router;
-

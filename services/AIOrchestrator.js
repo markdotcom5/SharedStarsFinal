@@ -19,18 +19,25 @@ class AIOrchestrator extends EventEmitter {
                 this.leaderboard.handleScoreUpdate(userId, data),
                 this.aiGuidance.processRealTimeAction(userId, action),
                 this.aiCoach.generateCoachingSuggestions({ userId, actionData: data }),
-                this.aiAssistant.analyzeAchievementProgress(data.achievements)
+                this.aiAssistant.analyzeAchievementProgress(data.achievements),
             ]);
 
             console.log(`✅ User ${userId} action processed successfully:`, {
                 leaderboard: leaderboardUpdate,
                 guidance,
                 coaching,
-                achievements
+                achievements,
             });
 
             // ✅ Emit event to notify listeners (e.g., AIServiceIntegrator)
-            this.emit('user-action-processed', { userId, action, leaderboardUpdate, guidance, coaching, achievements });
+            this.emit('user-action-processed', {
+                userId,
+                action,
+                leaderboardUpdate,
+                guidance,
+                coaching,
+                achievements,
+            });
 
             return { leaderboard: leaderboardUpdate, guidance, coaching, achievements };
         } catch (error) {

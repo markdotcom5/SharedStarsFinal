@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.lang = savedLang;
     applyTranslations(savedLang);
 
-    document.querySelectorAll('.language-flag').forEach(flag => {
+    document.querySelectorAll('.language-flag').forEach((flag) => {
         flag.addEventListener('click', () => {
             const selectedLang = flag.dataset.lang || 'en';
             if (savedLang !== selectedLang) {
@@ -18,16 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function applyTranslations(lang) {
-    document.querySelectorAll('[data-i18n]').forEach(element => {
+    document.querySelectorAll('[data-i18n]').forEach((element) => {
         const key = element.dataset.i18n;
         const keys = key.split('.');
         let translation = translations[lang];
 
-        keys.forEach(k => {
+        keys.forEach((k) => {
             translation = translation ? translation[k] : null;
         });
 
         if (translation) element.textContent = translation;
     });
 }
-

@@ -23,7 +23,7 @@ class SpaceTimelineManager {
             const [user, progress, subscription] = await Promise.all([
                 User.findById(this.userId),
                 UserProgress.findOne({ userId: this.userId }),
-                Subscription.findOne({ userId: this.userId, status: 'active' })
+                Subscription.findOne({ userId: this.userId, status: 'active' }),
             ]);
 
             if (!user) throw new Error('User not found');
@@ -31,17 +31,17 @@ class SpaceTimelineManager {
             this.userCredits = progress?.credits || 0;
             this.subscriptionType = subscription?.type || 'free';
             this.achievements = progress?.achievements || [];
-            
+
             // Calculate total credits from all sources
             await this.recalculateCredits();
-            
+
             this.initialized = true;
 
             // Notify client of initialization
             this.webSocketService.sendToUser(this.userId, 'timeline_initialized', {
                 credits: this.userCredits,
                 subscriptionType: this.subscriptionType,
-                achievements: this.achievements
+                achievements: this.achievements,
             });
 
             return true;
@@ -55,24 +55,24 @@ class SpaceTimelineManager {
         try {
             // Get base subscription credits
             const subscriptionCredits = await this.getSubscriptionCredits();
-            
+
             // Get achievement credits
             const achievementCredits = await this.getAchievementCredits();
-            
+
             // Get training session credits
             const trainingCredits = await this.getTrainingCredits();
-            
+
             // Calculate total
             this.userCredits = subscriptionCredits + achievementCredits + trainingCredits;
-            
+
             // Update UserProgress in DB
             await UserProgress.findOneAndUpdate(
                 { userId: this.userId },
-                { 
-                    $set: { 
+                {
+                    $set: {
                         credits: this.userCredits,
-                        lastUpdated: new Date()
-                    }
+                        lastUpdated: new Date(),
+                    },
                 },
                 { upsert: true }
             );
@@ -83,8 +83,8 @@ class SpaceTimelineManager {
                 breakdown: {
                     subscription: subscriptionCredits,
                     achievements: achievementCredits,
-                    training: trainingCredits
-                }
+                    training: trainingCredits,
+                },
             });
 
             return this.userCredits;
@@ -95,37 +95,41 @@ class SpaceTimelineManager {
     }
 
     async getSubscriptionCredits() {
-        const subscription = await Subscription.findOne({ 
+        const subscription = await Subscription.findOne({
             userId: this.userId,
-            status: 'active'
+            status: 'active',
         });
 
         const creditMap = {
-            'individual': 100,
-            'family': 250,
-            'elite': 1000,
-            'custom': (amount) => Math.floor(amount * 2)
+            individual: 100,
+            family: 250,
+            elite: 1000,
+            custom: (amount) => Math.floor(amount * 2),
         };
 
-        return subscription ? 
-            (typeof creditMap[subscription.type] === 'function' ? 
-                creditMap[subscription.type](subscription.amount) : 
-                creditMap[subscription.type] || 0) : 0;
+        return subscription
+            ? typeof creditMap[subscription.type] === 'function'
+                ? creditMap[subscription.type](subscription.amount)
+                : creditMap[subscription.type] || 0
+            : 0;
     }
 
     async getAchievementCredits() {
-        const progress = await UserProgress.findOne({ userId: this.userId })
-            .populate('achievements.achievementId');
-        
-        return progress?.achievements.reduce((total, achievement) => {
-            return total + (achievement.achievementId?.creditValue || 0);
-        }, 0) || 0;
+        const progress = await UserProgress.findOne({ userId: this.userId }).populate(
+            'achievements.achievementId'
+        );
+
+        return (
+            progress?.achievements.reduce((total, achievement) => {
+                return total + (achievement.achievementId?.creditValue || 0);
+            }, 0) || 0
+        );
     }
 
     async getTrainingCredits() {
         const sessions = await TrainingSession.find({
             userId: this.userId,
-            status: 'completed'
+            status: 'completed',
         });
 
         return sessions.reduce((total, session) => {
@@ -138,7 +142,7 @@ class SpaceTimelineManager {
         const baselineYears = 15;
         const maxReduction = 14; // Minimum 1 year
         const creditsPerYear = 1000;
-        
+
         const reduction = Math.min(maxReduction, credits / creditsPerYear);
         return baselineYears - reduction;
     }
@@ -151,7 +155,7 @@ class SpaceTimelineManager {
             credits: this.userCredits,
             yearsToLaunch,
             priceCurve: this.calculatePriceCurve(yearsToLaunch),
-            timelineDetails: await this.generateTimelineDetails(yearsToLaunch)
+            timelineDetails: await this.generateTimelineDetails(yearsToLaunch),
         };
 
         // Notify client of timeline update
@@ -165,10 +169,10 @@ class SpaceTimelineManager {
         const targetPrice = 5000;
         const steps = Math.floor(years * 12); // Monthly data points
         const priceReduction = (basePrice - targetPrice) / steps;
-        
+
         return Array.from({ length: steps }, (_, i) => ({
             month: i,
-            price: Math.max(targetPrice, basePrice - (priceReduction * i))
+            price: Math.max(targetPrice, basePrice - priceReduction * i),
         }));
     }
 
@@ -180,21 +184,21 @@ class SpaceTimelineManager {
         return {
             startDate: now,
             targetDate: target,
-            milestones: await this.generateMilestones(years)
+            milestones: await this.generateMilestones(years),
         };
     }
 
     async generateMilestones(years) {
         // Get uncompleted achievements that could affect timeline
         const potentialAchievements = await Achievement.find({
-            _id: { $nin: this.achievements.map(a => a.achievementId) }
+            _id: { $nin: this.achievements.map((a) => a.achievementId) },
         });
 
-        return potentialAchievements.map(achievement => ({
+        return potentialAchievements.map((achievement) => ({
             type: 'achievement',
             name: achievement.name,
             credits: achievement.creditValue,
-            potentialTimeReduction: achievement.creditValue / 1000 // years
+            potentialTimeReduction: achievement.creditValue / 1000, // years
         }));
     }
 
@@ -207,13 +211,13 @@ class SpaceTimelineManager {
             // Add achievement to user's progress
             await UserProgress.findOneAndUpdate(
                 { userId: this.userId },
-                { 
-                    $push: { 
+                {
+                    $push: {
                         achievements: {
                             achievementId,
-                            earnedDate: new Date()
-                        }
-                    }
+                            earnedDate: new Date(),
+                        },
+                    },
                 },
                 { upsert: true }
             );
@@ -222,7 +226,7 @@ class SpaceTimelineManager {
             await this.recalculateCredits();
             this.webSocketService.sendToUser(this.userId, 'achievement_unlocked', {
                 achievement: achievement.name,
-                credits: achievement.creditValue
+                credits: achievement.creditValue,
             });
 
             return true;
@@ -237,11 +241,11 @@ class SpaceTimelineManager {
         try {
             const session = await TrainingSession.findByIdAndUpdate(
                 sessionId,
-                { 
-                    $set: { 
+                {
+                    $set: {
                         progress,
-                        lastUpdated: new Date()
-                    }
+                        lastUpdated: new Date(),
+                    },
                 },
                 { new: true }
             );
@@ -249,7 +253,7 @@ class SpaceTimelineManager {
             if (session.progress >= 100) {
                 session.status = 'completed';
                 await session.save();
-                
+
                 // Recalculate credits and update timeline
                 await this.recalculateCredits();
                 await this.updatePersonalTimeline();
@@ -258,7 +262,7 @@ class SpaceTimelineManager {
             this.webSocketService.sendToUser(this.userId, 'training_progress_updated', {
                 sessionId,
                 progress,
-                status: session.status
+                status: session.status,
             });
 
             return true;

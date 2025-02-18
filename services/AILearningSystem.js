@@ -10,7 +10,7 @@ class ReinforcementLearning {
         return {
             content: 'recommended_content',
             difficulty: 0.7,
-            feedback: 'personalized feedback'
+            feedback: 'personalized feedback',
         };
     }
 }
@@ -19,7 +19,7 @@ class BayesianKnowledgeTracker {
     async estimateKnowledge(history) {
         return {
             knowledgeLevel: 0.8,
-            confidence: 0.9
+            confidence: 0.9,
         };
     }
 }
@@ -29,7 +29,7 @@ class MissionSimulationAI {
         return {
             type: 'space_walk',
             objectives: [],
-            challenges: []
+            challenges: [],
         };
     }
 }
@@ -39,7 +39,7 @@ class SquadTrainingAI {
         return {
             exercise: 'team_mission',
             roles: [],
-            objectives: []
+            objectives: [],
         };
     }
 }
@@ -48,7 +48,7 @@ class EngagementAI {
     async predictEngagement(activity) {
         return {
             risk: 'low',
-            recommendations: []
+            recommendations: [],
         };
     }
 }
@@ -56,15 +56,17 @@ class EngagementAI {
 class OpenAIAssistant {
     async getCoachingAdvice(context) {
         const response = await openai.chat.completions.create({
-            model: "gpt-4",
-            messages: [{ role: "system", content: `Provide coaching for a space training participant.` },
-            { role: "user", content: context }]
+            model: 'gpt-4',
+            messages: [
+                { role: 'system', content: `Provide coaching for a space training participant.` },
+                { role: 'user', content: context },
+            ],
         });
 
         return {
             feedback: response.choices[0].message.content,
-            suggestions: ["Try to focus on X skill", "Practice daily repetitions"],
-            nextSteps: ["Complete Module 3", "Attempt a mission simulation"]
+            suggestions: ['Try to focus on X skill', 'Practice daily repetitions'],
+            nextSteps: ['Complete Module 3', 'Attempt a mission simulation'],
         };
     }
 }
@@ -89,13 +91,13 @@ class AILearningSystem extends EventEmitter {
             const nextAction = await this.reinforcementModel.getOptimalAction({
                 userId,
                 knowledgeState,
-                currentPerformance
+                currentPerformance,
             });
 
             return {
                 recommendedContent: nextAction.content,
                 difficulty: nextAction.difficulty,
-                adaptiveFeedback: nextAction.feedback
+                adaptiveFeedback: nextAction.feedback,
             };
         } catch (error) {
             console.error('❌ Error in adaptive learning:', error);
@@ -108,13 +110,13 @@ class AILearningSystem extends EventEmitter {
             const coachingResponse = await this.openAIIntegration.getCoachingAdvice({
                 userId,
                 context,
-                previousInteractions: await this.getPreviousCoachingInteractions(userId)
+                previousInteractions: await this.getPreviousCoachingInteractions(userId),
             });
 
             return {
                 feedback: coachingResponse.feedback,
                 suggestions: coachingResponse.suggestions,
-                nextSteps: coachingResponse.nextSteps
+                nextSteps: coachingResponse.nextSteps,
             };
         } catch (error) {
             console.error('❌ Error in virtual coaching:', error);
@@ -129,7 +131,7 @@ class AILearningSystem extends EventEmitter {
                 userSkillLevel: userProfile.skillLevel,
                 previousMissions: userProfile.completedMissions,
                 difficulty,
-                learningObjectives: userProfile.currentObjectives
+                learningObjectives: userProfile.currentObjectives,
             });
         } catch (error) {
             console.error('❌ Error generating mission:', error);
@@ -142,7 +144,7 @@ class AILearningSystem extends EventEmitter {
             const analysis = {
                 stressLevel: this.calculateStressLevel(biometricData),
                 cognitiveLoad: this.assessCognitiveLoad(biometricData),
-                fatigueIndicators: this.detectFatigue(biometricData)
+                fatigueIndicators: this.detectFatigue(biometricData),
             };
 
             await this.storePerformanceMetrics(userId, analysis);
@@ -159,7 +161,7 @@ class AILearningSystem extends EventEmitter {
             return await this.squadTraining.generateTeamExercise({
                 members: squadMembers,
                 missionType,
-                previousPerformance: await this.getSquadHistory(squadId)
+                previousPerformance: await this.getSquadHistory(squadId),
             });
         } catch (error) {
             console.error('❌ Error coordinating squad training:', error);
@@ -167,14 +169,15 @@ class AILearningSystem extends EventEmitter {
         }
     }
     async initialize() {
-        console.log("✅ AI Learning System Initialized");
-        return { status: "success" };
+        console.log('✅ AI Learning System Initialized');
+        return { status: 'success' };
     }
-    
+
     async optimizeEngagement(userId) {
         try {
             const userActivity = await this.getUserActivityPattern(userId);
-            const engagementPrediction = await this.engagementOptimizer.predictEngagement(userActivity);
+            const engagementPrediction =
+                await this.engagementOptimizer.predictEngagement(userActivity);
 
             if (engagementPrediction.risk === 'high') {
                 return await this.generateEngagementIntervention(userId);
@@ -198,4 +201,4 @@ class AILearningSystem extends EventEmitter {
     detectFatigue(biometricData) {}
 }
 
-module.exports = new AILearningSystem();  // ✅ Ensure correct export
+module.exports = new AILearningSystem(); // ✅ Ensure correct export

@@ -15,19 +15,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/api/auth/reset-request', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ email }),
             });
 
             if (response.ok) {
                 emailStep.classList.remove('active');
                 codeStep.classList.add('active');
-                message.textContent = "A verification code has been sent to your email.";
+                message.textContent = 'A verification code has been sent to your email.';
                 message.className = 'message success';
             } else {
                 throw new Error('Failed to send reset code');
             }
         } catch (error) {
-            message.textContent = "Error: Could not send reset link.";
+            message.textContent = 'Error: Could not send reset link.';
             message.className = 'message error';
         }
     });
@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email: document.getElementById('reset-email').value,
-                    code
-                })
+                    code,
+                }),
             });
 
             if (response.ok) {
@@ -51,13 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetToken = data.token;
                 codeStep.classList.remove('active');
                 passwordStep.classList.add('active');
-                message.textContent = "Code verified successfully. Please reset your password.";
+                message.textContent = 'Code verified successfully. Please reset your password.';
                 message.className = 'message success';
             } else {
                 throw new Error('Invalid code');
             }
         } catch (error) {
-            message.textContent = "Error: Invalid verification code.";
+            message.textContent = 'Error: Invalid verification code.';
             message.className = 'message error';
         }
     });
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const confirmPassword = document.getElementById('confirm-password').value;
 
         if (newPassword !== confirmPassword) {
-            message.textContent = "Passwords do not match.";
+            message.textContent = 'Passwords do not match.';
             message.className = 'message error';
             return;
         }
@@ -78,13 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${resetToken}`
+                    Authorization: `Bearer ${resetToken}`,
                 },
-                body: JSON.stringify({ newPassword })
+                body: JSON.stringify({ newPassword }),
             });
 
             if (response.ok) {
-                message.textContent = "Password reset successful. Redirecting to login...";
+                message.textContent = 'Password reset successful. Redirecting to login...';
                 message.className = 'message success';
                 setTimeout(() => {
                     window.location.href = '/login.html';
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Failed to reset password');
             }
         } catch (error) {
-            message.textContent = "Error: Could not reset password.";
+            message.textContent = 'Error: Could not reset password.';
             message.className = 'message error';
         }
     });

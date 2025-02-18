@@ -1,243 +1,377 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Log in to StelTrek Academy" />
-  <title>Login - StelTrek Academy</title>
-  <!-- Tailwind CSS & DaisyUI -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.0/dist/full.css" rel="stylesheet" />
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="/css/main.css" />
-  <link rel="stylesheet" href="/css/ai-assistant.css" />
-</head>
-<body class="bg-gray-900 text-white">
-  <!-- Fixed Header -->
-  <header class="site-header bg-gray-800 shadow-lg fixed w-full z-50">
-    <nav class="container mx-auto flex items-center justify-between py-4" aria-label="Main Navigation">
-      <!-- Language Selector -->
-      <div class="flex space-x-2">
-        <button class="language-flag" data-lang="en" aria-label="English">🇺🇸</button>
-        <button class="language-flag" data-lang="zh" aria-label="中文">🇨🇳</button>
-        <button class="language-flag" data-lang="ko" aria-label="한국어">🇰🇷</button>
-        <button class="language-flag" data-lang="es" aria-label="Español">🇪🇸</button>
-      </div>
-      <!-- Logo -->
-      <div class="logo">
-        <a href="/index.html" aria-label="StelTrek Academy Home">
-          <img src="/css/images/SharedStars.svg" alt="StelTrek Academy Logo" class="h-10" />
-        </a>
-      </div>
-      <!-- Navigation Menu (Desktop) -->
-      <ul class="hidden md:flex space-x-6">
-        <li><a href="/index.html" data-i18n="nav.home" class="hover:text-blue-400 transition-colors">Home</a></li>
-        <li><a href="/Why-StelTrek.html" data-i18n="nav.why" class="hover:text-blue-400 transition-colors">Why StelTrek</a></li>
-        <li><a href="/about.html" data-i18n="nav.about" class="hover:text-blue-400 transition-colors">About</a></li>
-        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard" class="hover:text-blue-400 transition-colors">Leaderboard</a></li>
-        <li><a href="/mission-control.html" data-i18n="nav.merchandise" class="hover:text-blue-400 transition-colors">Mission-Control</a></li>
-        <li><a href="/profile.html" data-i18n="nav.profile" class="hover:text-blue-400 transition-colors">Profile</a></li>
-        <li><a href="/signup.html" data-i18n="nav.signup" class="hover:text-blue-400 transition-colors">Sign Up</a></li>
-        <li><a href="/academy.html" data-i18n="nav.academy" class="hover:text-blue-400 transition-colors">StelTrek Academy</a></li>
-        <li><a href="/welcome.html" data-i18n="nav.welcome" class="hover:text-blue-400 transition-colors">Welcome</a></li>
-        <li><a href="/subscribe.html" data-i18n="nav.subscribe" class="hover:text-blue-400 transition-colors">Subscribe</a></li>
-      </ul>
-      <!-- Mobile Menu Toggle (if needed) -->
-      <button class="md:hidden menu-toggle" aria-label="Toggle Menu">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    </nav>
-  </header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Log in to StelTrek Academy" />
+        <title>Login - StelTrek Academy</title>
+        <!-- Tailwind CSS & DaisyUI -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+            rel="stylesheet"
+        />
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.0/dist/full.css" rel="stylesheet" />
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/ai-assistant.css" />
+    </head>
+    <body class="bg-gray-900 text-white">
+        <!-- Fixed Header -->
+        <header class="site-header bg-gray-800 shadow-lg fixed w-full z-50">
+            <nav
+                class="container mx-auto flex items-center justify-between py-4"
+                aria-label="Main Navigation"
+            >
+                <!-- Language Selector -->
+                <div class="flex space-x-2">
+                    <button class="language-flag" data-lang="en" aria-label="English">🇺🇸</button>
+                    <button class="language-flag" data-lang="zh" aria-label="中文">🇨🇳</button>
+                    <button class="language-flag" data-lang="ko" aria-label="한국어">🇰🇷</button>
+                    <button class="language-flag" data-lang="es" aria-label="Español">🇪🇸</button>
+                </div>
+                <!-- Logo -->
+                <div class="logo">
+                    <a href="/index.html" aria-label="StelTrek Academy Home">
+                        <img
+                            src="/css/images/SharedStars.svg"
+                            alt="StelTrek Academy Logo"
+                            class="h-10"
+                        />
+                    </a>
+                </div>
+                <!-- Navigation Menu (Desktop) -->
+                <ul class="hidden md:flex space-x-6">
+                    <li>
+                        <a
+                            href="/index.html"
+                            data-i18n="nav.home"
+                            class="hover:text-blue-400 transition-colors"
+                            >Home</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/Why-StelTrek.html"
+                            data-i18n="nav.why"
+                            class="hover:text-blue-400 transition-colors"
+                            >Why StelTrek</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/about.html"
+                            data-i18n="nav.about"
+                            class="hover:text-blue-400 transition-colors"
+                            >About</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/leaderboard.html"
+                            data-i18n="nav.leaderboard"
+                            class="hover:text-blue-400 transition-colors"
+                            >Leaderboard</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/mission-control.html"
+                            data-i18n="nav.merchandise"
+                            class="hover:text-blue-400 transition-colors"
+                            >Mission-Control</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/profile.html"
+                            data-i18n="nav.profile"
+                            class="hover:text-blue-400 transition-colors"
+                            >Profile</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/signup.html"
+                            data-i18n="nav.signup"
+                            class="hover:text-blue-400 transition-colors"
+                            >Sign Up</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/academy.html"
+                            data-i18n="nav.academy"
+                            class="hover:text-blue-400 transition-colors"
+                            >StelTrek Academy</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/welcome.html"
+                            data-i18n="nav.welcome"
+                            class="hover:text-blue-400 transition-colors"
+                            >Welcome</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/subscribe.html"
+                            data-i18n="nav.subscribe"
+                            class="hover:text-blue-400 transition-colors"
+                            >Subscribe</a
+                        >
+                    </li>
+                </ul>
+                <!-- Mobile Menu Toggle (if needed) -->
+                <button class="md:hidden menu-toggle" aria-label="Toggle Menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                    </svg>
+                </button>
+            </nav>
+        </header>
 
-  <!-- Main Content -->
-  <main class="container mx-auto pt-24 px-4">
-    <section class="login-section max-w-md mx-auto bg-gray-800 p-8 rounded-lg shadow-xl">
-      <h1 class="text-3xl font-bold mb-4" data-i18n="login.title">Log In</h1>
-      <p class="mb-6" data-i18n="login.instructions">Please enter your email and password to access your account.</p>
-      <form id="login-form" class="space-y-4">
-        <div class="form-group">
-          <label for="email" data-i18n="login.emailLabel">Email:</label>
-          <input type="email" id="email" name="email" class="w-full p-3 rounded bg-gray-700 border border-gray-600" required>
-        </div>
-        <div class="form-group">
-          <label for="password" data-i18n="login.passwordLabel">Password:</label>
-          <input type="password" id="password" name="password" class="w-full p-3 rounded bg-gray-700 border border-gray-600" required>
-        </div>
-        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded font-bold" data-i18n="login.loginButton">Log In</button>
-        <p id="login-error" class="mt-2 text-red-400" role="alert"></p>
-      </form>
-      <div class="mt-4 flex justify-between">
-        <a href="/reset-password.html" class="text-sm hover:text-blue-400" data-i18n="login.forgotPassword">Forgot your password?</a>
-        <a href="/signup.html" class="text-sm hover:text-blue-400" data-i18n="login.noAccount">Don’t have an account? Sign Up</a>
-      </div>
-    </section>
-  </main>
-<!-- COUNTDOWN & PRICE EVOLUTION SECTION -->
-<section id="countdown-price" class="relative min-h-screen py-16 text-white text-center">
-  <!-- Video Background -->
-  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-      <source src="/videos/space-future.mp4" type="video/mp4">
-  </video>
-  <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/90"></div>
+        <!-- Main Content -->
+        <main class="container mx-auto pt-24 px-4">
+            <section class="login-section max-w-md mx-auto bg-gray-800 p-8 rounded-lg shadow-xl">
+                <h1 class="text-3xl font-bold mb-4" data-i18n="login.title">Log In</h1>
+                <p class="mb-6" data-i18n="login.instructions">
+                    Please enter your email and password to access your account.
+                </p>
+                <form id="login-form" class="space-y-4">
+                    <div class="form-group">
+                        <label for="email" data-i18n="login.emailLabel">Email:</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="w-full p-3 rounded bg-gray-700 border border-gray-600"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="password" data-i18n="login.passwordLabel">Password:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="w-full p-3 rounded bg-gray-700 border border-gray-600"
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded font-bold"
+                        data-i18n="login.loginButton"
+                    >
+                        Log In
+                    </button>
+                    <p id="login-error" class="mt-2 text-red-400" role="alert"></p>
+                </form>
+                <div class="mt-4 flex justify-between">
+                    <a
+                        href="/reset-password.html"
+                        class="text-sm hover:text-blue-400"
+                        data-i18n="login.forgotPassword"
+                        >Forgot your password?</a
+                    >
+                    <a
+                        href="/signup.html"
+                        class="text-sm hover:text-blue-400"
+                        data-i18n="login.noAccount"
+                        >Don’t have an account? Sign Up</a
+                    >
+                </div>
+            </section>
+        </main>
+        <!-- COUNTDOWN & PRICE EVOLUTION SECTION -->
+        <section id="countdown-price" class="relative min-h-screen py-16 text-white text-center">
+            <!-- Video Background -->
+            <video
+                autoplay
+                muted
+                loop
+                playsinline
+                class="absolute inset-0 w-full h-full object-cover"
+            >
+                <source src="/videos/space-future.mp4" type="video/mp4" />
+            </video>
+            <div
+                class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/90"
+            ></div>
 
-  <!-- Content Container -->
-  <div class="relative z-10 container mx-auto px-4">
-      <!-- Problem Statement -->
-      <div class="mb-12">
-          <h2 class="text-4xl font-bold mb-6">Current Space Travel Reality</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-                  <h3 class="text-xl font-bold mb-3">Limited Access</h3>
-                  <p>Currently restricted to ultra-wealthy individuals and elite astronauts</p>
-              </div>
-              <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-                  <h3 class="text-xl font-bold mb-3">High Barriers</h3>
-                  <p>Prohibitively expensive with limited pathways for public participation</p>
-              </div>
-              <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-                  <h3 class="text-xl font-bold mb-3">Growing Demand</h3>
-                  <p>Increasing interest but insufficient options for space enthusiasts</p>
-              </div>
-          </div>
-      </div>
+            <!-- Content Container -->
+            <div class="relative z-10 container mx-auto px-4">
+                <!-- Problem Statement -->
+                <div class="mb-12">
+                    <h2 class="text-4xl font-bold mb-6">Current Space Travel Reality</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+                            <h3 class="text-xl font-bold mb-3">Limited Access</h3>
+                            <p>
+                                Currently restricted to ultra-wealthy individuals and elite
+                                astronauts
+                            </p>
+                        </div>
+                        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+                            <h3 class="text-xl font-bold mb-3">High Barriers</h3>
+                            <p>
+                                Prohibitively expensive with limited pathways for public
+                                participation
+                            </p>
+                        </div>
+                        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+                            <h3 class="text-xl font-bold mb-3">Growing Demand</h3>
+                            <p>
+                                Increasing interest but insufficient options for space enthusiasts
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-      <!-- Stakes Section -->
-      <div class="mb-16">
-          <h2 class="text-5xl font-bold mb-6">What's at Stake?</h2>
-          <p class="text-2xl mb-8">Your Future. Your Family's Future. Humanity's Future.</p>
-      </div>
+                <!-- Stakes Section -->
+                <div class="mb-16">
+                    <h2 class="text-5xl font-bold mb-6">What's at Stake?</h2>
+                    <p class="text-2xl mb-8">
+                        Your Future. Your Family's Future. Humanity's Future.
+                    </p>
+                </div>
 
-      <!-- Countdowns Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-          <!-- Global Timeline -->
-          <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-              <h3 class="text-2xl font-bold mb-4">Global Space Travel Timeline</h3>
-              <div id="globalCountdown" class="flex flex-wrap justify-center gap-4">
-                  <!-- Countdown boxes here -->
-              </div>
-          </div>
-          
-          <!-- Personal Timeline -->
-          <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-              <h3 class="text-2xl font-bold mb-4">Your Accelerated Timeline</h3>
-              <div id="personalCountdown" class="flex flex-wrap justify-center gap-4">
-                  <!-- Countdown boxes here -->
-              </div>
-              <p class="mt-4 text-green-400">Your SharedStars Credits: 500</p>
-          </div>
-      </div>
+                <!-- Countdowns Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                    <!-- Global Timeline -->
+                    <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4">Global Space Travel Timeline</h3>
+                        <div id="globalCountdown" class="flex flex-wrap justify-center gap-4">
+                            <!-- Countdown boxes here -->
+                        </div>
+                    </div>
 
-      <!-- Price Evolution Chart -->
-      <div class="bg-black/50 backdrop-blur-md p-8 rounded-lg">
-          <h3 class="text-3xl font-bold mb-6">Price Evolution Timeline</h3>
-          <div class="w-full max-w-4xl mx-auto">
-              <canvas id="priceChart"></canvas>
-          </div>
-      </div>
-  </div>
-</section>
-  <!-- Footer -->
-  <footer class="bg-gray-900 py-6 mt-12">
-    <div class="container mx-auto text-center">
-      <p data-i18n="common.footer">© 2024 StelTrek Academy. All rights reserved.</p>
-    </div>
-  </footer>
+                    <!-- Personal Timeline -->
+                    <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4">Your Accelerated Timeline</h3>
+                        <div id="personalCountdown" class="flex flex-wrap justify-center gap-4">
+                            <!-- Countdown boxes here -->
+                        </div>
+                        <p class="mt-4 text-green-400">Your SharedStars Credits: 500</p>
+                    </div>
+                </div>
 
-  <!-- JavaScript -->
-  <!-- Multi-language support scripts -->
-  <script src="/js/language-switcher.js"></script>
-  <script type="module" src="/js/languages.js"></script>
-  <!-- Menu functionality -->
-  <script src="/js/menu.js"></script>
-  <!-- Language Selection (if separate) -->
-  <script src="/js/languageSelection.js"></script>
-  <!-- Custom login functionality -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const loginForm = document.getElementById('login-form');
-      const loginError = document.getElementById('login-error');
+                <!-- Price Evolution Chart -->
+                <div class="bg-black/50 backdrop-blur-md p-8 rounded-lg">
+                    <h3 class="text-3xl font-bold mb-6">Price Evolution Timeline</h3>
+                    <div class="w-full max-w-4xl mx-auto">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer -->
+        <footer class="bg-gray-900 py-6 mt-12">
+            <div class="container mx-auto text-center">
+                <p data-i18n="common.footer">© 2024 StelTrek Academy. All rights reserved.</p>
+            </div>
+        </footer>
 
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        try {
-          const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-          });
-          if (response.ok) {
-            window.location.href = '/mission-control.html';
-          } else {
-            const errorData = await response.json();
-            loginError.textContent = errorData.error || "Failed to log in. Please try again.";
-          }
-        } catch (error) {
-          loginError.textContent = "An unexpected error occurred. Please try again.";
-          console.error('Login Error:', error);
-        }
-      });
-    });
-  </script>
-   <!-- Countdown Timer Script -->
-  <script>
-    // Price Evolution Chart
-const ctx = document.getElementById('priceChart').getContext('2d');
-const baselineData = [
-    { year: 2022, price: 875000 }, // Average of 750k-1M
-    { year: 2024, price: 250000 },
-    { year: 2029, price: 75000 },  // Average of 50k-100k
-    { year: 2034, price: 17500 },  // Average of 10k-25k
-    { year: 2049, price: 5000 }
-];
+        <!-- JavaScript -->
+        <!-- Multi-language support scripts -->
+        <script src="/js/language-switcher.js"></script>
+        <script type="module" src="/js/languages.js"></script>
+        <!-- Menu functionality -->
+        <script src="/js/menu.js"></script>
+        <!-- Language Selection (if separate) -->
+        <script src="/js/languageSelection.js"></script>
+        <!-- Custom login functionality -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const loginForm = document.getElementById('login-form');
+                const loginError = document.getElementById('login-error');
 
-// Calculate personal timeline based on credits
-function calculatePersonalTimeline(credits) {
-    return baselineData.map(point => ({
-        year: point.year,
-        price: Math.max(point.price - (credits * 100), point.price * 0.2) // Minimum 20% of baseline
-    }));
-}
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    try {
+                        const response = await fetch('/api/auth/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email, password }),
+                        });
+                        if (response.ok) {
+                            window.location.href = '/mission-control.html';
+                        } else {
+                            const errorData = await response.json();
+                            loginError.textContent =
+                                errorData.error || 'Failed to log in. Please try again.';
+                        }
+                    } catch (error) {
+                        loginError.textContent = 'An unexpected error occurred. Please try again.';
+                        console.error('Login Error:', error);
+                    }
+                });
+            });
+        </script>
+        <!-- Countdown Timer Script -->
+        <script>
+            // Price Evolution Chart
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            const baselineData = [
+                { year: 2022, price: 875000 }, // Average of 750k-1M
+                { year: 2024, price: 250000 },
+                { year: 2029, price: 75000 }, // Average of 50k-100k
+                { year: 2034, price: 17500 }, // Average of 10k-25k
+                { year: 2049, price: 5000 },
+            ];
 
-const personalData = calculatePersonalTimeline(500);
-
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: baselineData.map(d => d.year),
-        datasets: [
-            {
-                label: 'Baseline Timeline',
-                data: baselineData.map(d => d.price),
-                borderColor: 'rgba(59, 130, 246, 1)',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                fill: true
-            },
-            {
-                label: 'Your Personal Timeline',
-                data: personalData.map(d => d.price),
-                borderColor: 'rgba(16, 185, 129, 1)',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                fill: true
+            // Calculate personal timeline based on credits
+            function calculatePersonalTimeline(credits) {
+                return baselineData.map((point) => ({
+                    year: point.year,
+                    price: Math.max(point.price - credits * 100, point.price * 0.2), // Minimum 20% of baseline
+                }));
             }
-        ]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                type: 'logarithmic',
-                title: {
-                    display: true,
-                    text: 'Price (USD)'
-                }
-            }
-        }
-    }
-});
-  </script>
-</body>
+
+            const personalData = calculatePersonalTimeline(500);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: baselineData.map((d) => d.year),
+                    datasets: [
+                        {
+                            label: 'Baseline Timeline',
+                            data: baselineData.map((d) => d.price),
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                        },
+                        {
+                            label: 'Your Personal Timeline',
+                            data: personalData.map((d) => d.price),
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: 'Price (USD)',
+                            },
+                        },
+                    },
+                },
+            });
+        </script>
+    </body>
 </html>

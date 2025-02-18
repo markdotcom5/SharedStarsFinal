@@ -1,9 +1,9 @@
 // services/CoreTrainingSystem.js
 const EventEmitter = require('events');
 const BayesianTracker = require('./BayesianTracker');
-const aiLearningInstance = require('./AILearningSystem');  // ✅ Correct import
+const aiLearningInstance = require('./AILearningSystem'); // ✅ Correct import
 const UnifiedEVAAIService = require('./UnifiedEVAAIService');
-const ProgressTracking = require('../services/ProgressTracker');  // ✅ Correct path
+const ProgressTracking = require('../services/ProgressTracker'); // ✅ Correct path
 
 class CoreTrainingSystem extends EventEmitter {
     constructor() {
@@ -13,32 +13,32 @@ class CoreTrainingSystem extends EventEmitter {
                 id: 'physical',
                 aiEnabled: true,
                 components: ['assessments', 'tasks', 'requirements'],
-                prerequisites: []
+                prerequisites: [],
             },
             technical: {
                 id: 'technical',
                 aiEnabled: true,
                 components: ['tasks', 'systems', 'protocols'],
-                prerequisites: ['physical.basics']
+                prerequisites: ['physical.basics'],
             },
             simulation: {
                 id: 'simulation',
                 aiEnabled: true,
                 components: ['missions', 'scenarios', 'teamRoles'],
-                prerequisites: ['technical.basics', 'physical.advanced']
+                prerequisites: ['technical.basics', 'physical.advanced'],
             },
             eva: {
                 id: 'eva',
                 aiEnabled: true,
                 components: ['procedures', 'equipment', 'safety'],
-                prerequisites: ['simulation.basics', 'physical.zero_g']
-            }
+                prerequisites: ['simulation.basics', 'physical.zero_g'],
+            },
         };
 
         // Initialize core services
         this.bayesianTracker = new BayesianTracker();
         this.aiLearning = aiLearningInstance;
-        this.progressTracker = ProgressTracking;  // ✅ Correct reference
+        this.progressTracker = ProgressTracking; // ✅ Correct reference
 
         // Module-specific AI services
         this.moduleAIServices = {
@@ -50,9 +50,9 @@ class CoreTrainingSystem extends EventEmitter {
     }
 
     setupEventHandlers() {
-        Object.keys(this.modules).forEach(moduleId => {
+        Object.keys(this.modules).forEach((moduleId) => {
             const module = this.modules[moduleId];
-            
+
             // Module-specific events
             this.on(`${moduleId}:progress`, async (data) => {
                 await this.handleModuleProgress(moduleId, data);
@@ -104,10 +104,10 @@ class CoreTrainingSystem extends EventEmitter {
         try {
             // Load component configuration
             const config = require(`../modules/core/${moduleId}/${component}`);
-            
+
             // Initialize component
             await config.initialize();
-            
+
             console.log(`✅ Component ${component} initialized for ${moduleId}`);
         } catch (error) {
             console.error(`❌ Error initializing component ${component} for ${moduleId}:`, error);
@@ -128,11 +128,7 @@ class CoreTrainingSystem extends EventEmitter {
 
         try {
             // Update Bayesian knowledge state
-            await this.bayesianTracker.updateKnowledgeState(
-                userId,
-                moduleId,
-                progress.successRate
-            );
+            await this.bayesianTracker.updateKnowledgeState(userId, moduleId, progress.successRate);
 
             // Update module-specific AI if available
             if (this.moduleAIServices[moduleId]) {
@@ -153,9 +149,8 @@ class CoreTrainingSystem extends EventEmitter {
                 userId,
                 moduleId,
                 feedback,
-                timestamp: new Date()
+                timestamp: new Date(),
             });
-
         } catch (error) {
             console.error(`Error handling progress for ${moduleId}:`, error);
             throw error;
@@ -167,11 +162,7 @@ class CoreTrainingSystem extends EventEmitter {
 
         try {
             // Update knowledge state
-            await this.bayesianTracker.updateKnowledgeState(
-                userId,
-                moduleId,
-                assessment.score
-            );
+            await this.bayesianTracker.updateKnowledgeState(userId, moduleId, assessment.score);
 
             // Generate recommendations
             const recommendations = await this.generateRecommendations(userId, moduleId);
@@ -192,7 +183,7 @@ class CoreTrainingSystem extends EventEmitter {
 
         // Get knowledge gaps
         const gaps = await this.bayesianTracker.identifyKnowledgeGaps(userId);
-        
+
         // Get module-specific feedback if available
         let moduleFeedback = {};
         if (aiService) {
@@ -206,7 +197,7 @@ class CoreTrainingSystem extends EventEmitter {
             ...moduleFeedback,
             ...aiFeedback,
             gaps,
-            recommendations: await this.generateRecommendations(userId, moduleId)
+            recommendations: await this.generateRecommendations(userId, moduleId),
         };
     }
 
@@ -217,13 +208,13 @@ class CoreTrainingSystem extends EventEmitter {
         return this.aiLearning.generateRecommendations(userId, {
             moduleId,
             knowledgeState,
-            gaps
+            gaps,
         });
     }
 
     async updateLearningPath(userId, moduleId, assessment) {
         const currentState = await this.bayesianTracker.getSkillMastery(userId, moduleId);
-        
+
         // Check prerequisites for next modules
         for (const [nextModuleId, module] of Object.entries(this.modules)) {
             if (module.prerequisites.includes(`${moduleId}.basics`)) {
@@ -240,7 +231,7 @@ class CoreTrainingSystem extends EventEmitter {
         const prerequisites = module.prerequisites;
 
         const prerequisiteStatus = await Promise.all(
-            prerequisites.map(async prereq => {
+            prerequisites.map(async (prereq) => {
                 const [moduleId, level] = prereq.split('.');
                 const mastery = await this.bayesianTracker.getSkillMastery(userId, moduleId);
                 return mastery >= this.getRequiredMasteryLevel(level);
@@ -248,8 +239,8 @@ class CoreTrainingSystem extends EventEmitter {
         );
 
         return {
-            ready: prerequisiteStatus.every(status => status),
-            missingPrerequisites: prerequisites.filter((_, index) => !prerequisiteStatus[index])
+            ready: prerequisiteStatus.every((status) => status),
+            missingPrerequisites: prerequisites.filter((_, index) => !prerequisiteStatus[index]),
         };
     }
 
@@ -258,7 +249,7 @@ class CoreTrainingSystem extends EventEmitter {
             basics: 70,
             advanced: 85,
             expert: 95,
-            zero_g: 90
+            zero_g: 90,
         };
         return levels[level] || 70;
     }

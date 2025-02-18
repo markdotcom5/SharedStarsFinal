@@ -17,6 +17,6 @@ class HomepageHandler {
 }
 
 // ✅ Ensure Homepage Handler is initialized on page load
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     new HomepageHandler();
 });

@@ -6,7 +6,7 @@ class InsightsController {
         try {
             const { category, limit = 10, page = 1 } = req.query;
             const query = category ? { category } : {};
-            
+
             const insights = await Insight.find(query)
                 .sort({ publishDate: -1 })
                 .limit(parseInt(limit))
@@ -20,8 +20,8 @@ class InsightsController {
                 pagination: {
                     total,
                     pages: Math.ceil(total / limit),
-                    currentPage: page
-                }
+                    currentPage: page,
+                },
             });
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -38,10 +38,7 @@ class InsightsController {
                 return res.status(404).json({ error: 'Insight not found' });
             }
 
-            await Insight.updateOne(
-                { _id: req.params.id },
-                { $inc: { views: 1 } }
-            );
+            await Insight.updateOne({ _id: req.params.id }, { $inc: { views: 1 } });
 
             res.json(insight);
         } catch (error) {
@@ -59,7 +56,7 @@ class InsightsController {
             const insight = new Insight({
                 ...req.body,
                 author: req.user.id,
-                publishDate: new Date()
+                publishDate: new Date(),
             });
 
             await insight.save();
@@ -91,7 +88,7 @@ class InsightsController {
         try {
             const insight = await Insight.findOneAndDelete({
                 _id: req.params.id,
-                author: req.user.id
+                author: req.user.id,
             });
 
             if (!insight) {
@@ -110,8 +107,8 @@ class InsightsController {
             const searchQuery = {
                 $or: [
                     { title: { $regex: query, $options: 'i' } },
-                    { content: { $regex: query, $options: 'i' } }
-                ]
+                    { content: { $regex: query, $options: 'i' } },
+                ],
             };
 
             if (tags) {

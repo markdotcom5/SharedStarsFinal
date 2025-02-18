@@ -8,7 +8,7 @@ class WebSocketService {
     constructor(server) {
         this.wss = new WebSocket.Server({
             server,
-            noServer: true
+            noServer: true,
         });
         this.clients = new Map();
         this.activeEVASessions = new Map();
@@ -27,10 +27,12 @@ class WebSocketService {
                     await this.handleMessage(userId, ws, data);
                 } catch (error) {
                     console.error('Error processing message:', error);
-                    ws.send(JSON.stringify({
-                        type: 'error',
-                        error: 'Failed to process message'
-                    }));
+                    ws.send(
+                        JSON.stringify({
+                            type: 'error',
+                            error: 'Failed to process message',
+                        })
+                    );
                 }
             });
 
@@ -94,7 +96,7 @@ class WebSocketService {
             const session = await EVASession.create({
                 userId,
                 startTime: new Date(),
-                status: 'in-progress'
+                status: 'in-progress',
             });
 
             this.activeEVASessions.set(userId, session._id);
@@ -104,13 +106,13 @@ class WebSocketService {
 
             this.broadcastToUser(userId, 'eva_session_started', {
                 sessionId: session._id,
-                guidance: aiGuidance
+                guidance: aiGuidance,
             });
         } catch (error) {
             console.error('Error starting EVA session:', error);
             this.broadcastToUser(userId, 'error', {
                 context: 'eva_session_start',
-                message: 'Failed to start EVA session'
+                message: 'Failed to start EVA session',
             });
         }
     }
@@ -127,7 +129,7 @@ class WebSocketService {
 
             // Update session with telemetry
             await EVASession.findByIdAndUpdate(sessionId, {
-                $push: { telemetry: data.telemetry }
+                $push: { telemetry: data.telemetry },
             });
 
             this.broadcastToUser(userId, 'eva_guidance_update', guidance);
@@ -135,7 +137,7 @@ class WebSocketService {
             console.error('Error processing EVA telemetry:', error);
             this.broadcastToUser(userId, 'error', {
                 context: 'eva_telemetry',
-                message: 'Failed to process telemetry data'
+                message: 'Failed to process telemetry data',
             });
         }
     }
@@ -155,7 +157,7 @@ class WebSocketService {
             session.completedProcedures.push({
                 name: data.procedure,
                 completionTime: new Date(),
-                performance: analysis.score
+                performance: analysis.score,
             });
             await session.save();
 
@@ -164,13 +166,13 @@ class WebSocketService {
 
             this.broadcastToUser(userId, 'eva_procedure_completion', {
                 analysis,
-                nextScenario
+                nextScenario,
             });
         } catch (error) {
             console.error('Error completing EVA procedure:', error);
             this.broadcastToUser(userId, 'error', {
                 context: 'eva_procedure',
-                message: 'Failed to process procedure completion'
+                message: 'Failed to process procedure completion',
             });
         }
     }
@@ -183,7 +185,7 @@ class WebSocketService {
             console.error('Error getting AI guidance:', error);
             this.broadcastToUser(userId, 'error', {
                 context: 'ai_guidance',
-                message: 'Failed to get AI guidance'
+                message: 'Failed to get AI guidance',
             });
         }
     }
@@ -191,14 +193,14 @@ class WebSocketService {
     async handleTeamChallengeRequest(userId, data) {
         try {
             const challenge = await EVAAIService.generateTeamChallenge(data.teamIds);
-            data.teamIds.forEach(teamMemberId => {
+            data.teamIds.forEach((teamMemberId) => {
                 this.broadcastToUser(teamMemberId, 'team_challenge', challenge);
             });
         } catch (error) {
             console.error('Error creating team challenge:', error);
             this.broadcastToUser(userId, 'error', {
                 context: 'team_challenge',
-                message: 'Failed to create team challenge'
+                message: 'Failed to create team challenge',
             });
         }
     }
@@ -211,14 +213,14 @@ class WebSocketService {
                     {
                         $group: {
                             _id: null,
-                            credits: { $sum: "$credits" },
-                            rank: { $last: "$rank" },
-                            successRate: { $avg: "$successRate" },
+                            credits: { $sum: '$credits' },
+                            rank: { $last: '$rank' },
+                            successRate: { $avg: '$successRate' },
                             activeMissions: {
-                                $sum: { $cond: [{ $eq: ["$status", "active"] }, 1, 0] }
-                            }
-                        }
-                    }
+                                $sum: { $cond: [{ $eq: ['$status', 'active'] }, 1, 0] },
+                            },
+                        },
+                    },
                 ]),
                 EVASession.aggregate([
                     { $match: { userId } },
@@ -226,16 +228,16 @@ class WebSocketService {
                         $group: {
                             _id: null,
                             totalEVAs: { $sum: 1 },
-                            avgPerformance: { $avg: "$performanceMetrics.safetyScore" },
-                            completedProcedures: { $sum: { $size: "$completedProcedures" } }
-                        }
-                    }
-                ])
+                            avgPerformance: { $avg: '$performanceMetrics.safetyScore' },
+                            completedProcedures: { $sum: { $size: '$completedProcedures' } },
+                        },
+                    },
+                ]),
             ]);
 
             this.broadcastToUser(userId, 'stats_update', {
                 training: trainingStats[0],
-                eva: evaStats[0]
+                eva: evaStats[0],
             });
         } catch (error) {
             console.error('Error updating dashboard stats:', error);
@@ -254,7 +256,7 @@ class WebSocketService {
     }
 
     broadcast(type, data, targetUserId = null) {
-        this.wss.clients.forEach(client => {
+        this.wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
                 if (!targetUserId || this.clients.get(targetUserId) === client) {
                     client.send(JSON.stringify({ type, data }));

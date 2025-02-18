@@ -4,7 +4,7 @@ const AISpaceCoach = require('./AISpaceCoach');
 const AIGuidanceSystem = require('./AIGuidanceSystem');
 const aiGuidance = require('./aiGuidance');
 const aiAssistant = require('./aiAssistant');
-const User = require('../models/User');  // Add this as the first new line after your existing requires
+const User = require('../models/User'); // Add this as the first new line after your existing requires
 
 class ServiceIntegrator extends EventEmitter {
     constructor() {
@@ -13,13 +13,13 @@ class ServiceIntegrator extends EventEmitter {
             coach: AISpaceCoach,
             guidance: AIGuidanceSystem,
             realTime: aiGuidance,
-            assistant: aiAssistant
+            assistant: aiAssistant,
         };
 
         // Simplified to just two modes like early Tesla FSD
         this.MODES = {
-            MANUAL: 'manual',     // User drives their own learning
-            FSD: 'fsd'           // AI takes the wheel
+            MANUAL: 'manual', // User drives their own learning
+            FSD: 'fsd', // AI takes the wheel
         };
 
         // Track active guidance sessions
@@ -36,16 +36,16 @@ class ServiceIntegrator extends EventEmitter {
 
             const sessionState = {
                 userId,
-                mode: this.MODES.MANUAL,  // Start in manual by default
+                mode: this.MODES.MANUAL, // Start in manual by default
                 currentPath: null,
                 confidence: 0,
                 nextAction: null,
                 visualState: {
                     highlightedElements: [],
                     nextSteps: [],
-                    currentFocus: null
+                    currentFocus: null,
                 },
-                lastUpdate: new Date()
+                lastUpdate: new Date(),
             };
 
             this.activeSessions.set(userId, sessionState);
@@ -54,7 +54,7 @@ class ServiceIntegrator extends EventEmitter {
             this.engagementMetrics.set(userId, {
                 totalTimeInFSD: 0,
                 totalActionsCompleted: 0,
-                fsdEngagements: 0
+                fsdEngagements: 0,
             });
 
             return sessionState;
@@ -70,14 +70,13 @@ class ServiceIntegrator extends EventEmitter {
             if (!session) throw new Error('No active session found');
 
             // Toggle between Manual and FSD
-            const newMode = session.mode === this.MODES.MANUAL ? 
-                this.MODES.FSD : this.MODES.MANUAL;
+            const newMode = session.mode === this.MODES.MANUAL ? this.MODES.FSD : this.MODES.MANUAL;
 
             // Update session state
             session.mode = newMode;
             await User.findByIdAndUpdate(userId, {
                 'aiGuidance.mode': newMode,
-                'aiGuidance.lastModeChange': new Date()
+                'aiGuidance.lastModeChange': new Date(),
             });
 
             // Track FSD engagement
@@ -97,7 +96,7 @@ class ServiceIntegrator extends EventEmitter {
             this.emit('modeChange', {
                 userId,
                 mode: newMode,
-                state: session
+                state: session,
             });
 
             return session;
@@ -121,7 +120,7 @@ class ServiceIntegrator extends EventEmitter {
                 // Full FSD mode - AI takes control
                 const [guidance, coaching] = await Promise.all([
                     this.services.realTime.processRealTimeAction(userId, action),
-                    this.services.coach.generateCoachingSuggestions(context)
+                    this.services.coach.generateCoachingSuggestions(context),
                 ]);
 
                 // Calculate next actions and confidence
@@ -137,14 +136,14 @@ class ServiceIntegrator extends EventEmitter {
                     userId,
                     guidance,
                     coaching,
-                    nextAction
+                    nextAction,
                 });
 
                 return {
                     guidance,
                     coaching,
                     nextAction,
-                    mode: 'fsd'
+                    mode: 'fsd',
                 };
             } else {
                 // Manual mode with basic assistance
@@ -155,7 +154,7 @@ class ServiceIntegrator extends EventEmitter {
 
                 return {
                     coaching,
-                    mode: 'manual'
+                    mode: 'manual',
                 };
             }
         } catch (error) {
@@ -166,13 +165,14 @@ class ServiceIntegrator extends EventEmitter {
 
     async calculateNextAction(userId) {
         try {
-            const user = await User.findById(userId)
-                .select('trainingProgress aiGuidance certifications achievements');
+            const user = await User.findById(userId).select(
+                'trainingProgress aiGuidance certifications achievements'
+            );
 
             // Get comprehensive analysis from all services
             const [certProgress, achievements] = await Promise.all([
                 this.services.assistant.analyzeCertificationProgress(user.certifications),
-                this.services.assistant.analyzeAchievementProgress(user.achievements)
+                this.services.assistant.analyzeAchievementProgress(user.achievements),
             ]);
 
             // Generate optimal next action and confidence score
@@ -180,13 +180,13 @@ class ServiceIntegrator extends EventEmitter {
                 type: 'next_action_calculation',
                 progress: user.trainingProgress,
                 certifications: certProgress,
-                achievements
+                achievements,
             });
 
             return {
                 action: guidance.nextSteps[0],
                 confidence: this.calculateConfidence(guidance, certProgress, achievements),
-                fullPath: guidance.nextSteps
+                fullPath: guidance.nextSteps,
             };
         } catch (error) {
             console.error('Next Action Calculation Error:', error);
@@ -196,8 +196,8 @@ class ServiceIntegrator extends EventEmitter {
 
     calculateConfidence(guidance, certProgress, achievements) {
         // Weighted scoring for confidence
-        const certWeight = certProgress.completed / certProgress.total * 50; // 50% weight
-        const progressWeight = guidance.progress / 100 * 30; // 30% weight
+        const certWeight = (certProgress.completed / certProgress.total) * 50; // 50% weight
+        const progressWeight = (guidance.progress / 100) * 30; // 30% weight
         const achievementWeight = achievements.length * 20; // 20% weight
 
         return Math.min(certWeight + progressWeight + achievementWeight, 100); // Cap at 100%
@@ -221,7 +221,7 @@ class ServiceIntegrator extends EventEmitter {
 
                     this.emit('actionUpdate', {
                         userId,
-                        nextAction
+                        nextAction,
                     });
                 }
 
@@ -250,7 +250,7 @@ class ServiceIntegrator extends EventEmitter {
             mode: session.mode,
             nextAction: session.nextAction,
             confidence: session.confidence,
-            lastUpdate: session.lastUpdate
+            lastUpdate: session.lastUpdate,
         };
     }
 
@@ -265,16 +265,16 @@ class ServiceIntegrator extends EventEmitter {
         return {
             plan: [
                 { step: 'Complete Module 1', dueDate: '2025-02-01' },
-                { step: 'Earn Badge 2', dueDate: '2025-02-15' }
+                { step: 'Earn Badge 2', dueDate: '2025-02-15' },
             ],
-            confidence: 90
+            confidence: 90,
         };
     }
     async initialize() {
-        console.log("✅ Service Integrator Initialized");
-        return { status: "success" };
+        console.log('✅ Service Integrator Initialized');
+        return { status: 'success' };
     }
-    
+
     async updateUserProgress(userId, progressData) {
         // Update user progress
     }
@@ -282,13 +282,14 @@ class ServiceIntegrator extends EventEmitter {
     async getDailyRecommendations(userId) {
         // Return daily recommendations
     }
-}module.exports.initializeSession = async (userId) => {
+}
+module.exports.initializeSession = async (userId) => {
     try {
         // Simulate session initialization
         console.log(`Initializing session for user ${userId}`);
         return { sessionId: `session_${userId}`, initialized: true };
     } catch (error) {
-        console.error("Error initializing session:", error);
+        console.error('Error initializing session:', error);
         throw error;
     }
 };

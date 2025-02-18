@@ -17,46 +17,42 @@ function handleError(res, message, statusCode = 500) {
 }
 
 // Webhook Route
-router.post(
-    '/stripe-webhook',
-    bodyParser.raw({ type: 'application/json' }),
-    async (req, res) => {
-        let event;
+router.post('/stripe-webhook', bodyParser.raw({ type: 'application/json' }), async (req, res) => {
+    let event;
 
-        try {
-            // Verify the Stripe event
-            event = stripe.webhooks.constructEvent(
-                req.body,
-                req.headers['stripe-signature'],
-                endpointSecret
-            );
-        } catch (error) {
-            return handleError(res, `Webhook verification failed: ${error.message}`, 400);
-        }
-
-        try {
-            // Handle different event types
-            switch (event.type) {
-                case 'checkout.session.completed':
-                    await handleCheckoutComplete(event.data.object);
-                    break;
-                case 'payment_intent.succeeded':
-                    await handlePaymentSuccess(event.data.object);
-                    break;
-                case 'payment_intent.payment_failed':
-                    await handlePaymentFailure(event.data.object);
-                    break;
-                default:
-                    console.log(`Unhandled event type: ${event.type}`);
-                    break;
-            }
-
-            res.json({ received: true });
-        } catch (error) {
-            handleError(res, `Webhook processing failed: ${error.message}`);
-        }
+    try {
+        // Verify the Stripe event
+        event = stripe.webhooks.constructEvent(
+            req.body,
+            req.headers['stripe-signature'],
+            endpointSecret
+        );
+    } catch (error) {
+        return handleError(res, `Webhook verification failed: ${error.message}`, 400);
     }
-);
+
+    try {
+        // Handle different event types
+        switch (event.type) {
+            case 'checkout.session.completed':
+                await handleCheckoutComplete(event.data.object);
+                break;
+            case 'payment_intent.succeeded':
+                await handlePaymentSuccess(event.data.object);
+                break;
+            case 'payment_intent.payment_failed':
+                await handlePaymentFailure(event.data.object);
+                break;
+            default:
+                console.log(`Unhandled event type: ${event.type}`);
+                break;
+        }
+
+        res.json({ received: true });
+    } catch (error) {
+        handleError(res, `Webhook processing failed: ${error.message}`);
+    }
+});
 
 // Handle checkout session completion
 async function handleCheckoutComplete(session) {
@@ -72,9 +68,9 @@ async function handleCheckoutComplete(session) {
                     logs: {
                         logId: session.id,
                         action: 'token_purchase',
-                        createdAt: new Date()
-                    }
-                }
+                        createdAt: new Date(),
+                    },
+                },
             },
             { new: true }
         );
@@ -94,9 +90,9 @@ async function handlePaymentSuccess(paymentIntent) {
                 logs: {
                     logId: paymentIntent.id,
                     action: 'payment_success',
-                    createdAt: new Date()
-                }
-            }
+                    createdAt: new Date(),
+                },
+            },
         });
     } catch (error) {
         console.error('Error handling payment success:', error.message);
@@ -114,9 +110,9 @@ async function handlePaymentFailure(paymentIntent) {
                 logs: {
                     logId: paymentIntent.id,
                     action: 'payment_failed',
-                    createdAt: new Date()
-                }
-            }
+                    createdAt: new Date(),
+                },
+            },
         });
     } catch (error) {
         console.error('Error handling payment failure:', error.message);

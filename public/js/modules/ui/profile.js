@@ -31,5 +31,5 @@ export const profile = {
 
     init() {
         console.log('UI profile module initialized');
-    }
+    },
 };

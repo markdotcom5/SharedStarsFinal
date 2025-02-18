@@ -8,17 +8,11 @@ const moduleTemplate = {
         version: '1.0.0',
         aiEnabled: true,
         components: ['main', 'tasks', 'assessments'],
-        prerequisites: []
+        prerequisites: [],
     },
 
     // Directory structure
-    directories: [
-        'main',
-        'tasks',
-        'assessments',
-        'requirements',
-        'data'
-    ],
+    directories: ['main', 'tasks', 'assessments', 'requirements', 'data'],
 
     // Required files
     files: {
@@ -73,7 +67,7 @@ const moduleTemplate = {
             });
 
             module.exports = router;
-        `
+        `,
     },
 
     // Event handlers template
@@ -93,7 +87,7 @@ const moduleTemplate = {
                 features: ['feedback', 'assessment', 'adaptation']
             });
         }
-    `
+    `,
 };
 
 module.exports = moduleTemplate;

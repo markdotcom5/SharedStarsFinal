@@ -1,44 +1,64 @@
 <!-- views/partials/header.ejs -->
-<header class="fixed w-full bg-gray-900/90 backdrop-blur-lg z-50">
-  <!-- Language Selection Bar -->
-  <div class="bg-gray-800 text-white py-2">
-      <div class="container mx-auto px-4 flex justify-end space-x-4">
-          <button class="language-btn hover:text-blue-400 transition-colors" data-lang="en">
-              🇺🇸 English
-          </button>
-          <button class="language-btn hover:text-blue-400 transition-colors" data-lang="zh">
-              🇨🇳 中文
-          </button>
-          <button class="language-btn hover:text-blue-400 transition-colors" data-lang="ko">
-              🇰🇷 한국어
-          </button>
-          <button class="language-btn hover:text-blue-400 transition-colors" data-lang="es">
-              🇪🇸 Español
-          </button>
+<header class="site-header fixed w-full flex items-center justify-between z-50 px-[120px]">
+
+    <!-- Logo -->
+    <div class="py-8">
+      <a href="/" aria-label="SharedStars Homepage" class="group">
+        <img src="/public/images/SharedStars.png" alt="SharedStars Logo" class="h-10 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+      </a>
+    </div>
+
+    <!-- Navigation Links -->
+    <ul class="flex flex-wrap items-center justify-between gap-2 text-body-small-medium font-body text-white-700">
+        <li class="relative group py-8">
+            <a href="/" data-i18n="nav.home" class="px-4 text-white-700 hover:text-white">Home</a>
+            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
+        </li>
+        <li class="relative group py-8">
+            <a href="/" data-i18n="nav.academy" class="px-4 py-6 hover:text-white">Academy</a>
+            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
+        </li>
+        <li class="relative group py-8">
+            <a href="/" data-i18n="nav.about" class="px-4 py-6 hover:text-white">About</a>
+            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
+        </li>
+        <li class="relative group py-8">
+            <a href="/" data-i18n="nav.leaderboard" class="px-4 py-6 hover:text-white">Leaderboard</a>
+            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
+        </li>
+        <li class="relative group py-8">
+            <a href="/" data-i18n="nav.subscribe" class="px-4 py-6 hover:text-white">Subscribe</a>
+            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
+        </li>
+    </ul>
+
+    <!-- Language Selector -->
+     <div class="flex relative items-center justify-between gap-6">
+      <div class="gap-6">
+        <button class="lang-btn btn-ghost flex items-center justify-between gap-2 bg-gray-700 px-3 py-3 text-white rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]" aria-label="Language Selection">
+          <img src="/public/images/USflag.png" alt="US country flag" class="w-4" />
+          <img src="/public/icons/chevron-down.png" alt="DropeDOwn button" class="w-4 max-w-xl" />
+        </button>
+        <ul class="dropdown-menu absolute hidden bg-gray-800 text-white border w-40 mt-2">
+          <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="en"><span>🇺🇸</span> English</button></li>
+          <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="zh"><span>🇨🇳</span> 中文</button></li>
+          <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="ko"><span>🇰🇷</span> 한국어</button></li>
+          <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="es"><span>🇪🇸</span> Español</button></li>
+        </ul>
       </div>
-  </div>
-
-  <!-- Main Navigation -->
-  <div class="container mx-auto px-4 py-4">
-      <nav class="flex items-center justify-between">
-          <!-- Logo -->
-          <a href="/" class="flex-shrink-0">
-            <img src="/images/SharedStars.svg" alt="SharedStars Logo">
-        </a>
-
-          <!-- Navigation Links -->
-          <div class="flex items-center space-x-8">
-              <!-- <a href="/" class="text-white hover:text-blue-400 transition-colors">Home</a>
-              <a href="/academy" class="text-white hover:text-blue-400 transition-colors">Academy</a>
-              <a href="/about" class="text-white hover:text-blue-400 transition-colors">About</a>
-              <a href="/leaderboard" class="text-white hover:text-blue-400 transition-colors">Leaderboard</a>
-              <a href="/subscribe" class="text-white hover:text-blue-400 transition-colors">Subscribe</a> -->
-              <!-- Auth Buttons -->
-              <a href="/login" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition-colors">Login</a>
-              <a href="/signup" class="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded transition-colors">Sign Up</a>
-          </div>
-      </nav>
-  </div>
+       <!-- <div class="language-selector flex gap-2">
+         <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button> 
+         <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+         <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+         <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+       </div> -->
+        <!-- <button class="relative overflow-hidden bg-brand-700 text-white text-body-2xsmall-semibold px-5 py-3 rounded-full shadow-md transition-all duration-300 hover:shadow-lg shine-effect" data-i18n="nav.getStarted">
+            Get Started
+        </button> -->
+        <button class="relative bg-brand-700 text-white text-body-2xsmall-semibold px-5 py-3 rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] before:absolute before:top-1 before:left-0.5 before:w-[15%] before:h-[20%] before:rounded-full before:bg-white before:blur-[5px]">
+            Get Started
+        </button>     
+     </div>
 </header>
 
 <!-- Language Handling Script -->

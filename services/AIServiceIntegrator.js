@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const AILearningSystem = require('./AILearningSystem');  // ✅ Import the correct module
+const AILearningSystem = require('./AILearningSystem'); // ✅ Import the correct module
 const AIGuidanceSystem = require('./AIGuidanceSystem');
 const AIOrchestrator = require('./AIOrchestrator');
 const AISpaceCoach = require('./AISpaceCoach');
@@ -10,7 +10,7 @@ class AIServiceIntegrator extends EventEmitter {
     constructor() {
         super(); // ✅ Enables event handling for better system coordination
 
-        this.learningSystem = AILearningSystem; 
+        this.learningSystem = AILearningSystem;
         this.guidanceSystem = AIGuidanceSystem;
         this.orchestrator = AIOrchestrator;
         this.spaceCoach = AISpaceCoach;
@@ -64,7 +64,10 @@ class AIServiceIntegrator extends EventEmitter {
         try {
             console.log(`📊 Analyzing performance for user ${userId}`);
 
-            const analysis = await this.learningSystem.analyzeBiometricData(userId, performanceData);
+            const analysis = await this.learningSystem.analyzeBiometricData(
+                userId,
+                performanceData
+            );
             const [guidance, nextSteps] = await Promise.all([
                 this.guidanceSystem.generatePerformanceGuidance(analysis),
                 this.spaceCoach.getNextSteps(userId),
@@ -102,7 +105,11 @@ class AIServiceIntegrator extends EventEmitter {
                     this.spaceCoach.provideMotivationalCoaching(userId),
                 ]);
 
-                await this.webController.updateEngagementUI({ userId, engagement, recommendations });
+                await this.webController.updateEngagementUI({
+                    userId,
+                    engagement,
+                    recommendations,
+                });
             }
 
             return engagement;
@@ -115,37 +122,37 @@ class AIServiceIntegrator extends EventEmitter {
     // ✅ Social Sharing Triggers
     async handleAchievement(userId, achievement) {
         console.log(`🏆 User ${userId} earned achievement: ${achievement.name}`);
-        await SocialPlatformIntegrator.shareEvent("achievement", { userId, achievement });
+        await SocialPlatformIntegrator.shareEvent('achievement', { userId, achievement });
     }
 
     async handleCertification(userId, certification) {
         console.log(`🎓 User ${userId} earned certification: ${certification.name}`);
-        await SocialPlatformIntegrator.shareEvent("certification", { userId, certification });
+        await SocialPlatformIntegrator.shareEvent('certification', { userId, certification });
     }
 
     async handleMissionCompletion(userId, mission) {
         console.log(`🚀 User ${userId} completed mission: ${mission.name}`);
-        await SocialPlatformIntegrator.shareEvent("missionComplete", { userId, mission });
+        await SocialPlatformIntegrator.shareEvent('missionComplete', { userId, mission });
     }
 
     async handleSquadTraining(userId, squad) {
         console.log(`👨‍🚀 User ${userId} joined Squad: ${squad.name}`);
-        await SocialPlatformIntegrator.shareEvent("teamFormation", { userId, squad });
+        await SocialPlatformIntegrator.shareEvent('teamFormation', { userId, squad });
     }
 
     async handleLeaderboardUpdate(userId, leaderboard) {
         console.log(`🏅 User ${userId} moved up in Leaderboard Rank: ${leaderboard.rank}`);
-        await SocialPlatformIntegrator.shareEvent("leaderboardUpdate", { userId, leaderboard });
+        await SocialPlatformIntegrator.shareEvent('leaderboardUpdate', { userId, leaderboard });
     }
 
     async handleMilestone(userId, milestone) {
         console.log(`🎯 User ${userId} reached milestone: ${milestone.name}`);
-        await SocialPlatformIntegrator.shareEvent("milestone", { userId, milestone });
+        await SocialPlatformIntegrator.shareEvent('milestone', { userId, milestone });
     }
 
     async handleVRTrainingCompletion(userId, session) {
         console.log(`🕶️ User ${userId} completed VR Training: ${session.name}`);
-        await SocialPlatformIntegrator.shareEvent("moduleComplete", { userId, session });
+        await SocialPlatformIntegrator.shareEvent('moduleComplete', { userId, session });
     }
 
     // ✅ Service Validation
@@ -155,7 +162,7 @@ class AIServiceIntegrator extends EventEmitter {
             guidanceSystem: this.guidanceSystem,
             orchestrator: this.orchestrator,
             spaceCoach: this.spaceCoach,
-            webController: this.webController
+            webController: this.webController,
         };
 
         for (const [name, service] of Object.entries(services)) {
@@ -167,4 +174,3 @@ class AIServiceIntegrator extends EventEmitter {
 }
 
 module.exports = AIServiceIntegrator;
-

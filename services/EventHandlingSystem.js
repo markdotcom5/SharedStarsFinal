@@ -28,7 +28,7 @@ class EventHandlingSystem extends EventEmitter {
 
     registerModuleHandlers(moduleId, handlers) {
         this.activeHandlers.set(moduleId, handlers);
-        
+
         // Set up module-specific events
         Object.entries(handlers).forEach(([event, handler]) => {
             this.on(`${moduleId}:${event}`, async (data) => {
@@ -49,19 +49,19 @@ class EventHandlingSystem extends EventEmitter {
         try {
             // Update module progress
             await this.coreSystem.handleModuleProgress(moduleId, data);
-            
+
             // Check for achievements
             await this.checkAchievements(userId, moduleId, progress);
-            
+
             // Generate AI feedback
             const feedback = await this.coreSystem.generateFeedback(userId, moduleId, progress);
-            
+
             // Emit feedback
             this.emit('ai:feedback', {
                 userId,
                 moduleId,
                 feedback,
-                timestamp: new Date()
+                timestamp: new Date(),
             });
         } catch (error) {
             console.error('Error handling module progress:', error);
@@ -73,10 +73,10 @@ class EventHandlingSystem extends EventEmitter {
         try {
             // Process assessment
             await this.coreSystem.handleModuleAssessment(moduleId, data);
-            
+
             // Check for certifications
             await this.checkCertifications(userId, moduleId, assessment);
-            
+
             // Update learning path
             await this.coreSystem.updateLearningPath(userId, moduleId);
         } catch (error) {
@@ -89,7 +89,7 @@ class EventHandlingSystem extends EventEmitter {
         try {
             // Update completion status
             await this.coreSystem.handleModuleCompletion(moduleId, data);
-            
+
             // Check prerequisites for next modules
             await this.checkNextModules(userId, moduleId);
         } catch (error) {
@@ -103,7 +103,7 @@ class EventHandlingSystem extends EventEmitter {
         try {
             // Process AI feedback
             await this.coreSystem.processAIFeedback(moduleId, feedback);
-            
+
             // Update user's learning model
             await this.coreSystem.updateLearningModel(userId, moduleId, feedback);
         } catch (error) {
@@ -116,7 +116,7 @@ class EventHandlingSystem extends EventEmitter {
         try {
             // Process recommendations
             await this.coreSystem.processAIRecommendations(userId, recommendations);
-            
+
             // Update learning path
             await this.coreSystem.updateLearningPath(userId, moduleId);
         } catch (error) {
@@ -129,7 +129,7 @@ class EventHandlingSystem extends EventEmitter {
         try {
             // Apply AI adaptations
             await this.coreSystem.applyAIAdaptation(userId, moduleId, adaptation);
-            
+
             // Update module difficulty
             await this.updateModuleDifficulty(userId, moduleId, adaptation);
         } catch (error) {
@@ -146,7 +146,11 @@ class EventHandlingSystem extends EventEmitter {
     }
 
     async checkCertifications(userId, moduleId, assessment) {
-        const certifications = await this.coreSystem.checkCertifications(userId, moduleId, assessment);
+        const certifications = await this.coreSystem.checkCertifications(
+            userId,
+            moduleId,
+            assessment
+        );
         if (certifications.length > 0) {
             this.emit('user:certification', { userId, moduleId, certifications });
         }
@@ -160,7 +164,7 @@ class EventHandlingSystem extends EventEmitter {
                     this.emit('module:unlock', {
                         userId,
                         moduleId: nextModule,
-                        unlockedBy: moduleId
+                        unlockedBy: moduleId,
                     });
                 }
             }
@@ -175,7 +179,7 @@ class EventHandlingSystem extends EventEmitter {
             this.emit('module:difficulty-updated', {
                 userId,
                 moduleId,
-                newDifficulty: adaptation.difficulty
+                newDifficulty: adaptation.difficulty,
             });
         } catch (error) {
             console.error('Error updating module difficulty:', error);

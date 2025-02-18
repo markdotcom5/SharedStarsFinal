@@ -14,26 +14,26 @@ router.post('/start-trial', async (req, res) => {
             name,
             email,
             password,
-            accountType: 'trial'
+            accountType: 'trial',
         });
         await user.save();
 
         // Create trial period (30 days)
         const trial = new Trial({
             userId: user._id,
-            endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+            endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         });
         await trial.save();
 
         res.status(201).json({
             success: true,
             userId: user._id,
-            nextStep: 'assessment'
+            nextStep: 'assessment',
         });
     } catch (error) {
         res.status(500).json({
             success: false,
-            error: error.message
+            error: error.message,
         });
     }
 });
@@ -50,13 +50,13 @@ router.post('/assessment', async (req, res) => {
         trial.initialAssessment = {
             motivation,
             experienceLevel,
-            completedAt: new Date()
+            completedAt: new Date(),
         };
 
         // Generate AI-guided learning path
         const aiGuidance = await generateAIGuidance({
             motivation,
-            experienceLevel
+            experienceLevel,
         });
 
         trial.initialAssessment.preferredPath = aiGuidance.pathId;
@@ -65,12 +65,12 @@ router.post('/assessment', async (req, res) => {
         res.json({
             success: true,
             guidance: aiGuidance,
-            nextStep: 'training'
+            nextStep: 'training',
         });
     } catch (error) {
         res.status(500).json({
             success: false,
-            error: error.message
+            error: error.message,
         });
     }
 });

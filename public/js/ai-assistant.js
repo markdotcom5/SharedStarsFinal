@@ -18,13 +18,14 @@ function closeChat() {
 
 async function startAITraining() {
     openChat();
-    sendAIMessage("Welcome! I will guide you through your space training journey.");
+    sendAIMessage('Welcome! I will guide you through your space training journey.');
 
     setTimeout(() => {
-        sendAIMessage("Let's start by understanding your fitness level. Are you a Beginner, Intermediate, or Advanced?");
+        sendAIMessage(
+            "Let's start by understanding your fitness level. Are you a Beginner, Intermediate, or Advanced?"
+        );
     }, 2000);
 }
-
 
 // Send AI Message
 function sendAIMessage(message) {
@@ -63,7 +64,6 @@ async function sendMessage() {
 function determineNextStep() {
     sendAIMessage("Now, let's test your reaction speed. Follow this quick reflex exercise...");
     setTimeout(() => {
-        sendAIMessage("Touch the screen when you see the countdown reach 0!");
+        sendAIMessage('Touch the screen when you see the countdown reach 0!');
     }, 2000);
 }
-

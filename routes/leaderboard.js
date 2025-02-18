@@ -5,31 +5,31 @@ const { authenticate } = require('../middleware/auth');
 const Leaderboard = require('../models/Leaderboard');
 const User = require('../models/User');
 const AISpaceCoach = require('../services/AISpaceCoach');
-const LeaderboardService = require("../services/LeaderboardService");
+const LeaderboardService = require('../services/LeaderboardService');
 // ✅ Get the top 10 leaderboard rankings
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const leaderboard = await LeaderboardService.getLeaderboard();
         res.json(leaderboard);
     } catch (error) {
-        console.error("❌ Error fetching leaderboard:", error);
-        res.status(500).json({ error: "Failed to fetch leaderboard" });
+        console.error('❌ Error fetching leaderboard:', error);
+        res.status(500).json({ error: 'Failed to fetch leaderboard' });
     }
 });
 
 // ✅ Update leaderboard when a user's score changes
-router.post("/update", authenticate, async (req, res) => {
+router.post('/update', authenticate, async (req, res) => {
     try {
         const { userId, newScore } = req.body;
         if (!userId || !newScore) {
-            return res.status(400).json({ error: "User ID and new score are required" });
+            return res.status(400).json({ error: 'User ID and new score are required' });
         }
 
         const result = await LeaderboardService.updateLeaderboard(userId, newScore);
         res.json(result);
     } catch (error) {
-        console.error("❌ Error updating leaderboard:", error);
-        res.status(500).json({ error: "Failed to update leaderboard" });
+        console.error('❌ Error updating leaderboard:', error);
+        res.status(500).json({ error: 'Failed to update leaderboard' });
     }
 });
 router.get('/rankings', authenticate, async (req, res) => {
@@ -40,7 +40,7 @@ router.get('/rankings', authenticate, async (req, res) => {
             .limit(100);
 
         const userRank = await User.countDocuments({
-            'leaderboard.score': { $gt: req.user.leaderboard.score }
+            'leaderboard.score': { $gt: req.user.leaderboard.score },
         });
 
         res.json({
@@ -48,12 +48,12 @@ router.get('/rankings', authenticate, async (req, res) => {
             rankings,
             userStats: {
                 rank: userRank + 1,
-                score: req.user.leaderboard.score
-            }
+                score: req.user.leaderboard.score,
+            },
         });
     } catch (error) {
         console.error('Error fetching leaderboard:', error);
-        res.status(500).json({ success: false, message: "Failed to fetch leaderboard" });
+        res.status(500).json({ success: false, message: 'Failed to fetch leaderboard' });
     }
 });
 
@@ -62,19 +62,21 @@ router.get('/', authenticate, async (req, res) => {
     try {
         const [globalStats, userStats, aiReadiness] = await Promise.all([
             Leaderboard.aggregate([
-                { $group: {
-                    _id: null,
-                    totalUsers: { $sum: 1 },
-                    totalCredits: { $sum: '$score' },
-                    averageLevel: { $avg: '$level' }
-                }}
+                {
+                    $group: {
+                        _id: null,
+                        totalUsers: { $sum: 1 },
+                        totalCredits: { $sum: '$score' },
+                        averageLevel: { $avg: '$level' },
+                    },
+                },
             ]),
             req.user ? Leaderboard.findOne({ userId: req.user._id }) : null,
             // Get AI space readiness assessment
             AISpaceCoach.calculateSpaceReadiness({
                 trainingHistory: req.user?.trainingHistory || [],
-                assessmentScores: req.user?.assessmentScores || []
-            })
+                assessmentScores: req.user?.assessmentScores || [],
+            }),
         ]);
 
         res.render('leaderboard', {
@@ -85,15 +87,15 @@ router.get('/', authenticate, async (req, res) => {
                 totalCredits: Math.floor(globalStats[0]?.totalCredits || 0),
                 activeMissions: await User.countDocuments({ 'missions.active': true }),
                 successRate: '94%',
-                spaceReadiness: aiReadiness
-            }
+                spaceReadiness: aiReadiness,
+            },
         });
 
         // Track user engagement with AI Coach
         if (req.user) {
             await AISpaceCoach.trackProgress(req.user._id, {
                 type: 'LEADERBOARD_VIEW',
-                timestamp: new Date()
+                timestamp: new Date(),
             });
         }
     } catch (error) {
@@ -114,26 +116,28 @@ router.get('/state/:stateCode', authenticate, async (req, res) => {
         }
 
         const [stateRankings, aiSuggestions] = await Promise.all([
-            Leaderboard.find({ 
+            Leaderboard.find({
                 state: stateCode.toUpperCase(),
                 category: 'state',
             })
-            .sort({ score: -1 })
-            .populate('userId', 'username avatar level')
-            .skip((page - 1) * limit)
-            .limit(limit),
+                .sort({ score: -1 })
+                .populate('userId', 'username avatar level')
+                .skip((page - 1) * limit)
+                .limit(limit),
 
             // Get AI coaching insights for state performance
-            req.user ? AISpaceCoach.generateCoachingSuggestions({
-                userId: req.user._id,
-                stateCode: stateCode,
-                rankingContext: 'state'
-            }) : null
+            req.user
+                ? AISpaceCoach.generateCoachingSuggestions({
+                      userId: req.user._id,
+                      stateCode: stateCode,
+                      rankingContext: 'state',
+                  })
+                : null,
         ]);
 
-        const totalCount = await Leaderboard.countDocuments({ 
-            state: stateCode.toUpperCase(), 
-            category: 'state' 
+        const totalCount = await Leaderboard.countDocuments({
+            state: stateCode.toUpperCase(),
+            category: 'state',
         });
 
         res.json({
@@ -144,7 +148,7 @@ router.get('/state/:stateCode', authenticate, async (req, res) => {
                 totalPages: Math.ceil(totalCount / limit),
                 totalEntries: totalCount,
                 entriesPerPage: limit,
-            }
+            },
         });
     } catch (error) {
         console.error(`State leaderboard error:`, error);
@@ -172,9 +176,9 @@ router.get('/local', authenticate, async (req, res) => {
             User.find({
                 location: {
                     $near: {
-                        $geometry: { 
-                            type: 'Point', 
-                            coordinates: [parsedLng, parsedLat] 
+                        $geometry: {
+                            type: 'Point',
+                            coordinates: [parsedLng, parsedLat],
                         },
                         $maxDistance: radius * 1000,
                     },
@@ -182,33 +186,35 @@ router.get('/local', authenticate, async (req, res) => {
             }).select('_id'),
 
             // Get AI analysis of local competition
-            req.user ? AISpaceCoach.generateCoachingSuggestions({
-                userId: req.user._id,
-                location: { latitude: parsedLat, longitude: parsedLng },
-                rankingContext: 'local'
-            }) : null
+            req.user
+                ? AISpaceCoach.generateCoachingSuggestions({
+                      userId: req.user._id,
+                      location: { latitude: parsedLat, longitude: parsedLng },
+                      rankingContext: 'local',
+                  })
+                : null,
         ]);
 
         if (!users.length) {
-            return res.json({ 
-                rankings: [], 
+            return res.json({
+                rankings: [],
                 message: 'No users in range',
-                aiInsights: aiAnalysis
+                aiInsights: aiAnalysis,
             });
         }
 
-        const userIds = users.map(user => user._id);
+        const userIds = users.map((user) => user._id);
         const rankings = await Leaderboard.find({
             userId: { $in: userIds },
             category: 'global',
         })
-        .sort({ score: -1 })
-        .populate('userId', 'username avatar level')
-        .limit(100);
+            .sort({ score: -1 })
+            .populate('userId', 'username avatar level')
+            .limit(100);
 
-        res.json({ 
+        res.json({
             rankings,
-            aiInsights: aiAnalysis 
+            aiInsights: aiAnalysis,
         });
     } catch (error) {
         console.error('Local rankings error:', error);
@@ -228,22 +234,22 @@ router.get('/global', authenticate, async (req, res) => {
         let query = { category: filter };
 
         if (timeRange !== 'allTime') {
-            const ranges = { 
-                today: 1, 
-                thisWeek: 7, 
-                thisMonth: 30 
+            const ranges = {
+                today: 1,
+                thisWeek: 7,
+                thisMonth: 30,
             };
             const days = ranges[timeRange] || 0;
             if (days) {
-                query.lastUpdated = { 
-                    $gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000) 
+                query.lastUpdated = {
+                    $gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000),
                 };
             }
         }
 
         if (search) {
-            const userIds = await User.find({ 
-                username: { $regex: search, $options: 'i' } 
+            const userIds = await User.find({
+                username: { $regex: search, $options: 'i' },
             }).distinct('_id');
             query.userId = { $in: userIds };
         }
@@ -252,23 +258,27 @@ router.get('/global', authenticate, async (req, res) => {
             Leaderboard.aggregate([
                 { $match: query },
                 { $sort: { score: -1 } },
-                { $lookup: { 
-                    from: 'users', 
-                    localField: 'userId', 
-                    foreignField: '_id', 
-                    as: 'user' 
-                }},
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'user',
+                    },
+                },
                 { $unwind: '$user' },
                 { $skip: (page - 1) * limit },
-                { $limit: limit }
+                { $limit: limit },
             ]),
             Leaderboard.countDocuments(query),
             // Get AI insights on global rankings
-            req.user ? AISpaceCoach.generateCoachingSuggestions({
-                userId: req.user._id,
-                rankingContext: 'global',
-                timeRange: timeRange
-            }) : null
+            req.user
+                ? AISpaceCoach.generateCoachingSuggestions({
+                      userId: req.user._id,
+                      rankingContext: 'global',
+                      timeRange: timeRange,
+                  })
+                : null,
         ]);
 
         // Track this view with AI coach
@@ -276,7 +286,7 @@ router.get('/global', authenticate, async (req, res) => {
             await AISpaceCoach.trackProgress(req.user._id, {
                 type: 'GLOBAL_RANKINGS_VIEW',
                 timeRange: timeRange,
-                filter: filter
+                filter: filter,
             });
         }
 
@@ -287,8 +297,8 @@ router.get('/global', authenticate, async (req, res) => {
                 currentPage: page,
                 totalPages: Math.ceil(totalCount / limit),
                 totalEntries: totalCount,
-                entriesPerPage: limit
-            }
+                entriesPerPage: limit,
+            },
         });
     } catch (error) {
         console.error('Global rankings error:', error);
@@ -300,20 +310,20 @@ router.get('/global', authenticate, async (req, res) => {
 router.post('/track-progress', authenticate, async (req, res) => {
     try {
         const progress = await AISpaceCoach.trackProgress(req.user._id, req.body);
-        
+
         const [achievements, suggestions] = await Promise.all([
             AISpaceCoach.checkAchievements(req.user._id),
             AISpaceCoach.generateCoachingSuggestions({
                 userId: req.user._id,
-                recentProgress: progress
-            })
+                recentProgress: progress,
+            }),
         ]);
 
         res.json({
             success: true,
             progress,
             achievements,
-            suggestions
+            suggestions,
         });
     } catch (error) {
         console.error('Progress tracking error:', error);
@@ -331,23 +341,30 @@ router.get('/stats', authenticate, async (req, res) => {
                         _id: null,
                         totalUsers: { $sum: 1 },
                         totalCredits: { $sum: '$score' },
-                        activeUsers: { 
-                            $sum: { 
+                        activeUsers: {
+                            $sum: {
                                 $cond: [
-                                    { $gt: ['$lastActivity', new Date(Date.now() - 24 * 60 * 60 * 1000)] },
+                                    {
+                                        $gt: [
+                                            '$lastActivity',
+                                            new Date(Date.now() - 24 * 60 * 60 * 1000),
+                                        ],
+                                    },
                                     1,
-                                    0
-                                ]
-                            }
+                                    0,
+                                ],
+                            },
                         },
-                        averageScore: { $avg: '$score' }
-                    }
-                }
+                        averageScore: { $avg: '$score' },
+                    },
+                },
             ]),
-            req.user ? AISpaceCoach.calculateSpaceReadiness({
-                userId: req.user._id,
-                context: 'stats'
-            }) : null
+            req.user
+                ? AISpaceCoach.calculateSpaceReadiness({
+                      userId: req.user._id,
+                      context: 'stats',
+                  })
+                : null,
         ]);
 
         res.json({
@@ -355,9 +372,9 @@ router.get('/stats', authenticate, async (req, res) => {
                 totalUsers: 0,
                 totalCredits: 0,
                 activeUsers: 0,
-                averageScore: 0
+                averageScore: 0,
             },
-            aiInsights: aiAnalysis
+            aiInsights: aiAnalysis,
         });
     } catch (error) {
         console.error('Stats error:', error);

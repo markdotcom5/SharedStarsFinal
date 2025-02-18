@@ -1,10 +1,10 @@
-const EventEmitter = require("events");
-const OpenAI = require("openai");
-const User = require("../models/User");
-const TrainingSession = require("../models/TrainingSession");
-const Intervention = require("../models/Intervention");
-const UserProgress = require("../models/UserProgress");
-const Achievement = require("../models/Achievement");
+const EventEmitter = require('events');
+const OpenAI = require('openai');
+const User = require('../models/User');
+const TrainingSession = require('../models/TrainingSession');
+const Intervention = require('../models/Intervention');
+const UserProgress = require('../models/UserProgress');
+const Achievement = require('../models/Achievement');
 
 class AIGuidanceSystem extends EventEmitter {
     constructor() {
@@ -14,32 +14,32 @@ class AIGuidanceSystem extends EventEmitter {
         this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
         // ✅ Default AI Model
-        this.defaultModel = "gpt-4-turbo";
+        this.defaultModel = 'gpt-4-turbo';
 
         // ✅ AI Personality Traits
         this.aiPersonality = {
-            name: "STELLA",
-            traits: ["encouraging", "detail-oriented", "safety-conscious"],
-            experienceLevel: "veteran astronaut",
-            specialties: ["crisis management", "psychological support", "technical guidance"]
+            name: 'STELLA',
+            traits: ['encouraging', 'detail-oriented', 'safety-conscious'],
+            experienceLevel: 'veteran astronaut',
+            specialties: ['crisis management', 'psychological support', 'technical guidance'],
         };
 
         // ✅ Simulation Scenarios
         this.simulationScenarios = {
             emergencyResponses: [
-                "oxygen_system_failure",
-                "micrometeoroid_impact",
-                "solar_flare_warning",
-                "communication_loss",
-                "pressure_leak"
+                'oxygen_system_failure',
+                'micrometeoroid_impact',
+                'solar_flare_warning',
+                'communication_loss',
+                'pressure_leak',
             ],
             spaceOperations: [
-                "docking_procedure",
-                "spacewalk_preparation",
-                "equipment_maintenance",
-                "navigation_challenge",
-                "resource_management"
-            ]
+                'docking_procedure',
+                'spacewalk_preparation',
+                'equipment_maintenance',
+                'navigation_challenge',
+                'resource_management',
+            ],
         };
 
         // ✅ Intervention Types
@@ -47,7 +47,7 @@ class AIGuidanceSystem extends EventEmitter {
             TIME_BASED: this.handleTimeBasedIntervention,
             ERROR_BASED: this.handleErrorBasedIntervention,
             CONFIDENCE_BASED: this.handleConfidenceIntervention,
-            PROGRESS_BASED: this.handleProgressIntervention
+            PROGRESS_BASED: this.handleProgressIntervention,
         };
     }
 
@@ -62,15 +62,21 @@ class AIGuidanceSystem extends EventEmitter {
             const response = await this.openai.chat.completions.create({
                 model: this.defaultModel,
                 messages: [
-                    { role: "system", content: `You are STELLA, an AI space training coach with ${this.aiPersonality.experienceLevel} experience.` },
-                    { role: "user", content: `Generate a space scenario for a ${userLevel} trainee. Include: Situation, Conditions, Critical Decisions, Success Criteria, and Learning Objectives.` }
+                    {
+                        role: 'system',
+                        content: `You are STELLA, an AI space training coach with ${this.aiPersonality.experienceLevel} experience.`,
+                    },
+                    {
+                        role: 'user',
+                        content: `Generate a space scenario for a ${userLevel} trainee. Include: Situation, Conditions, Critical Decisions, Success Criteria, and Learning Objectives.`,
+                    },
                 ],
-                temperature: 0.7
+                temperature: 0.7,
             });
 
-            return JSON.parse(response.choices[0]?.message?.content || "{}");
+            return JSON.parse(response.choices[0]?.message?.content || '{}');
         } catch (error) {
-            console.error("❌ Error generating space scenario:", error);
+            console.error('❌ Error generating space scenario:', error);
             throw error;
         }
     }
@@ -80,7 +86,7 @@ class AIGuidanceSystem extends EventEmitter {
         try {
             const [userProgress, intervention] = await Promise.all([
                 UserProgress.findOne({ userId }),
-                this.createIntervention(userId, moduleId, triggerType)
+                this.createIntervention(userId, moduleId, triggerType),
             ]);
 
             if (this.interventionTypes[triggerType]) {
@@ -101,7 +107,7 @@ class AIGuidanceSystem extends EventEmitter {
             moduleId,
             triggerType,
             status: 'PENDING',
-            duration: { started: new Date() }
+            duration: { started: new Date() },
         });
     }
 
@@ -110,17 +116,24 @@ class AIGuidanceSystem extends EventEmitter {
         try {
             const scenario = this.simulationScenarios.emergencyResponses.includes(scenarioType)
                 ? scenarioType
-                : "oxygen_system_failure";
+                : 'oxygen_system_failure';
 
             const response = await this.openai.chat.completions.create({
                 model: this.defaultModel,
                 messages: [
-                    { role: "system", content: "Simulate a critical space emergency scenario requiring immediate response." },
-                    { role: "user", content: `Create emergency scenario: ${scenario}. Include warning signs, system readings, crew status, resources, and time constraints.` }
-                ]
+                    {
+                        role: 'system',
+                        content:
+                            'Simulate a critical space emergency scenario requiring immediate response.',
+                    },
+                    {
+                        role: 'user',
+                        content: `Create emergency scenario: ${scenario}. Include warning signs, system readings, crew status, resources, and time constraints.`,
+                    },
+                ],
             });
 
-            return JSON.parse(response.choices[0]?.message?.content || "{}");
+            return JSON.parse(response.choices[0]?.message?.content || '{}');
         } catch (error) {
             console.error('❌ Error simulating emergency:', error);
             throw error;
@@ -132,7 +145,7 @@ class AIGuidanceSystem extends EventEmitter {
         try {
             const [user, sessions] = await Promise.all([
                 User.findById(userId),
-                TrainingSession.find({ userId })
+                TrainingSession.find({ userId }),
             ]);
 
             const recentChallenges = sessions[0]?.aiGuidance?.challenges || [];
@@ -140,12 +153,18 @@ class AIGuidanceSystem extends EventEmitter {
             const response = await this.openai.chat.completions.create({
                 model: this.defaultModel,
                 messages: [
-                    { role: "system", content: `As STELLA, provide mentoring combining ${this.aiPersonality.traits.join(', ')} traits.` },
-                    { role: "user", content: `Address challenges: ${JSON.stringify(recentChallenges)}. Include insights, astronaut experiences, psychological support, and technical advice.` }
-                ]
+                    {
+                        role: 'system',
+                        content: `As STELLA, provide mentoring combining ${this.aiPersonality.traits.join(', ')} traits.`,
+                    },
+                    {
+                        role: 'user',
+                        content: `Address challenges: ${JSON.stringify(recentChallenges)}. Include insights, astronaut experiences, psychological support, and technical advice.`,
+                    },
+                ],
             });
 
-            return JSON.parse(response.choices[0]?.message?.content || "{}");
+            return JSON.parse(response.choices[0]?.message?.content || '{}');
         } catch (error) {
             console.error('❌ Error providing mentoring:', error);
             throw error;
@@ -161,12 +180,19 @@ class AIGuidanceSystem extends EventEmitter {
             const response = await this.openai.chat.completions.create({
                 model: this.defaultModel,
                 messages: [
-                    { role: "system", content: "Generate a complete space mission simulation with multiple phases." },
-                    { role: "user", content: `Create ${missionType} mission simulation. Include launch sequence, objectives, challenges, and success criteria.` }
-                ]
+                    {
+                        role: 'system',
+                        content:
+                            'Generate a complete space mission simulation with multiple phases.',
+                    },
+                    {
+                        role: 'user',
+                        content: `Create ${missionType} mission simulation. Include launch sequence, objectives, challenges, and success criteria.`,
+                    },
+                ],
             });
 
-            return JSON.parse(response.choices[0]?.message?.content || "{}");
+            return JSON.parse(response.choices[0]?.message?.content || '{}');
         } catch (error) {
             console.error('❌ Error generating mission simulation:', error);
             throw error;
@@ -175,12 +201,22 @@ class AIGuidanceSystem extends EventEmitter {
 
     // ✅ Utility Functions
     determineMissionType(progress) {
-        const missionTypes = ['orbital_insertion', 'lunar_landing', 'mars_approach', 'deep_space_exploration', 'space_station_docking'];
+        const missionTypes = [
+            'orbital_insertion',
+            'lunar_landing',
+            'mars_approach',
+            'deep_space_exploration',
+            'space_station_docking',
+        ];
         return missionTypes[Math.floor((progress.overallScore || 0) / 20)] || missionTypes[0];
     }
 
     calculateUserLevel(progress) {
-        return ['rookie', 'intermediate', 'advanced', 'expert', 'mission-ready'][Math.floor((progress.overallScore || 0) / 20)] || 'rookie';
+        return (
+            ['rookie', 'intermediate', 'advanced', 'expert', 'mission-ready'][
+                Math.floor((progress.overallScore || 0) / 20)
+            ] || 'rookie'
+        );
     }
 }
 

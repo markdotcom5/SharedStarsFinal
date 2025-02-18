@@ -8,18 +8,19 @@ const getLanguagePreference = (req, res, next) => {
 };
 
 // Common render function
-const renderPage = (page, title) => async (req, res) => {
+const renderPage = (page, title) => async (req, res, next) => {
     try {
         res.render(page, {
             selectedLang: req.selectedLang,
             title: `${title} - StelTrek`,
             isPage: page, // For active nav highlighting
+            user: req.user || null,
         });
     } catch (error) {
         console.error(`Error rendering ${page}:`, error);
         res.status(500).render('error', {
             error: `Failed to load ${page} page`,
-            selectedLang: req.selectedLang
+            selectedLang: req.selectedLang,
         });
     }
 };
@@ -31,12 +32,12 @@ router.get('/', getLanguagePreference, renderPage('index', 'Your Journey to Spac
 router.post('/set-language', (req, res) => {
     const { language } = req.body;
     const validLanguages = ['en', 'zh', 'ko', 'es'];
-    
+
     try {
         if (!validLanguages.includes(language)) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 error: 'Invalid language selection',
-                validOptions: validLanguages
+                validOptions: validLanguages,
             });
         }
 
@@ -45,7 +46,7 @@ router.post('/set-language', (req, res) => {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict'
+            sameSite: 'strict',
         });
 
         res.json({ success: true, language });
@@ -67,23 +68,29 @@ router.get('/subscribe', getLanguagePreference, renderPage('subscribe', 'Subscri
 // Training module routes
 router.get('/training/:module', getLanguagePreference, (req, res) => {
     const modules = [
-        'physical', 'mental', 'psychological', 'spiritual', 
-        'technical', 'social', 'simulations', 'creative'
+        'physical',
+        'mental',
+        'psychological',
+        'spiritual',
+        'technical',
+        'social',
+        'simulations',
+        'creative',
     ];
-    
+
     const module = req.params.module;
-    
+
     if (!modules.includes(module)) {
         return res.status(404).render('error', {
             error: 'Training module not found',
-            selectedLang: req.selectedLang
+            selectedLang: req.selectedLang,
         });
     }
-    
+
     res.render('training/module', {
         selectedLang: req.selectedLang,
         title: `${module.charAt(0).toUpperCase() + module.slice(1)} Training - StelTrek`,
-        module: module
+        module: module,
     });
 });
 
@@ -105,7 +112,7 @@ router.use((err, req, res, next) => {
     console.error('Route error:', err);
     res.status(500).render('error', {
         error: 'An unexpected error occurred',
-        selectedLang: req.selectedLang || 'en'
+        selectedLang: req.selectedLang || 'en',
     });
 });
 

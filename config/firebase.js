@@ -1,9 +1,9 @@
-const firebase = require("firebase/app");
-require("firebase/auth");
-require("firebase/firestore");
+const firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/firestore');
 
 // Import Firebase Config
-const firebaseConfig = require("./firebase.config");
+const firebaseConfig = require('./firebase.config');
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);

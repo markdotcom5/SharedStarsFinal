@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/authenticate');
 const subscriptionController = require('../controllers/subscriptionController');
-const { validateCreateSubscription, validateUpdatePaymentStatus } = require('../validators/subscriptionValidator'); // Import validators
+const {
+    validateCreateSubscription,
+    validateUpdatePaymentStatus,
+} = require('../validators/subscriptionValidator'); // Import validators
 
 // ========================
 // Subscription Routes
@@ -19,14 +22,19 @@ router.post('/create', authenticate, validateCreateSubscription, async (req, res
 });
 
 // Update Payment Status for a Subscription
-router.post('/update-payment-status', authenticate, validateUpdatePaymentStatus, async (req, res, next) => {
-    try {
-        await subscriptionController.updatePaymentStatus(req, res, next);
-    } catch (error) {
-        console.error('Error in /update-payment-status:', error.message);
-        res.status(500).json({ error: 'Failed to update payment status' });
+router.post(
+    '/update-payment-status',
+    authenticate,
+    validateUpdatePaymentStatus,
+    async (req, res, next) => {
+        try {
+            await subscriptionController.updatePaymentStatus(req, res, next);
+        } catch (error) {
+            console.error('Error in /update-payment-status:', error.message);
+            res.status(500).json({ error: 'Failed to update payment status' });
+        }
     }
-});
+);
 
 // Get Subscription Status by User
 router.get('/status', authenticate, async (req, res, next) => {
@@ -41,11 +49,15 @@ router.get('/status', authenticate, async (req, res, next) => {
 router.post('/update-tier', authenticate, async (req, res) => {
     try {
         const { tier } = req.body;
-        const user = await User.findByIdAndUpdate(req.user._id, {
-            'subscription.tier': tier,
-            'subscription.updatedAt': new Date(),
-            spaceReadinessScore: tier === 'elite' ? 1000 : 500
-        }, { new: true });
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                'subscription.tier': tier,
+                'subscription.updatedAt': new Date(),
+                spaceReadinessScore: tier === 'elite' ? 1000 : 500,
+            },
+            { new: true }
+        );
         res.json(user);
     } catch (error) {
         res.status(500).json({ error: error.message });

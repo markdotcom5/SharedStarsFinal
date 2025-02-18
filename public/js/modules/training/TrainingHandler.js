@@ -14,7 +14,7 @@ class TrainingHandler {
         this.sessionMetrics = {
             focusScore: 0,
             completionRate: 0,
-            accuracyScore: 0
+            accuracyScore: 0,
         };
     }
 
@@ -27,11 +27,11 @@ class TrainingHandler {
             const response = await fetch('/api/training/assessment/start', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    mode: 'full_guidance', 
+                body: JSON.stringify({
+                    mode: 'full_guidance',
                     userId: this.userId,
-                    initialMetrics: this.sessionMetrics 
-                })
+                    initialMetrics: this.sessionMetrics,
+                }),
             });
 
             const result = await response.json();
@@ -40,7 +40,7 @@ class TrainingHandler {
                 this.questions = result.questions.questions;
                 this.currentQuestionIndex = 0;
                 await this.showAIGuidedQuestion(this.questions[0]);
-                
+
                 // Start tracking progress
                 this.progressTracker.startTracking(this.sessionId);
             } else {
@@ -53,22 +53,22 @@ class TrainingHandler {
 
     async showAIGuidedQuestion(question) {
         console.log('Displaying question:', question.text);
-        
+
         // Get FSD analysis for adaptive difficulty
         const learnerState = await this.fsd.analyzeLearnerState({
             focusTime: this.sessionMetrics.focusScore,
             interactionRate: this.sessionMetrics.completionRate,
-            accuracy: this.sessionMetrics.accuracyScore
+            accuracy: this.sessionMetrics.accuracyScore,
         });
 
         // Show immediate guidance
-        AIAssistant.showGuidance("Analyzing your response pattern...");
+        AIAssistant.showGuidance('Analyzing your response pattern...');
 
         // Get personalized guidance
         const guidance = await AIAssistant.requestGuidance({
             questionId: question.id,
             currentProgress: this.currentQuestionIndex,
-            learnerState
+            learnerState,
         });
 
         console.log('Received guidance:', guidance);
@@ -133,15 +133,15 @@ class TrainingHandler {
                 body: JSON.stringify({
                     question: currentQuestion,
                     answer: answer,
-                    metrics: this.sessionMetrics
-                })
+                    metrics: this.sessionMetrics,
+                }),
             });
 
             const result = await response.json();
             if (result.success) {
                 // Update metrics
                 this.updateSessionMetrics(result.metrics);
-                
+
                 this.currentQuestionIndex++;
                 if (result.isComplete) {
                     await this.completeAssessment();
@@ -159,7 +159,7 @@ class TrainingHandler {
     updateSessionMetrics(newMetrics) {
         this.sessionMetrics = {
             ...this.sessionMetrics,
-            ...newMetrics
+            ...newMetrics,
         };
         this.progressTracker.updateMetrics(this.sessionMetrics);
     }
@@ -170,13 +170,16 @@ class TrainingHandler {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    finalMetrics: this.sessionMetrics
-                })
+                    finalMetrics: this.sessionMetrics,
+                }),
             });
 
             const result = await response.json();
             if (result.success) {
-                console.log('Assessment completed successfully. Training plan:', result.trainingPlan);
+                console.log(
+                    'Assessment completed successfully. Training plan:',
+                    result.trainingPlan
+                );
                 this.progressTracker.completeSession(result.trainingPlan);
                 await this.showCompletionSummary(result);
             } else {

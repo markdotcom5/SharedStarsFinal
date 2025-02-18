@@ -4,10 +4,10 @@ const ModuleHighlight = require('./ModuleHighlight');
 const ProgressTracker = require('./ProgressTracker');
 
 module.exports = {
-  AchievementDisplay,
-  PathPredictor,
-  ModuleHighlight,
-  ProgressTracker,
+    AchievementDisplay,
+    PathPredictor,
+    ModuleHighlight,
+    ProgressTracker,
 };
 
 class ProgressTrackingSystem {
@@ -22,7 +22,7 @@ class ProgressTrackingSystem {
         // Progress Bar
         const progressBar = document.createElement('div');
         progressBar.className = 'fixed top-0 left-0 w-full h-1 bg-gray-800';
-        
+
         const progress = document.createElement('div');
         progress.className = 'h-full bg-blue-500 transition-all duration-300';
         progressBar.appendChild(progress);
@@ -42,8 +42,8 @@ class ProgressTrackingSystem {
                 body: JSON.stringify({
                     moduleId,
                     completionData,
-                    timestamp: Date.now()
-                })
+                    timestamp: Date.now(),
+                }),
             });
 
             const { progress, achievements } = await response.json();
@@ -55,7 +55,7 @@ class ProgressTrackingSystem {
     }
 
     handleNewAchievements(achievements) {
-        achievements.forEach(achievement => {
+        achievements.forEach((achievement) => {
             this.showAchievementNotification(achievement);
             this.visualSystem.highlightModule(achievement.moduleId, 'achievement');
         });

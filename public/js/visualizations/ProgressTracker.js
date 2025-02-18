@@ -59,7 +59,7 @@ class ProgressTracker {
 
     updateProgress(data) {
         const { overall, skills, metrics, credits, timeline } = data;
-        
+
         // Update original progress
         this.container.querySelector('.progress').style.width = `${overall}%`;
         this.updateSkills(skills);
@@ -126,7 +126,7 @@ class ProgressTracker {
 
     animateNumber(element, start, end) {
         if (isNaN(start) || isNaN(end)) return;
-        
+
         const duration = 1000;
         const steps = 60;
         const stepValue = (end - start) / steps;
@@ -147,22 +147,22 @@ class ProgressTracker {
 
     initializeWebSocket() {
         const ws = new WebSocket(`wss://${window.location.host}/ws`);
-        
+
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             switch (data.type) {
                 case 'progress_update':
                     this.updateProgress(data.progress);
                     break;
-                    
+
                 case 'credit_update':
                     this.updateCredits(data.data);
                     break;
-                    
+
                 case 'timeline_update':
                     this.updateTimeline(data.data);
                     break;
-                    
+
                 case 'achievement_unlocked':
                     this.showAchievementNotification(data.data);
                     break;
@@ -185,7 +185,8 @@ class ProgressTracker {
 
     showAchievementNotification(achievement) {
         const notification = document.createElement('div');
-        notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-y-0 transition-transform duration-300';
+        notification.className =
+            'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-y-0 transition-transform duration-300';
         notification.innerHTML = `
             <div class="flex items-center space-x-3">
                 <div class="text-2xl">${achievement.icon}</div>

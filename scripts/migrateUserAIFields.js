@@ -6,17 +6,17 @@ const fs = require('fs');
 
 // Language configuration matching your frontend
 const LANGUAGE_CONFIG = {
-    en: { flag: "🇺🇸", name: "English", default: true },
-    zh: { flag: "🇨🇳", name: "Chinese", default: false },
-    ko: { flag: "🇰🇷", name: "Korean", default: false },
-    es: { flag: "🇪🇸", name: "Spanish", default: false }
+    en: { flag: '🇺🇸', name: 'English', default: true },
+    zh: { flag: '🇨🇳', name: 'Chinese', default: false },
+    ko: { flag: '🇰🇷', name: 'Korean', default: false },
+    es: { flag: '🇪🇸', name: 'Spanish', default: false },
 };
 
 // AI Guidance configuration
 const AI_GUIDANCE_LEVELS = {
     MANUAL: 'manual',
     ASSIST: 'assist',
-    FULL_GUIDANCE: 'full_guidance'
+    FULL_GUIDANCE: 'full_guidance',
 };
 
 async function migrateUsers(dryRun = false) {
@@ -27,7 +27,10 @@ async function migrateUsers(dryRun = false) {
             throw new Error('MONGO_URI not found in environment variables');
         }
 
-        await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
         console.log('✅ Connected to database');
 
         const users = await User.find({});
@@ -49,7 +52,7 @@ async function migrateUsers(dryRun = false) {
                             pacePreference: 'balanced',
                             focusAreas: [],
                             adaptiveUI: true,
-                            language: { preferred: null, flag: null, lastUpdated: new Date() }
+                            language: { preferred: null, flag: null, lastUpdated: new Date() },
                         },
                         context: {
                             currentPhase: 'onboarding',
@@ -57,8 +60,8 @@ async function migrateUsers(dryRun = false) {
                             progressMetrics: {},
                             activeModules: [],
                             recentDecisions: [],
-                            lastUpdated: new Date()
-                        }
+                            lastUpdated: new Date(),
+                        },
                     },
                     trainingProgress: {
                         currentModule: null,
@@ -66,15 +69,15 @@ async function migrateUsers(dryRun = false) {
                         achievements: [],
                         skillLevels: {},
                         lastActivity: new Date(),
-                        nextMilestone: null
+                        nextMilestone: null,
                     },
                     localization: {
                         selectedLanguage: null,
                         flag: null,
                         region: null,
                         timezone: null,
-                        lastUpdated: new Date()
-                    }
+                        lastUpdated: new Date(),
+                    },
                 };
 
                 // Handle existing language settings
@@ -96,14 +99,14 @@ async function migrateUsers(dryRun = false) {
                             email: true,
                             push: true,
                             aiSuggestions: true,
-                            language: true
+                            language: true,
                         },
                         aiPreferences: {
                             automationLevel: 'moderate',
                             interactionStyle: 'reactive',
                             dataCollection: 'enhanced',
-                            languageAssist: true
-                        }
+                            languageAssist: true,
+                        },
                     };
                 }
 
@@ -116,7 +119,9 @@ async function migrateUsers(dryRun = false) {
 
                     if (result.modifiedCount > 0) {
                         updated++;
-                        console.log(`Updated user ${user._id}${!currentLanguage ? ' (needs language selection)' : ''}`);
+                        console.log(
+                            `Updated user ${user._id}${!currentLanguage ? ' (needs language selection)' : ''}`
+                        );
                     }
                 } else {
                     console.log(`Dry run: User ${user._id} would be updated.`);
@@ -130,7 +135,7 @@ async function migrateUsers(dryRun = false) {
         const requiredFiles = [
             'public/js/languages.js',
             'public/js/language-switcher.js',
-            'public/js/languageSelection.js'
+            'public/js/languageSelection.js',
         ];
 
         console.log('\nVerifying frontend files:');
@@ -147,7 +152,7 @@ async function migrateUsers(dryRun = false) {
         await Promise.allSettled([
             User.collection.createIndex({ 'aiGuidance.mode': 1 }),
             User.collection.createIndex({ 'settings.language': 1 }),
-            User.collection.createIndex({ 'localization.selectedLanguage': 1 })
+            User.collection.createIndex({ 'localization.selectedLanguage': 1 }),
         ]);
         console.log('Indexes created successfully');
 

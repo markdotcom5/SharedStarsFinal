@@ -6,34 +6,24 @@
     <%- include('partials/header') %>
 
     <!-- Hero Section -->
-    <section class="hero-section min-h-screen flex items-center justify-center relative">
-      <div class="video-container">
-        <video id="heroVideo" class="video-background" autoplay muted loop playsinline>
-          <!-- Using absolute path for video -->
-          <source src="/videos/academy10.mp4" type="video/mp4">
-        </video>
-      </div>
+   
+    <section id="hero" class="relative min-h-screen flex items-start justify-center text-center pt-24 z-40">
+      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+        <source src="/public/videos/academy10.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+  
+   <div class="absolute inset-0 w-full h-full bg-black pointer-events-none bg-opacity-75 z-20"></div>
 
-      <!-- Hero Content -->
-      <div class="hero-content text-center text-white max-w-4xl px-4">
-        <h1 class="text-6xl font-bold mb-4" data-i18n="heroTitle">From Earth to Space in 36 Months</h1>
-        <p class="text-xl mb-8" data-i18n="subtitle">Like Tesla's FSD for Space Training: Intelligent, Adaptive, Revolutionary</p>
-
-        <!-- Training Mode Selection -->
-        <div class="training-modes grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Self-Paced Mode -->
-          <div class="mode-card bg-black/30 backdrop-blur p-6 rounded-xl border border-blue-500/20">
-            <h3 class="text-2xl font-bold mb-3">Self-Paced Training</h3>
-            <p class="mb-4">Learn at your own pace with structured modules</p>
-            <button class="training-mode-btn" data-mode="self-paced">Start Journey</button>
-          </div>
-
-          <!-- AI-Guided Mode -->
-          <div class="mode-card bg-black/30 backdrop-blur p-6 rounded-xl border border-purple-500/20">
-            <h3 class="text-2xl font-bold mb-3">AI-Guided Path</h3>
-            <p class="mb-4">Accelerated learning with FSD-style adaptive training</p>
-            <button class="training-mode-btn" data-mode="ai-guided">Launch AI Training</button>
-          </div>
+      <div class="relative flex flex-col mt-28 items-center justify-start max-w-5xl px-4 z-20">
+        <h1 class="hero-text font-aeonik text-heading1 text-white px-20 mb-6">World's Largest AI- Powered Space Training Platform</h1>
+        <p data-i18n="hero.subtitle" class="text-body-medium-medium max-w-2xl text-white mb-8">
+          In 36 months, humanity splits into two groups: Those who have prepared for space and those who watch from Earth.
+        </p>
+        <div class="w-full space-x-4 text-body-2xsmall-semibold">
+          <a data-i18n="hero.beginTraining" href="/signup" class="bg-black text-white px-6 py-3 z-30 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start Training Now</a>
+          <a data-i18n="hero.yourCountdown" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">See Your Countdown to Space</a>
+          <a data-i18n="hero.membershipPlans" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Explore Membership Plans</a>
         </div>
       </div>
     </section>

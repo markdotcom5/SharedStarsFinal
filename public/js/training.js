@@ -3,12 +3,12 @@ class TrainingInterface {
         this.timelineManager = window.timelineManager;
         this.biometricMonitor = new BiometricMonitor();
         this.aiCoach = new AICoach();
-        
+
         this.moduleState = {
             currentPhase: null,
             failedAttempts: 0,
             certificationRequirements: new Map(),
-            performanceHistory: []
+            performanceHistory: [],
         };
 
         this.requirementThresholds = {
@@ -19,21 +19,21 @@ class TrainingInterface {
                 biometricTargets: {
                     heartRate: { min: 60, max: 150 },
                     oxygenLevel: { min: 95 },
-                    stressLevel: { max: 7 }
-                }
+                    stressLevel: { max: 7 },
+                },
             },
             technical: {
                 requiredProcedures: 50,
                 emergencyScenarios: 25,
                 systemMasteryScore: 0.9,
-                theoreticalExamScore: 0.85
+                theoreticalExamScore: 0.85,
             },
             simulation: {
                 missionCompletions: 30,
                 teamCoordination: 20,
                 crisisManagement: 15,
-                decisionAccuracy: 0.9
-            }
+                decisionAccuracy: 0.9,
+            },
         };
     }
 
@@ -47,7 +47,7 @@ class TrainingInterface {
             ...moduleData,
             startTime: Date.now(),
             failurePoints: new Set(),
-            adaptiveDifficulty: this.calculateInitialDifficulty()
+            adaptiveDifficulty: this.calculateInitialDifficulty(),
         };
 
         await this.initializePhase(moduleData.phases[0]);
@@ -56,13 +56,13 @@ class TrainingInterface {
     async initializePhase(phase) {
         const biometrics = await this.biometricMonitor.startTracking({
             interval: 1000,
-            metrics: ['heartRate', 'oxygenLevel', 'stressLevel']
+            metrics: ['heartRate', 'oxygenLevel', 'stressLevel'],
         });
 
         const aiGuidance = await this.aiCoach.analyzeLearnerState({
             historicalPerformance: this.moduleState.performanceHistory,
             currentBiometrics: biometrics,
-            phaseRequirements: phase.requirements
+            phaseRequirements: phase.requirements,
         });
 
         this.adjustDifficulty(aiGuidance.recommendations);
@@ -70,7 +70,7 @@ class TrainingInterface {
 
     async evaluatePerformance() {
         const metrics = await this.collectDetailedMetrics();
-        
+
         if (this.checkFailureConditions(metrics)) {
             await this.handleFailure(metrics);
             return;
@@ -86,20 +86,21 @@ class TrainingInterface {
 
     checkFailureConditions(metrics) {
         const thresholds = this.requirementThresholds[this.currentModule.type];
-        
-        return metrics.some(metric => 
-            metric.value < thresholds[metric.type].min ||
-            metric.value > thresholds[metric.type].max
+
+        return metrics.some(
+            (metric) =>
+                metric.value < thresholds[metric.type].min ||
+                metric.value > thresholds[metric.type].max
         );
     }
 
     async handleFailure(metrics) {
         this.moduleState.failedAttempts++;
-        
+
         const recoveryPlan = await this.aiCoach.generateRecoveryPlan({
             failureMetrics: metrics,
             attemptHistory: this.moduleState.failedAttempts,
-            learnerState: this.moduleState
+            learnerState: this.moduleState,
         });
 
         this.updateDifficulty(recoveryPlan.adjustments);
@@ -110,11 +111,11 @@ class TrainingInterface {
         const weights = {
             practicalPerformance: 0.4,
             theoreticalKnowledge: 0.3,
-            safetyAdherence: 0.3
+            safetyAdherence: 0.3,
         };
 
         return Object.entries(weights).reduce((total, [metric, weight]) => {
-            return total + (metrics[metric] * weight);
+            return total + metrics[metric] * weight;
         }, 0);
     }
 

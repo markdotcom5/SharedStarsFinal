@@ -20,7 +20,6 @@ const createTestUser = async () => {
 
         await testUser.save(); // Save the user to the database
         console.log('✅ Test User Created:', testUser);
-
     } catch (err) {
         console.error('❌ Error creating test user:', err.message);
     } finally {

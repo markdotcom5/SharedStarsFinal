@@ -1,6 +1,6 @@
 {
-  "name": "Desktop",
-  "lockfileVersion": 3,
-  "requires": true,
-  "packages": {}
+    "name": "Desktop",
+    "lockfileVersion": 3,
+    "requires": true,
+    "packages": {}
 }

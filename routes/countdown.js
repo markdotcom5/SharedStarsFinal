@@ -31,7 +31,7 @@ function calculateTimeRemaining(targetDate) {
         minutes: minutes % 60,
         seconds: seconds % 60,
         totalSeconds: seconds,
-        formatted: `${years ? years + 'y ' : ''}${months % 12 ? (months % 12) + 'm ' : ''}${weeks % 4 ? (weeks % 4) + 'w ' : ''}${days % 7 ? (days % 7) + 'd ' : ''}${hours % 24}h ${minutes % 60}m ${seconds % 60}s`
+        formatted: `${years ? years + 'y ' : ''}${months % 12 ? (months % 12) + 'm ' : ''}${weeks % 4 ? (weeks % 4) + 'w ' : ''}${days % 7 ? (days % 7) + 'd ' : ''}${hours % 24}h ${minutes % 60}m ${seconds % 60}s`,
     };
 }
 
@@ -40,59 +40,63 @@ router.get('/user', authenticate, async (req, res) => {
     try {
         const [userProgress, user] = await Promise.all([
             UserProgress.findOne({ userId: req.user._id }),
-            User.findById(req.user._id).select('leaderboard subscription')
+            User.findById(req.user._id).select('leaderboard subscription'),
         ]);
-        
+
         if (!userProgress) {
             return res.status(404).json({
                 success: false,
-                error: 'No progress found for this user'
+                error: 'No progress found for this user',
             });
         }
 
         // Calculate countdowns for active modules
-        const countdowns = userProgress.moduleProgress.map(progress => {
-            const nextSessionDate = progress.lastSessionDate ? 
-                new Date(progress.lastSessionDate.getTime() + (24 * 60 * 60 * 1000)) : 
-                new Date();
-            
-            const streakExpiryDate = progress.lastSessionDate ? 
-                new Date(progress.lastSessionDate.getTime() + (48 * 60 * 60 * 1000)) : 
-                null;
+        const countdowns = userProgress.moduleProgress.map((progress) => {
+            const nextSessionDate = progress.lastSessionDate
+                ? new Date(progress.lastSessionDate.getTime() + 24 * 60 * 60 * 1000)
+                : new Date();
+
+            const streakExpiryDate = progress.lastSessionDate
+                ? new Date(progress.lastSessionDate.getTime() + 48 * 60 * 60 * 1000)
+                : null;
 
             // Adjust moduleExpiryDate based on leaderboard score
             let moduleExpiryDays = 90;
             if (user.leaderboard.score > 1000) moduleExpiryDays *= 0.9;
             if (user.leaderboard.score > 2000) moduleExpiryDays *= 0.8;
 
-            const moduleExpiryDate = progress.startDate ? 
-                new Date(progress.startDate.getTime() + (moduleExpiryDays * 24 * 60 * 60 * 1000)) : 
-                null;
+            const moduleExpiryDate = progress.startDate
+                ? new Date(progress.startDate.getTime() + moduleExpiryDays * 24 * 60 * 60 * 1000)
+                : null;
 
             return {
                 moduleId: progress.moduleId,
                 deadlines: {
                     nextSession: {
                         date: nextSessionDate,
-                        remaining: calculateTimeRemaining(nextSessionDate)
+                        remaining: calculateTimeRemaining(nextSessionDate),
                     },
                     streakExpiry: {
                         date: streakExpiryDate,
-                        remaining: calculateTimeRemaining(streakExpiryDate)
+                        remaining: calculateTimeRemaining(streakExpiryDate),
                     },
                     moduleExpiry: {
                         date: moduleExpiryDate,
-                        remaining: calculateTimeRemaining(moduleExpiryDate)
-                    }
+                        remaining: calculateTimeRemaining(moduleExpiryDate),
+                    },
                 },
                 streak: progress.streak || 0,
                 nextMilestone: progress.nextMilestone,
                 streakAt: progress.streak || 0,
                 leaderboardImpact: {
-                    scoreModifier: user.leaderboard.score > 2000 ? 0.8 : 
-                                 user.leaderboard.score > 1000 ? 0.9 : 1,
-                    currentScore: user.leaderboard.score
-                }
+                    scoreModifier:
+                        user.leaderboard.score > 2000
+                            ? 0.8
+                            : user.leaderboard.score > 1000
+                              ? 0.9
+                              : 1,
+                    currentScore: user.leaderboard.score,
+                },
             };
         });
 
@@ -102,15 +106,15 @@ router.get('/user', authenticate, async (req, res) => {
             leaderboard: {
                 currentScore: user.leaderboard.score,
                 rank: user.leaderboard.rank,
-                recentHistory: user.leaderboard.history.slice(-5)
+                recentHistory: user.leaderboard.history.slice(-5),
             },
-            serverTime: new Date()
+            serverTime: new Date(),
         });
     } catch (error) {
         console.error('❌ Error fetching countdown:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to fetch countdown information'
+            error: 'Failed to fetch countdown information',
         });
     }
 });
@@ -118,70 +122,70 @@ router.get('/user', authenticate, async (req, res) => {
 router.get('/module/:moduleId', authenticate, async (req, res) => {
     try {
         const { moduleId } = req.params;
-        const userProgress = await UserProgress.findOne({ 
+        const userProgress = await UserProgress.findOne({
             userId: req.user._id,
-            'moduleProgress.moduleId': moduleId
+            'moduleProgress.moduleId': moduleId,
         });
 
         if (!userProgress) {
             return res.status(404).json({
                 success: false,
-                error: 'No progress found for this module'
+                error: 'No progress found for this module',
             });
         }
 
-        const moduleProgress = userProgress.moduleProgress.find(p => p.moduleId === moduleId);
-        
+        const moduleProgress = userProgress.moduleProgress.find((p) => p.moduleId === moduleId);
+
         if (!moduleProgress) {
             return res.status(404).json({
                 success: false,
-                error: 'Module progress not found'
+                error: 'Module progress not found',
             });
         }
 
-        const nextSessionDate = moduleProgress.lastSessionDate ? 
-            new Date(moduleProgress.lastSessionDate.getTime() + (24 * 60 * 60 * 1000)) : 
-            new Date();
-        
-        const streakExpiryDate = moduleProgress.lastSessionDate ? 
-            new Date(moduleProgress.lastSessionDate.getTime() + (48 * 60 * 60 * 1000)) : 
-            null;
+        const nextSessionDate = moduleProgress.lastSessionDate
+            ? new Date(moduleProgress.lastSessionDate.getTime() + 24 * 60 * 60 * 1000)
+            : new Date();
 
-        const moduleExpiryDate = moduleProgress.startDate ? 
-            new Date(moduleProgress.startDate.getTime() + (90 * 24 * 60 * 60 * 1000)) : 
-            null;
+        const streakExpiryDate = moduleProgress.lastSessionDate
+            ? new Date(moduleProgress.lastSessionDate.getTime() + 48 * 60 * 60 * 1000)
+            : null;
+
+        const moduleExpiryDate = moduleProgress.startDate
+            ? new Date(moduleProgress.startDate.getTime() + 90 * 24 * 60 * 60 * 1000)
+            : null;
 
         const countdown = {
             moduleId,
             deadlines: {
                 nextSession: {
                     date: nextSessionDate,
-                    remaining: calculateTimeRemaining(nextSessionDate)
+                    remaining: calculateTimeRemaining(nextSessionDate),
                 },
                 streakExpiry: {
                     date: streakExpiryDate,
-                    remaining: calculateTimeRemaining(streakExpiryDate)
+                    remaining: calculateTimeRemaining(streakExpiryDate),
                 },
                 moduleExpiry: {
                     date: moduleExpiryDate,
-                    remaining: calculateTimeRemaining(moduleExpiryDate)
-                }
+                    remaining: calculateTimeRemaining(moduleExpiryDate),
+                },
             },
             streak: moduleProgress.streak || 0,
             nextMilestone: moduleProgress.nextMilestone,
-            streakAt: moduleProgress.streak || 0
+            streakAt: moduleProgress.streak || 0,
         };
 
         res.json({
             success: true,
             countdown,
-            serverTime: new Date()
+            serverTime: new Date(),
         });
     } catch (error) {
         console.error('❌ Error fetching module countdown:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to fetch module countdown information'
+            error: 'Failed to fetch module countdown information',
         });
     }
 });

@@ -13,7 +13,7 @@ router.get('/social/:platform', async (req, res) => {
         if (!SocialPlatformIntegrator.platforms[platform]) {
             return res.status(400).json({
                 success: false,
-                error: `Platform ${platform} not supported`
+                error: `Platform ${platform} not supported`,
             });
         }
 
@@ -21,13 +21,13 @@ router.get('/social/:platform', async (req, res) => {
         const testData = {
             user: {
                 name: 'Test User',
-                id: 'test_user'
+                id: 'test_user',
             },
             details: {
                 type: 'test',
                 message: `Testing ${platform} integration`,
-                timestamp: new Date().toISOString()
-            }
+                timestamp: new Date().toISOString(),
+            },
         };
 
         // Test sharing
@@ -38,16 +38,15 @@ router.get('/social/:platform', async (req, res) => {
             success: true,
             platform,
             result,
-            apiStatus: getApiStatus(platform)
+            apiStatus: getApiStatus(platform),
         });
-
     } catch (error) {
         console.error(`❌ ${req.params.platform} Test Error:`, error);
         res.status(500).json({
             success: false,
             platform: req.params.platform,
             error: error.message,
-            apiStatus: getApiStatus(req.params.platform)
+            apiStatus: getApiStatus(req.params.platform),
         });
     }
 });
@@ -66,13 +65,13 @@ router.get('/social/test-all', async (req, res) => {
                 const testData = {
                     user: {
                         name: 'Test User',
-                        id: 'test_user'
+                        id: 'test_user',
                     },
                     details: {
                         type: 'test',
                         message: `Testing ${platform} integration`,
-                        timestamp: new Date().toISOString()
-                    }
+                        timestamp: new Date().toISOString(),
+                    },
                 };
 
                 const result = await SocialPlatformIntegrator.shareEvent(platform, testData);
@@ -88,14 +87,13 @@ router.get('/social/test-all', async (req, res) => {
             success: true,
             results,
             errors,
-            platformStatus: getAllPlatformStatus()
+            platformStatus: getAllPlatformStatus(),
         });
-
     } catch (error) {
         console.error('❌ All Platforms Test Error:', error);
         res.status(500).json({
             success: false,
-            error: error.message
+            error: error.message,
         });
     }
 });
@@ -105,31 +103,31 @@ function getApiStatus(platform) {
     const statusMap = {
         youtube: {
             apiKey: process.env.YOUTUBE_API_KEY ? 'Configured' : 'Missing',
-            channelId: process.env.YOUTUBE_CHANNEL_ID ? 'Configured' : 'Missing'
+            channelId: process.env.YOUTUBE_CHANNEL_ID ? 'Configured' : 'Missing',
         },
         facebook: {
             apiKey: process.env.FACEBOOK_API_KEY ? 'Configured' : 'Missing',
-            appId: process.env.FACEBOOK_APP_ID ? 'Configured' : 'Missing'
+            appId: process.env.FACEBOOK_APP_ID ? 'Configured' : 'Missing',
         },
         xcom: {
             apiKey: process.env.TWITTER_API_KEY ? 'Configured' : 'Missing',
-            accessToken: process.env.TWITTER_ACCESS_TOKEN ? 'Configured' : 'Missing'
+            accessToken: process.env.TWITTER_ACCESS_TOKEN ? 'Configured' : 'Missing',
         },
         linkedin: {
             apiKey: process.env.LINKEDIN_API_KEY ? 'Configured' : 'Missing',
-            clientId: process.env.LINKEDIN_CLIENT_ID ? 'Configured' : 'Missing'
+            clientId: process.env.LINKEDIN_CLIENT_ID ? 'Configured' : 'Missing',
         },
         tiktok: {
             apiKey: process.env.TIKTOK_API_KEY ? 'Configured' : 'Missing',
-            clientKey: process.env.TIKTOK_CLIENT_KEY ? 'Configured' : 'Missing'
+            clientKey: process.env.TIKTOK_CLIENT_KEY ? 'Configured' : 'Missing',
         },
         telegram: {
-            botToken: process.env.TELEGRAM_BOT_TOKEN ? 'Configured' : 'Missing'
+            botToken: process.env.TELEGRAM_BOT_TOKEN ? 'Configured' : 'Missing',
         },
         instagram: {
             apiKey: process.env.INSTAGRAM_API_KEY ? 'Configured' : 'Missing',
-            clientId: process.env.INSTAGRAM_CLIENT_ID ? 'Configured' : 'Missing'
-        }
+            clientId: process.env.INSTAGRAM_CLIENT_ID ? 'Configured' : 'Missing',
+        },
     };
 
     return statusMap[platform] || { error: 'Platform not configured' };
@@ -139,8 +137,8 @@ function getApiStatus(platform) {
 function getAllPlatformStatus() {
     const platforms = Object.keys(SocialPlatformIntegrator.platforms);
     const status = {};
-    
-    platforms.forEach(platform => {
+
+    platforms.forEach((platform) => {
         status[platform] = getApiStatus(platform);
     });
 

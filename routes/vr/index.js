@@ -13,7 +13,7 @@ router.post('/session/start', authenticate, async (req, res) => {
         const session = new VRSession({
             userId: req.user._id,
             deviceType,
-            scenario
+            scenario,
         });
         await session.save();
         res.json({ success: true, sessionId: session._id });

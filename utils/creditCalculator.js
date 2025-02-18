@@ -3,13 +3,13 @@ class CreditCalculator {
     static BASE_CREDITS = {
         ASSESSMENT: 100,
         TRAINING: 150,
-        CERTIFICATION: 500
+        CERTIFICATION: 500,
     };
 
     static STREAK_MULTIPLIERS = {
-        3: 1.2,  // 3 day streak = 20% bonus
-        5: 1.5,  // 5 day streak = 50% bonus
-        7: 2.0   // 7 day streak = 100% bonus
+        3: 1.2, // 3 day streak = 20% bonus
+        5: 1.5, // 5 day streak = 50% bonus
+        7: 2.0, // 7 day streak = 100% bonus
     };
 
     static calculateSessionCredits(session, userStreak = 1) {
@@ -58,36 +58,39 @@ router.post('/training/complete', authenticate, async (req, res) => {
 
         const trainingSession = new TrainingSession({
             userId: req.user._id,
-            moduleType: 'assessment',  // ✅ Correct
+            moduleType: 'assessment', // ✅ Correct
             status: 'completed',
             dateTime: new Date(),
             metrics: {
                 completionRate: completionScore,
                 effectivenessScore: completionScore,
-                overallRank: 1
+                overallRank: 1,
             },
             assessment: {
                 score: completionScore,
                 completedAt: new Date(),
-                aiRecommendations: ['Keep up the great work!']
-            }
+                aiRecommendations: ['Keep up the great work!'],
+            },
         });
-        
+
         // Calculate credits with enhancements
-        const earnedCredits = CreditCalculator.calculateSessionCredits(trainingSession, currentStreak);
-        
+        const earnedCredits = CreditCalculator.calculateSessionCredits(
+            trainingSession,
+            currentStreak
+        );
+
         // Update user progress
         await UserProgress.findOneAndUpdate(
             { userId: req.user._id },
             {
-                $inc: { 
+                $inc: {
                     totalCredits: earnedCredits,
-                    todayCredits: earnedCredits
+                    todayCredits: earnedCredits,
                 },
                 $set: {
                     lastTrainingDate: new Date(),
-                    trainingStreak: currentStreak
-                }
+                    trainingStreak: currentStreak,
+                },
             },
             { upsert: true, new: true }
         );
@@ -108,14 +111,14 @@ router.post('/training/complete', authenticate, async (req, res) => {
             currentStreak,
             metrics: trainingSession.metrics,
             yearsToLaunch,
-            totalCredits: await timelineManager.getTrainingCredits()
+            totalCredits: await timelineManager.getTrainingCredits(),
         });
     } catch (error) {
         console.error('Error awarding training credits:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Failed to award training credits',
             message: error.message,
-            details: error.errors
+            details: error.errors,
         });
     }
 });

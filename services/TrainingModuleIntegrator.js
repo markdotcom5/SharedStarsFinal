@@ -1,98 +1,98 @@
 const EventEmitter = require('events');
-const SpaceTrainingRL = require('../models/SpaceTrainingRL');  // ✅ Correct path
+const SpaceTrainingRL = require('../models/SpaceTrainingRL'); // ✅ Correct path
 const BayesianTracker = require('../models/BayesianTracking');
 const AIServiceIntegrator = require('./AIServiceIntegrator');
-const aiLearningInstance = require('./AILearningSystem');  // ✅ Correct import
+const aiLearningInstance = require('./AILearningSystem'); // ✅ Correct import
 const UnifiedEVAAIService = require('./UnifiedEVAAIService');
-const ProgressTracking = require('./ProgressTracker');  // ✅ Correct path
+const ProgressTracking = require('./ProgressTracker'); // ✅ Correct path
 const ModuleSystemIntegrator = require('./ModuleSystemIntegrator');
-const ReinforcementLearning = require('../models/ReinforcementLearning');  // ✅ Ensure correct path
+const ReinforcementLearning = require('../models/ReinforcementLearning'); // ✅ Ensure correct path
 
 const TRAINING_MODULES = {
     FOUNDATIONAL: {
         id: 'foundational',
-        modules: ['space_science', 'mission_prep', 'zero_g_adaptation', 'crew_dynamics']
+        modules: ['space_science', 'mission_prep', 'zero_g_adaptation', 'crew_dynamics'],
     },
     INTERMEDIATE: {
         id: 'intermediate',
-        modules: ['emergency_protocols', 'spacecraft_operations', 'problem_solving']
+        modules: ['emergency_protocols', 'spacecraft_operations', 'problem_solving'],
     },
     SIMULATION: {
         id: 'simulation',
-        modules: ['eva_sim', 'spacecraft_ops_sim', 'planetary_nav_sim']
+        modules: ['eva_sim', 'spacecraft_ops_sim', 'planetary_nav_sim'],
     },
     HEALTH_PERFORMANCE: {
         id: 'health',
-        modules: ['physical_training', 'mental_resilience', 'space_medicine']
+        modules: ['physical_training', 'mental_resilience', 'space_medicine'],
     },
     TECHNICAL: {
         id: 'technical',
-        modules: ['spacecraft_controls', 'navigation', 'propulsion_systems']
+        modules: ['spacecraft_controls', 'navigation', 'propulsion_systems'],
     },
     EMERGENCY: {
         id: 'emergency',
-        modules: ['system_failures', 'survival_techniques', 'crisis_response']
+        modules: ['system_failures', 'survival_techniques', 'crisis_response'],
     },
     ENGINEERING: {
         id: 'engineering',
-        modules: ['spacecraft_repair', 'robotics', 'health_monitoring']
+        modules: ['spacecraft_repair', 'robotics', 'health_monitoring'],
     },
     EVA: {
         id: 'eva',
-        modules: ['spacewalk', 'suit_operations', 'emergency_procedures']
+        modules: ['spacewalk', 'suit_operations', 'emergency_procedures'],
     },
     NAVIGATION: {
         id: 'navigation',
-        modules: ['mission_planning', 'orbital_mechanics', 'autonomous_nav']
+        modules: ['mission_planning', 'orbital_mechanics', 'autonomous_nav'],
     },
     SURFACE_OPS: {
         id: 'surface_ops',
-        modules: ['terrain_adaptation', 'rover_operations', 'habitat_construction']
+        modules: ['terrain_adaptation', 'rover_operations', 'habitat_construction'],
     },
     SPACE_MEDICINE: {
         id: 'medicine',
-        modules: ['medical_protocols', 'emergency_medicine', 'telemedicine']
+        modules: ['medical_protocols', 'emergency_medicine', 'telemedicine'],
     },
     AI_ROBOTICS: {
         id: 'ai_robotics',
-        modules: ['ai_mission_planning', 'human_machine_collab', 'robotics_deployment']
+        modules: ['ai_mission_planning', 'human_machine_collab', 'robotics_deployment'],
     },
     AGRICULTURE: {
         id: 'agriculture',
-        modules: ['hydroponics', 'resource_management', 'sustainability']
+        modules: ['hydroponics', 'resource_management', 'sustainability'],
     },
     COMMUNICATIONS: {
         id: 'communications',
-        modules: ['realtime_comms', 'deep_space_comms', 'signal_processing']
+        modules: ['realtime_comms', 'deep_space_comms', 'signal_processing'],
     },
     SPACE_LAW: {
         id: 'space_law',
-        modules: ['regulations', 'ethics', 'governance']
+        modules: ['regulations', 'ethics', 'governance'],
     },
     MISSION_CONTROL: {
         id: 'mission_control',
-        modules: ['mission_monitoring', 'predictive_analytics', 'traffic_management']
+        modules: ['mission_monitoring', 'predictive_analytics', 'traffic_management'],
     },
     COMMERCIAL: {
         id: 'commercial',
-        modules: ['space_economics', 'tourism', 'investment']
+        modules: ['space_economics', 'tourism', 'investment'],
     },
     RADIATION: {
         id: 'radiation',
-        modules: ['radiation_protection', 'shielding', 'weather_forecasting']
+        modules: ['radiation_protection', 'shielding', 'weather_forecasting'],
     },
     PSYCHOLOGICAL: {
         id: 'psychological',
-        modules: ['isolation_training', 'team_building', 'mental_endurance']
+        modules: ['isolation_training', 'team_building', 'mental_endurance'],
     },
     LEADERSHIP: {
         id: 'leadership',
-        modules: ['crisis_leadership', 'crew_coordination', 'decision_making']
+        modules: ['crisis_leadership', 'crew_coordination', 'decision_making'],
     },
     CERTIFICATION: {
         id: 'certification',
-        modules: ['final_exams', 'mission_trials', 'seat_allocation']
-    }
+        modules: ['final_exams', 'mission_trials', 'seat_allocation'],
+    },
 };
 
 class TrainingModuleIntegrator extends EventEmitter {
@@ -104,7 +104,7 @@ class TrainingModuleIntegrator extends EventEmitter {
         this.aiService = new AIServiceIntegrator();
         this.aiLearning = aiLearningInstance;
         this.evaService = UnifiedEVAAIService;
-        this.progressTracker = ProgressTracking;  // ✅ Correct reference
+        this.progressTracker = ProgressTracking; // ✅ Correct reference
         this.moduleIntegrator = ModuleSystemIntegrator;
 
         // Training state management
@@ -129,23 +129,34 @@ class TrainingModuleIntegrator extends EventEmitter {
     }
 
     initialize() {
-        console.log("✅ TrainingModuleIntegrator Initialized");
+        console.log('✅ TrainingModuleIntegrator Initialized');
     }
 
     createModuleHandler(moduleConfig) {
         return {
             getNextModule: async (userId, currentModule, performance) => {
-                const state = await this.rl.getState({ moduleType: moduleConfig.id, currentModule, performance });
+                const state = await this.rl.getState({
+                    moduleType: moduleConfig.id,
+                    currentModule,
+                    performance,
+                });
                 return this.determineNextModule(moduleConfig, state);
             },
             updateProgress: async (userId, moduleData) => {
-                await this.bayesianTracker.updateKnowledgeState(userId, moduleConfig.id, moduleData.performance.success);
+                await this.bayesianTracker.updateKnowledgeState(
+                    userId,
+                    moduleConfig.id,
+                    moduleData.performance.success
+                );
                 return this.generateProgressUpdate(userId, moduleConfig, moduleData);
             },
             getRecommendations: async (userId, moduleData) => {
-                const state = await this.rl.getState({ moduleType: moduleConfig.id, performance: moduleData.performance });
+                const state = await this.rl.getState({
+                    moduleType: moduleConfig.id,
+                    performance: moduleData.performance,
+                });
                 return this.generateModuleRecommendations(moduleConfig, state);
-            }
+            },
         };
     }
 
@@ -173,7 +184,7 @@ class TrainingModuleIntegrator extends EventEmitter {
                 config,
                 state: 'active',
                 aiEnabled: config.aiEnabled,
-                trackingEnabled: true
+                trackingEnabled: true,
             });
 
             return true;
@@ -187,15 +198,15 @@ class TrainingModuleIntegrator extends EventEmitter {
         await Promise.all([
             this.aiLearning.initializeForModule(moduleId, config),
             this.evaService.initialize(),
-            this.bayesianTracker.initializeTracking(moduleId)
+            this.bayesianTracker.initializeTracking(moduleId),
         ]);
     }
 
     async handleUserProgress(userId, moduleId, progressData) {
         try {
             await this.bayesianTracker.updateKnowledgeState(
-                userId, 
-                moduleId, 
+                userId,
+                moduleId,
                 progressData.successRate
             );
 
@@ -210,7 +221,7 @@ class TrainingModuleIntegrator extends EventEmitter {
             return {
                 feedback,
                 nextSteps: await this.getNextSteps(userId, moduleId),
-                recommendations: await this.getRecommendations(userId, moduleId)
+                recommendations: await this.getRecommendations(userId, moduleId),
             };
         } catch (error) {
             console.error('Error handling user progress:', error);
@@ -227,17 +238,17 @@ class TrainingModuleIntegrator extends EventEmitter {
             moduleId,
             progressData,
             knowledgeGaps,
-            skillMastery
+            skillMastery,
         });
     }
 
     async updateLearningPath(userId, moduleId) {
         const currentPath = this.learningPaths.get(userId) || [];
         const nextModules = await this.aiLearning.predictNextModules(userId, moduleId);
-        
+
         this.learningPaths.set(userId, [
             ...currentPath,
-            ...nextModules.filter(m => !currentPath.includes(m))
+            ...nextModules.filter((m) => !currentPath.includes(m)),
         ]);
     }
 
@@ -249,7 +260,7 @@ class TrainingModuleIntegrator extends EventEmitter {
             userId,
             moduleId,
             knowledgeState,
-            learningPath
+            learningPath,
         });
     }
 
@@ -265,20 +276,12 @@ class TrainingModuleIntegrator extends EventEmitter {
 
     async handleAssessmentComplete(data) {
         const { userId, moduleId, assessment } = data;
-        await this.bayesianTracker.updateKnowledgeState(
-            userId,
-            moduleId,
-            assessment.score
-        );
+        await this.bayesianTracker.updateKnowledgeState(userId, moduleId, assessment.score);
     }
 
     async handleSkillPractice(data) {
         const { userId, moduleId, skill, performance } = data;
-        await this.bayesianTracker.updateKnowledgeState(
-            userId,
-            moduleId,
-            performance.successRate
-        );
+        await this.bayesianTracker.updateKnowledgeState(userId, moduleId, performance.successRate);
     }
 
     async handleAIFeedback(data) {

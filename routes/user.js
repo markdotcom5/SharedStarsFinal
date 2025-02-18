@@ -29,7 +29,6 @@ router.get('/stats', authenticate, async (req, res) => {
     }
 });
 
-
 // POST /api/users (Create a new user)
 router.post('/', async (req, res) => {
     try {
@@ -68,7 +67,9 @@ router.put('/:id', authenticate, async (req, res) => {
             updates.password = await bcrypt.hash(updates.password, 12);
         }
 
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, updates, { new: true }).select('-password');
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, updates, {
+            new: true,
+        }).select('-password');
         if (!updatedUser) {
             return res.status(404).json({ error: 'User not found' });
         }

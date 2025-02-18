@@ -6,20 +6,17 @@ const assessments = {
         criteria: [
             'Run 1.5 miles under 12 minutes',
             'Complete 30 pushups in a row',
-            'Hold plank position for 2 minutes'
+            'Hold plank position for 2 minutes',
         ],
-        credits: 100
+        credits: 100,
     },
 
     agilityTest: {
         id: 'A200',
         name: 'Agility and Coordination',
         duration: '45 minutes',
-        criteria: [
-            'Complete shuttle run under 10 seconds',
-            'Balance test on unstable surface'
-        ],
-        credits: 75
+        criteria: ['Complete shuttle run under 10 seconds', 'Balance test on unstable surface'],
+        credits: 75,
     },
 
     reactionTraining: {
@@ -28,9 +25,9 @@ const assessments = {
         duration: '30 minutes',
         criteria: [
             'Achieve <200ms reaction time on light reflex test',
-            'Respond to 90% of sudden directional changes'
+            'Respond to 90% of sudden directional changes',
         ],
-        credits: 90
+        credits: 90,
     },
 
     microgravityTraining: {
@@ -39,10 +36,10 @@ const assessments = {
         duration: '90 minutes',
         criteria: [
             'Maintain balance while floating for 5 minutes',
-            'Successfully navigate through microgravity obstacle course'
+            'Successfully navigate through microgravity obstacle course',
         ],
-        credits: 120
-    }
+        credits: 120,
+    },
 };
 
 // ✅ Function to retrieve assessments
