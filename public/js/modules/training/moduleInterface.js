@@ -11,7 +11,7 @@ class ModuleInterface {
             heartRate: [],
             oxygenLevel: [],
             stressLevel: [],
-            vestibularStability: []
+            vestibularStability: [],
         };
         this.certificationProgress = new Map();
     }
@@ -32,7 +32,7 @@ class ModuleInterface {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             this.heartRateMonitor = new HeartRateMonitor(stream);
             this.vestibularMonitor = new VestibularMonitor();
-            
+
             // Update interval for biometrics
             setInterval(() => this.updateBiometrics(), 1000);
         } catch (error) {
@@ -45,20 +45,20 @@ class ModuleInterface {
             heartRate: await this.heartRateMonitor.getCurrentRate(),
             vestibularStability: this.vestibularMonitor.getStability(),
             oxygenLevel: await this.getOxygenLevel(),
-            stressLevel: this.calculateStressLevel()
+            stressLevel: this.calculateStressLevel(),
         };
 
         // Update history
-        Object.keys(currentBiometrics).forEach(metric => {
+        Object.keys(currentBiometrics).forEach((metric) => {
             this.biometricData[metric].push({
                 value: currentBiometrics[metric],
-                timestamp: Date.now()
+                timestamp: Date.now(),
             });
         });
 
         // Check thresholds and notify AI
         this.checkBiometricThresholds(currentBiometrics);
-        
+
         // Update UI
         this.updateBiometricDisplay(currentBiometrics);
     }
@@ -84,11 +84,11 @@ class ModuleInterface {
     async handleBiometricViolations(violations) {
         // Notify AI Handler
         await this.aiHandler.handleBiometricWarning(violations);
-        
+
         // Adjust difficulty if needed
         const adjustment = this.spaceTraining.adjustDifficulty({
             biometricViolations: violations,
-            currentPerformance: this.getCurrentPerformance()
+            currentPerformance: this.getCurrentPerformance(),
         });
 
         // Update module parameters
@@ -140,7 +140,7 @@ class ModuleInterface {
     renderLevel(level, index) {
         const isLocked = !this.checkLevelPrerequisites(level);
         const statusClass = isLocked ? 'opacity-50 cursor-not-allowed' : 'hover:border-blue-500';
-        
+
         return `
             <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 ${statusClass}">
                 <div class="flex justify-between items-start mb-4">

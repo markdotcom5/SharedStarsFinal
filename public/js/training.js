@@ -3,13 +3,17 @@ class TrainingInterface {
         this.timelineManager = window.timelineManager;
         this.biometricMonitor = new BiometricMonitor();
         this.aiCoach = new AICoach();
+<<<<<<< HEAD
         
         // Existing module state
+=======
+
+>>>>>>> 309f5a5 (settled up local tailwind css, configured according to our brand guidelines and served ejs engine to express server and configured and devloped header and home section.)
         this.moduleState = {
             currentPhase: null,
             failedAttempts: 0,
             certificationRequirements: new Map(),
-            performanceHistory: []
+            performanceHistory: [],
         };
 
         // Keep existing requirement thresholds
@@ -21,21 +25,21 @@ class TrainingInterface {
                 biometricTargets: {
                     heartRate: { min: 60, max: 150 },
                     oxygenLevel: { min: 95 },
-                    stressLevel: { max: 7 }
-                }
+                    stressLevel: { max: 7 },
+                },
             },
             technical: {
                 requiredProcedures: 50,
                 emergencyScenarios: 25,
                 systemMasteryScore: 0.9,
-                theoreticalExamScore: 0.85
+                theoreticalExamScore: 0.85,
             },
             simulation: {
                 missionCompletions: 30,
                 teamCoordination: 20,
                 crisisManagement: 15,
-                decisionAccuracy: 0.9
-            }
+                decisionAccuracy: 0.9,
+            },
         };
 
         // Add new user-centric tracking
@@ -117,7 +121,10 @@ class TrainingInterface {
             startTime: Date.now(),
             failurePoints: new Set(),
             adaptiveDifficulty: this.calculateInitialDifficulty(),
+<<<<<<< HEAD
             valueMetrics: moduleValue
+=======
+>>>>>>> 309f5a5 (settled up local tailwind css, configured according to our brand guidelines and served ejs engine to express server and configured and devloped header and home section.)
         };
 
         // Initialize with personal optimization
@@ -128,7 +135,7 @@ class TrainingInterface {
         // Start biometric tracking
         const biometrics = await this.biometricMonitor.startTracking({
             interval: 1000,
-            metrics: ['heartRate', 'oxygenLevel', 'stressLevel']
+            metrics: ['heartRate', 'oxygenLevel', 'stressLevel'],
         });
 
         // Get AI guidance with personal factors
@@ -136,8 +143,11 @@ class TrainingInterface {
             historicalPerformance: this.moduleState.performanceHistory,
             currentBiometrics: biometrics,
             phaseRequirements: phase.requirements,
+<<<<<<< HEAD
             personalMetrics: this.userProgress.personalMetrics,
             careerGoals: this.userProgress.careerProgress.careerPathProgress
+=======
+>>>>>>> 309f5a5 (settled up local tailwind css, configured according to our brand guidelines and served ejs engine to express server and configured and devloped header and home section.)
         });
 
         // Adjust for optimal learning
@@ -147,7 +157,7 @@ class TrainingInterface {
 
     async evaluatePerformance() {
         const metrics = await this.collectDetailedMetrics();
-        
+
         if (this.checkFailureConditions(metrics)) {
             await this.handleFailure(metrics);
             return;
@@ -168,6 +178,7 @@ class TrainingInterface {
         this.updateUI(metrics, progress);
     }
 
+<<<<<<< HEAD
     async updateCareerProgress(progress) {
         const careerImpact = await this.calculateCareerImpact(progress);
         this.userProgress.careerProgress = {
@@ -177,6 +188,41 @@ class TrainingInterface {
 
         // Update dashboard with career progress
         await this.dashboard.updateRealTimeMetrics();
+=======
+    checkFailureConditions(metrics) {
+        const thresholds = this.requirementThresholds[this.currentModule.type];
+
+        return metrics.some(
+            (metric) =>
+                metric.value < thresholds[metric.type].min ||
+                metric.value > thresholds[metric.type].max
+        );
+    }
+
+    async handleFailure(metrics) {
+        this.moduleState.failedAttempts++;
+
+        const recoveryPlan = await this.aiCoach.generateRecoveryPlan({
+            failureMetrics: metrics,
+            attemptHistory: this.moduleState.failedAttempts,
+            learnerState: this.moduleState,
+        });
+
+        this.updateDifficulty(recoveryPlan.adjustments);
+        this.renderRecoveryGuidance(recoveryPlan.guidance);
+    }
+
+    calculateProgress(metrics) {
+        const weights = {
+            practicalPerformance: 0.4,
+            theoreticalKnowledge: 0.3,
+            safetyAdherence: 0.3,
+        };
+
+        return Object.entries(weights).reduce((total, [metric, weight]) => {
+            return total + metrics[metric] * weight;
+        }, 0);
+>>>>>>> 309f5a5 (settled up local tailwind css, configured according to our brand guidelines and served ejs engine to express server and configured and devloped header and home section.)
     }
 
     async calculateCareerImpact(progress) {

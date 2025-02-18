@@ -6,9 +6,9 @@ export const achievementHandler = {
             const response = await fetch('/api/achievements/track', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ userId, achievementType })
+                body: JSON.stringify({ userId, achievementType }),
             });
             return await response.json();
         } catch (error) {
@@ -33,5 +33,5 @@ export const achievementHandler = {
 
     init() {
         console.log('Core achievement handler initialized');
-    }
+    },
 };

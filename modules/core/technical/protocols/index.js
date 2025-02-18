@@ -15,19 +15,19 @@ const PROTOCOLS = {
                 'Don emergency oxygen mask',
                 'Seal off affected compartment',
                 'Initiate emergency communication protocol',
-                'Begin pressure stabilization procedure'
+                'Begin pressure stabilization procedure',
             ],
             requiredEquipment: [
                 'Pressure monitoring system',
                 'Emergency oxygen supply',
-                'Communication system'
+                'Communication system',
             ],
             assessmentCriteria: {
                 timeLimit: 180, // seconds
                 minAccuracy: 95,
-                criticalSteps: [1, 2] // steps that must be perfect
-            }
-        }
+                criticalSteps: [1, 2], // steps that must be perfect
+            },
+        },
     ],
     communication: [
         {
@@ -39,13 +39,13 @@ const PROTOCOLS = {
                 'Equipment check sequence',
                 'Channel verification',
                 'Communication window scheduling',
-                'Emergency backup systems check'
+                'Emergency backup systems check',
             ],
             terminology: {
                 standard: ['Copy that', 'Roger', 'Wilco'],
-                emergency: ['Mayday', 'Pan-pan', 'Break-break']
-            }
-        }
+                emergency: ['Mayday', 'Pan-pan', 'Break-break'],
+            },
+        },
     ],
     maintenance: [
         {
@@ -58,10 +58,10 @@ const PROTOCOLS = {
                 'Life support systems',
                 'Communication systems',
                 'Navigation systems',
-                'Power systems'
-            ]
-        }
-    ]
+                'Power systems',
+            ],
+        },
+    ],
 };
 
 function getProtocols() {
@@ -72,14 +72,14 @@ function getProtocols() {
 router.get('/', authenticate, (req, res) => {
     res.json({
         success: true,
-        protocols: PROTOCOLS
+        protocols: PROTOCOLS,
     });
 });
 
 // Get specific protocol
 router.get('/:protocolId', authenticate, (req, res) => {
     const [category, ...rest] = req.params.protocolId.split('-');
-    const protocol = PROTOCOLS[category.toLowerCase()]?.find(p => p.id === req.params.protocolId);
+    const protocol = PROTOCOLS[category.toLowerCase()]?.find((p) => p.id === req.params.protocolId);
 
     if (!protocol) {
         return res.status(404).json({ error: 'Protocol not found' });
@@ -87,7 +87,7 @@ router.get('/:protocolId', authenticate, (req, res) => {
 
     res.json({
         success: true,
-        protocol
+        protocol,
     });
 });
 
@@ -95,7 +95,9 @@ router.get('/:protocolId', authenticate, (req, res) => {
 router.post('/:protocolId/start', authenticate, async (req, res) => {
     try {
         const [category, ...rest] = req.params.protocolId.split('-');
-        const protocol = PROTOCOLS[category.toLowerCase()]?.find(p => p.id === req.params.protocolId);
+        const protocol = PROTOCOLS[category.toLowerCase()]?.find(
+            (p) => p.id === req.params.protocolId
+        );
 
         if (!protocol) {
             return res.status(404).json({ error: 'Protocol not found' });
@@ -111,8 +113,8 @@ router.post('/:protocolId/start', authenticate, async (req, res) => {
             metrics: {
                 completionRate: 0,
                 effectivenessScore: 0,
-                accuracy: 0
-            }
+                accuracy: 0,
+            },
         });
 
         await session.save();
@@ -124,8 +126,8 @@ router.post('/:protocolId/start', authenticate, async (req, res) => {
                 id: session._id,
                 protocol: protocol.id,
                 timeLimit: protocol.assessmentCriteria?.timeLimit,
-                requirements: protocol.requiredEquipment
-            }
+                requirements: protocol.requiredEquipment,
+            },
         });
     } catch (error) {
         console.error('Error starting protocol training:', error);
@@ -138,23 +140,23 @@ function getProtocols() {
         emergency: {
             id: 'P100',
             name: 'Emergency Protocols',
-            description: 'Learn to handle spacecraft emergencies'
+            description: 'Learn to handle spacecraft emergencies',
         },
         docking: {
             id: 'P200',
             name: 'Docking Procedures',
-            description: 'Master docking techniques with space stations'
+            description: 'Master docking techniques with space stations',
         },
         EVA: {
             id: 'P300',
             name: 'EVA Safety and Operations',
-            description: 'Prepare for extravehicular activity in space'
-        }
+            description: 'Prepare for extravehicular activity in space',
+        },
     };
 }
 
 // ✅ Export router and getProtocols function
 module.exports = {
     router,
-    getProtocols
+    getProtocols,
 };

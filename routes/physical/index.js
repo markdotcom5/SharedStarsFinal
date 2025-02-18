@@ -6,31 +6,34 @@ const TrainingSession = require('../../models/TrainingSession');
 const Module = require('../../models/Module');
 const { authenticate } = require('../../middleware/authenticate');
 
-const { 
-    generateAIRecommendations, 
-    milestoneTypes, 
-    phaseBasedChallenges 
+const {
+    generateAIRecommendations,
+    milestoneTypes,
+    phaseBasedChallenges,
 } = require('./recommendations');
 const aiAssistant = require('../../services/aiAssistant'); // ✅ Import AI Assistant
 
 // ✅ Debugging: Ensure analyzeAchievementProgress exists
-console.log("aiAssistant Object:", aiAssistant);
-console.log("aiAssistant.analyzeAchievementProgress Type:", typeof aiAssistant.analyzeAchievementProgress);
+console.log('aiAssistant Object:', aiAssistant);
+console.log(
+    'aiAssistant.analyzeAchievementProgress Type:',
+    typeof aiAssistant.analyzeAchievementProgress
+);
 
 // 📌 Test route
 router.get('/test', (req, res) => {
-    console.log("Test route hit!");
-    res.json({ message: "Test route working" });
+    console.log('Test route hit!');
+    res.json({ message: 'Test route working' });
 });
 
 // 📌 Debugging route
 router.get('/debug/:userId', async (req, res) => {
-    console.log("Debug route starting");
+    console.log('Debug route starting');
     try {
         const result = await UserProgress.findOne({
-            userId: new mongoose.Types.ObjectId(req.params.userId)
+            userId: new mongoose.Types.ObjectId(req.params.userId),
         });
-        console.log("Query result:", result);
+        console.log('Query result:', result);
         res.json({ result });
     } catch (error) {
         console.error('Debug error:', error);
@@ -44,29 +47,31 @@ router.get('/progress/:userId', authenticate, async (req, res) => {
     try {
         const [userProgress, trainingSessions] = await Promise.all([
             UserProgress.findOne({
-                userId: new mongoose.Types.ObjectId(req.params.userId)
+                userId: new mongoose.Types.ObjectId(req.params.userId),
             }),
             TrainingSession.find({
                 userId: new mongoose.Types.ObjectId(req.params.userId),
-                moduleType: "physical"
-            }).sort({ dateTime: -1 }).limit(5)
+                moduleType: 'physical',
+            })
+                .sort({ dateTime: -1 })
+                .limit(5),
         ]);
 
         if (!userProgress) {
-            return res.status(404).json({ 
-                success: false, 
-                message: "No training progress found" 
+            return res.status(404).json({
+                success: false,
+                message: 'No training progress found',
             });
         }
 
-        const physicalModule = userProgress.moduleProgress.find(m => 
-            m.moduleId === 'core-phys-001'
+        const physicalModule = userProgress.moduleProgress.find(
+            (m) => m.moduleId === 'core-phys-001'
         );
 
         if (!physicalModule) {
-            return res.status(404).json({ 
-                success: false, 
-                message: "Physical training module not found" 
+            return res.status(404).json({
+                success: false,
+                message: 'Physical training module not found',
             });
         }
 
@@ -77,61 +82,63 @@ router.get('/progress/:userId', authenticate, async (req, res) => {
             metrics: {
                 completionRate: trainingSessions[0]?.metrics?.completionRate || 0,
                 effectivenessScore: trainingSessions[0]?.metrics?.effectivenessScore || 0,
-                overallRank: trainingSessions[0]?.metrics?.overallRank || 999999
-            }
+                overallRank: trainingSessions[0]?.metrics?.overallRank || 999999,
+            },
         });
-
     } catch (error) {
         console.error('Error fetching progress:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-router.post('/milestone', authenticate, async (req, res) => {  
+router.post('/milestone', authenticate, async (req, res) => {
     try {
         const userId = new mongoose.Types.ObjectId(req.user._id);
         const { milestoneId } = req.body;
 
-        console.log("🔍 Checking Milestone ID:", milestoneId);
+        console.log('🔍 Checking Milestone ID:', milestoneId);
 
         let userProgress = await UserProgress.findOne({ userId });
 
         if (!userProgress) {
-            console.error("❌ User progress not found");
-            return res.status(404).json({ success: false, message: "User progress not found" });
+            console.error('❌ User progress not found');
+            return res.status(404).json({ success: false, message: 'User progress not found' });
         }
 
-        const physicalModule = userProgress.moduleProgress.find(m => m.moduleId === 'core-phys-001');
+        const physicalModule = userProgress.moduleProgress.find(
+            (m) => m.moduleId === 'core-phys-001'
+        );
 
         if (!physicalModule) {
-            console.error("❌ Physical module not found");
-            return res.status(404).json({ success: false, message: "Physical module not found" });
+            console.error('❌ Physical module not found');
+            return res.status(404).json({ success: false, message: 'Physical module not found' });
         }
 
         // Log all available milestones
-        console.log("🔍 Available Milestones:", milestoneTypes);
+        console.log('🔍 Available Milestones:', milestoneTypes);
 
         // Find the milestone definition
-        const milestone = [...milestoneTypes.SESSION_MILESTONES, 
+        const milestone = [
+            ...milestoneTypes.SESSION_MILESTONES,
             ...milestoneTypes.PERFORMANCE_MILESTONES,
             ...milestoneTypes.STREAK_MILESTONES,
-            ...milestoneTypes.PHASE_MILESTONES
-        ].find(m => m.id === milestoneId);
+            ...milestoneTypes.PHASE_MILESTONES,
+        ].find((m) => m.id === milestoneId);
 
         if (!milestone) {
-            console.error("❌ Milestone not found");
-            return res.status(404).json({ success: false, message: "Milestone not found" });
+            console.error('❌ Milestone not found');
+            return res.status(404).json({ success: false, message: 'Milestone not found' });
         }
 
         // Check if the milestone is already completed
-        if (physicalModule.milestones.some(m => m.id === milestoneId)) {
-            return res.status(400).json({ success: false, message: "Milestone already completed" });
+        if (physicalModule.milestones.some((m) => m.id === milestoneId)) {
+            return res.status(400).json({ success: false, message: 'Milestone already completed' });
         }
 
         // Add the new milestone
         physicalModule.milestones.push({
             ...milestone,
-            dateAchieved: new Date()
+            dateAchieved: new Date(),
         });
 
         // Update credits
@@ -141,9 +148,8 @@ router.post('/milestone', authenticate, async (req, res) => {
         await userProgress.save();
 
         res.json({ success: true, milestone: milestone, totalCredits: userProgress.credits.total });
-
     } catch (error) {
-        console.error("❌ Milestone Error:", error);
+        console.error('❌ Milestone Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -152,24 +158,24 @@ router.post('/milestone', authenticate, async (req, res) => {
 router.post('/session', authenticate, async (req, res) => {
     try {
         const { exercises, duration, intensity } = req.body;
-        
+
         // Create training session
         const trainingSession = new TrainingSession({
             userId: req.user._id,
-            moduleType: "physical",
-            moduleId: "core-phys-001",
+            moduleType: 'physical',
+            moduleId: 'core-phys-001',
             adaptiveAI: {
                 enabled: true,
                 skillFactors: {
                     physical: intensity || 1,
                     technical: 1,
-                    mental: 1
-                }
+                    mental: 1,
+                },
             },
             metrics: {
                 completionRate: 100,
-                effectivenessScore: intensity * 20
-            }
+                effectivenessScore: intensity * 20,
+            },
         });
 
         await trainingSession.save();
@@ -177,17 +183,19 @@ router.post('/session', authenticate, async (req, res) => {
         // Update user progress
         const userProgress = await UserProgress.findOne({ userId: req.user._id });
         if (!userProgress) {
-            return res.status(404).json({ success: false, message: "User progress not found" });
+            return res.status(404).json({ success: false, message: 'User progress not found' });
         }
 
-        const physicalModule = userProgress.moduleProgress.find(m => m.moduleId === 'core-phys-001');
+        const physicalModule = userProgress.moduleProgress.find(
+            (m) => m.moduleId === 'core-phys-001'
+        );
         if (physicalModule) {
             physicalModule.completedSessions += 1;
             physicalModule.trainingLogs.push({
                 date: new Date(),
                 exercisesCompleted: exercises,
                 duration,
-                caloriesBurned: duration * intensity * 5
+                caloriesBurned: duration * intensity * 5,
             });
         }
 
@@ -196,9 +204,8 @@ router.post('/session', authenticate, async (req, res) => {
         res.json({
             success: true,
             session: trainingSession,
-            progress: physicalModule
+            progress: physicalModule,
         });
-
     } catch (error) {
         console.error('Error creating session:', error);
         res.status(500).json({ success: false, error: error.message });

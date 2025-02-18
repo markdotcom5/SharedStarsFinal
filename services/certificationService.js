@@ -7,11 +7,11 @@ class CertificationService {
         try {
             const [progress, module] = await Promise.all([
                 UserProgress.findOne({ userId }),
-                Module.findById(moduleId)
+                Module.findById(moduleId),
             ]);
 
-            const moduleProgress = progress.moduleProgress.find(
-                mp => mp.moduleId.equals(moduleId)
+            const moduleProgress = progress.moduleProgress.find((mp) =>
+                mp.moduleId.equals(moduleId)
             );
 
             if (this.meetsRequirements(moduleProgress, module)) {
@@ -34,14 +34,14 @@ class CertificationService {
     async awardCertification(userId, moduleId, module) {
         try {
             const progress = await UserProgress.findOne({ userId });
-            
+
             const certification = {
                 name: module.certification.name,
                 moduleId,
                 earnedDate: new Date(),
-                expiryDate: new Date(Date.now() + (365 * 24 * 60 * 60 * 1000)), // 1 year
+                expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
                 level: module.difficulty,
-                creditsEarned: module.certification.creditValue
+                creditsEarned: module.certification.creditValue,
             };
 
             progress.certifications.push(certification);

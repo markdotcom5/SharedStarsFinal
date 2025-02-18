@@ -14,9 +14,9 @@ export const profile = {
             const response = await fetch(`/api/user/profile/${userId}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
             });
             return await response.json();
         } catch (error) {
@@ -27,5 +27,5 @@ export const profile = {
 
     init() {
         console.log('Core profile module initialized');
-    }
+    },
 };

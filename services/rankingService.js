@@ -4,7 +4,7 @@ const UserProgress = require('../models/UserProgress');
 
 const cache = {
     data: new Map(),
-    timeout: 5 * 60 * 1000 // 5 minutes
+    timeout: 5 * 60 * 1000, // 5 minutes
 };
 async function getLeaderboard() {
     try {
@@ -15,10 +15,10 @@ async function getLeaderboard() {
         return leaderboard.map((user, index) => ({
             rank: index + 1,
             userId: user.userId,
-            credits: user.credits
+            credits: user.credits,
         }));
     } catch (error) {
-        console.error("Error fetching leaderboard:", error);
+        console.error('Error fetching leaderboard:', error);
         throw error;
     }
 }
@@ -57,7 +57,7 @@ class RankingService extends EventEmitter {
 
             const [totalUsers, higherScores] = await Promise.all([
                 User.countDocuments(),
-                User.countDocuments({ spaceReadinessScore: { $gt: user.spaceReadinessScore } })
+                User.countDocuments({ spaceReadinessScore: { $gt: user.spaceReadinessScore } }),
             ]);
 
             const ranking = this.calculateRankingMetrics(higherScores + 1, totalUsers);
@@ -66,7 +66,7 @@ class RankingService extends EventEmitter {
             this.emit('rankUpdate', {
                 userId: user.id,
                 newRank: ranking.rank,
-                type: 'global'
+                type: 'global',
             });
 
             return ranking;
@@ -81,27 +81,29 @@ class RankingService extends EventEmitter {
             const query = {
                 'location.coordinates': {
                     $geoWithin: {
-                        $centerSphere: [location.coordinates, radiusMeters / 6378100]
-                    }
-                }
+                        $centerSphere: [location.coordinates, radiusMeters / 6378100],
+                    },
+                },
             };
 
             const [nearbyUsers, totalLocal] = await Promise.all([
                 User.find(query).select('spaceReadinessScore').lean(),
-                User.countDocuments(query)
+                User.countDocuments(query),
             ]);
 
-            const higherScores = nearbyUsers.filter(u => u.spaceReadinessScore > user.spaceReadinessScore).length;
+            const higherScores = nearbyUsers.filter(
+                (u) => u.spaceReadinessScore > user.spaceReadinessScore
+            ).length;
             const ranking = {
                 ...this.calculateRankingMetrics(higherScores + 1, totalLocal),
                 radius: radiusMiles,
-                nearbyCount: totalLocal
+                nearbyCount: totalLocal,
             };
 
             this.emit('rankUpdate', {
                 userId: user.id,
                 newRank: ranking.rank,
-                type: 'local'
+                type: 'local',
             });
 
             return ranking;
@@ -116,13 +118,13 @@ class RankingService extends EventEmitter {
             const cacheKey = `rankings_${type}_${options.page}_${options.limit}`;
             const cached = this.getCache(cacheKey);
             if (cached) return cached;
-    
+
             let query = {};
             if (type === 'state') {
                 if (!options.state) throw new Error('State parameter required');
                 query['location.state'] = options.state;
             }
-    
+
             const [rankings, totalCount] = await Promise.all([
                 User.find(query)
                     .select('username spaceReadinessScore location achievements')
@@ -130,20 +132,20 @@ class RankingService extends EventEmitter {
                     .skip(skip)
                     .limit(options.limit)
                     .lean(),
-                User.countDocuments(query)
+                User.countDocuments(query),
             ]);
-    
+
             const formattedRankings = rankings.map((user, index) => ({
                 ...user,
                 rank: skip + index + 1,
-                quintile: this.getQuintileLabel(skip + index + 1, totalCount)
+                quintile: this.getQuintileLabel(skip + index + 1, totalCount),
             }));
-    
+
             this.setCache(cacheKey, formattedRankings);
 
             this.emit('rankingsUpdated', {
                 type,
-                rankings: formattedRankings
+                rankings: formattedRankings,
             });
 
             return formattedRankings;
@@ -159,7 +161,7 @@ class RankingService extends EventEmitter {
             rank,
             total,
             percentile: Math.round(percentile * 10) / 10,
-            label: this.getQuintileLabel(rank, total)
+            label: this.getQuintileLabel(rank, total),
         };
     }
 

@@ -9,13 +9,13 @@ router.get('/', authenticate, async (req, res) => {
     try {
         res.json({
             success: true,
-            safety: evaSafety
+            safety: evaSafety,
         });
     } catch (error) {
         console.error('❌ Error fetching EVA safety protocols:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to fetch EVA safety protocols'
+            error: 'Failed to fetch EVA safety protocols',
         });
     }
 });
@@ -24,28 +24,28 @@ router.get('/', authenticate, async (req, res) => {
 router.get('/:category', authenticate, async (req, res) => {
     try {
         const { category } = req.params;
-        
+
         if (!evaSafety[category]) {
             return res.status(404).json({
                 success: false,
-                error: 'Safety category not found'
+                error: 'Safety category not found',
             });
         }
 
         res.json({
             success: true,
-            [category]: evaSafety[category]
+            [category]: evaSafety[category],
         });
     } catch (error) {
         console.error('❌ Error fetching EVA safety category:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to fetch EVA safety category'
+            error: 'Failed to fetch EVA safety category',
         });
     }
 });
 
 module.exports = {
     router,
-    getSafetyProtocols: () => evaSafety
+    getSafetyProtocols: () => evaSafety,
 };

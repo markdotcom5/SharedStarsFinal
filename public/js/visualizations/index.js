@@ -11,8 +11,8 @@ const ModuleHighlight = require('./ModuleHighlight');
 const ProgressTracker = require('./ProgressTracker');
 
 module.exports = {
-  AchievementDisplay,
-  PathPredictor,
-  ModuleHighlight,
-  ProgressTracker,
+    AchievementDisplay,
+    PathPredictor,
+    ModuleHighlight,
+    ProgressTracker,
 };

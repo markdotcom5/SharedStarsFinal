@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { code: 'en', flag: '🇺🇸', name: 'English' },
         { code: 'zh', flag: '🇨🇳', name: 'Chinese' },
         { code: 'ko', flag: '🇰🇷', name: 'Korean' },
-        { code: 'es', flag: '🇪🇸', name: 'Spanish' }
+        { code: 'es', flag: '🇪🇸', name: 'Spanish' },
     ];
 
     // Menu items with translations
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             signup: 'Sign Up',
             academy: 'StelTrek Academy',
             welcome: 'Welcome',
-            subscribe: 'Subscribe'
+            subscribe: 'Subscribe',
         },
         zh: {
             home: '主页',
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             signup: '注册',
             academy: 'StelTrek 学院',
             welcome: '欢迎',
-            subscribe: '订阅'
+            subscribe: '订阅',
         },
         ko: {
             home: '홈',
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             signup: '가입하기',
             academy: 'StelTrek 아카데미',
             welcome: '환영합니다',
-            subscribe: '구독'
+            subscribe: '구독',
         },
         es: {
             home: 'Inicio',
@@ -61,8 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
             signup: 'Registrarse',
             academy: 'Academia StelTrek',
             welcome: 'Bienvenido',
-            subscribe: 'Suscribirse'
-        }
+            subscribe: 'Suscribirse',
+        },
     };
 
     // Menu items with their URLs
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { key: 'signup', href: '/signup.html' },
         { key: 'academy', href: '/academy.html' },
         { key: 'welcome', href: '/welcome.html' },
-        { key: 'subscribe', href: '/subscribe.html' }
+        { key: 'subscribe', href: '/subscribe.html' },
     ];
 
     // Create language selector if not already selected
@@ -87,12 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const langContainer = document.createElement('div');
             langContainer.className = 'language-selector';
 
-            languages.forEach(lang => {
+            languages.forEach((lang) => {
                 const button = document.createElement('button');
                 button.className = 'language-flag';
                 button.innerHTML = lang.flag;
                 button.title = lang.name;
-                
+
                 button.addEventListener('click', () => {
                     selectLanguage(lang.code);
                 });
@@ -126,12 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const menuContainer = document.createElement('div');
             menuContainer.className = 'menu-container';
-            
+
             const menuContent = document.createElement('nav');
             menuContent.className = 'menu-content';
 
             // Add menu items with correct translation
-            menuItems.forEach(item => {
+            menuItems.forEach((item) => {
                 const link = document.createElement('a');
                 link.href = item.href;
                 link.className = 'menu-item';

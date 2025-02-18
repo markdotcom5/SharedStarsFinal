@@ -14,25 +14,25 @@ class EVAHandler extends TrainingHandler {
 
     async initializeModule() {
         try {
-            console.log("🚀 Initializing EVA Module");
-            
+            console.log('🚀 Initializing EVA Module');
+
             // Get module data from server
             const moduleData = await this.fetchModuleData();
-            
+
             // Initialize safety monitoring
             await this.safetyMonitor.initialize(moduleData.safetyProtocols);
-            
+
             // Set up progress tracking
             await this.progressTracker.initialize(moduleData.procedures);
-            
+
             // Initialize AI guidance
             await this.aiHandler.initializeEVAGuidance();
-            
+
             this.renderInterface(moduleData);
-            
-            console.log("✅ EVA Module Initialized");
+
+            console.log('✅ EVA Module Initialized');
         } catch (error) {
-            console.error("❌ EVA Module Initialization Error:", error);
+            console.error('❌ EVA Module Initialization Error:', error);
             this.handleError(error);
         }
     }
@@ -45,7 +45,7 @@ class EVAHandler extends TrainingHandler {
             this.progressTracker.startTracking(session.id);
             return session;
         } catch (error) {
-            console.error("❌ Session Start Error:", error);
+            console.error('❌ Session Start Error:', error);
             this.handleError(error);
         }
     }
@@ -62,14 +62,14 @@ class EVAHandler extends TrainingHandler {
                 {
                     completionData: {
                         safetyScore: finalChecks.safetyScore,
-                        performanceMetrics: this.progressTracker.getMetrics()
-                    }
+                        performanceMetrics: this.progressTracker.getMetrics(),
+                    },
                 }
             );
 
             this.handleSessionCompletion(completion);
         } catch (error) {
-            console.error("❌ Session Completion Error:", error);
+            console.error('❌ Session Completion Error:', error);
             this.handleError(error);
         }
     }
@@ -95,25 +95,25 @@ class EVAHandler extends TrainingHandler {
 
     async handleEmergency(emergency) {
         try {
-            console.log("🚨 Emergency Procedure Initiated:", emergency.type);
+            console.log('🚨 Emergency Procedure Initiated:', emergency.type);
             await this.safetyMonitor.handleEmergency(emergency);
             const guidance = await this.aiHandler.getEmergencyGuidance(emergency);
             this.updateInterface({ emergency: true, guidance });
         } catch (error) {
-            console.error("❌ Emergency Handling Error:", error);
+            console.error('❌ Emergency Handling Error:', error);
             this.handleCriticalError(error);
         }
     }
 
     handleError(error) {
-        console.error("EVA Error:", error);
+        console.error('EVA Error:', error);
         // Update UI with error
         document.getElementById('eva-error-display')?.classList.remove('hidden');
         document.getElementById('eva-error-message').textContent = error.message;
     }
 
     handleCriticalError(error) {
-        console.error("Critical EVA Error:", error);
+        console.error('Critical EVA Error:', error);
         this.safetyMonitor.triggerEmergencyProtocol();
         // Show critical error UI
         document.getElementById('eva-critical-error')?.classList.remove('hidden');

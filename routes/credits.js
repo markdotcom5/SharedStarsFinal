@@ -16,13 +16,13 @@ router.get('/balance', authenticate, async (req, res) => {
         res.json({
             success: true,
             credits: user.credits,
-            timestamp: new Date()
+            timestamp: new Date(),
         });
     } catch (error) {
         console.error('Error fetching credit balance:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Failed to fetch credit balance',
-            message: error.message 
+            message: error.message,
         });
     }
 });
@@ -32,25 +32,25 @@ router.get('/history', authenticate, async (req, res) => {
     try {
         const trainingSessions = await TrainingSession.find({
             userId: req.user._id,
-            status: 'completed'
+            status: 'completed',
         }).sort({ completedAt: -1 });
 
-        const creditHistory = trainingSessions.map(session => ({
+        const creditHistory = trainingSessions.map((session) => ({
             date: session.completedAt || session.dateTime,
             type: session.sessionType,
             credits: session.earnedCredits || 0,
-            moduleId: session.moduleId
+            moduleId: session.moduleId,
         }));
 
         res.json({
             success: true,
-            history: creditHistory
+            history: creditHistory,
         });
     } catch (error) {
         console.error('Error fetching credit history:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Failed to fetch credit history',
-            message: error.message 
+            message: error.message,
         });
     }
 });
@@ -59,7 +59,7 @@ router.get('/history', authenticate, async (req, res) => {
 router.post('/award', authenticate, async (req, res) => {
     try {
         const { amount, reason, sessionId } = req.body;
-        
+
         const user = await User.findByIdAndUpdate(
             req.user._id,
             { $inc: { credits: amount } },
@@ -68,7 +68,7 @@ router.post('/award', authenticate, async (req, res) => {
 
         if (sessionId) {
             await TrainingSession.findByIdAndUpdate(sessionId, {
-                $set: { earnedCredits: amount }
+                $set: { earnedCredits: amount },
             });
         }
 
@@ -76,13 +76,13 @@ router.post('/award', authenticate, async (req, res) => {
             success: true,
             newBalance: user.credits,
             awarded: amount,
-            reason
+            reason,
         });
     } catch (error) {
         console.error('Error awarding credits:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Failed to award credits',
-            message: error.message 
+            message: error.message,
         });
     }
 });

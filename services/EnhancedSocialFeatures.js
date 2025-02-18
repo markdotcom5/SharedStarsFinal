@@ -17,31 +17,31 @@ class EnhancedSocialFeatures extends EventEmitter {
             referral: {
                 basic: {
                     count: 1,
-                    rewards: ['training_credits', 'basic_badge']
+                    rewards: ['training_credits', 'basic_badge'],
                 },
                 advanced: {
                     count: 3,
-                    rewards: ['free_month', 'advanced_badge', 'vr_session']
+                    rewards: ['free_month', 'advanced_badge', 'vr_session'],
                 },
                 expert: {
                     count: 5,
-                    rewards: ['premium_access', 'expert_badge', 'private_training']
-                }
+                    rewards: ['premium_access', 'expert_badge', 'private_training'],
+                },
             },
             squad: {
                 formation: {
                     type: 'achievement',
-                    rewards: ['squad_badge', 'group_discount']
+                    rewards: ['squad_badge', 'group_discount'],
                 },
                 completion: {
                     type: 'milestone',
-                    rewards: ['certification_boost', 'special_mission']
+                    rewards: ['certification_boost', 'special_mission'],
                 },
                 excellence: {
                     type: 'performance',
-                    rewards: ['vr_priority', 'custom_training']
-                }
-            }
+                    rewards: ['vr_priority', 'custom_training'],
+                },
+            },
         };
     }
 
@@ -57,7 +57,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             progress: new Map(),
             achievements: [],
             currentActivity: null,
-            vrSessions: []
+            vrSessions: [],
         };
 
         // Initialize VR features for squad
@@ -75,7 +75,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             voiceChat: true,
             avatars: new Map(),
             interactions: [],
-            sessions: []
+            sessions: [],
         };
     }
 
@@ -85,7 +85,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             totalCount: 0,
             activeReferrals: [],
             rewards: [],
-            status: 'active'
+            status: 'active',
         };
 
         // Update referral counts
@@ -94,7 +94,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             userId: newUserId,
             date: new Date(),
             type,
-            status: 'pending'
+            status: 'pending',
         });
 
         // Check for rewards
@@ -107,7 +107,7 @@ class EnhancedSocialFeatures extends EventEmitter {
         this.referrals.set(referrerId, referralData);
         return {
             referralData,
-            newRewards
+            newRewards,
         };
     }
 
@@ -123,7 +123,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             startTime: new Date(),
             participants: new Map(),
             activities: [],
-            metrics: this.initializeVRMetrics()
+            metrics: this.initializeVRMetrics(),
         };
 
         // Initialize VR features for each participant
@@ -132,7 +132,7 @@ class EnhancedSocialFeatures extends EventEmitter {
                 status: 'initializing',
                 avatar: await this.vrFeatures.handleAvatarSync({}),
                 voice: await this.vrFeatures.handleVoiceChat({}),
-                presence: await this.vrFeatures.handleSocialPresence({})
+                presence: await this.vrFeatures.handleSocialPresence({}),
             });
         }
 
@@ -149,7 +149,7 @@ class EnhancedSocialFeatures extends EventEmitter {
         squad.progress.set(activityData.type, {
             value: activityData.progress,
             lastUpdate: new Date(),
-            contributors: activityData.contributors
+            contributors: activityData.contributors,
         });
 
         // Check for achievements
@@ -161,7 +161,7 @@ class EnhancedSocialFeatures extends EventEmitter {
 
         return {
             progress: squad.progress,
-            newAchievements
+            newAchievements,
         };
     }
 
@@ -172,7 +172,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             teamwork: 0,
             communication: 0,
             efficiency: 0,
-            vrPerformance: 0
+            vrPerformance: 0,
         };
     }
 
@@ -181,18 +181,18 @@ class EnhancedSocialFeatures extends EventEmitter {
             performance: {
                 fps: [],
                 latency: [],
-                quality: []
+                quality: [],
             },
             social: {
                 interactions: 0,
                 communication: 0,
-                collaboration: 0
+                collaboration: 0,
             },
             training: {
                 completion: 0,
                 accuracy: 0,
-                teamwork: 0
-            }
+                teamwork: 0,
+            },
         };
     }
 
@@ -202,11 +202,13 @@ class EnhancedSocialFeatures extends EventEmitter {
 
         Object.entries(this.rewards.referral).forEach(([level, data]) => {
             if (totalCount >= data.count) {
-                rewards.push(...data.rewards.map(reward => ({
-                    type: reward,
-                    level,
-                    awarded: new Date()
-                })));
+                rewards.push(
+                    ...data.rewards.map((reward) => ({
+                        type: reward,
+                        level,
+                        awarded: new Date(),
+                    }))
+                );
             }
         });
 
@@ -218,7 +220,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             activity: 0,
             influence: 0,
             engagement: 0,
-            vrParticipation: 0
+            vrParticipation: 0,
         };
 
         switch (type) {
@@ -238,11 +240,7 @@ class EnhancedSocialFeatures extends EventEmitter {
     }
 
     calculateActivityScore(metrics) {
-        return (
-            metrics.influence * 0.3 +
-            metrics.engagement * 0.4 +
-            metrics.vrParticipation * 0.3
-        );
+        return metrics.influence * 0.3 + metrics.engagement * 0.4 + metrics.vrParticipation * 0.3;
     }
 
     async checkSquadAchievements(squad) {
@@ -254,7 +252,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             achievements.push({
                 type: 'vr_mastery',
                 level: 'gold',
-                awarded: new Date()
+                awarded: new Date(),
             });
         }
 
@@ -263,7 +261,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             achievements.push({
                 type: 'team_excellence',
                 level: 'platinum',
-                awarded: new Date()
+                awarded: new Date(),
             });
         }
 
@@ -272,7 +270,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             achievements.push({
                 type: 'squad_completion',
                 level: 'elite',
-                awarded: new Date()
+                awarded: new Date(),
             });
         }
 
@@ -289,7 +287,7 @@ class EnhancedSocialFeatures extends EventEmitter {
             timestamp: new Date(),
             activity: vrData.activity,
             participants: vrData.participants,
-            performance: vrData.performance
+            performance: vrData.performance,
         });
 
         // Update squad metrics
@@ -297,7 +295,7 @@ class EnhancedSocialFeatures extends EventEmitter {
 
         return {
             updatedStats: squad.stats,
-            sessionSummary: vrData
+            sessionSummary: vrData,
         };
     }
 
@@ -305,7 +303,7 @@ class EnhancedSocialFeatures extends EventEmitter {
         const metrics = {
             coordination: this.getCoordinationScore(vrData),
             communication: this.getCommunicationScore(vrData),
-            taskCompletion: this.getTaskCompletionScore(vrData)
+            taskCompletion: this.getTaskCompletionScore(vrData),
         };
 
         return Object.values(metrics).reduce((a, b) => a + b, 0) / 3;

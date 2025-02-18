@@ -6,12 +6,12 @@ const data = require('./data'); // Import technical tasks
 router.get('/', (req, res) => {
     res.json({
         success: true,
-        tasks: data.getTasks()
+        tasks: data.getTasks(),
     });
 });
 
 // ✅ Export Router & Tasks
 module.exports = {
     router,
-    getTasks: data.getTasks
+    getTasks: data.getTasks,
 };

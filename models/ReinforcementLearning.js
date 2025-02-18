@@ -5,34 +5,34 @@ const StateSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
     },
     moduleId: {
         type: String,
-        required: true
+        required: true,
     },
     state: {
         type: Map,
-        of: mongoose.Schema.Types.Mixed
+        of: mongoose.Schema.Types.Mixed,
     },
     value: Number,
     visits: Number,
-    lastUpdated: Date
+    lastUpdated: Date,
 });
 
 const ActionSchema = new mongoose.Schema({
     stateId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'State',
-        required: true
+        required: true,
     },
     action: {
         type: Map,
-        of: mongoose.Schema.Types.Mixed
+        of: mongoose.Schema.Types.Mixed,
     },
     reward: Number,
     count: Number,
-    qValue: Number
+    qValue: Number,
 });
 
 const State = mongoose.model('State', StateSchema);
@@ -55,7 +55,7 @@ class ReinforcementLearning {
                     state: new Map(Object.entries(stateData)),
                     value: 0,
                     visits: 0,
-                    lastUpdated: new Date()
+                    lastUpdated: new Date(),
                 });
                 await state.save();
             }
@@ -95,7 +95,7 @@ class ReinforcementLearning {
                 return availableActions[Math.floor(Math.random() * availableActions.length)];
             }
 
-            return actions.reduce((best, current) => 
+            return actions.reduce((best, current) =>
                 current.qValue > best.qValue ? current : best
             ).action;
         } catch (error) {
@@ -113,7 +113,7 @@ class ReinforcementLearning {
                     action: new Map(Object.entries(action)),
                     reward: 0,
                     count: 0,
-                    qValue: 0
+                    qValue: 0,
                 });
             }
 
@@ -121,12 +121,14 @@ class ReinforcementLearning {
             const maxNextQ = nextState ? nextState.value : 0;
 
             // Q-learning update
-            const newQValue = actionDoc.qValue + 
+            const newQValue =
+                actionDoc.qValue +
                 this.learningRate * (reward + this.discountFactor * maxNextQ - actionDoc.qValue);
 
             actionDoc.qValue = newQValue;
             actionDoc.count += 1;
-            actionDoc.reward = (actionDoc.reward * (actionDoc.count - 1) + reward) / actionDoc.count;
+            actionDoc.reward =
+                (actionDoc.reward * (actionDoc.count - 1) + reward) / actionDoc.count;
 
             await actionDoc.save();
             return actionDoc;
@@ -140,5 +142,5 @@ class ReinforcementLearning {
 module.exports = {
     ReinforcementLearning: new ReinforcementLearning(),
     State,
-    Action
+    Action,
 };

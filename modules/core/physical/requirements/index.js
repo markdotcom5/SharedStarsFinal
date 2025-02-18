@@ -8,39 +8,31 @@ const PHYSICAL_REQUIREMENTS = {
         cardiovascular: {
             restingHeartRate: '60-100 bpm',
             bloodPressure: '< 140/90 mmHg',
-            vo2Max: '> 30 ml/kg/min'
+            vo2Max: '> 30 ml/kg/min',
         },
         strength: {
             coreStrength: 'Hold plank 60 seconds',
             upperBody: '10 proper pushups',
-            lowerBody: '20 bodyweight squats'
+            lowerBody: '20 bodyweight squats',
         },
         flexibility: {
             hipFlexibility: 'Touch toes while seated',
             shoulderMobility: 'Hands meet behind back',
-            ankleFlexibility: '> 30° dorsiflexion'
-        }
+            ankleFlexibility: '> 30° dorsiflexion',
+        },
     },
     medical: {
         clearance: ['Physical examination', 'ECG test', 'Blood work'],
-        contraindications: [
-            'Uncontrolled hypertension',
-            'Recent surgery',
-            'Acute illness'
-        ]
+        contraindications: ['Uncontrolled hypertension', 'Recent surgery', 'Acute illness'],
     },
     equipment: {
-        personal: [
-            'Heart rate monitor',
-            'Proper athletic shoes',
-            'Training attire'
-        ],
+        personal: ['Heart rate monitor', 'Proper athletic shoes', 'Training attire'],
         facility: [
             'Cardiovascular equipment',
             'Resistance training equipment',
-            'Flexibility assessment tools'
-        ]
-    }
+            'Flexibility assessment tools',
+        ],
+    },
 };
 
 // ✅ Function to Retrieve Physical Requirements
@@ -53,7 +45,7 @@ function getRequirements(category = null) {
 router.get('/all', authenticate, (req, res) => {
     res.json({
         success: true,
-        requirements: getRequirements()
+        requirements: getRequirements(),
     });
 });
 
@@ -65,20 +57,19 @@ router.get('/:category', authenticate, (req, res) => {
     if (!data) {
         return res.status(404).json({
             success: false,
-            error: `No requirements found for category: ${category}`
+            error: `No requirements found for category: ${category}`,
         });
     }
 
     res.json({
         success: true,
         category,
-        requirements: data
+        requirements: data,
     });
 });
 
 // ✅ Export Router and `getRequirements()`
 module.exports = {
-    router,  // ✅ Express Routes
-    getRequirements // ✅ Function for other modules to use
+    router, // ✅ Express Routes
+    getRequirements, // ✅ Function for other modules to use
 };
-

@@ -1,11 +1,11 @@
 // services/LeaderboardService.js
-const SocialPlatformIntegrator = require("../services/SocialPlatformIntegrator");
-const User = require("../models/User"); // ✅ Assuming a User model exists
-const mongoose = require("mongoose");
+const SocialPlatformIntegrator = require('../services/SocialPlatformIntegrator');
+const User = require('../models/User'); // ✅ Assuming a User model exists
+const mongoose = require('mongoose');
 
 class LeaderboardService {
     constructor() {
-        console.log("✅ Leaderboard Service Initialized");
+        console.log('✅ Leaderboard Service Initialized');
     }
 
     // ✅ Get current leaderboard rankings
@@ -14,11 +14,11 @@ class LeaderboardService {
             const leaderboard = await User.find()
                 .sort({ leaderboardScore: -1 })
                 .limit(top)
-                .select("name leaderboardScore email");
+                .select('name leaderboardScore email');
 
             return leaderboard;
         } catch (error) {
-            console.error("❌ Error fetching leaderboard:", error);
+            console.error('❌ Error fetching leaderboard:', error);
             throw error;
         }
     }
@@ -27,7 +27,7 @@ class LeaderboardService {
     async updateLeaderboard(userId, newScore) {
         try {
             const user = await User.findById(userId);
-            if (!user) throw new Error("User not found");
+            if (!user) throw new Error('User not found');
 
             const oldRank = await this.getUserRank(userId);
             user.leaderboardScore = newScore;
@@ -39,15 +39,15 @@ class LeaderboardService {
 
             // ✅ If user moves up in ranking, announce update
             if (newRank < oldRank) {
-                await SocialPlatformIntegrator.shareEvent("leaderboardUpdate", {
+                await SocialPlatformIntegrator.shareEvent('leaderboardUpdate', {
                     user,
-                    details: { position: newRank, score: newScore }
+                    details: { position: newRank, score: newScore },
                 });
             }
 
             return { success: true, newRank, score: newScore };
         } catch (error) {
-            console.error("❌ Error updating leaderboard:", error);
+            console.error('❌ Error updating leaderboard:', error);
             throw error;
         }
     }
@@ -55,13 +55,11 @@ class LeaderboardService {
     // ✅ Get user’s rank
     async getUserRank(userId) {
         try {
-            const leaderboard = await User.find()
-                .sort({ leaderboardScore: -1 })
-                .select("_id");
+            const leaderboard = await User.find().sort({ leaderboardScore: -1 }).select('_id');
 
             return leaderboard.findIndex((u) => u._id.toString() === userId.toString()) + 1;
         } catch (error) {
-            console.error("❌ Error fetching user rank:", error);
+            console.error('❌ Error fetching user rank:', error);
             return -1;
         }
     }

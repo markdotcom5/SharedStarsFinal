@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const translations = {
         profile: {
-            updateSuccess: "Profile updated successfully!",
-            updateError: "Failed to update profile."
-        }
+            updateSuccess: 'Profile updated successfully!',
+            updateError: 'Failed to update profile.',
+        },
     };
 
     // Load profile data
@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('email').value = profileData.email || '';
             document.getElementById('location').value = profileData.location || '';
             document.getElementById('bio').value = profileData.bio || '';
-            document.getElementById('modules-count').textContent = profileData.modulesCompleted || '0';
+            document.getElementById('modules-count').textContent =
+                profileData.modulesCompleted || '0';
             document.getElementById('current-rank').textContent = profileData.rank || 'Beginner';
             document.getElementById('total-points').textContent = profileData.points || '0';
         }
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch('/api/profile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Object.fromEntries(formData))
+                body: JSON.stringify(Object.fromEntries(formData)),
             });
 
             const data = await response.json();

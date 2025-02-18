@@ -1,6 +1,12 @@
 // services/CommunityHub.js
 const EventEmitter = require('events');
-const { StudyGroup, TrainingSession, Challenge, Discussion, PeerMatch } = require('../models/CommunityModels');
+const {
+    StudyGroup,
+    TrainingSession,
+    Challenge,
+    Discussion,
+    PeerMatch,
+} = require('../models/CommunityModels');
 const ServiceIntegrator = require('./ServiceIntegrator');
 const aiGuidance = require('./aiGuidance');
 
@@ -17,7 +23,7 @@ class CommunityHub extends EventEmitter {
             // Get AI recommendations for group formation
             const aiRecommendations = await this.aiGuidance.processRealTimeAction(userId, {
                 type: 'study_group_creation',
-                data: groupData
+                data: groupData,
             });
 
             const group = new StudyGroup({
@@ -28,8 +34,8 @@ class CommunityHub extends EventEmitter {
                     recommendedModules: aiRecommendations.modules,
                     groupStrengths: aiRecommendations.strengths,
                     improvementAreas: aiRecommendations.improvements,
-                    lastAnalysis: new Date()
-                }
+                    lastAnalysis: new Date(),
+                },
             });
 
             await group.save();
@@ -54,14 +60,14 @@ class CommunityHub extends EventEmitter {
             const aiSessionGuidance = await this.aiGuidance.processRealTimeAction(group.leader, {
                 type: 'training_session_start',
                 groupId,
-                sessionData
+                sessionData,
             });
 
             const session = new TrainingSession({
                 group: groupId,
                 ...sessionData,
                 aiGuidance: aiSessionGuidance,
-                startTime: new Date()
+                startTime: new Date(),
             });
 
             await session.save();
@@ -82,7 +88,7 @@ class CommunityHub extends EventEmitter {
             // Get AI recommendations for challenge
             const aiRecommendations = await this.serviceIntegrator.processUserAction(userId, {
                 type: 'challenge_creation',
-                data: challengeData
+                data: challengeData,
             });
 
             const challenge = new Challenge({
@@ -90,7 +96,7 @@ class CommunityHub extends EventEmitter {
                 creator: userId,
                 aiGuidance: aiRecommendations,
                 startDate: new Date(challengeData.startDate),
-                endDate: new Date(challengeData.endDate)
+                endDate: new Date(challengeData.endDate),
             });
 
             await challenge.save();
@@ -116,15 +122,15 @@ class CommunityHub extends EventEmitter {
             // Get AI-powered peer recommendations
             const matches = await this.aiGuidance.processRealTimeAction(userId, {
                 type: 'peer_matching',
-                preferences: user.preferences
+                preferences: user.preferences,
             });
 
             // Update peer matches
-            user.matches = matches.map(match => ({
+            user.matches = matches.map((match) => ({
                 peer: match.userId,
                 compatibilityScore: match.score,
                 matchReason: match.reasons,
-                status: 'pending'
+                status: 'pending',
             }));
 
             await user.save();
@@ -142,7 +148,7 @@ class CommunityHub extends EventEmitter {
             // Get AI moderation and analysis
             const aiAnalysis = await this.aiGuidance.processRealTimeAction(userId, {
                 type: 'discussion_creation',
-                data: discussionData
+                data: discussionData,
             });
 
             const discussion = new Discussion({
@@ -151,8 +157,8 @@ class CommunityHub extends EventEmitter {
                 aiModeration: {
                     topicAnalysis: aiAnalysis.topicAnalysis,
                     suggestedExperts: aiAnalysis.experts,
-                    relatedResources: aiAnalysis.resources
-                }
+                    relatedResources: aiAnalysis.resources,
+                },
             });
 
             await discussion.save();
@@ -177,18 +183,18 @@ class CommunityHub extends EventEmitter {
             const aiAnalysis = await this.serviceIntegrator.processUserAction(group.leader, {
                 type: 'group_progress_update',
                 groupId,
-                progress: progressData
+                progress: progressData,
             });
 
             group.metrics = {
                 ...group.metrics,
                 ...progressData,
-                lastUpdated: new Date()
+                lastUpdated: new Date(),
             };
 
             group.aiGuidance = {
                 ...group.aiGuidance,
-                ...aiAnalysis
+                ...aiAnalysis,
             };
 
             await group.save();

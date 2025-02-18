@@ -1,8 +1,8 @@
-console.log("✅ aiServices.js loaded successfully!");
+console.log('✅ aiServices.js loaded successfully!');
 
 class AIAssistant {
     constructor() {
-        console.log("AIAssistant instance created!");
+        console.log('AIAssistant instance created!');
         // OpenAI setup (if needed)
     }
 

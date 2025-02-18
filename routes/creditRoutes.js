@@ -13,12 +13,12 @@ const webSocketService = {
     },
     broadcast: (type, data) => {
         console.log('WebSocket broadcast:', { type, data });
-    }
+    },
 };
 
 // ✅ Prevent Memory Leaks: Limit timeline managers
 const timelineManagers = new Map();
-const MAX_TIMELINE_MANAGERS = 1000; 
+const MAX_TIMELINE_MANAGERS = 1000;
 
 const getTimelineManager = (userId) => {
     if (!timelineManagers.has(userId)) {
@@ -45,7 +45,7 @@ router.get('/balance', authenticate, async (req, res) => {
             success: true,
             credits: user.credits,
             yearsToLaunch,
-            timestamp: new Date()
+            timestamp: new Date(),
         });
     } catch (error) {
         console.error('❌ Error fetching credit balance:', error);
@@ -56,7 +56,7 @@ router.get('/balance', authenticate, async (req, res) => {
 // ✅ Award Credits for Training Completion
 router.post('/training/complete', authenticate, async (req, res) => {
     try {
-        const completionScore = req.body.completionScore || 0;  // ✅ Prevents `undefined` error
+        const completionScore = req.body.completionScore || 0; // ✅ Prevents `undefined` error
 
         const trainingSession = new TrainingSession({
             userId: req.user._id,
@@ -66,13 +66,13 @@ router.post('/training/complete', authenticate, async (req, res) => {
             metrics: {
                 completionRate: completionScore,
                 effectivenessScore: completionScore,
-                overallRank: 1
+                overallRank: 1,
             },
             assessment: {
                 score: completionScore,
                 completedAt: new Date(),
-                aiRecommendations: ['Great progress!']
-            }
+                aiRecommendations: ['Great progress!'],
+            },
         });
 
         await trainingSession.save();
@@ -85,7 +85,7 @@ router.post('/training/complete', authenticate, async (req, res) => {
         webSocketService.sendToUser(req.user._id, 'credits_updated', {
             sessionId: trainingSession._id,
             earnedCredits: trainingSession.metrics.completionRate,
-            newTotalCredits: await timelineManager.getTrainingCredits()
+            newTotalCredits: await timelineManager.getTrainingCredits(),
         });
 
         res.json({
@@ -93,7 +93,7 @@ router.post('/training/complete', authenticate, async (req, res) => {
             sessionId: trainingSession._id,
             metrics: trainingSession.metrics,
             yearsToLaunch,
-            totalCredits: await timelineManager.getTrainingCredits()
+            totalCredits: await timelineManager.getTrainingCredits(),
         });
     } catch (error) {
         console.error('❌ Error awarding training credits:', error);
@@ -104,32 +104,35 @@ router.post('/training/complete', authenticate, async (req, res) => {
 // ✅ Get User Credit History
 router.get('/history', authenticate, async (req, res) => {
     try {
-        const user = await User.findById(req.user._id)
-            .select('moduleProgress certifications');
+        const user = await User.findById(req.user._id).select('moduleProgress certifications');
 
         const timelineManager = getTimelineManager(req.user._id);
         await timelineManager.initialize();
 
         const creditHistory = {
-            modules: Array.isArray(user.moduleProgress) ? user.moduleProgress.map(m => ({
-                moduleId: m.moduleId,
-                credits: m.creditsEarned,
-                date: m.completionDate,
-                timelineImpact: m.creditsEarned ? (m.creditsEarned / 1000) : 0
-            })) : [],
-            certifications: Array.isArray(user.certifications) ? user.certifications.map(c => ({
-                name: c.name,
-                credits: c.creditsEarned,
-                date: c.issuedDate,
-                timelineImpact: c.creditsEarned ? (c.creditsEarned / 1000) : 0
-            })) : []
+            modules: Array.isArray(user.moduleProgress)
+                ? user.moduleProgress.map((m) => ({
+                      moduleId: m.moduleId,
+                      credits: m.creditsEarned,
+                      date: m.completionDate,
+                      timelineImpact: m.creditsEarned ? m.creditsEarned / 1000 : 0,
+                  }))
+                : [],
+            certifications: Array.isArray(user.certifications)
+                ? user.certifications.map((c) => ({
+                      name: c.name,
+                      credits: c.creditsEarned,
+                      date: c.issuedDate,
+                      timelineImpact: c.creditsEarned ? c.creditsEarned / 1000 : 0,
+                  }))
+                : [],
         };
 
         res.json({
             success: true,
             history: creditHistory,
             totalCredits: await timelineManager.getTrainingCredits(),
-            yearsToLaunch: await timelineManager.calculateTimeToLaunch()
+            yearsToLaunch: await timelineManager.calculateTimeToLaunch(),
         });
     } catch (error) {
         console.error('❌ Error fetching credit history:', error);

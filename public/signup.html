@@ -1,390 +1,582 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="StelTrek Academy - Begin Your Journey to Space" />
-    <title data-i18n="subscribe.pageTitle">Subscribe - SharedStars Academy</title>
-    
-    <!-- Tailwind CSS & DaisyUI -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
-    
-    <!-- Fonts & AOS -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/ai-assistant.css" />
-    <link rel="stylesheet" href="/css/main.css" />
-    
-    <!-- Inline styles for Stripe elements -->
-    <style>
-      .StripeElement {
-        background-color: #2A303C;
-        padding: 16px;
-        border-radius: 8px;
-        border: 1px solid #374151;
-      }
-      .StripeElement--focus {
-        border-color: #60A5FA;
-      }
-      
-      /* DaisyUI modal override (if needed) */
-      .modal { display: none; }
-      .modal.modal-open { display: flex; }
-      
-      /* Additional custom styles */
-      body {
-        font-family: 'Inter', sans-serif;
-        scroll-behavior: smooth;
-      }
-    </style>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Stripe JS -->
-    <script src="https://js.stripe.com/v3/"></script>
-    <script>
-      // Replace with your actual publishable key
-      const stripe = Stripe('your_publishable_key'); 
-    </script>
-    
-    <!-- Language Selection Script -->
-    <script src="/js/languageSelection.js" defer></script>
-  </head>
-  <body class="min-h-screen bg-base-200 flex flex-col">
-    <!-- NAVBAR -->
-    <div class="navbar bg-base-100 fixed top-0 z-50 shadow-lg">
-      <div class="container mx-auto flex items-center justify-between">
-        <div class="flex-1">
-          <a href="/index.html" aria-label="SharedStars Homepage">
-            <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-10" />
-          </a>
-        </div>
-        <nav class="desktop-menu hidden md:flex space-x-6">
-          <a href="/index.html" data-i18n="nav.home" class="text-gray-300 hover:text-white">Home</a>
-          <a href="/academy.html" data-i18n="nav.academy" class="text-gray-300 hover:text-white">Academy</a>
-          <a href="/about.html" data-i18n="nav.about" class="text-gray-300 hover:text-white">About</a>
-          <a href="/mission-control.html" data-i18n="nav.missionControl" class="text-gray-300 hover:text-white">Mission Control</a>
-          <a href="/subscribe.html" data-i18n="nav.subscribe" class="text-gray-300 hover:text-white">Subscribe</a>
-        </nav>
-      </div>
-    </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="StelTrek Academy - Begin Your Journey to Space" />
+        <title data-i18n="subscribe.pageTitle">Subscribe - SharedStars Academy</title>
 
-    <!-- HERO SECTION -->
-    <div class="hero min-h-screen" style="background-image: url('/images/space-bg.jpg');">
-      <div class="hero-overlay bg-opacity-60"></div>
-      <div class="hero-content text-center text-neutral-content" data-aos="fade">
-        <div class="max-w-md">
-          <h1 class="mb-5 text-5xl font-bold" data-i18n="subscribe.heroTitle">
-            Chart Your Course to Space
-          </h1>
-          <div class="alert alert-warning shadow-lg mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <span data-i18n="subscribe.seatsWarning">
-              Space Seats are Filling Up Fast!
-            </span>
-          </div>
-          <!-- Stats Cards -->
-          <div class="stats shadow bg-base-200 bg-opacity-80 backdrop-blur">
-            <div class="stat">
-              <div class="stat-title" data-i18n="subscribe.currentPriceTitle">Current Price</div>
-              <div class="stat-value text-primary" data-i18n="subscribe.currentPriceValue">$450k</div>
-              <div class="stat-desc" data-i18n="subscribe.currentPriceDesc">Per space seat</div>
-            </div>
-            <div class="stat">
-              <div class="stat-title" data-i18n="subscribe.targetPriceTitle">Target Price</div>
-              <div class="stat-value text-secondary" data-i18n="subscribe.targetPriceValue">$5k</div>
-              <div class="stat-desc" data-i18n="subscribe.targetPriceDesc">By 2039</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        <!-- Tailwind CSS & DaisyUI -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+            rel="stylesheet"
+        />
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
 
-    <!-- SIGNUP SECTION WITH POP-UP MODAL -->
-    <main class="flex-grow flex flex-col items-center justify-center pt-32 pb-20 px-4">
-      <div class="bg-gray-800/90 p-12 rounded-lg shadow-2xl max-w-xl w-full backdrop-blur-md" data-aos="fade-up">
-        <h2 class="text-3xl font-bold text-center mb-8 text-blue-400" data-i18n="signup.heading">
-          Create Your Account
-        </h2>
-        <form id="signupForm" class="space-y-6">
-          <div class="form-control">
-            <label for="username" class="block text-lg font-medium text-white" data-i18n="signup.usernameLabel">
-              Username
-            </label>
-            <input type="text" id="username" name="username" class="w-full h-12 p-3 rounded bg-gray-700 border border-gray-600 text-white text-lg" required autocomplete="username" />
-          </div>
-          <div class="form-control">
-            <label for="email" class="block text-lg font-medium text-white" data-i18n="signup.emailLabel">
-              Email Address
-            </label>
-            <input type="email" id="email" name="email" class="w-full h-12 p-3 rounded bg-gray-700 border border-gray-600 text-white text-lg" required autocomplete="email" />
-          </div>
-          <div class="form-control">
-            <label for="password" class="block text-lg font-medium text-white" data-i18n="signup.passwordLabel">
-              Password
-            </label>
-            <input type="password" id="password" name="password" class="w-full h-12 p-3 rounded bg-gray-700 border border-gray-600 text-white text-lg" required autocomplete="new-password" />
-          </div>
-          <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded text-lg mt-6" data-i18n="signup.submitButton">
-            Sign Up
-          </button>
-        </form>
-      </div>
-    </main>
+        <!-- Fonts & AOS -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
 
-    <!-- ONBOARDING WIZARD MODAL (Pop-Up) -->
-    <div id="onboardingModal" class="modal fixed inset-0 flex items-center justify-center z-50 hidden">
-      <div class="modal-box bg-gray-800 p-8 rounded-lg shadow-2xl">
-        <h2 class="text-3xl font-bold text-blue-400 mb-6" data-i18n="onboarding.heading">
-          Complete Your Profile
-        </h2>
-        <div id="onboardingContent">
-          <!-- Step content will be injected here -->
-        </div>
-        <div class="modal-action flex justify-between mt-6">
-          <button id="prevStep" class="btn btn-outline" disabled data-i18n="onboarding.prev">Previous</button>
-          <button id="nextStep" class="btn btn-primary" data-i18n="onboarding.next">Next</button>
-          <button id="closeModal" class="btn" data-i18n="onboarding.close">Close</button>
-        </div>
-      </div>
-    </div>
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/ai-assistant.css" />
+        <link rel="stylesheet" href="/css/main.css" />
 
-    <!-- FOOTER -->
-    <footer class="bg-gray-900 text-white py-12 mt-auto" data-i18n>
-      <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
-        <!-- About -->
-        <div>
-          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
-          <ul class="space-y-2 mt-4">
-            <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
-            <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">Space Academy</a></li>
-          </ul>
-        </div>
-        <!-- Community -->
-        <div>
-          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
-          <ul class="space-y-2 mt-4">
-            <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
-            <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
-          </ul>
-        </div>
-        <!-- Resources -->
-        <div>
-          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
-          <ul class="space-y-2 mt-4">
-            <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
-            <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
-          </ul>
-        </div>
-        <!-- Legal -->
-        <div>
-          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
-          <ul class="space-y-2 mt-4">
-            <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
-            <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="mt-12 text-center">
-        <p class="text-gray-400 text-sm" data-i18n="footer.copyright">
-          © 2024 SharedStars Academy. All rights reserved.
-        </p>
-      </div>
-    </footer>
-
-    <!-- CORE DEPENDENCIES -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <!-- Initialize AOS -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        AOS.init({
-          duration: 1000,
-          easing: 'ease',
-          once: true,
-        });
-      });
-    </script>
-    
-    <!-- Language Selection & Navigation -->
-    <script src="/js/languageSelection.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        console.log("✅ Language & Navigation Script Loaded");
-        const savedLang = localStorage.getItem("preferredLanguage") || "en";
-        document.documentElement.lang = savedLang;
-        applyTranslations(savedLang);
-        document.querySelectorAll(".language-flag").forEach((flag) => {
-          flag.addEventListener("click", () => {
-            const selectedLang = flag.dataset.lang || "en";
-            localStorage.setItem("preferredLanguage", selectedLang);
-            applyTranslations(selectedLang);
-          });
-        });
-        document.querySelectorAll("nav a").forEach((button) => {
-          button.addEventListener("click", function (event) {
-            event.preventDefault();
-            console.log(`✅ Navigating to: ${this.href}`);
-            window.location.href = this.href;
-          });
-        });
-      });
-      
-      function applyTranslations(lang) {
-        const translations = {
-          en: {
-            nav: {
-              home: "Home",
-              why: "Why SharedStars",
-              about: "About",
-              leaderboard: "Leaderboard",
-              login: "Login",
-              "mission-control": "Mission Control",
-              profile: "Profile",
-              signup: "Sign Up",
-              academy: "StelTrek Academy",
-              welcome: "Welcome",
-              subscribe: "Subscribe"
-            },
-            welcome: {
-              videoTagline: "Enough dreaming, let’s take a walk to show how we can get you up to space.",
-              ctaMessage: "Are you ready to begin your space journey?",
-              joinButton: "Join Now",
-              proceedButton: "Proceed",
-              aiStatus: "Initializing AI Coach..."
-            },
-            subscribe: {
-              pageTitle: "Subscribe - SharedStars",
-              heroTitle: "Chart Your Course to Space",
-              seatsWarning: "Space Seats are Filling Up Fast!",
-              currentPriceTitle: "Current Price",
-              currentPriceValue: "$450k",
-              currentPriceDesc: "Per space seat",
-              targetPriceTitle: "Target Price",
-              targetPriceValue: "$5k",
-              targetPriceDesc: "By 2039",
-              pathTitle: "Your Path to Space",
-              pathDesc: "*Based on market projections and your subscription plan",
-              baselineGraphTitle: "Baseline Ticket Price Projection",
-              baselineGraphDesc: "2022: $750K, 2025: $500K, 2029: $125K, 2034: $60K, 2039: $5K.",
-              personalGraphTitle: "Personalized Credits Projection",
-              personalGraphDesc: "This graph updates dynamically as you complete training modules and earn credits.",
-              yearsLabel: "Years",
-              monthsLabel: "Months",
-              weeksLabel: "Weeks",
-              daysLabel: "Days",
-              hoursLabel: "Hours",
-              minutesLabel: "Minutes",
-              personalTimelineTitle: "Your Accelerated Timeline",
-              creditsDisplay: "Your SharedStars Credits: 0",
-              paymentTitle: "Secure Your Journey",
-              plan: {
-                individual: {
-                  badge: "15-year track",
-                  title: "Individual Explorer",
-                  price: "$49.99",
-                  feature1: "Personal AI Coach",
-                  feature2: "10hrs Monthly VR",
-                  feature3: "100 Space Credits",
-                  cta: "Begin Journey"
-                },
-                family: {
-                  badge: "10-year track",
-                  title: "Family Pioneer",
-                  price: "$89.99",
-                  feature1: "4 Member Access",
-                  feature2: "Unlimited VR",
-                  feature3: "250 Space Credits",
-                  cta: "Secure Family Access"
-                },
-                elite: {
-                  badge: "1-year track",
-                  title: "Galactic Elite",
-                  price: "$2,048",
-                  feature1: "Priority Access",
-                  feature2: "Private Facility",
-                  feature3: "1000 Space Credits",
-                  cta: "Launch Next Year"
-                },
-                custom: {
-                  badge: "Flexible track",
-                  title: "Custom Contributor",
-                  feature1: "Flexible Contribution",
-                  feature2: "Credits Based on Contribution",
-                  cta: "Start Contributing"
-                }
-              }
-            },
-            footer: {
-              about: {
-                title: "About",
-                ourStory: "Our Story",
-                academy: "Space Academy"
-              },
-              community: {
-                title: "Community",
-                events: "Events",
-                forums: "Forums"
-              },
-              resources: {
-                title: "Resources",
-                faq: "FAQ",
-                support: "Support"
-              },
-              legal: {
-                title: "Legal",
-                terms: "Terms",
-                privacy: "Privacy"
-              },
-              followUs: "Follow Us",
-              copyright: "© 2025 Celestial Technologies, LLC. All Rights Reserved."
+        <!-- Inline styles for Stripe elements -->
+        <style>
+            .StripeElement {
+                background-color: #2a303c;
+                padding: 16px;
+                border-radius: 8px;
+                border: 1px solid #374151;
             }
-          },
-          zh: {
-            // Chinese translations...
-          }
-          // Additional translations for ko and es as needed...
-        };
+            .StripeElement--focus {
+                border-color: #60a5fa;
+            }
 
-        document.querySelectorAll("[data-i18n]").forEach((element) => {
-          const key = element.dataset.i18n;
-          const keys = key.split(".");
-          let translation = translations[lang];
-          keys.forEach((k) => {
-            translation = translation ? translation[k] : null;
-          });
-          if (translation) {
-            element.textContent = translation;
-          }
-        });
-      }
-    </script>
-    
-    <!-- ES Module Imports for Custom JS -->
-    <script type="module">
-      import '/js/modules/core/index.js';
-      import '/js/modules/ui/index.js';
-      import '/js/modules/training/index.js';
-      import '/js/modules/auth/index.js';
-    </script>
-    
-    <!-- Legacy Scripts (Deferred) -->
-    <script src="/js/animations.js" defer></script>
-    <script src="/js/trialFlow.js" defer></script>
-    <script src="/js/leaderboard.js" defer></script>
-    <script src="/js/visualizations/ModuleHighlight.js" defer></script>
-    
-    <!-- Highlight.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    
-    <!-- Main Initialization Script -->
-    <script src="/js/main.js"></script>
-  </body>
+            /* DaisyUI modal override (if needed) */
+            .modal {
+                display: none;
+            }
+            .modal.modal-open {
+                display: flex;
+            }
+
+            /* Additional custom styles */
+            body {
+                font-family: 'Inter', sans-serif;
+                scroll-behavior: smooth;
+            }
+        </style>
+
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Stripe JS -->
+        <script src="https://js.stripe.com/v3/"></script>
+        <script>
+            // Replace with your actual publishable key
+            const stripe = Stripe('your_publishable_key');
+        </script>
+
+        <!-- Language Selection Script -->
+        <script src="/js/languageSelection.js" defer></script>
+    </head>
+    <body class="min-h-screen bg-base-200 flex flex-col">
+        <!-- NAVBAR -->
+        <div class="navbar bg-base-100 fixed top-0 z-50 shadow-lg">
+            <div class="container mx-auto flex items-center justify-between">
+                <div class="flex-1">
+                    <a href="/index.html" aria-label="SharedStars Homepage">
+                        <img
+                            src="/css/images/SharedStars.svg"
+                            alt="SharedStars Logo"
+                            class="h-10"
+                        />
+                    </a>
+                </div>
+                <nav class="desktop-menu hidden md:flex space-x-6">
+                    <a
+                        href="/index.html"
+                        data-i18n="nav.home"
+                        class="text-gray-300 hover:text-white"
+                        >Home</a
+                    >
+                    <a
+                        href="/academy.html"
+                        data-i18n="nav.academy"
+                        class="text-gray-300 hover:text-white"
+                        >Academy</a
+                    >
+                    <a
+                        href="/about.html"
+                        data-i18n="nav.about"
+                        class="text-gray-300 hover:text-white"
+                        >About</a
+                    >
+                    <a
+                        href="/mission-control.html"
+                        data-i18n="nav.missionControl"
+                        class="text-gray-300 hover:text-white"
+                        >Mission Control</a
+                    >
+                    <a
+                        href="/subscribe.html"
+                        data-i18n="nav.subscribe"
+                        class="text-gray-300 hover:text-white"
+                        >Subscribe</a
+                    >
+                </nav>
+            </div>
+        </div>
+
+        <!-- HERO SECTION -->
+        <div class="hero min-h-screen" style="background-image: url('/images/space-bg.jpg')">
+            <div class="hero-overlay bg-opacity-60"></div>
+            <div class="hero-content text-center text-neutral-content" data-aos="fade">
+                <div class="max-w-md">
+                    <h1 class="mb-5 text-5xl font-bold" data-i18n="subscribe.heroTitle">
+                        Chart Your Course to Space
+                    </h1>
+                    <div class="alert alert-warning shadow-lg mb-6">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="stroke-current shrink-0 h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                            />
+                        </svg>
+                        <span data-i18n="subscribe.seatsWarning">
+                            Space Seats are Filling Up Fast!
+                        </span>
+                    </div>
+                    <!-- Stats Cards -->
+                    <div class="stats shadow bg-base-200 bg-opacity-80 backdrop-blur">
+                        <div class="stat">
+                            <div class="stat-title" data-i18n="subscribe.currentPriceTitle">
+                                Current Price
+                            </div>
+                            <div
+                                class="stat-value text-primary"
+                                data-i18n="subscribe.currentPriceValue"
+                            >
+                                $450k
+                            </div>
+                            <div class="stat-desc" data-i18n="subscribe.currentPriceDesc">
+                                Per space seat
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title" data-i18n="subscribe.targetPriceTitle">
+                                Target Price
+                            </div>
+                            <div
+                                class="stat-value text-secondary"
+                                data-i18n="subscribe.targetPriceValue"
+                            >
+                                $5k
+                            </div>
+                            <div class="stat-desc" data-i18n="subscribe.targetPriceDesc">
+                                By 2039
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIGNUP SECTION WITH POP-UP MODAL -->
+        <main class="flex-grow flex flex-col items-center justify-center pt-32 pb-20 px-4">
+            <div
+                class="bg-gray-800/90 p-12 rounded-lg shadow-2xl max-w-xl w-full backdrop-blur-md"
+                data-aos="fade-up"
+            >
+                <h2
+                    class="text-3xl font-bold text-center mb-8 text-blue-400"
+                    data-i18n="signup.heading"
+                >
+                    Create Your Account
+                </h2>
+                <form id="signupForm" class="space-y-6">
+                    <div class="form-control">
+                        <label
+                            for="username"
+                            class="block text-lg font-medium text-white"
+                            data-i18n="signup.usernameLabel"
+                        >
+                            Username
+                        </label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="w-full h-12 p-3 rounded bg-gray-700 border border-gray-600 text-white text-lg"
+                            required
+                            autocomplete="username"
+                        />
+                    </div>
+                    <div class="form-control">
+                        <label
+                            for="email"
+                            class="block text-lg font-medium text-white"
+                            data-i18n="signup.emailLabel"
+                        >
+                            Email Address
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="w-full h-12 p-3 rounded bg-gray-700 border border-gray-600 text-white text-lg"
+                            required
+                            autocomplete="email"
+                        />
+                    </div>
+                    <div class="form-control">
+                        <label
+                            for="password"
+                            class="block text-lg font-medium text-white"
+                            data-i18n="signup.passwordLabel"
+                        >
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="w-full h-12 p-3 rounded bg-gray-700 border border-gray-600 text-white text-lg"
+                            required
+                            autocomplete="new-password"
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded text-lg mt-6"
+                        data-i18n="signup.submitButton"
+                    >
+                        Sign Up
+                    </button>
+                </form>
+            </div>
+        </main>
+
+        <!-- ONBOARDING WIZARD MODAL (Pop-Up) -->
+        <div
+            id="onboardingModal"
+            class="modal fixed inset-0 flex items-center justify-center z-50 hidden"
+        >
+            <div class="modal-box bg-gray-800 p-8 rounded-lg shadow-2xl">
+                <h2 class="text-3xl font-bold text-blue-400 mb-6" data-i18n="onboarding.heading">
+                    Complete Your Profile
+                </h2>
+                <div id="onboardingContent">
+                    <!-- Step content will be injected here -->
+                </div>
+                <div class="modal-action flex justify-between mt-6">
+                    <button
+                        id="prevStep"
+                        class="btn btn-outline"
+                        disabled
+                        data-i18n="onboarding.prev"
+                    >
+                        Previous
+                    </button>
+                    <button id="nextStep" class="btn btn-primary" data-i18n="onboarding.next">
+                        Next
+                    </button>
+                    <button id="closeModal" class="btn" data-i18n="onboarding.close">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="bg-gray-900 text-white py-12 mt-auto" data-i18n>
+            <div
+                class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left"
+            >
+                <!-- About -->
+                <div>
+                    <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">
+                        About
+                    </h3>
+                    <ul class="space-y-2 mt-4">
+                        <li>
+                            <a
+                                href="/about.html"
+                                class="hover:text-blue-400 transition-colors"
+                                data-i18n="footer.about.ourStory"
+                                >Our Story</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="/academy.html"
+                                class="hover:text-blue-400 transition-colors"
+                                data-i18n="footer.about.academy"
+                                >Space Academy</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+                <!-- Community -->
+                <div>
+                    <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">
+                        Community
+                    </h3>
+                    <ul class="space-y-2 mt-4">
+                        <li>
+                            <a
+                                href="/events.html"
+                                class="hover:text-blue-400 transition-colors"
+                                data-i18n="footer.community.events"
+                                >Events</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="/forums.html"
+                                class="hover:text-blue-400 transition-colors"
+                                data-i18n="footer.community.forums"
+                                >Forums</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+                <!-- Resources -->
+                <div>
+                    <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">
+                        Resources
+                    </h3>
+                    <ul class="space-y-2 mt-4">
+                        <li>
+                            <a
+                                href="/faq.html"
+                                class="hover:text-blue-400 transition-colors"
+                                data-i18n="footer.resources.faq"
+                                >FAQ</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="/support.html"
+                                class="hover:text-blue-400 transition-colors"
+                                data-i18n="footer.resources.support"
+                                >Support</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+                <!-- Legal -->
+                <div>
+                    <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">
+                        Legal
+                    </h3>
+                    <ul class="space-y-2 mt-4">
+                        <li>
+                            <a
+                                href="/terms.html"
+                                class="hover:text-blue-400 transition-colors"
+                                data-i18n="footer.legal.terms"
+                                >Terms</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="/privacy.html"
+                                class="hover:text-blue-400 transition-colors"
+                                data-i18n="footer.legal.privacy"
+                                >Privacy</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 text-center">
+                <p class="text-gray-400 text-sm" data-i18n="footer.copyright">
+                    © 2024 SharedStars Academy. All rights reserved.
+                </p>
+            </div>
+        </footer>
+
+        <!-- CORE DEPENDENCIES -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+        <!-- Initialize AOS -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                AOS.init({
+                    duration: 1000,
+                    easing: 'ease',
+                    once: true,
+                });
+            });
+        </script>
+
+        <!-- Language Selection & Navigation -->
+        <script src="/js/languageSelection.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('✅ Language & Navigation Script Loaded');
+                const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+                document.documentElement.lang = savedLang;
+                applyTranslations(savedLang);
+                document.querySelectorAll('.language-flag').forEach((flag) => {
+                    flag.addEventListener('click', () => {
+                        const selectedLang = flag.dataset.lang || 'en';
+                        localStorage.setItem('preferredLanguage', selectedLang);
+                        applyTranslations(selectedLang);
+                    });
+                });
+                document.querySelectorAll('nav a').forEach((button) => {
+                    button.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        console.log(`✅ Navigating to: ${this.href}`);
+                        window.location.href = this.href;
+                    });
+                });
+            });
+
+            function applyTranslations(lang) {
+                const translations = {
+                    en: {
+                        nav: {
+                            home: 'Home',
+                            why: 'Why SharedStars',
+                            about: 'About',
+                            leaderboard: 'Leaderboard',
+                            login: 'Login',
+                            'mission-control': 'Mission Control',
+                            profile: 'Profile',
+                            signup: 'Sign Up',
+                            academy: 'StelTrek Academy',
+                            welcome: 'Welcome',
+                            subscribe: 'Subscribe',
+                        },
+                        welcome: {
+                            videoTagline:
+                                'Enough dreaming, let’s take a walk to show how we can get you up to space.',
+                            ctaMessage: 'Are you ready to begin your space journey?',
+                            joinButton: 'Join Now',
+                            proceedButton: 'Proceed',
+                            aiStatus: 'Initializing AI Coach...',
+                        },
+                        subscribe: {
+                            pageTitle: 'Subscribe - SharedStars',
+                            heroTitle: 'Chart Your Course to Space',
+                            seatsWarning: 'Space Seats are Filling Up Fast!',
+                            currentPriceTitle: 'Current Price',
+                            currentPriceValue: '$450k',
+                            currentPriceDesc: 'Per space seat',
+                            targetPriceTitle: 'Target Price',
+                            targetPriceValue: '$5k',
+                            targetPriceDesc: 'By 2039',
+                            pathTitle: 'Your Path to Space',
+                            pathDesc: '*Based on market projections and your subscription plan',
+                            baselineGraphTitle: 'Baseline Ticket Price Projection',
+                            baselineGraphDesc:
+                                '2022: $750K, 2025: $500K, 2029: $125K, 2034: $60K, 2039: $5K.',
+                            personalGraphTitle: 'Personalized Credits Projection',
+                            personalGraphDesc:
+                                'This graph updates dynamically as you complete training modules and earn credits.',
+                            yearsLabel: 'Years',
+                            monthsLabel: 'Months',
+                            weeksLabel: 'Weeks',
+                            daysLabel: 'Days',
+                            hoursLabel: 'Hours',
+                            minutesLabel: 'Minutes',
+                            personalTimelineTitle: 'Your Accelerated Timeline',
+                            creditsDisplay: 'Your SharedStars Credits: 0',
+                            paymentTitle: 'Secure Your Journey',
+                            plan: {
+                                individual: {
+                                    badge: '15-year track',
+                                    title: 'Individual Explorer',
+                                    price: '$49.99',
+                                    feature1: 'Personal AI Coach',
+                                    feature2: '10hrs Monthly VR',
+                                    feature3: '100 Space Credits',
+                                    cta: 'Begin Journey',
+                                },
+                                family: {
+                                    badge: '10-year track',
+                                    title: 'Family Pioneer',
+                                    price: '$89.99',
+                                    feature1: '4 Member Access',
+                                    feature2: 'Unlimited VR',
+                                    feature3: '250 Space Credits',
+                                    cta: 'Secure Family Access',
+                                },
+                                elite: {
+                                    badge: '1-year track',
+                                    title: 'Galactic Elite',
+                                    price: '$2,048',
+                                    feature1: 'Priority Access',
+                                    feature2: 'Private Facility',
+                                    feature3: '1000 Space Credits',
+                                    cta: 'Launch Next Year',
+                                },
+                                custom: {
+                                    badge: 'Flexible track',
+                                    title: 'Custom Contributor',
+                                    feature1: 'Flexible Contribution',
+                                    feature2: 'Credits Based on Contribution',
+                                    cta: 'Start Contributing',
+                                },
+                            },
+                        },
+                        footer: {
+                            about: {
+                                title: 'About',
+                                ourStory: 'Our Story',
+                                academy: 'Space Academy',
+                            },
+                            community: {
+                                title: 'Community',
+                                events: 'Events',
+                                forums: 'Forums',
+                            },
+                            resources: {
+                                title: 'Resources',
+                                faq: 'FAQ',
+                                support: 'Support',
+                            },
+                            legal: {
+                                title: 'Legal',
+                                terms: 'Terms',
+                                privacy: 'Privacy',
+                            },
+                            followUs: 'Follow Us',
+                            copyright: '© 2025 Celestial Technologies, LLC. All Rights Reserved.',
+                        },
+                    },
+                    zh: {
+                        // Chinese translations...
+                    },
+                    // Additional translations for ko and es as needed...
+                };
+
+                document.querySelectorAll('[data-i18n]').forEach((element) => {
+                    const key = element.dataset.i18n;
+                    const keys = key.split('.');
+                    let translation = translations[lang];
+                    keys.forEach((k) => {
+                        translation = translation ? translation[k] : null;
+                    });
+                    if (translation) {
+                        element.textContent = translation;
+                    }
+                });
+            }
+        </script>
+
+        <!-- ES Module Imports for Custom JS -->
+        <script type="module">
+            import '/js/modules/core/index.js';
+            import '/js/modules/ui/index.js';
+            import '/js/modules/training/index.js';
+            import '/js/modules/auth/index.js';
+        </script>
+
+        <!-- Legacy Scripts (Deferred) -->
+        <script src="/js/animations.js" defer></script>
+        <script src="/js/trialFlow.js" defer></script>
+        <script src="/js/leaderboard.js" defer></script>
+        <script src="/js/visualizations/ModuleHighlight.js" defer></script>
+
+        <!-- Highlight.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
+
+        <!-- Main Initialization Script -->
+        <script src="/js/main.js"></script>
+    </body>
 </html>
-

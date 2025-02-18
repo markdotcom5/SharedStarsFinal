@@ -1,17 +1,16 @@
-const SocialPlatformIntegrator = require("../services/SocialPlatformIntegrator");
+const SocialPlatformIntegrator = require('../services/SocialPlatformIntegrator');
 
 // ✅ When an achievement is earned
 const handleAchievementUnlock = async (user, achievementData) => {
     try {
         console.log(`🏆 Achievement Earned: ${achievementData.name} by ${user.name}`);
-        
-        await SocialPlatformIntegrator.shareEvent("achievement", {
-            user,
-            details: achievementData
-        });
 
+        await SocialPlatformIntegrator.shareEvent('achievement', {
+            user,
+            details: achievementData,
+        });
     } catch (error) {
-        console.error("❌ Error sharing achievement:", error);
+        console.error('❌ Error sharing achievement:', error);
     }
 };
 class AchievementServices {
@@ -24,7 +23,7 @@ class AchievementServices {
     async fetchAchievements() {
         const response = await fetch('/api/achievements');
         const achievements = await response.json();
-        achievements.forEach(achievement => {
+        achievements.forEach((achievement) => {
             this.achievements.set(achievement.id, achievement);
         });
     }

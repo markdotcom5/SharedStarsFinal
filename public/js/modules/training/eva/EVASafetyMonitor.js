@@ -4,9 +4,9 @@ class EVASafetyMonitor {
             oxygen: { min: 85, max: 100, unit: '%' },
             pressure: { min: 3.5, max: 5.0, unit: 'PSI' },
             temperature: { min: 60, max: 85, unit: '°F' },
-            battery: { min: 20, max: 100, unit: '%' }
+            battery: { min: 20, max: 100, unit: '%' },
         };
-        
+
         this.monitoringInterval = null;
         this.currentSession = null;
         this.alertHandlers = new Map();
@@ -54,7 +54,7 @@ class EVASafetyMonitor {
             this.updateVitalsDisplay(vitals);
             this.checkThresholds(vitals);
         } catch (error) {
-            console.error("❌ Vitals Check Error:", error);
+            console.error('❌ Vitals Check Error:', error);
             this.handleMonitoringError(error);
         }
     }
@@ -93,8 +93,8 @@ class EVASafetyMonitor {
 
     async triggerEmergencyProtocol(reason) {
         try {
-            console.log("🚨 Emergency Protocol Triggered:", reason);
-            
+            console.log('🚨 Emergency Protocol Triggered:', reason);
+
             // Stop normal monitoring
             this.stopMonitoring();
 
@@ -102,15 +102,14 @@ class EVASafetyMonitor {
             await fetch(`/api/eva/session/${this.currentSession}/emergency`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ reason })
+                body: JSON.stringify({ reason }),
             });
 
             // Update UI
             document.body.classList.add('emergency-mode');
             this.showEmergencyProcedures();
-
         } catch (error) {
-            console.error("❌ Emergency Protocol Error:", error);
+            console.error('❌ Emergency Protocol Error:', error);
             // Fallback to local emergency procedures
             this.showEmergencyProcedures();
         }
@@ -122,7 +121,7 @@ class EVASafetyMonitor {
             emergencyUI.classList.remove('hidden');
             // Populate with relevant procedures
             emergencyUI.innerHTML = this.protocols.emergency
-                .map(proc => `<div class="emergency-step">${proc}</div>`)
+                .map((proc) => `<div class="emergency-step">${proc}</div>`)
                 .join('');
         }
     }
@@ -140,7 +139,7 @@ class EVASafetyMonitor {
     updateMetricStatus(element, metric, value) {
         const threshold = this.thresholds[metric];
         element.classList.remove('normal', 'warning', 'critical');
-        
+
         if (value < threshold.min || value > threshold.max) {
             element.classList.add('critical');
         } else if (value < threshold.min + 5 || value > threshold.max - 5) {
@@ -151,9 +150,9 @@ class EVASafetyMonitor {
     }
 
     handleMonitoringError(error) {
-        console.error("Monitoring Error:", error);
+        console.error('Monitoring Error:', error);
         this.triggerAlert('Monitoring System Error', 'warning');
-        
+
         // If connection lost, switch to local monitoring
         if (error.message.includes('fetch')) {
             this.switchToLocalMonitoring();
@@ -161,7 +160,7 @@ class EVASafetyMonitor {
     }
 
     switchToLocalMonitoring() {
-        console.log("⚠️ Switching to Local Monitoring");
+        console.log('⚠️ Switching to Local Monitoring');
         // Implement local monitoring logic
     }
 
@@ -169,15 +168,15 @@ class EVASafetyMonitor {
         try {
             const checks = await this.runSafetyChecklist();
             const telemetry = await this.getFullTelemetry();
-            
+
             return {
-                passed: checks.every(check => check.passed),
+                passed: checks.every((check) => check.passed),
                 safetyScore: this.calculateSafetyScore(checks, telemetry),
                 checks,
-                telemetry
+                telemetry,
             };
         } catch (error) {
-            console.error("❌ Final Checks Error:", error);
+            console.error('❌ Final Checks Error:', error);
             throw error;
         }
     }
@@ -210,12 +209,16 @@ class EVASafetyMonitor {
             <div class="safety-monitor-container">
                 <div id="eva-alerts" class="alerts-container"></div>
                 <div class="vitals-grid">
-                    ${Object.entries(this.thresholds).map(([metric, data]) => `
+                    ${Object.entries(this.thresholds)
+                        .map(
+                            ([metric, data]) => `
                         <div class="vital-metric">
                             <label>${metric.toUpperCase()}</label>
                             <span id="eva-${metric}" class="normal">--${data.unit}</span>
                         </div>
-                    `).join('')}
+                    `
+                        )
+                        .join('')}
                 </div>
                 <div id="emergency-procedures" class="hidden"></div>
             </div>

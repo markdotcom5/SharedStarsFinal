@@ -10,11 +10,11 @@ const evaProcedures = {
                 'Suit pressure check',
                 'Airlock depressurization',
                 'Safety tether verification',
-                'Egress procedures'
+                'Egress procedures',
             ],
             duration: 45,
             difficulty: 'beginner',
-            requirements: ['Basic suit qualification', 'Pressure training completion']
+            requirements: ['Basic suit qualification', 'Pressure training completion'],
         },
         {
             id: 'eva-proc-002',
@@ -25,12 +25,12 @@ const evaProcedures = {
                 'Body positioning',
                 'Tool management',
                 'Tether management',
-                'Emergency return procedures'
+                'Emergency return procedures',
             ],
             duration: 60,
             difficulty: 'beginner',
-            requirements: ['Zero-G adaptation', 'Physical fitness certification']
-        }
+            requirements: ['Zero-G adaptation', 'Physical fitness certification'],
+        },
     ],
     advanced: [
         {
@@ -42,18 +42,18 @@ const evaProcedures = {
                 'Work site setup',
                 'Repair sequence execution',
                 'Quality verification',
-                'Site cleanup'
+                'Site cleanup',
             ],
             duration: 90,
             difficulty: 'advanced',
-            requirements: ['Basic EVA certification', 'Technical systems training']
-        }
-    ]
+            requirements: ['Basic EVA certification', 'Technical systems training'],
+        },
+    ],
 };
 
 const getProcedures = () => evaProcedures;
 
 module.exports = {
     getProcedures,
-    evaProcedures
+    evaProcedures,
 };

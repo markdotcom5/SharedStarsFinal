@@ -12,13 +12,13 @@ class ModuleCreditSystem {
         assessment: 100,
         mental: 125,
         certification: 300,
-        default: 100 // ✅ Added default case
+        default: 100, // ✅ Added default case
     };
 
     static STREAK_MULTIPLIERS = {
         3: 1.2,
         5: 1.5,
-        7: 2.0
+        7: 2.0,
     };
 
     async calculateModuleCredits(sessionId) {
@@ -45,7 +45,7 @@ class ModuleCreditSystem {
                 earnedCredits: credits,
                 performanceMultiplier,
                 streakMultiplier,
-                streak
+                streak,
             };
         } catch (error) {
             console.error('❌ Error calculating module credits:', error);
@@ -73,10 +73,10 @@ class ModuleCreditSystem {
             const sessions = await TrainingSession.find({
                 userId,
                 status: 'completed',
-                dateTime: { $exists: true }
+                dateTime: { $exists: true },
             })
-            .sort({ dateTime: -1 })
-            .limit(30);
+                .sort({ dateTime: -1 })
+                .limit(30);
 
             if (!sessions.length) return 0;
             if (!sessions[0].dateTime) return 0;
@@ -91,7 +91,9 @@ class ModuleCreditSystem {
                 const currentDate = new Date(sessions[i].dateTime);
                 if (!currentDate || isNaN(currentDate)) continue;
 
-                const dayDiff = Math.floor((new Date(lastDate) - currentDate) / (1000 * 60 * 60 * 24));
+                const dayDiff = Math.floor(
+                    (new Date(lastDate) - currentDate) / (1000 * 60 * 60 * 24)
+                );
 
                 if (dayDiff === 1) {
                     streak++;
@@ -119,18 +121,18 @@ class ModuleCreditSystem {
 
             await UserProgress.findOneAndUpdate(
                 { userId: session.userId },
-                { 
+                {
                     $inc: { credits: creditInfo.earnedCredits },
-                    $set: { lastCreditAward: new Date() }
+                    $set: { lastCreditAward: new Date() },
                 },
                 { upsert: true }
             );
 
             if (notificationService && typeof notificationService.sendNotification === 'function') {
                 notificationService.sendNotification(session.userId, {
-                    title: "🎉 Credits Earned!",
+                    title: '🎉 Credits Earned!',
                     message: `You earned ${creditInfo.earnedCredits} credits from ${session.moduleType}! Keep training!`,
-                    type: 'creditReward'
+                    type: 'creditReward',
                 });
             } else {
                 console.warn('⚠️ Warning: notificationService is unavailable.');

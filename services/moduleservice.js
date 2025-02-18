@@ -14,21 +14,23 @@ class ModuleService {
                         category: config.type,
                         difficulty: config.difficulty,
                         content: {
-                            theory: config.objectives?.map(obj => ({
-                                title: obj,
-                                description: obj
-                            })) || [],
-                            practice: config.tasks?.map(task => ({
-                                type: 'individual',
-                                description: task.description || 'No description provided',
-                                duration: parseInt(task.duration) || 0,
-                                requirements: task.requirements || []
-                            })) || [],
+                            theory:
+                                config.objectives?.map((obj) => ({
+                                    title: obj,
+                                    description: obj,
+                                })) || [],
+                            practice:
+                                config.tasks?.map((task) => ({
+                                    type: 'individual',
+                                    description: task.description || 'No description provided',
+                                    duration: parseInt(task.duration) || 0,
+                                    requirements: task.requirements || [],
+                                })) || [],
                             assessment: {
                                 criteria: config.certification?.requirements || [],
-                                passingScore: 80
-                            }
-                        }
+                                passingScore: 80,
+                            },
+                        },
                     },
                     { upsert: true, new: true }
                 );
@@ -57,5 +59,4 @@ class ModuleService {
 }
 
 // ✅ Ensure Proper Export
-module.exports = new ModuleService();  // Export single instance
-
+module.exports = new ModuleService(); // Export single instance

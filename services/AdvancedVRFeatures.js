@@ -8,23 +8,23 @@ class AdvancedVRFeatures {
                     visualDistortion: true,
                     audioEffects: true,
                     breathingGuide: true,
-                    pressureSimulation: true
+                    pressureSimulation: true,
                 },
-                
+
                 environmentalEffects: {
                     temperatureControl: true,
                     airPressure: true,
                     humidity: true,
                     lighting: true,
-                    smokeMachine: true // For emergency scenarios
+                    smokeMachine: true, // For emergency scenarios
                 },
 
                 equipmentSimulation: {
                     suitPressure: true,
                     toolHandling: true,
                     cableManagement: true,
-                    repairScenarios: true
-                }
+                    repairScenarios: true,
+                },
             },
 
             immersiveScenarios: {
@@ -33,7 +33,7 @@ class AdvancedVRFeatures {
                     systemsMonitoring: true,
                     emergencyProcedures: true,
                     communicationProtocols: true,
-                    multiCrewCoordination: true
+                    multiCrewCoordination: true,
                 },
 
                 spaceWalks: {
@@ -41,15 +41,15 @@ class AdvancedVRFeatures {
                     tether: true,
                     zeroDrift: true,
                     suitMalfunction: true,
-                    emergencyReturn: true
+                    emergencyReturn: true,
                 },
 
                 dockingProcedures: {
                     approachGuidance: true,
                     velocityControl: true,
                     alignmentAssist: true,
-                    collisionWarning: true
-                }
+                    collisionWarning: true,
+                },
             },
 
             multiplayer: {
@@ -57,15 +57,15 @@ class AdvancedVRFeatures {
                     voiceComms: true,
                     systemsMonitoring: true,
                     emergencyOverride: true,
-                    realTimeGuidance: true
+                    realTimeGuidance: true,
                 },
 
                 crewInteractions: {
                     toolPassing: true,
                     jointTasks: true,
                     emergencyAssist: true,
-                    resourceSharing: true
-                }
+                    resourceSharing: true,
+                },
             },
 
             trainingEnhancements: {
@@ -74,15 +74,15 @@ class AdvancedVRFeatures {
                     breathingRate: true,
                     stressLevels: true,
                     eyeTracking: true,
-                    muscleStrain: true
+                    muscleStrain: true,
                 },
 
                 adaptiveDifficulty: {
                     performanceScaling: true,
                     stressManagement: true,
                     fatigueAdjustment: true,
-                    skillProgression: true
-                }
+                    skillProgression: true,
+                },
             },
 
             realWorldIntegration: {
@@ -90,15 +90,15 @@ class AdvancedVRFeatures {
                     toolAlignment: true,
                     equipmentTracking: true,
                     spatialMapping: true,
-                    gestureRecognition: true
+                    gestureRecognition: true,
                 },
 
                 mixedReality: {
                     realToolOverlay: true,
                     environmentBlending: true,
                     physicalBoundaries: true,
-                    safetyZones: true
-                }
+                    safetyZones: true,
+                },
             },
 
             specialFeatures: {
@@ -106,23 +106,23 @@ class AdvancedVRFeatures {
                     slowMotion: true,
                     fastForward: true,
                     instantReplay: true,
-                    multipleTimelines: true
+                    multipleTimelines: true,
                 },
 
                 viewpoints: {
                     thirdPerson: true,
                     multiAngle: true,
                     freeCam: true,
-                    satelliteView: true
+                    satelliteView: true,
                 },
 
                 analytics: {
                     performanceTracking: true,
                     movementAnalysis: true,
                     decisionMetrics: true,
-                    teamCoordination: true
-                }
-            }
+                    teamCoordination: true,
+                },
+            },
         };
     }
 
@@ -146,7 +146,7 @@ class AdvancedVRFeatures {
         return {
             status: 'activated',
             features: config,
-            scenario
+            scenario,
         };
     }
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sample EJS Page</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to Sample EJS Page</h1>
+  </header>
+  <main>
+    <p>This is a sample EJS page.</p>
+    <ul>
+      <% if (typeof items !== 'undefined' && items.length > 0) { %>
+        <% for(let i = 0; i < items.length; i++) { %>
+          <li><%= items[i] %></li>
+        <% } %>
+      <% } else { %>
+        <li>No items available</li>
+      <% } %>
+    </ul>
+  </main>
+  <footer>
+    <p>&copy; 2023 Sample EJS Page</p>
+  </footer>
+</body>
+</html>

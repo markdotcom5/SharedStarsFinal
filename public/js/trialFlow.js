@@ -1,4 +1,4 @@
-console.log('File loaded:', 'trialFlow.js');  // Add to trialFlow.js
+console.log('File loaded:', 'trialFlow.js'); // Add to trialFlow.js
 
 class AIGuidanceHandler {
     constructor() {
@@ -101,7 +101,9 @@ class AIGuidanceHandler {
                     console.log(`Step ${index + 1} activated`);
 
                     if (index === steps.length - 1) {
-                        console.log('All steps completed. Preparing to display subscription prompt...');
+                        console.log(
+                            'All steps completed. Preparing to display subscription prompt...'
+                        );
                         const subscriptionPrompt = overlay.querySelector('.subscription-prompt');
                         if (subscriptionPrompt) {
                             subscriptionPrompt.style.display = 'block';

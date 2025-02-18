@@ -11,9 +11,9 @@ export const signup = {
             const response = await fetch('/api/auth/signup', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
             });
             return await response.json();
         } catch (error) {
@@ -24,5 +24,5 @@ export const signup = {
 
     init() {
         console.log('Core signup module initialized');
-    }
+    },
 };

@@ -1,5 +1,5 @@
 // services/socialMedia/APIIntegrations.js
-const axios = require("axios");
+const axios = require('axios');
 
 class SocialMediaAPIs {
     constructor() {
@@ -7,36 +7,36 @@ class SocialMediaAPIs {
             twitter: {
                 apiKey: process.env.TWITTER_API_KEY,
                 apiSecret: process.env.TWITTER_API_SECRET,
-                baseUrl: "https://api.twitter.com/2"
+                baseUrl: 'https://api.twitter.com/2',
             },
             linkedin: {
                 clientId: process.env.LINKEDIN_CLIENT_ID,
                 clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
-                baseUrl: "https://api.linkedin.com/v2"
+                baseUrl: 'https://api.linkedin.com/v2',
             },
             facebook: {
                 appId: process.env.FACEBOOK_APP_ID,
                 appSecret: process.env.FACEBOOK_APP_SECRET,
-                baseUrl: "https://graph.facebook.com/v18.0"
+                baseUrl: 'https://graph.facebook.com/v18.0',
             },
             instagram: {
                 accessToken: process.env.INSTAGRAM_ACCESS_TOKEN,
-                baseUrl: "https://graph.instagram.com"
+                baseUrl: 'https://graph.instagram.com',
             },
             tiktok: {
                 accessToken: process.env.TIKTOK_ACCESS_TOKEN,
-                baseUrl: "https://open-api.tiktokglobalplatform.com"
+                baseUrl: 'https://open-api.tiktokglobalplatform.com',
             },
             telegram: {
                 botToken: process.env.TELEGRAM_BOT_TOKEN,
                 chatId: process.env.TELEGRAM_CHAT_ID,
-                baseUrl: "https://api.telegram.org"
+                baseUrl: 'https://api.telegram.org',
             },
             youtube: {
                 apiKey: process.env.YOUTUBE_API_KEY,
                 channelId: process.env.YOUTUBE_CHANNEL_ID,
-                baseUrl: "https://www.googleapis.com/youtube/v3"
-            }
+                baseUrl: 'https://www.googleapis.com/youtube/v3',
+            },
         };
     }
 
@@ -47,20 +47,22 @@ class SocialMediaAPIs {
                 `${this.apis.twitter.baseUrl}/tweets`,
                 {
                     text: content.message,
-                    media: content.media ? {
-                        media_ids: [await this.uploadTwitterMedia(content.media)]
-                    } : undefined
+                    media: content.media
+                        ? {
+                              media_ids: [await this.uploadTwitterMedia(content.media)],
+                          }
+                        : undefined,
                 },
                 {
                     headers: {
                         Authorization: `Bearer ${this.apis.twitter.apiKey}`,
-                        "Content-Type": "application/json"
-                    }
+                        'Content-Type': 'application/json',
+                    },
                 }
             );
             return response.data;
         } catch (error) {
-            console.error("🐦 Twitter post error:", error);
+            console.error('🐦 Twitter post error:', error);
             throw error;
         }
     }
@@ -72,26 +74,28 @@ class SocialMediaAPIs {
                 `${this.apis.linkedin.baseUrl}/ugcPosts`,
                 {
                     author: `urn:li:organization:${process.env.LINKEDIN_ORG_ID}`,
-                    lifecycleState: "PUBLISHED",
+                    lifecycleState: 'PUBLISHED',
                     specificContent: {
-                        "com.linkedin.ugc.ShareContent": {
+                        'com.linkedin.ugc.ShareContent': {
                             shareCommentary: { text: content.message },
-                            shareMediaCategory: content.media ? "IMAGE" : "NONE",
-                            media: content.media ? [{ status: "READY", media: content.media }] : undefined
-                        }
+                            shareMediaCategory: content.media ? 'IMAGE' : 'NONE',
+                            media: content.media
+                                ? [{ status: 'READY', media: content.media }]
+                                : undefined,
+                        },
                     },
-                    visibility: { "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC" }
+                    visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
                 },
                 {
                     headers: {
                         Authorization: `Bearer ${this.apis.linkedin.accessToken}`,
-                        "Content-Type": "application/json"
-                    }
+                        'Content-Type': 'application/json',
+                    },
                 }
             );
             return response.data;
         } catch (error) {
-            console.error("🔗 LinkedIn post error:", error);
+            console.error('🔗 LinkedIn post error:', error);
             throw error;
         }
     }
@@ -105,16 +109,18 @@ class SocialMediaAPIs {
                     message: content.message,
                     link: content.link,
                     ...(content.media && {
-                        attached_media: [{ media_fbid: await this.uploadFacebookMedia(content.media) }]
-                    })
+                        attached_media: [
+                            { media_fbid: await this.uploadFacebookMedia(content.media) },
+                        ],
+                    }),
                 },
                 {
-                    params: { access_token: this.apis.facebook.accessToken }
+                    params: { access_token: this.apis.facebook.accessToken },
                 }
             );
             return response.data;
         } catch (error) {
-            console.error("📘 Facebook post error:", error);
+            console.error('📘 Facebook post error:', error);
             throw error;
         }
     }
@@ -130,7 +136,7 @@ class SocialMediaAPIs {
             );
             return response.data;
         } catch (error) {
-            console.error("📸 Instagram post error:", error);
+            console.error('📸 Instagram post error:', error);
             throw error;
         }
     }
@@ -145,7 +151,7 @@ class SocialMediaAPIs {
             );
             return response.data;
         } catch (error) {
-            console.error("🎵 TikTok post error:", error);
+            console.error('🎵 TikTok post error:', error);
             throw error;
         }
     }
@@ -159,7 +165,7 @@ class SocialMediaAPIs {
             );
             return response.data;
         } catch (error) {
-            console.error("✈️ Telegram post error:", error);
+            console.error('✈️ Telegram post error:', error);
             throw error;
         }
     }
@@ -172,61 +178,61 @@ class SocialMediaAPIs {
                 {
                     snippet: {
                         title: content.message,
-                        description: content.description || "",
-                        categoryId: "22",
-                        tags: content.tags || []
+                        description: content.description || '',
+                        categoryId: '22',
+                        tags: content.tags || [],
                     },
-                    status: { privacyStatus: "public" }
+                    status: { privacyStatus: 'public' },
                 },
                 {
                     headers: {
                         Authorization: `Bearer ${this.apis.youtube.apiKey}`,
-                        "Content-Type": "application/json"
-                    }
+                        'Content-Type': 'application/json',
+                    },
                 }
             );
             return response.data;
         } catch (error) {
-            console.error("🎥 YouTube post error:", error);
+            console.error('🎥 YouTube post error:', error);
             throw error;
         }
     }
 
     // ✅ Media Upload Methods
-   // ✅ Media Upload Methods
-async uploadTwitterMedia(mediaUrl) {
-    console.log("🐦 Uploading media to Twitter:", mediaUrl);
-    // TODO: Implement Twitter API media upload
-}
+    // ✅ Media Upload Methods
+    async uploadTwitterMedia(mediaUrl) {
+        console.log('🐦 Uploading media to Twitter:', mediaUrl);
+        // TODO: Implement Twitter API media upload
+    }
 
-async uploadFacebookMedia(mediaUrl) {
-    console.log("📘 Uploading media to Facebook:", mediaUrl);
-    // TODO: Implement Facebook API media upload
-}
+    async uploadFacebookMedia(mediaUrl) {
+        console.log('📘 Uploading media to Facebook:', mediaUrl);
+        // TODO: Implement Facebook API media upload
+    }
 
-async uploadInstagramMedia(mediaUrl) {
-    console.log("📸 Uploading media to Instagram:", mediaUrl);
-    // TODO: Implement Instagram API media upload
-}
+    async uploadInstagramMedia(mediaUrl) {
+        console.log('📸 Uploading media to Instagram:', mediaUrl);
+        // TODO: Implement Instagram API media upload
+    }
 
-async uploadTikTokMedia(mediaUrl) {
-    console.log("🎵 Uploading media to TikTok:", mediaUrl);
-    // TODO: Implement TikTok API media upload
-}
+    async uploadTikTokMedia(mediaUrl) {
+        console.log('🎵 Uploading media to TikTok:', mediaUrl);
+        // TODO: Implement TikTok API media upload
+    }
 
-async uploadTelegramMedia(mediaUrl) {
-    console.log("✈️ Uploading media to Telegram:", mediaUrl);
-    // TODO: Implement Telegram API media upload
-}
+    async uploadTelegramMedia(mediaUrl) {
+        console.log('✈️ Uploading media to Telegram:', mediaUrl);
+        // TODO: Implement Telegram API media upload
+    }
 
-async uploadYouTubeMedia(mediaUrl) {
-    console.log("🎥 Uploading media to YouTube:", mediaUrl);
-    // TODO: Implement YouTube API media upload
-}
+    async uploadYouTubeMedia(mediaUrl) {
+        console.log('🎥 Uploading media to YouTube:', mediaUrl);
+        // TODO: Implement YouTube API media upload
+    }
 
-async uploadLinkedInMedia(mediaUrl) {
-    console.log("🔗 Uploading media to LinkedIn:", mediaUrl);
-    // TODO: Implement LinkedIn API media upload
-}
+    async uploadLinkedInMedia(mediaUrl) {
+        console.log('🔗 Uploading media to LinkedIn:', mediaUrl);
+        // TODO: Implement LinkedIn API media upload
+    }
 }
 module.exports = new SocialMediaAPIs();

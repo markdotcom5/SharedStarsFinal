@@ -7,7 +7,7 @@ class AIHandler {
             initialized: false,
             mode: null,
             sessionId: null,
-            learnerProfile: null
+            learnerProfile: null,
         };
         this.eventHandlers = new Map();
         this.performanceHistory = [];
@@ -47,7 +47,7 @@ class AIHandler {
     async handleBiometricWarning(violations) {
         const analysis = await this.analyzeBiometricData(violations);
         const guidance = this.generateBiometricGuidance(analysis);
-        
+
         this.emit('guidance', guidance);
 
         if (analysis.requiresIntervention) {
@@ -63,8 +63,8 @@ class AIHandler {
             body: JSON.stringify({
                 violations,
                 historicalData,
-                learnerProfile: this.learnerProfile
-            })
+                learnerProfile: this.learnerProfile,
+            }),
         });
 
         return await response.json();
@@ -74,7 +74,7 @@ class AIHandler {
         const guidance = {
             immediate: [],
             shortTerm: [],
-            longTerm: []
+            longTerm: [],
         };
 
         // Immediate actions
@@ -84,7 +84,7 @@ class AIHandler {
 
         // Short-term adjustments
         if (analysis.fatigue > 0.6) {
-            guidance.shortTerm.push("Consider taking a 15-minute break.");
+            guidance.shortTerm.push('Consider taking a 15-minute break.');
         }
 
         // Long-term recommendations
@@ -97,9 +97,9 @@ class AIHandler {
 
     async requestAIIntervention(analysis) {
         const intervention = await this.adaptiveEngine.generateIntervention(analysis);
-        
+
         this.emit('intervention', intervention);
-        
+
         if (intervention.type === 'break') {
             this.pauseTraining();
         } else if (intervention.type === 'adjust') {
@@ -137,7 +137,7 @@ class AIHandler {
         this.performanceHistory.push({
             timestamp: Date.now(),
             guidance,
-            context: this.getCurrentContext()
+            context: this.getCurrentContext(),
         });
 
         // Check for patterns
@@ -156,7 +156,7 @@ class AIHandler {
         return {
             moduleProgress: this.learnerProfile.moduleProgress,
             recentPerformance: this.performanceHistory.slice(-5),
-            currentDifficulty: this.adaptiveEngine.currentState
+            currentDifficulty: this.adaptiveEngine.currentState,
         };
     }
 
@@ -190,7 +190,7 @@ class AIHandler {
     emit(event, data) {
         const handlers = this.eventHandlers.get(event);
         if (handlers) {
-            handlers.forEach(handler => handler(data));
+            handlers.forEach((handler) => handler(data));
         }
     }
 }

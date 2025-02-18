@@ -15,7 +15,7 @@ async function initializeVR() {
         'services/vr',
         'models/vr',
         'routes/vr',
-        'public/assets/vr'
+        'public/assets/vr',
     ];
 
     for (const dir of directories) {
@@ -30,13 +30,10 @@ async function initializeVR() {
         '@react-three/drei',
         'websocket',
         'ws',
-        'haptics-api'
+        'haptics-api',
     ];
 
-    const devDependencies = [
-        '@types/three',
-        '@types/websocket'
-    ];
+    const devDependencies = ['@types/three', '@types/websocket'];
 
     console.log('📦 Installing dependencies...');
     execSync(`npm install ${dependencies.join(' ')}`);
@@ -46,25 +43,23 @@ async function initializeVR() {
 
     // Create necessary files
     const files = [
-        { 
+        {
             path: 'config/vr-config.js',
-            content: '// VR Configuration\nmodule.exports = require("../config/vr-config");'
+            content: '// VR Configuration\nmodule.exports = require("../config/vr-config");',
         },
         {
             path: 'middleware/vr.js',
-            content: '// VR Middleware\nmodule.exports = require("../middleware/vr-middleware");'
+            content: '// VR Middleware\nmodule.exports = require("../middleware/vr-middleware");',
         },
         {
             path: 'routes/vr/index.js',
-            content: '// VR Routes\nconst router = require("express").Router();\nmodule.exports = router;'
-        }
+            content:
+                '// VR Routes\nconst router = require("express").Router();\nmodule.exports = router;',
+        },
     ];
 
     for (const file of files) {
-        await fs.writeFile(
-            path.join(__dirname, '..', file.path),
-            file.content
-        );
+        await fs.writeFile(path.join(__dirname, '..', file.path), file.content);
         console.log(`✅ Created file: ${file.path}`);
     }
 

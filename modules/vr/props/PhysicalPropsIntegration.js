@@ -5,137 +5,137 @@ class PhysicalPropsIntegration {
             tools: {
                 spaceTools: {
                     wrench: {
-                        type: "tool",
-                        tracking: "6dof",
+                        type: 'tool',
+                        tracking: '6dof',
                         haptics: true,
-                        calibration: "auto",
-                        virtualModel: "/models/tools/wrench.glb",
+                        calibration: 'auto',
+                        virtualModel: '/models/tools/wrench.glb',
                         physicalDimensions: {
                             length: 25, // cm
                             width: 5,
                             height: 2,
-                            weight: 400 // grams
+                            weight: 400, // grams
                         },
-                        interactionPoints: ["handle", "head"],
-                        feedbackZones: ["grip", "contact"]
+                        interactionPoints: ['handle', 'head'],
+                        feedbackZones: ['grip', 'contact'],
                     },
-                    
+
                     screwdriver: {
-                        type: "tool",
-                        tracking: "6dof",
+                        type: 'tool',
+                        tracking: '6dof',
                         haptics: true,
-                        calibration: "manual",
-                        virtualModel: "/models/tools/screwdriver.glb",
+                        calibration: 'manual',
+                        virtualModel: '/models/tools/screwdriver.glb',
                         physicalDimensions: {
                             length: 20,
                             width: 3,
                             height: 3,
-                            weight: 200
+                            weight: 200,
                         },
-                        interactionPoints: ["handle", "tip"],
-                        feedbackZones: ["grip", "rotation"]
-                    }
+                        interactionPoints: ['handle', 'tip'],
+                        feedbackZones: ['grip', 'rotation'],
+                    },
                 },
 
                 emergencyKit: {
                     patchKit: {
-                        type: "emergency",
-                        tracking: "6dof",
+                        type: 'emergency',
+                        tracking: '6dof',
                         haptics: true,
-                        virtualModel: "/models/emergency/patch_kit.glb",
+                        virtualModel: '/models/emergency/patch_kit.glb',
                         physicalDimensions: {
                             length: 15,
                             width: 10,
                             height: 5,
-                            weight: 300
+                            weight: 300,
                         },
-                        interactionPoints: ["handle", "applicator"],
-                        feedbackZones: ["pressure", "seal"]
-                    }
-                }
+                        interactionPoints: ['handle', 'applicator'],
+                        feedbackZones: ['pressure', 'seal'],
+                    },
+                },
             },
 
             controls: {
                 flightControls: {
                     throttle: {
-                        type: "control",
-                        tracking: "6dof",
+                        type: 'control',
+                        tracking: '6dof',
                         forceFeeback: true,
-                        virtualModel: "/models/controls/throttle.glb",
+                        virtualModel: '/models/controls/throttle.glb',
                         physicalDimensions: {
                             length: 30,
                             width: 10,
                             height: 15,
-                            weight: 800
+                            weight: 800,
                         },
-                        interactionPoints: ["grip", "base"],
-                        feedbackZones: ["resistance", "stops"]
+                        interactionPoints: ['grip', 'base'],
+                        feedbackZones: ['resistance', 'stops'],
                     },
-                    
+
                     joystick: {
-                        type: "control",
-                        tracking: "6dof",
+                        type: 'control',
+                        tracking: '6dof',
                         forceFeeback: true,
-                        virtualModel: "/models/controls/joystick.glb",
+                        virtualModel: '/models/controls/joystick.glb',
                         physicalDimensions: {
                             length: 25,
                             width: 25,
                             height: 40,
-                            weight: 1200
+                            weight: 1200,
                         },
-                        interactionPoints: ["grip", "buttons", "hat"],
-                        feedbackZones: ["x_axis", "y_axis", "rotation"]
-                    }
-                }
+                        interactionPoints: ['grip', 'buttons', 'hat'],
+                        feedbackZones: ['x_axis', 'y_axis', 'rotation'],
+                    },
+                },
             },
 
             equipment: {
                 spaceSuit: {
                     gloves: {
-                        type: "wearable",
-                        tracking: "finger_tracking",
+                        type: 'wearable',
+                        tracking: 'finger_tracking',
                         haptics: true,
-                        virtualModel: "/models/suit/gloves.glb",
+                        virtualModel: '/models/suit/gloves.glb',
                         physicalDimensions: {
-                            sizes: ["S", "M", "L", "XL"],
-                            weight: 400
+                            sizes: ['S', 'M', 'L', 'XL'],
+                            weight: 400,
                         },
-                        interactionPoints: ["fingers", "palm", "wrist"],
-                        feedbackZones: ["fingertips", "palm", "pressure"]
+                        interactionPoints: ['fingers', 'palm', 'wrist'],
+                        feedbackZones: ['fingertips', 'palm', 'pressure'],
                     },
-                    
+
                     helmet: {
-                        type: "wearable",
-                        tracking: "head_tracking",
+                        type: 'wearable',
+                        tracking: 'head_tracking',
                         ar_overlay: true,
-                        virtualModel: "/models/suit/helmet.glb",
+                        virtualModel: '/models/suit/helmet.glb',
                         physicalDimensions: {
-                            sizes: ["S", "M", "L"],
-                            weight: 2000
+                            sizes: ['S', 'M', 'L'],
+                            weight: 2000,
                         },
-                        interactionPoints: ["visor", "comms"],
-                        feedbackZones: ["hud", "audio"]
-                    }
-                }
-            }
+                        interactionPoints: ['visor', 'comms'],
+                        feedbackZones: ['hud', 'audio'],
+                    },
+                },
+            },
         };
 
         this.trackingSystems = {
             opticalTracking: {
                 cameras: 4,
-                accuracy: "sub_mm",
-                updateRate: 120
+                accuracy: 'sub_mm',
+                updateRate: 120,
             },
             magneticTracking: {
                 sensors: 8,
-                accuracy: "mm",
-                updateRate: 90
+                accuracy: 'mm',
+                updateRate: 90,
             },
             inertialTracking: {
-                sensors: "distributed",
-                accuracy: "degree",
-                updateRate: 240
-            }
+                sensors: 'distributed',
+                accuracy: 'degree',
+                updateRate: 240,
+            },
         };
     }
 
@@ -146,10 +146,10 @@ class PhysicalPropsIntegration {
 
             // Initialize tracking system
             const trackingSystem = await this.setupTracking(prop.tracking);
-            
+
             // Calibrate prop
             const calibration = await this.calibrateProp(prop);
-            
+
             // Set up haptic feedback
             const haptics = await this.setupHaptics(prop);
 
@@ -158,7 +158,7 @@ class PhysicalPropsIntegration {
                 tracking: trackingSystem,
                 calibration,
                 haptics,
-                prop
+                prop,
             };
         } catch (error) {
             console.error('Error initializing prop:', error);
@@ -173,11 +173,11 @@ class PhysicalPropsIntegration {
     async setupTracking(trackingType) {
         // Initialize appropriate tracking system
         const system = this.trackingSystems[trackingType] || this.trackingSystems.opticalTracking;
-        
+
         return {
             type: trackingType,
             system,
-            status: 'active'
+            status: 'active',
         };
     }
 
@@ -186,7 +186,7 @@ class PhysicalPropsIntegration {
         return {
             status: 'calibrated',
             accuracy: 'high',
-            referencePoints: this.generateReferencePoints(prop)
+            referencePoints: this.generateReferencePoints(prop),
         };
     }
 
@@ -197,16 +197,16 @@ class PhysicalPropsIntegration {
         return {
             zones: prop.feedbackZones,
             patterns: this.getHapticPatterns(prop.type),
-            intensity: 'adaptive'
+            intensity: 'adaptive',
         };
     }
 
     generateReferencePoints(prop) {
         // Generate calibration reference points
-        return prop.interactionPoints.map(point => ({
+        return prop.interactionPoints.map((point) => ({
             id: point,
             position: { x: 0, y: 0, z: 0 },
-            orientation: { pitch: 0, yaw: 0, roll: 0 }
+            orientation: { pitch: 0, yaw: 0, roll: 0 },
         }));
     }
 
@@ -215,22 +215,22 @@ class PhysicalPropsIntegration {
             tool: {
                 contact: { duration: 50, intensity: 0.5 },
                 resistance: { duration: 100, intensity: 0.7 },
-                completion: { duration: 200, intensity: 0.3 }
+                completion: { duration: 200, intensity: 0.3 },
             },
             control: {
                 detent: { duration: 30, intensity: 0.4 },
                 limit: { duration: 150, intensity: 0.8 },
-                warning: { duration: 250, intensity: 1.0 }
+                warning: { duration: 250, intensity: 1.0 },
             },
             wearable: {
                 alert: { duration: 100, intensity: 0.6 },
                 pressure: { duration: 500, intensity: 0.3 },
-                warning: { duration: 200, intensity: 0.9 }
-            }
+                warning: { duration: 200, intensity: 0.9 },
+            },
         };
 
         return patterns[propType] || patterns.tool;
     }
 }
 
-module.exports = new PhysicalPropsIntegration();  
+module.exports = new PhysicalPropsIntegration();

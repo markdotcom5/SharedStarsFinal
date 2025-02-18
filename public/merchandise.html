@@ -1,79 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="StelTrek Academy">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="StelTrek Academy" />
         <title>StelTrek Academy</title>
-        <meta http-equiv="Content-Security-Policy" content="
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="
             default-src 'self'; 
             script-src 'self'; 
             style-src 'self'; 
             frame-src 'self' https://www.sora.com; 
             child-src 'self' https://www.sora.com;
-        ">
-        <link rel="stylesheet" href="/css/main.css">
-        <link rel="stylesheet" href="/css/ai-assistant.css">
+        "
+        />
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/ai-assistant.css" />
     </head>
-    
-<body>
-    <!-- Fixed Header -->
-    <header class="site-header">
-        <nav aria-label="Main Navigation">
-            <!-- Language Selector -->
-            <div class="language-selector">
-                <a href="#" class="language-flag" data-lang="en">🇺🇸</a>
-                <a href="#" class="language-flag" data-lang="zh">🇨🇳</a>
-                <a href="#" class="language-flag" data-lang="ko">🇰🇷</a>
-                <a href="#" class="language-flag" data-lang="es">🇪🇸</a>
-            </div>
 
-            <!-- 3-Line Menu -->
-            <div class="menu-icon" aria-label="Toggle Navigation">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
+    <body>
+        <!-- Fixed Header -->
+        <header class="site-header">
+            <nav aria-label="Main Navigation">
+                <!-- Language Selector -->
+                <div class="language-selector">
+                    <a href="#" class="language-flag" data-lang="en">🇺🇸</a>
+                    <a href="#" class="language-flag" data-lang="zh">🇨🇳</a>
+                    <a href="#" class="language-flag" data-lang="ko">🇰🇷</a>
+                    <a href="#" class="language-flag" data-lang="es">🇪🇸</a>
+                </div>
 
-            <!-- Dropdown Navigation -->
-            <ul>
-                <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
-                <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
-                <li><a href="/about.html" data-i18n="nav.about" aria-current="page">About</a></li>
-                <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
-                <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
-                <li><a href="/merchandise.html" data-i18n="nav.merchandise">Retail Store</a></li>
-                <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
-                <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-                <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
-                <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
-                <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
-            </ul>
-        </nav>
-    </header>
+                <!-- 3-Line Menu -->
+                <div class="menu-icon" aria-label="Toggle Navigation">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
 
-    <!-- Main Content -->
-    <main>
-        <header>
-            <h1 id="page-title" data-i18n="merchandise.pageTitle">StelTrek Merchandise</h1>
-            <p id="page-description" data-i18n="merchandise.pageDescription">Browse our exclusive StelTrek merchandise.</p>
+                <!-- Dropdown Navigation -->
+                <ul>
+                    <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
+                    <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
+                    <li>
+                        <a href="/about.html" data-i18n="nav.about" aria-current="page">About</a>
+                    </li>
+                    <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+                    <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
+                    <li>
+                        <a href="/merchandise.html" data-i18n="nav.merchandise">Retail Store</a>
+                    </li>
+                    <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
+                    <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
+                    <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
+                    <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
+                    <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+                </ul>
+            </nav>
         </header>
 
-        <section id="merchandise-list">
-            <h2 data-i18n="merchandise.products">Explore Our Products</h2>
-            <div class="product-grid" aria-label="Product Grid">
-                <!-- Products will be dynamically populated by JavaScript -->
-            </div>
-        </section>
-    </main>
+        <!-- Main Content -->
+        <main>
+            <header>
+                <h1 id="page-title" data-i18n="merchandise.pageTitle">StelTrek Merchandise</h1>
+                <p id="page-description" data-i18n="merchandise.pageDescription">
+                    Browse our exclusive StelTrek merchandise.
+                </p>
+            </header>
 
-    <!-- Footer -->
-    <footer>
-        <p data-i18n="common.footer">© 2024 StelTrek Academy. All rights reserved.</p>
-    </footer>
+            <section id="merchandise-list">
+                <h2 data-i18n="merchandise.products">Explore Our Products</h2>
+                <div class="product-grid" aria-label="Product Grid">
+                    <!-- Products will be dynamically populated by JavaScript -->
+                </div>
+            </section>
+        </main>
 
-    <!-- JavaScript -->
-    <script type="module" src="/js/languages.js"></script>
-    <script src="/js/menu.js"></script>
-</body>
+        <!-- Footer -->
+        <footer>
+            <p data-i18n="common.footer">© 2024 StelTrek Academy. All rights reserved.</p>
+        </footer>
+
+        <!-- JavaScript -->
+        <script type="module" src="/js/languages.js"></script>
+        <script src="/js/menu.js"></script>
+    </body>
 </html>

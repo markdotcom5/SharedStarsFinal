@@ -14,28 +14,28 @@ class ModuleIntegration {
         await this.integrateModule('physical', {
             path: './core/physical',
             components: ['assessments', 'tasks', 'requirements'],
-            routes: require('../routes/physical')
+            routes: require('../routes/physical'),
         });
 
         // Technical Module Integration
         await this.integrateModule('technical', {
             path: './core/technical',
             components: ['tasks', 'systems', 'protocols'],
-            routes: require('../routes/technical')
+            routes: require('../routes/technical'),
         });
 
         // Simulation Module Integration
         await this.integrateModule('simulation', {
             path: './core/simulation',
             components: ['missions', 'scenarios', 'teamRoles'],
-            routes: require('../routes/simulation/simulation')
+            routes: require('../routes/simulation/simulation'),
         });
 
         // EVA Module Integration
         await this.integrateModule('eva', {
             path: './core/eva',
             components: ['procedures', 'equipment', 'safety'],
-            routes: require('../routes/eva')
+            routes: require('../routes/eva'),
         });
     }
 
@@ -49,7 +49,7 @@ class ModuleIntegration {
             // Register with core system
             await this.coreSystem.initializeModule(moduleId, {
                 ...config,
-                components: moduleComponents
+                components: moduleComponents,
             });
 
             // Set up event handlers
@@ -63,7 +63,7 @@ class ModuleIntegration {
             this.registeredModules.set(moduleId, {
                 config,
                 components: moduleComponents,
-                status: 'active'
+                status: 'active',
             });
 
             console.log(`✅ ${moduleId} module integrated successfully`);
@@ -75,7 +75,7 @@ class ModuleIntegration {
 
     async loadModuleComponents(moduleId, config) {
         const components = {};
-        
+
         for (const component of config.components) {
             try {
                 const componentPath = `${config.path}/${component}`;

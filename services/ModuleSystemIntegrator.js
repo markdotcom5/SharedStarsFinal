@@ -23,7 +23,7 @@ class ModuleSystemIntegrator {
         this.moduleConfigs.set('vr', {
             scenarios: ImmersiveScenarios,
             props: PhysicalPropsIntegration,
-            sessions: VRSession
+            sessions: VRSession,
         });
     }
 
@@ -43,7 +43,7 @@ class ModuleSystemIntegrator {
             type: moduleType,
             config,
             status: 'active',
-            instances: new Map()
+            instances: new Map(),
         };
 
         // Initialize module components
@@ -77,7 +77,7 @@ class ModuleSystemIntegrator {
             module: module.type,
             created: new Date(),
             state: await this.rl.getState(instanceId, module.type, {}),
-            active: true
+            active: true,
         };
 
         return instance;
@@ -108,10 +108,10 @@ class ModuleSystemIntegrator {
         // Update module state
         const nextState = await this.rl.getState(instance.id, module.type, event.data);
         const action = await this.rl.selectAction(instance.state._id, event.actions);
-        
+
         // Apply action and get reward
         const reward = await this.applyModuleAction(module, instance, action);
-        
+
         // Update RL model
         await this.rl.updateAction(instance.state._id, action, reward, nextState._id);
         instance.state = nextState;
@@ -169,9 +169,12 @@ class ModuleSystemIntegrator {
 
     calculateVRReward(before, after) {
         // Calculate reward based on improvement in metrics
-        const performanceImprovement = (after.performance.accuracy - before.performance.accuracy) * 0.4;
-        const biometricStability = (1 - Math.abs(after.biometrics.stressLevel - before.biometrics.stressLevel)) * 0.3;
-        const technicalQuality = (after.technical.trackingQuality - before.technical.trackingQuality) * 0.3;
+        const performanceImprovement =
+            (after.performance.accuracy - before.performance.accuracy) * 0.4;
+        const biometricStability =
+            (1 - Math.abs(after.biometrics.stressLevel - before.biometrics.stressLevel)) * 0.3;
+        const technicalQuality =
+            (after.technical.trackingQuality - before.technical.trackingQuality) * 0.3;
 
         return performanceImprovement + biometricStability + technicalQuality;
     }

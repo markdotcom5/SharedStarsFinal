@@ -18,10 +18,7 @@ const User = require('./models/User'); // Adjust path to your User model
 
         // Update the user in the database
         const email = 'mark@trihockey.com'; // Replace with the email of the user to update
-        const result = await User.updateOne(
-            { email },
-            { password: hashedPassword }
-        );
+        const result = await User.updateOne({ email }, { password: hashedPassword });
 
         console.log(`✅ Password updated for ${email}:`, result);
         mongoose.connection.close();

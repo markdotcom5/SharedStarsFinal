@@ -5,5 +5,5 @@ import { achievementHandler } from './achievementHandler.js';
 export const ui = {
     signup,
     profile,
-    achievementHandler
+    achievementHandler,
 };

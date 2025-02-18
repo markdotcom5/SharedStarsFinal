@@ -1,39 +1,44 @@
 // models/AITraining.js
 const mongoose = require('mongoose');
 
-const AITrainingSchema = new mongoose.Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+const AITrainingSchema = new mongoose.Schema(
+    {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        sessionId: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        moduleType: {
+            type: String,
+            required: true,
+        },
+        metrics: {
+            accuracy: Number,
+            completionTime: Number,
+            attentionScore: Number,
+            confidenceLevel: Number,
+        },
+        adaptiveSettings: {
+            difficulty: Number,
+            pace: Number,
+            complexity: Number,
+        },
+        feedback: [
+            {
+                timestamp: { type: Date, default: Date.now },
+                type: String,
+                message: String,
+                priority: String,
+            },
+        ],
     },
-    sessionId: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    moduleType: {
-        type: String,
-        required: true
-    },
-    metrics: {
-        accuracy: Number,
-        completionTime: Number,
-        attentionScore: Number,
-        confidenceLevel: Number
-    },
-    adaptiveSettings: {
-        difficulty: Number,
-        pace: Number,
-        complexity: Number
-    },
-    feedback: [{
-        timestamp: { type: Date, default: Date.now },
-        type: String,
-        message: String,
-        priority: String
-    }]
-}, { timestamps: true });
+    { timestamps: true }
+);
 
 const AITraining = mongoose.model('AITraining', AITrainingSchema);
 module.exports = AITraining;
@@ -49,7 +54,7 @@ const AIOrchestrator = require('../services/AIOrchestrator');
 router.post('/session/start', async (req, res) => {
     try {
         const { userId, moduleType } = req.body;
-        
+
         const session = new AITraining({
             userId,
             sessionId: `train_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -58,13 +63,13 @@ router.post('/session/start', async (req, res) => {
                 accuracy: 0,
                 completionTime: 0,
                 attentionScore: 0,
-                confidenceLevel: 0
+                confidenceLevel: 0,
             },
             adaptiveSettings: {
                 difficulty: 0.5,
                 pace: 0.5,
-                complexity: 0.5
-            }
+                complexity: 0.5,
+            },
         });
 
         await session.save();
@@ -88,7 +93,7 @@ router.post('/metrics/:sessionId', async (req, res) => {
 
         // Update metrics
         session.metrics = { ...session.metrics, ...metrics };
-        
+
         // Generate AI feedback
         const feedback = await AIGuidanceSystem.generateFeedback(metrics);
         if (feedback) {
@@ -102,10 +107,10 @@ router.post('/metrics/:sessionId', async (req, res) => {
         }
 
         await session.save();
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             feedback,
-            adaptiveSettings: session.adaptiveSettings 
+            adaptiveSettings: session.adaptiveSettings,
         });
     } catch (error) {
         console.error('Error updating training metrics:', error);
@@ -118,7 +123,7 @@ router.get('/analysis/:sessionId', async (req, res) => {
     try {
         const { sessionId } = req.params;
         const session = await AITraining.findOne({ sessionId });
-        
+
         if (!session) {
             return res.status(404).json({ success: false, error: 'Session not found' });
         }
@@ -140,7 +145,7 @@ class AIAnalytics {
             const processed = {
                 accuracy: this.calculateAccuracy(metrics),
                 efficiency: this.calculateEfficiency(metrics),
-                progress: await this.calculateProgress(metrics)
+                progress: await this.calculateProgress(metrics),
             };
             return processed;
         } catch (error) {
@@ -181,7 +186,7 @@ class AIStorageService {
             // Store training data
             session.metrics = { ...session.metrics, ...data.metrics };
             session.feedback.push(...data.feedback);
-            
+
             await session.save();
             return session;
         } catch (error) {
@@ -195,7 +200,7 @@ class AIStorageService {
             const session = await AITraining.findOne({ sessionId })
                 .populate('userId', 'name email')
                 .exec();
-            
+
             if (!session) {
                 throw new Error('Session not found');
             }

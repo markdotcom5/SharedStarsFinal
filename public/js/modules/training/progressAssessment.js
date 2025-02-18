@@ -8,18 +8,13 @@ class ProgressAssessment {
             moduleScores: {},
             skillLevels: {},
             completedTasks: new Set(),
-            achievements: []
+            achievements: [],
         };
     }
 
     async evaluatePerformance(moduleId, performanceData) {
-        const {
-            completionTime,
-            accuracy,
-            interactions,
-            challengesCompleted,
-            biometricData
-        } = performanceData;
+        const { completionTime, accuracy, interactions, challengesCompleted, biometricData } =
+            performanceData;
 
         // Calculate comprehensive score
         const score = this.calculateScore({
@@ -27,7 +22,7 @@ class ProgressAssessment {
             accuracy,
             interactions,
             challengesCompleted,
-            biometricData
+            biometricData,
         });
 
         // Update module scores
@@ -40,7 +35,7 @@ class ProgressAssessment {
             quizResults: [accuracy * 100],
             completionTime,
             practiceResults: [score * 100],
-            biometricData
+            biometricData,
         });
 
         // Check for achievements
@@ -50,7 +45,7 @@ class ProgressAssessment {
             score,
             guidance,
             achievements: newAchievements,
-            nextSteps: guidance.nextSteps
+            nextSteps: guidance.nextSteps,
         };
     }
 
@@ -60,22 +55,24 @@ class ProgressAssessment {
             accuracy: 0.4,
             interactions: 0.2,
             challengesCompleted: 0.1,
-            biometricEfficiency: 0.1
+            biometricEfficiency: 0.1,
         };
 
         // Normalize completion time (faster is better, up to a point)
         const normalizedTime = Math.min(1, 600 / Math.max(data.completionTime, 300));
-        
+
         // Biometric efficiency score
-        const biometricScore = data.biometricData ? this.calculateBiometricScore(data.biometricData) : 1;
-        
+        const biometricScore = data.biometricData
+            ? this.calculateBiometricScore(data.biometricData)
+            : 1;
+
         // Calculate weighted score
-        const score = 
-            (normalizedTime * weights.completionTime) +
-            (data.accuracy * weights.accuracy) +
-            (Math.min(1, data.interactions / 10) * weights.interactions) +
-            (Math.min(1, data.challengesCompleted / 5) * weights.challengesCompleted) +
-            (biometricScore * weights.biometricEfficiency);
+        const score =
+            normalizedTime * weights.completionTime +
+            data.accuracy * weights.accuracy +
+            Math.min(1, data.interactions / 10) * weights.interactions +
+            Math.min(1, data.challengesCompleted / 5) * weights.challengesCompleted +
+            biometricScore * weights.biometricEfficiency;
 
         return Math.round(score * 100) / 100;
     }
@@ -99,7 +96,7 @@ class ProgressAssessment {
             newAchievements.push({
                 type: 'excellence',
                 title: 'Excellence in Space Training',
-                description: 'Achieved 90% or higher in a training module'
+                description: 'Achieved 90% or higher in a training module',
             });
         }
 
@@ -107,7 +104,7 @@ class ProgressAssessment {
             newAchievements.push({
                 type: 'dedication',
                 title: 'Dedicated Space Cadet',
-                description: 'Completed 5 training modules'
+                description: 'Completed 5 training modules',
             });
         }
 
@@ -116,7 +113,7 @@ class ProgressAssessment {
             newAchievements.push({
                 type: 'calm_under_pressure',
                 title: 'Calm Under Pressure',
-                description: 'Maintained low stress and heart rate under training conditions'
+                description: 'Maintained low stress and heart rate under training conditions',
             });
         }
 
@@ -130,15 +127,16 @@ class ProgressAssessment {
 
     generateProgressReport() {
         const totalModules = Object.keys(this.assessmentData.moduleScores).length;
-        const averageScore = Object.values(this.assessmentData.moduleScores)
-            .reduce((acc, curr) => acc + curr, 0) / totalModules;
+        const averageScore =
+            Object.values(this.assessmentData.moduleScores).reduce((acc, curr) => acc + curr, 0) /
+            totalModules;
 
         return {
             totalModulesCompleted: totalModules,
             averageScore: Math.round(averageScore * 100) / 100,
             achievements: this.assessmentData.achievements,
             skillLevels: this.calculateSkillLevels(),
-            recommendedFocus: this.getRecommendedFocus()
+            recommendedFocus: this.getRecommendedFocus(),
         };
     }
 
@@ -146,31 +144,34 @@ class ProgressAssessment {
         return {
             physical: this.calculateSkillLevel('physical'),
             technical: this.calculateSkillLevel('technical'),
-            simulation: this.calculateSkillLevel('simulation')
+            simulation: this.calculateSkillLevel('simulation'),
         };
     }
 
     calculateSkillLevel(skillType) {
-        const relevantModules = Object.entries(this.assessmentData.moduleScores)
-            .filter(([moduleId]) => moduleId.startsWith(skillType));
-        
+        const relevantModules = Object.entries(this.assessmentData.moduleScores).filter(
+            ([moduleId]) => moduleId.startsWith(skillType)
+        );
+
         if (relevantModules.length === 0) return 0;
 
-        const averageScore = relevantModules
-            .reduce((acc, [, score]) => acc + score, 0) / relevantModules.length;
+        const averageScore =
+            relevantModules.reduce((acc, [, score]) => acc + score, 0) / relevantModules.length;
 
         return Math.round(averageScore * 100) / 100;
     }
 
     getRecommendedFocus() {
         const skillLevels = this.calculateSkillLevels();
-        const lowestSkill = Object.entries(skillLevels)
-            .reduce((acc, [skill, level]) => level < acc.level ? { skill, level } : acc, { skill: '', level: Infinity });
+        const lowestSkill = Object.entries(skillLevels).reduce(
+            (acc, [skill, level]) => (level < acc.level ? { skill, level } : acc),
+            { skill: '', level: Infinity }
+        );
 
         return {
             skill: lowestSkill.skill,
             currentLevel: lowestSkill.level,
-            recommendedModules: this.getRecommendedModules(lowestSkill.skill)
+            recommendedModules: this.getRecommendedModules(lowestSkill.skill),
         };
     }
 }

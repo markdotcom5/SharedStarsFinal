@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
             length: password.length >= 8,
             uppercase: /[A-Z]/.test(password),
             lowercase: /[a-z]/.test(password),
-            number: /[0-9]/.test(password)
+            number: /[0-9]/.test(password),
         };
         return requirements;
     };
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     passwordInput.addEventListener('input', () => {
         const requirements = validatePassword(passwordInput.value);
         const errorMsg = [];
-        
+
         if (!requirements.length) errorMsg.push('At least 8 characters');
         if (!requirements.uppercase) errorMsg.push('One uppercase letter');
         if (!requirements.lowercase) errorMsg.push('One lowercase letter');
@@ -41,10 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         // Clear previous errors
         const errorElements = document.querySelectorAll('.error-message');
-        errorElements.forEach(element => element.textContent = '');
+        errorElements.forEach((element) => (element.textContent = ''));
 
         // Get form data
         const formData = {
@@ -55,23 +55,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 mode: 'full_guidance',
                 personalizedSettings: {
                     pacePreference: 'balanced',
-                    adaptiveUI: true
+                    adaptiveUI: true,
                 },
                 context: {
                     currentPhase: 'onboarding',
-                    nextActions: ['complete_profile']
-                }
+                    nextActions: ['complete_profile'],
+                },
             },
             settings: {
                 notifications: {
-                    aiSuggestions: true
+                    aiSuggestions: true,
                 },
                 aiPreferences: {
                     automationLevel: 'maximum',
                     interactionStyle: 'proactive',
-                    dataCollection: 'comprehensive'
-                }
-            }
+                    dataCollection: 'comprehensive',
+                },
+            },
         };
 
         // Validate form data
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Display any validation errors
-        Object.keys(errors).forEach(field => {
+        Object.keys(errors).forEach((field) => {
             const errorElement = document.getElementById(`${field}-error`);
             if (errorElement) {
                 errorElement.textContent = errors[field];
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
             });
 
             const data = await response.json();
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok && data.success) {
                 // Store the token
                 localStorage.setItem('token', data.data.token);
-                
+
                 // Show success message
                 const successMessage = document.createElement('div');
                 successMessage.className = 'success-message';
@@ -144,16 +144,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 1500);
             } else {
                 // Show error from server
-                document.getElementById('form-error').textContent = data.error || 'Signup failed. Please try again.';
-                
+                document.getElementById('form-error').textContent =
+                    data.error || 'Signup failed. Please try again.';
+
                 // Reset button
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
             }
         } catch (error) {
             console.error('Error:', error);
-            document.getElementById('form-error').textContent = 'Houston, we have a problem. Please try again.';
-            
+            document.getElementById('form-error').textContent =
+                'Houston, we have a problem. Please try again.';
+
             // Reset button
             submitButton.disabled = false;
             submitButton.textContent = originalButtonText;

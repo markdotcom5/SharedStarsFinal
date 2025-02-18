@@ -10,5 +10,5 @@ import { achievementHandler } from './achievementHandler.js';
 export const core = {
     signup,
     profile,
-    achievementHandler
+    achievementHandler,
 };

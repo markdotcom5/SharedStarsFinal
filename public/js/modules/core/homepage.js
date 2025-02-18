@@ -28,19 +28,19 @@ class HomepageHandler {
         const closeMenu = document.getElementById('closeMenu');
 
         if (!menuToggle || !menuOverlay || !closeMenu) {
-            console.error("⚠️ Menu elements not found!");
+            console.error('⚠️ Menu elements not found!');
             return;
         }
 
         const toggleMenu = () => {
-            menuOverlay.classList.toggle("hidden");
-            document.body.style.overflow = menuOverlay.classList.contains("hidden") ? "" : "hidden";
+            menuOverlay.classList.toggle('hidden');
+            document.body.style.overflow = menuOverlay.classList.contains('hidden') ? '' : 'hidden';
         };
 
         menuToggle.addEventListener('click', toggleMenu);
         closeMenu.addEventListener('click', toggleMenu);
 
-        menuOverlay.querySelectorAll('nav a').forEach(link => {
+        menuOverlay.querySelectorAll('nav a').forEach((link) => {
             link.addEventListener('click', toggleMenu);
         });
     }
@@ -49,13 +49,13 @@ class HomepageHandler {
         const toggleOptions = document.querySelectorAll('.toggle-option');
 
         if (!toggleOptions.length) {
-            console.error("⚠️ Training toggle elements not found!");
+            console.error('⚠️ Training toggle elements not found!');
             return;
         }
 
-        toggleOptions.forEach(option => {
+        toggleOptions.forEach((option) => {
             option.addEventListener('click', () => {
-                toggleOptions.forEach(opt => opt.classList.remove('active'));
+                toggleOptions.forEach((opt) => opt.classList.remove('active'));
                 option.classList.add('active');
 
                 const mode = option.getAttribute('data-mode');
@@ -63,10 +63,10 @@ class HomepageHandler {
                 console.log(`Training mode selected: ${mode}`);
 
                 if (mode === 'ai') {
-                    console.log("🚀 AI Mode Activated. Launching AI Training...");
+                    console.log('🚀 AI Mode Activated. Launching AI Training...');
                     this.startAITraining();
                 } else {
-                    console.log("📍 Opening Sign-Up Popup");
+                    console.log('📍 Opening Sign-Up Popup');
                     this.openSignupPopup();
                 }
             });
@@ -74,7 +74,9 @@ class HomepageHandler {
 
         // ✅ Fix: Set initial state correctly
         const savedMode = localStorage.getItem('trainingMode') || 'manual';
-        const activeOption = [...toggleOptions].find(option => option.getAttribute('data-mode') === savedMode);
+        const activeOption = [...toggleOptions].find(
+            (option) => option.getAttribute('data-mode') === savedMode
+        );
         if (activeOption) {
             activeOption.classList.add('active');
             activeOption.setAttribute('aria-pressed', 'true');
@@ -83,10 +85,12 @@ class HomepageHandler {
 
     startAITraining() {
         this.openChat();
-        this.sendAIMessage("Welcome! I will guide you through your space training journey.");
+        this.sendAIMessage('Welcome! I will guide you through your space training journey.');
 
         setTimeout(() => {
-            this.sendAIMessage("Let's start by understanding your fitness level. Are you a Beginner, Intermediate, or Advanced?");
+            this.sendAIMessage(
+                "Let's start by understanding your fitness level. Are you a Beginner, Intermediate, or Advanced?"
+            );
         }, 2000);
     }
 
@@ -95,7 +99,7 @@ class HomepageHandler {
         if (chatContainer) {
             chatContainer.classList.remove('hidden');
         } else {
-            console.error("⚠️ AI chat container not found.");
+            console.error('⚠️ AI chat container not found.');
         }
     }
 
@@ -104,14 +108,14 @@ class HomepageHandler {
         if (chatContainer) {
             chatContainer.classList.add('hidden');
         } else {
-            console.error("⚠️ AI chat container not found.");
+            console.error('⚠️ AI chat container not found.');
         }
     }
 
     sendAIMessage(message) {
         const chatMessages = document.querySelector('.chat-messages');
         if (!chatMessages) {
-            console.error("⚠️ Chat messages container not found.");
+            console.error('⚠️ Chat messages container not found.');
             return;
         }
 
@@ -123,7 +127,7 @@ class HomepageHandler {
     }
 
     openSignupPopup() {
-        const signupPopup = document.createElement("div");
+        const signupPopup = document.createElement('div');
         signupPopup.innerHTML = `
             <div class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto text-center">
@@ -138,7 +142,7 @@ class HomepageHandler {
         `;
         document.body.appendChild(signupPopup);
 
-        signupPopup.querySelector(".close-signup").addEventListener("click", () => {
+        signupPopup.querySelector('.close-signup').addEventListener('click', () => {
             signupPopup.remove();
         });
     }
@@ -156,7 +160,7 @@ class HomepageHandler {
             const diff = target - now;
 
             if (diff <= 0) {
-                timerElement.textContent = "🚀 The journey begins!";
+                timerElement.textContent = '🚀 The journey begins!';
                 return;
             }
 
@@ -174,6 +178,6 @@ class HomepageHandler {
 }
 
 // ✅ Ensure the script runs when the page is loaded
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     window.homepageHandler = new HomepageHandler();
 });

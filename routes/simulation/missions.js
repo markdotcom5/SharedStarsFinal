@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { getMissions, getMissionById, createMission, updateMissionProgress } = require('../../controllers/missionsController'); // ✅ Ensure correct path
+const {
+    getMissions,
+    getMissionById,
+    createMission,
+    updateMissionProgress,
+} = require('../../controllers/missionsController'); // ✅ Ensure correct path
 
 // ✅ Get all missions
 router.get('/', getMissions);

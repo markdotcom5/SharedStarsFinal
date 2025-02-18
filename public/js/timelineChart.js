@@ -3,15 +3,15 @@ export function renderTimelineChart(elementId) {
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ["2024", "2029", "2034", "2043"],
+            labels: ['2024', '2029', '2034', '2043'],
             datasets: [
                 {
-                    label: "Cost of Space Travel",
+                    label: 'Cost of Space Travel',
                     data: [250000, 50000, 25000, 5000],
-                    borderColor: "#007bff",
-                    backgroundColor: "rgba(0, 123, 255, 0.2)",
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
                     fill: true,
-                }
+                },
             ],
         },
         options: {

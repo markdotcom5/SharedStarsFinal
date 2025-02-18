@@ -2,7 +2,7 @@ const ModuleTypes = {
     TRAINING: 'training',
     SIMULATION: 'simulation',
     ASSESSMENT: 'assessment',
-    MISSION: 'mission'
+    MISSION: 'mission',
 };
 
 const ModuleCategories = {
@@ -11,10 +11,10 @@ const ModuleCategories = {
     PSYCHOLOGICAL: 'psychological',
     TEAMWORK: 'teamwork',
     EMERGENCY: 'emergency',
-    SPACE_EXPLORATION: 'space-exploration'
+    SPACE_EXPLORATION: 'space-exploration',
 };
 
 module.exports = {
     ModuleTypes,
-    ModuleCategories
+    ModuleCategories,
 };

@@ -3,27 +3,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menuToggle');
     const menuOverlay = document.getElementById('menuOverlay');
     const closeMenu = document.getElementById('closeMenu');
-  
+
     menuToggle.addEventListener('click', () => {
-      menuOverlay.classList.toggle('translate-x-full');
+        menuOverlay.classList.toggle('translate-x-full');
     });
-  
+
     closeMenu.addEventListener('click', () => {
-      menuOverlay.classList.add('translate-x-full');
+        menuOverlay.classList.add('translate-x-full');
     });
-  
+
     // Setup language button listeners (example)
-    document.querySelectorAll('.language-option').forEach(button => {
-      button.addEventListener('click', (e) => {
-        const lang = e.currentTarget.getAttribute('data-lang');
-        // Store language preference (e.g., in localStorage)
-        localStorage.setItem('preferredLanguage', lang);
-        // Optionally reload or update the page language dynamically
-        console.log('Language changed to:', lang);
-      });
+    document.querySelectorAll('.language-option').forEach((button) => {
+        button.addEventListener('click', (e) => {
+            const lang = e.currentTarget.getAttribute('data-lang');
+            // Store language preference (e.g., in localStorage)
+            localStorage.setItem('preferredLanguage', lang);
+            // Optionally reload or update the page language dynamically
+            console.log('Language changed to:', lang);
+        });
     });
-  });
-  
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         en: {
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             signup: 'Sign Up',
             academy: 'StelTrek Academy',
             welcome: 'Welcome',
-            subscribe: 'Subscribe'
+            subscribe: 'Subscribe',
         },
         // ... other translations
     };
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { key: 'signup', href: '/signup.html' },
         { key: 'academy', href: '/academy.html' },
         { key: 'welcome', href: '/welcome.html' },
-        { key: 'subscribe', href: '/subscribe.html' }
+        { key: 'subscribe', href: '/subscribe.html' },
     ];
 
     const menuContainer = document.getElementById('menu-container');
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuButton = document.getElementById('menu-button');
 
     const langButtons = document.querySelectorAll('.lang-btn');
-    langButtons.forEach(btn => {
+    langButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             const lang = btn.dataset.lang;
             document.cookie = `language=${lang};path=/`;
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const selectedLang = document.cookie.split(';').find(c => c.trim().startsWith('language='));
+    const selectedLang = document.cookie.split(';').find((c) => c.trim().startsWith('language='));
     const lang = selectedLang ? selectedLang.split('=')[1] : 'en';
     initializeMenu(lang);
 
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menuContent.innerHTML = '';
 
         // Populate menu with translated items
-        menuItems.forEach(item => {
+        menuItems.forEach((item) => {
             const link = document.createElement('a');
             link.href = item.href;
             link.textContent = translations[lang][item.key];

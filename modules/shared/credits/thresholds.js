@@ -2,7 +2,7 @@ const creditThresholds = {
     bronze: 100,
     silver: 300,
     gold: 600,
-    platinum: 1000
+    platinum: 1000,
 };
 
 // ✅ Function to Check User Level Based on Credits

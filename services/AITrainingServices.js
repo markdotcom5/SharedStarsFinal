@@ -1,4 +1,4 @@
-const { OpenAI } = require("openai");
+const { OpenAI } = require('openai');
 const EventEmitter = require('events');
 const WebSocket = require('ws');
 const mongoose = require('mongoose');
@@ -14,9 +14,9 @@ class AITrainingService extends EventEmitter {
         super();
         // Initialize OpenAI
         this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY
+            apiKey: process.env.OPENAI_API_KEY,
         });
-        this.defaultModel = "gpt-4-turbo-preview";
+        this.defaultModel = 'gpt-4-turbo-preview';
 
         // Initialize WebSocket server
         this.wss = new WebSocket.Server({ server, noServer: true });
@@ -40,21 +40,21 @@ class AITrainingService extends EventEmitter {
         this.stateSpace = {
             knowledge: new Array(100).fill(0),
             skills: new Array(50).fill(0),
-            performance: new Array(30).fill(0)
+            performance: new Array(30).fill(0),
         };
 
         // Initialize Action Space
         this.actionSpace = {
             difficulty: ['easy', 'medium', 'hard'],
             taskTypes: ['theory', 'practical', 'assessment'],
-            adaptationTypes: ['increase', 'decrease', 'maintain']
+            adaptationTypes: ['increase', 'decrease', 'maintain'],
         };
 
         // Initialize Bayesian Model
         this.bayesianModel = {
             priorKnowledge: new Map(),
             learningRates: new Map(),
-            confidenceScores: new Map()
+            confidenceScores: new Map(),
         };
 
         // Initialize RL Model
@@ -68,23 +68,23 @@ class AITrainingService extends EventEmitter {
                     tf.layers.dense({
                         inputShape: [180],
                         units: 128,
-                        activation: 'relu'
+                        activation: 'relu',
                     }),
                     tf.layers.dense({
                         units: 64,
-                        activation: 'relu'
+                        activation: 'relu',
                     }),
                     tf.layers.dense({
                         units: 9, // Combined action space size
-                        activation: 'softmax'
-                    })
-                ]
+                        activation: 'softmax',
+                    }),
+                ],
             });
 
             this.rlModel.compile({
                 optimizer: tf.train.adam(0.001),
                 loss: 'categoricalCrossentropy',
-                metrics: ['accuracy']
+                metrics: ['accuracy'],
             });
         } catch (error) {
             console.error('❌ RL Model Initialization Error:', error);
@@ -131,7 +131,7 @@ class AITrainingService extends EventEmitter {
         try {
             const userProfile = await this.getUserProfile(userId);
             const learningState = await this.getCurrentLearningState(userId);
-            
+
             // Get RL-based next action
             const nextAction = await this.predictNextAction(learningState);
 
@@ -140,19 +140,20 @@ class AITrainingService extends EventEmitter {
                 model: this.defaultModel,
                 messages: [
                     {
-                        role: "system",
-                        content: "You are an advanced space training AI providing personalized guidance based on both current performance and predicted optimal learning path."
+                        role: 'system',
+                        content:
+                            'You are an advanced space training AI providing personalized guidance based on both current performance and predicted optimal learning path.',
                     },
                     {
-                        role: "user",
+                        role: 'user',
                         content: `Provide guidance based on:
                             Current Activity: ${data.activity}
                             Performance History: ${JSON.stringify(userProfile.performanceHistory)}
                             Learning State: ${JSON.stringify(learningState)}
                             Predicted Optimal Action: ${JSON.stringify(nextAction)}
-                            Current Challenges: ${JSON.stringify(data.challenges)}`
-                    }
-                ]
+                            Current Challenges: ${JSON.stringify(data.challenges)}`,
+                    },
+                ],
             });
 
             // Update Bayesian model
@@ -162,7 +163,7 @@ class AITrainingService extends EventEmitter {
                 aiGuidance: JSON.parse(guidance.choices[0].message.content),
                 nextAction,
                 learningState,
-                bayesianMetrics: this.getBayesianMetrics(userId)
+                bayesianMetrics: this.getBayesianMetrics(userId),
             };
 
             this.broadcastToUser(userId, 'ai_guidance', combinedGuidance);
@@ -178,14 +179,14 @@ class AITrainingService extends EventEmitter {
             const currentState = await this.getCurrentLearningState(userId);
             const stateTensor = tf.tensor2d([this.flattenState(currentState)]);
             const actionProbabilities = this.rlModel.predict(stateTensor);
-            
+
             const action = await this.selectOptimalAction(actionProbabilities);
             await this.updateLearningState(userId, action, data.performance);
 
             return {
                 nextAction: action,
                 updatedState: await this.getCurrentLearningState(userId),
-                adaptiveMetrics: this.getAdaptiveMetrics(userId)
+                adaptiveMetrics: this.getAdaptiveMetrics(userId),
             };
         } catch (error) {
             console.error('❌ Adaptive Learning Error:', error);
@@ -196,7 +197,11 @@ class AITrainingService extends EventEmitter {
     async analyzePerformance(userId, data) {
         try {
             // Update Bayesian knowledge
-            const posteriorKnowledge = this.updateBayesianKnowledge(userId, data.moduleId, data.performance);
+            const posteriorKnowledge = this.updateBayesianKnowledge(
+                userId,
+                data.moduleId,
+                data.performance
+            );
 
             // Get current learning state
             const learningState = await this.getCurrentLearningState(userId);
@@ -210,7 +215,7 @@ class AITrainingService extends EventEmitter {
                 learningState,
                 recommendedAction: nextAction,
                 confidence: this.bayesianModel.confidenceScores.get(userId),
-                adaptiveMetrics: this.getAdaptiveMetrics(userId)
+                adaptiveMetrics: this.getAdaptiveMetrics(userId),
             };
 
             this.broadcastToUser(userId, 'performance_analysis', analysis);
@@ -225,12 +230,11 @@ class AITrainingService extends EventEmitter {
     async getCurrentLearningState(userId) {
         const userProgress = await UserProgress.findOne({ userId });
         return {
-            knowledge: this.stateSpace.knowledge.map((_, i) => 
-                userProgress?.knowledge?.[i] || 0),
-            skills: this.stateSpace.skills.map((_, i) => 
-                userProgress?.skills?.[i] || 0),
-            performance: this.stateSpace.performance.map((_, i) => 
-                userProgress?.performance?.[i] || 0)
+            knowledge: this.stateSpace.knowledge.map((_, i) => userProgress?.knowledge?.[i] || 0),
+            skills: this.stateSpace.skills.map((_, i) => userProgress?.skills?.[i] || 0),
+            performance: this.stateSpace.performance.map(
+                (_, i) => userProgress?.performance?.[i] || 0
+            ),
         };
     }
 
@@ -247,14 +251,17 @@ class AITrainingService extends EventEmitter {
     async selectOptimalAction(actionProbabilities) {
         const probArray = await actionProbabilities.array();
         const maxIndex = probArray[0].indexOf(Math.max(...probArray[0]));
-        
+
         return {
             difficulty: this.actionSpace.difficulty[Math.floor(maxIndex / 3)],
             taskType: this.actionSpace.taskTypes[maxIndex % 3],
-            adaptationType: this.actionSpace.adaptationTypes[
-                Math.floor(maxIndex / (this.actionSpace.difficulty.length * 
-                                     this.actionSpace.taskTypes.length))
-            ]
+            adaptationType:
+                this.actionSpace.adaptationTypes[
+                    Math.floor(
+                        maxIndex /
+                            (this.actionSpace.difficulty.length * this.actionSpace.taskTypes.length)
+                    )
+                ],
         };
     }
 
@@ -262,21 +269,20 @@ class AITrainingService extends EventEmitter {
         const key = `${userId}-${moduleId}`;
         const prior = this.bayesianModel.priorKnowledge.get(key) || 0.5;
         const likelihood = 1 / (1 + Math.exp(-performance));
-        
-        const posterior = (prior * likelihood) / 
-            ((prior * likelihood) + ((1 - prior) * (1 - likelihood)));
-        
+
+        const posterior =
+            (prior * likelihood) / (prior * likelihood + (1 - prior) * (1 - likelihood));
+
         this.bayesianModel.priorKnowledge.set(key, posterior);
-        this.bayesianModel.confidenceScores.set(key, 
-            Math.abs(posterior - 0.5) * 2);
-        
+        this.bayesianModel.confidenceScores.set(key, Math.abs(posterior - 0.5) * 2);
+
         return posterior;
     }
 
     getBayesianMetrics(userId) {
         return {
             confidence: this.bayesianModel.confidenceScores.get(userId) || 0,
-            learningRate: this.bayesianModel.learningRates.get(userId) || 0.1
+            learningRate: this.bayesianModel.learningRates.get(userId) || 0.1,
         };
     }
 
@@ -284,20 +290,20 @@ class AITrainingService extends EventEmitter {
         return {
             currentLevel: this.getCurrentLevel(userId),
             adaptationRate: this.getAdaptationRate(userId),
-            performanceHistory: this.getPerformanceHistory(userId)
+            performanceHistory: this.getPerformanceHistory(userId),
         };
     }
 
     // Cleanup with enhanced resource management
     cleanup() {
-        this.wss.clients.forEach(client => {
+        this.wss.clients.forEach((client) => {
             client.terminate();
         });
-        
+
         if (this.rlModel) {
             this.rlModel.dispose();
         }
-        
+
         this.clients.clear();
         this.userProfiles.clear();
         this.performanceMetrics.clear();

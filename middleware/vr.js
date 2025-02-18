@@ -50,12 +50,12 @@ const vrMiddleware = {
         res.status(500).json({
             success: false,
             error: 'VR system error',
-            details: process.env.NODE_ENV === 'development' ? err.message : undefined
+            details: process.env.NODE_ENV === 'development' ? err.message : undefined,
         });
-    }
+    },
 };
 
 module.exports = (req, res, next) => {
-    console.log("✅ VR Middleware triggered");
-    next();  // ✅ Ensures Express continues processing
+    console.log('✅ VR Middleware triggered');
+    next(); // ✅ Ensures Express continues processing
 };

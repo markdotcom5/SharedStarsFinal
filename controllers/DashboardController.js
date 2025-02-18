@@ -22,7 +22,7 @@ class DashboardController {
     initializeTaskModal() {
         this.taskModal = document.getElementById('taskModal');
         this.taskForm = document.getElementById('taskForm');
-        
+
         this.taskForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const taskData = {
@@ -31,7 +31,7 @@ class DashboardController {
                 deadline: document.getElementById('taskDeadline').value,
                 category: document.getElementById('taskCategory').value,
                 description: document.getElementById('taskDescription').value,
-                resources: this.getSelectedResources()
+                resources: this.getSelectedResources(),
             };
 
             try {
@@ -54,15 +54,15 @@ class DashboardController {
     showTaskModal(taskId = null) {
         this.editingTaskId = taskId;
         if (taskId) {
-            const task = this.tasks.find(t => t.id === taskId);
+            const task = this.tasks.find((t) => t.id === taskId);
             if (!task) return;
 
             Object.entries({
-                'taskTitle': task.title,
-                'taskPriority': task.priority,
-                'taskDeadline': task.deadline,
-                'taskCategory': task.category,
-                'taskDescription': task.description
+                taskTitle: task.title,
+                taskPriority: task.priority,
+                taskDeadline: task.deadline,
+                taskCategory: task.category,
+                taskDescription: task.description,
             }).forEach(([id, value]) => {
                 document.getElementById(id).value = value;
             });
@@ -83,9 +83,9 @@ class DashboardController {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify(taskData)
+                body: JSON.stringify(taskData),
             });
 
             if (!response.ok) throw new Error('Failed to add task');
@@ -105,15 +105,15 @@ class DashboardController {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify(taskData)
+                body: JSON.stringify(taskData),
             });
 
             if (!response.ok) throw new Error('Failed to update task');
 
             const updatedTask = await response.json();
-            const index = this.tasks.findIndex(t => t.id === taskId);
+            const index = this.tasks.findIndex((t) => t.id === taskId);
             if (index !== -1) {
                 this.tasks[index] = updatedTask;
             }
@@ -126,7 +126,7 @@ class DashboardController {
 
     setupFormValidation() {
         const inputs = this.taskForm.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
+        inputs.forEach((input) => {
             input.addEventListener('input', () => {
                 this.validateField(input);
             });
@@ -181,11 +181,11 @@ class DashboardController {
 // In your controller (e.g., DashboardController.js)
 exports.renderDashboard = async (req, res) => {
     try {
-      const userData = await getUserData(req.user.id); // your service call
-      res.render('dashboard', { title: 'Dashboard', user: userData });
+        const userData = await getUserData(req.user.id); // your service call
+        res.render('dashboard', { title: 'Dashboard', user: userData });
     } catch (error) {
-      res.status(500).send('Error rendering dashboard');
+        res.status(500).send('Error rendering dashboard');
     }
-  };
-  
+};
+
 export default DashboardController;

@@ -14,22 +14,22 @@ const physicalTasks = {
                         name: 'Neutral Body Position',
                         sets: 3,
                         duration: '10 minutes',
-                        description: 'Master the neutral floating position'
+                        description: 'Master the neutral floating position',
                     },
                     {
                         name: 'Push-Pull Navigation',
                         sets: 4,
                         duration: '15 minutes',
-                        description: 'Movement using handrails and fixed points'
+                        description: 'Movement using handrails and fixed points',
                     },
                     {
                         name: 'Rotation Control',
                         sets: 3,
                         duration: '15 minutes',
-                        description: 'Body rotation and stabilization techniques'
-                    }
+                        description: 'Body rotation and stabilization techniques',
+                    },
                 ],
-                credits: 50
+                credits: 50,
             },
             {
                 id: 'PT100-2',
@@ -40,18 +40,18 @@ const physicalTasks = {
                         name: 'Multi-Axis Rotation',
                         sets: 4,
                         duration: '20 minutes',
-                        description: 'Complex rotation and stabilization'
+                        description: 'Complex rotation and stabilization',
                     },
                     {
                         name: 'Tool Manipulation',
                         sets: 3,
                         duration: '25 minutes',
-                        description: 'Using tools while floating'
-                    }
+                        description: 'Using tools while floating',
+                    },
                 ],
-                credits: 65
-            }
-        ]
+                credits: 65,
+            },
+        ],
     },
 
     spaceSuitMobility: {
@@ -68,16 +68,16 @@ const physicalTasks = {
                         name: 'Suit Donning/Doffing',
                         sets: 5,
                         duration: '30 minutes',
-                        description: 'Proper suit entry and exit procedures'
+                        description: 'Proper suit entry and exit procedures',
                     },
                     {
                         name: 'Range of Motion Exercises',
                         sets: 4,
                         duration: '20 minutes',
-                        description: 'Joint mobility in pressurized suit'
-                    }
+                        description: 'Joint mobility in pressurized suit',
+                    },
                 ],
-                credits: 75
+                credits: 75,
             },
             {
                 id: 'PT200-2',
@@ -88,19 +88,19 @@ const physicalTasks = {
                         name: 'Complex Tool Usage',
                         sets: 4,
                         duration: '45 minutes',
-                        description: 'Using specialized tools while suited'
+                        description: 'Using specialized tools while suited',
                     },
                     {
                         name: 'Emergency Procedures',
                         sets: 3,
                         duration: '40 minutes',
-                        description: 'Emergency response in suit'
-                    }
+                        description: 'Emergency response in suit',
+                    },
                 ],
-                credits: 90
-            }
-        ]
-    }
+                credits: 90,
+            },
+        ],
+    },
 };
 
 // Adding new certification preparation session
@@ -118,17 +118,17 @@ const certificationPrep = {
                     name: 'Combined Skills Assessment',
                     sets: 1,
                     duration: '120 minutes',
-                    description: 'Full evaluation of all learned skills.'
+                    description: 'Full evaluation of all learned skills.',
                 },
                 {
                     name: 'Emergency Scenario Response',
                     sets: 2,
                     duration: '60 minutes',
-                    description: 'Emergency reaction training for spaceflight incidents.'
-                }
-            ] // ✅ Properly closed exercises array
-        }
-    ] // ✅ Properly closed sessions array
+                    description: 'Emergency reaction training for spaceflight incidents.',
+                },
+            ], // ✅ Properly closed exercises array
+        },
+    ], // ✅ Properly closed sessions array
 }; // ✅ Properly closed certificationPrep object
 // Function to get all tasks
 function getTasks() {

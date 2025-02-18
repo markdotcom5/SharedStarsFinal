@@ -13,29 +13,29 @@ function getTasks() {
 router.get('/', authenticate, (req, res) => {
     res.json({
         success: true,
-        tasks: getTasks()
+        tasks: getTasks(),
     });
 });
 
 // ✅ API Endpoint: Get a Specific Task by ID
 router.get('/:taskId', authenticate, (req, res) => {
-    const task = Object.values(getTasks()).find(t => t.id === req.params.taskId);
-    
+    const task = Object.values(getTasks()).find((t) => t.id === req.params.taskId);
+
     if (!task) {
         return res.status(404).json({ error: 'Task not found' });
     }
 
     res.json({
         success: true,
-        task
+        task,
     });
 });
 
 // ✅ API Endpoint: Start a Training Task
 router.post('/:taskId/start', authenticate, async (req, res) => {
     try {
-        const task = Object.values(getTasks()).find(t => t.id === req.params.taskId);
-        
+        const task = Object.values(getTasks()).find((t) => t.id === req.params.taskId);
+
         if (!task) {
             return res.status(404).json({ error: 'Task not found' });
         }
@@ -49,8 +49,8 @@ router.post('/:taskId/start', authenticate, async (req, res) => {
             dateTime: new Date(),
             metrics: {
                 completionRate: 0,
-                effectivenessScore: 0
-            }
+                effectivenessScore: 0,
+            },
         });
 
         await session.save();
@@ -63,12 +63,12 @@ router.post('/:taskId/start', authenticate, async (req, res) => {
                 task: {
                     id: task.id,
                     name: task.name,
-                    exercises: task.exercises.map(e => ({
+                    exercises: task.exercises.map((e) => ({
                         name: e.name,
-                        duration: e.duration
-                    }))
-                }
-            }
+                        duration: e.duration,
+                    })),
+                },
+            },
         });
     } catch (error) {
         console.error('Error starting task:', error);
@@ -85,13 +85,13 @@ router.post('/:taskId/:sessionId/progress', authenticate, async (req, res) => {
             {
                 _id: req.params.sessionId,
                 userId: req.user._id,
-                taskId: req.params.taskId
+                taskId: req.params.taskId,
             },
             {
                 $set: {
                     'metrics.completionRate': completionRate,
-                    exerciseData
-                }
+                    exerciseData,
+                },
             },
             { new: true }
         );
@@ -105,8 +105,8 @@ router.post('/:taskId/:sessionId/progress', authenticate, async (req, res) => {
             message: 'Progress updated',
             progress: {
                 completionRate,
-                exerciseData
-            }
+                exerciseData,
+            },
         });
     } catch (error) {
         console.error('Error updating task progress:', error);
@@ -117,7 +117,5 @@ router.post('/:taskId/:sessionId/progress', authenticate, async (req, res) => {
 // ✅ Exporting API Routes and `getTasks`
 module.exports = {
     router,
-    getTasks
+    getTasks,
 };
-
-

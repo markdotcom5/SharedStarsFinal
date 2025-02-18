@@ -8,7 +8,7 @@ class SubscriptionController {
         this.planPricing = {
             individual: { price: 49.99, vrHours: 10, credits: 100, members: 1 },
             family: { price: 89.99, vrHours: 50, credits: 250, members: 4 },
-            galactic: { price: 2048, vrHours: 0, credits: 1000, members: 1 }
+            galactic: { price: 2048, vrHours: 0, credits: 1000, members: 1 },
         };
     }
 
@@ -16,11 +16,11 @@ class SubscriptionController {
         const { userId, plan, paymentMethodId } = req.body;
 
         try {
-            const existingSub = await Subscription.findOne({ 
-                userId, 
-                status: { $in: ['active', 'pending'] } 
+            const existingSub = await Subscription.findOne({
+                userId,
+                status: { $in: ['active', 'pending'] },
             });
-            
+
             if (existingSub) {
                 return res.status(400).json({ error: 'Active subscription exists' });
             }
@@ -44,14 +44,14 @@ class SubscriptionController {
                 price: planDetails.price,
                 features: this.getFeatures(plan),
                 renewalInfo: {
-                    nextBillingDate: new Date(subscription.current_period_end * 1000)
-                }
+                    nextBillingDate: new Date(subscription.current_period_end * 1000),
+                },
             });
 
             await newSubscription.save();
-            await User.findByIdAndUpdate(userId, { 
+            await User.findByIdAndUpdate(userId, {
                 subscriptionId: newSubscription._id,
-                credits: planDetails.credits
+                credits: planDetails.credits,
             });
 
             res.status(201).json(newSubscription);
@@ -107,7 +107,7 @@ class SubscriptionController {
 
             await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
                 items: [{ price: planDetails.price }],
-                proration_behavior: 'always_invoice'
+                proration_behavior: 'always_invoice',
             });
 
             subscription.plan = newPlan;
@@ -116,7 +116,7 @@ class SubscriptionController {
             await subscription.save();
 
             await User.findByIdAndUpdate(subscription.userId, {
-                credits: planDetails.credits
+                credits: planDetails.credits,
             });
 
             res.json(subscription);
@@ -136,7 +136,7 @@ class SubscriptionController {
             }
 
             await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
-                pause_collection: { behavior: 'void' }
+                pause_collection: { behavior: 'void' },
             });
 
             subscription.status = 'paused';
@@ -157,7 +157,7 @@ class SubscriptionController {
             spaceCredits: planDetails.credits,
             memberAccess: planDetails.members,
             privateFacility: plan === 'galactic',
-            priorityAccess: plan === 'galactic'
+            priorityAccess: plan === 'galactic',
         };
     }
 
@@ -169,7 +169,7 @@ class SubscriptionController {
 
         const customer = await stripe.customers.create({
             email: user.email,
-            metadata: { userId: user._id.toString() }
+            metadata: { userId: user._id.toString() },
         });
 
         await User.findByIdAndUpdate(userId, { stripeCustomerId: customer.id });
@@ -178,19 +178,19 @@ class SubscriptionController {
 
     async createStripeSubscription(customerId, paymentMethodId, price) {
         await stripe.paymentMethods.attach(paymentMethodId, {
-            customer: customerId
+            customer: customerId,
         });
 
         await stripe.customers.update(customerId, {
             invoice_settings: {
-                default_payment_method: paymentMethodId
-            }
+                default_payment_method: paymentMethodId,
+            },
         });
 
         return await stripe.subscriptions.create({
             customer: customerId,
             items: [{ price }],
-            expand: ['latest_invoice.payment_intent']
+            expand: ['latest_invoice.payment_intent'],
         });
     }
 }

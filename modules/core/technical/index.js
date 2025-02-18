@@ -11,14 +11,14 @@ const technicalModule = {
         'Spacecraft systems mastery',
         'Navigation and flight controls',
         'Life support systems management',
-        'Emergency protocols proficiency'
+        'Emergency protocols proficiency',
     ],
     weeklyStructure: {
         week1: 'Basic Systems and Life Support',
         week2: 'Navigation and Communications',
         week3: 'Power and Propulsion',
-        week4: 'Emergency Procedures'
-    }
+        week4: 'Emergency Procedures',
+    },
 };
 
 // ✅ API: Get Technical Module Data
