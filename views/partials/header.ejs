@@ -1,73 +1,4 @@
-<<<<<<< HEAD
-    <header class="fixed w-full bg-gray-900/90 backdrop-blur-lg z-50">
-    <!-- Top Bar with Language Selection -->
-    <div class="bg-gray-800 text-white py-2">
-      <div class="container mx-auto px-4 flex justify-end space-x-4 relative">
-        <div class="relative">
-          <button id="lang-dropdown-btn" class="bg-gray-800 px-4 py-2 rounded-lg">
-            🌐 Language
-          </button>
-          <div id="lang-dropdown-menu" class="hidden absolute bg-gray-900 p-2 rounded-lg mt-2 right-0 shadow-lg">
-            <button class="language-btn block w-full text-left px-4 py-2 hover:text-blue-400" data-lang="en">🇺🇸 English</button>
-            <button class="language-btn block w-full text-left px-4 py-2 hover:text-blue-400" data-lang="zh">🇨🇳 中文</button>
-            <button class="language-btn block w-full text-left px-4 py-2 hover:text-blue-400" data-lang="ko">🇰🇷 한국어</button>
-            <button class="language-btn block w-full text-left px-4 py-2 hover:text-blue-400" data-lang="es">🇪🇸 Español</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Main Navigation -->
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <!-- Logo -->
-      <a href="/" class="flex-shrink-0 hover:opacity-80 transition">
-        <img src="/images/SharedStars.svg" alt="SharedStars Logo">
-      </a>
-  
-      <!-- Navigation Links -->
-      <div class="flex items-center space-x-8">
-        <a href="/" class="text-white hover:text-blue-400 transition-colors">Home</a>
-        <a href="/academy" class="text-white hover:text-blue-400 transition-colors">Academy</a>
-        <a href="/about" class="text-white hover:text-blue-400 transition-colors">About</a>
-        <a href="/leaderboard" class="text-white hover:text-blue-400 transition-colors">Leaderboard</a>
-        <a href="/subscribe" class="text-white hover:text-blue-400 transition-colors">Subscribe</a>
-        <!-- Auth Buttons -->
-        <a href="/login" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition-colors">Login</a>
-        <a href="/signup" class="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded transition-colors">Sign Up</a>
-      </div>
-  
-      <!-- Dark Mode Toggle (Right-Aligned) -->
-      <button id="dark-mode-toggle" class="ml-4 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">
-        🌙 Dark Mode
-      </button>
-    </div>
-  </header>
-  
-  <!-- ✅ Language Dropdown Script -->
-  <script>
-    document.getElementById('lang-dropdown-btn').addEventListener('click', () => {
-      document.getElementById('lang-dropdown-menu').classList.toggle('hidden');
-    });
-  </script>
-  
-  <!-- ✅ Dark Mode Toggle Script -->
-  <script>
-    document.getElementById('dark-mode-toggle').addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-    });
-  
-    // Load saved theme
-    if (localStorage.getItem('theme') === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
-  </script>
-  
-  <!-- ✅ Multi-Language Handling -->
-  <script>
-  const translations = {
-    en: {
-=======
+
 <!-- views/partials/header.ejs -->
 <header class="site-header fixed w-full flex items-center justify-between z-50 px-[120px]">
 
@@ -135,7 +66,6 @@
 <script>
 const translations = {
   en: {
->>>>>>> 309f5a5 (settled up local tailwind css, configured according to our brand guidelines and served ejs engine to express server and configured and devloped header and home section.)
       heroTitle: "From Earth to Space in 36 Months",
       subtitle: "Like Tesla's FSD for Space Training: Intelligent, Adaptive, Revolutionary",
     },
