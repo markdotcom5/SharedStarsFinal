@@ -163,12 +163,8 @@ router.post('/register', async (req, res) => {
         res.status(500).json({ error: 'Registration failed', details: error.message });
     }
 });
-<<<<<<< HEAD
 
 router.get("/linkedin/callback", async (req, res) => {
-=======
-router.get('/linkedin/callback', async (req, res) => {
->>>>>>> 309f5a5 (settled up local tailwind css, configured according to our brand guidelines and served ejs engine to express server and configured and devloped header and home section.)
     const authorizationCode = req.query.code;
 
     if (!authorizationCode) {
@@ -192,7 +188,6 @@ router.get('/linkedin/callback', async (req, res) => {
             new URLSearchParams({
                 grant_type: 'authorization_code',
                 code: authorizationCode,
-<<<<<<< HEAD
                 redirect_uri: process.env.LINKEDIN_REDIRECT_URI,
                 client_id: process.env.LINKEDIN_CLIENT_ID,
                 client_secret: process.env.LINKEDIN_CLIENT_SECRET
@@ -205,29 +200,10 @@ router.get('/linkedin/callback', async (req, res) => {
 
         // Return the token securely (remove logging for production)
         res.json({ access_token: accessToken });
-=======
-                redirect_uri: REDIRECT_URI,
-                client_id: CLIENT_ID,
-                client_secret: CLIENT_SECRET,
-            }),
-            { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-        );
-
-        const accessToken = response.data.access_token;
-        console.log('✅ LinkedIn Access Token:', accessToken);
->>>>>>> 309f5a5 (settled up local tailwind css, configured according to our brand guidelines and served ejs engine to express server and configured and devloped header and home section.)
 
     } catch (error) {
-<<<<<<< HEAD
         console.error("❌ Error exchanging code for token:", error.response?.data || error.message);
         res.status(500).json({ error: "Failed to exchange authorization code for access token" });
-=======
-        console.error(
-            '❌ Error exchanging code for token:',
-            error.response ? error.response.data : error.message
-        );
-        res.status(500).json({ error: 'Failed to exchange authorization code for access token' });
->>>>>>> 309f5a5 (settled up local tailwind css, configured according to our brand guidelines and served ejs engine to express server and configured and devloped header and home section.)
     }
 });
 
