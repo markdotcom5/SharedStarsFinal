@@ -3,19 +3,6 @@ const express = require('express');
 const router = express.Router();
 const { OpenAI } = require("openai");
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
-
-
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-});
-
-console.log("Loaded API Key:", process.env.OPENAI_API_KEY ? "Yes" : "No");
-
 // Test endpoint (this one works fine)
 router.get('/test', (req, res) => {
     res.json({ message: "OpenAI test route is working" });

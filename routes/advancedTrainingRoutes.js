@@ -376,28 +376,6 @@ function handleError(res, error, message = 'An error occurred') {
     timestamp: new Date().toISOString()
   });
 }
-
-/* =====================================================
-   WebSocket Setup for Advanced Routes (if needed)
-===================================================== */
-wsServer.on('connection', (ws, req) => {
-  const userId = req.userId;
-  clients.set(userId, ws);
-
-  ws.send(JSON.stringify({
-    type: 'CONNECTION_ESTABLISHED',
-    timestamp: new Date().toISOString()
-  }));
-
-  ws.on('close', () => {
-    clients.delete(userId);
-  });
-
-  ws.on('error', (error) => {
-    console.error('WebSocket Error:', error);
-  });
-});
-
 /* =====================================================
    Final Combined Export
 ===================================================== */

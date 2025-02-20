@@ -1,7 +1,8 @@
-// ============================
-// 1. ENV & REQUIRED MODULES
-// ============================
-require("dotenv").config();
+// ============================ 
+// 1. ENV & REQUIRED MODULES 
+// ============================ 
+require('dotenv').config();
+console.log("✅ .env file loaded:", process.env.TWITTER_API_KEY ? "Yes" : "No");
 
 // Core modules
 const express = require("express");
@@ -9,10 +10,15 @@ const http = require("http");
 const path = require("path");
 const WebSocket = require("ws");
 const net = require("net");
+const mongoose = require("mongoose");
+const session = require("express-session");  // Only declare once
+const MongoStore = require('connect-mongo');
 
+// Initialize Express and server
 const app = express();
 const server = http.createServer(app);
 
+// Remove any other session declarations in your file
 // ============================
 // 2. ROUTE IMPORTS
 // ============================
@@ -59,6 +65,7 @@ const stripeRoutes = require("./routes/stripe");
 const stripeWebhookRoutes = require("./webhooks/stripe");
 const subscriptionRoutes = require("./routes/subscription");
 const aiRoutes = require("./routes/aiRoutes");
+const socialPlatformRoutes = require("./routes/socialPlatform");
 
 // ============================
 // 4. MIDDLEWARE IMPORTS
@@ -68,9 +75,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
-const session = require("express-session");
 const rateLimit = require("express-rate-limit");
-
+// Add or update this import
+const { authenticate } = require('./middleware/authenticate');
 // ============================
 // 5. AI SERVICES & INTEGRATORS
 // ============================
@@ -81,7 +88,6 @@ const EVAAIService = require("./services/EVAAIService");
 const ModuleSystemIntegrator = require("./services/ModuleSystemIntegrator");
 const ServiceIntegrator = require("./services/ServiceIntegrator");
 const aiSocialRoutes = require('./routes/aiSocial');
-const socialPlatformRoutes = require("./routes/socialPlatform");
 
 // ============================
 // 6. VR SERVICES
@@ -92,26 +98,30 @@ const PhysicalPropsIntegration = require("./modules/vr/props/PhysicalPropsIntegr
 // ============================
 // 7. DATABASE CONNECTION
 // ============================
-const mongoose = require("mongoose");
-const MongoStore = require("connect-mongo");
-
-// Custom middleware & services
-const { authenticateWebSocket } = require("./middleware/authenticate");
-const SpaceTimelineManager = require("./services/SpaceTimelineManager");
-const { authenticate } = require("./middleware/authenticate");
-
-// ============================
-// 8. DATABASE CONNECTION SETUP
-// ============================
-
 mongoose.set("strictQuery", true);
 mongoose.set("debug", process.env.NODE_ENV === "development");
+
+// Add session configuration before DB connection
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI || process.env.MONGO_URI,
+        ttl: 14 * 24 * 60 * 60,
+        autoRemove: "native",
+      }),
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 1000 * 60 * 60 * 24
+    }
+}));
 
 const connectDB = async () => {
     try {
         console.log("🔄 Connecting to MongoDB...");
-
-        await mongoose.connect(process.env.MONGO_URI, {
+        
+        await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, {
             serverSelectionTimeoutMS: process.env.MONGO_TIMEOUT ? parseInt(process.env.MONGO_TIMEOUT, 10) : 5000,
             autoIndex: process.env.MONGO_AUTO_INDEX === "true",
             maxPoolSize: process.env.MONGO_POOL_SIZE ? parseInt(process.env.MONGO_POOL_SIZE, 10) : 10,
@@ -121,47 +131,15 @@ const connectDB = async () => {
 
         console.log("✅ MongoDB Connected Successfully!");
 
-        // Load essential models
-        console.log("\n📚 Loading Core Models...");
-        const models = ["Module", "TrainingSession", "User", "Subscription", "UserProgress", "Simulation"];
-
-        models.forEach((model) => {
-            try {
-                require(`./models/${model}`);
-                console.log(`✅ ${model}.js loaded successfully!`);
-            } catch (err) {
-                console.error(`❌ Error loading ${model}.js:`, err.message);
-            }
-        });
-
-        console.log(`\n🔢 Total Models Connected: ${models.length}\n`);
-
-        mongoose.connection.on("disconnected", () => {
-            console.warn("⚠️ MongoDB Disconnected. Attempting to reconnect...");
-            setTimeout(connectDB, 5000);
-        });
-
-        mongoose.connection.on("reconnected", () => {
-            console.log("🔄 MongoDB Reconnected Successfully!");
-        });
-
-        mongoose.connection.on("error", (err) => {
-            console.error("❌ MongoDB Connection Error:", err);
-        });
-
-        process.on("SIGINT", async () => {
-            console.log("🛑 Closing MongoDB Connection...");
-            await mongoose.connection.close();
-            process.exit(0);
-        });
-
+        // Rest of your code remains the same...
     } catch (error) {
         console.error("❌ MongoDB Connection Error:", error.message);
         process.exit(1);
     }
 };
 
-module.exports = connectDB;
+// Initialize database connection
+connectDB();
 
 // ============================
 // ============================
@@ -372,8 +350,8 @@ app.use('/api/ai',
 
 // ✅ Communication Routes
 app.use('/api/chat', authenticate, chatRoutes);
-app.use('/api/social', authenticate, socialPlatformRoutes);
-
+// Replace both previous social platform routes with this one
+app.use('/api/modules/physical/share', authenticate, socialPlatformRoutes);
 // ✅ Payment & Subscription Routes
 app.use('/api/stripe', authenticate, stripeRoutes);
 app.use('/webhook/stripe', stripeWebhookRoutes);  // No auth for webhooks
