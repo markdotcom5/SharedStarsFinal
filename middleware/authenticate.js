@@ -198,11 +198,20 @@ moduleSchema.methods.generateAIContent = async function (prompt) {
         throw new Error("Failed to generate AI content");
     }
 };
+// ✅ Require Role Middleware (Add This at the Top)
+const requireRole = (role) => {
+    return (req, res, next) => {
+        if (!req.user || req.user.role !== role) {
+            return res.status(403).json({ message: "Access denied: Insufficient permissions" });
+        }
+        next();
+    };
+};
 
-// ✅ Export Middleware and Functions
+// ✅ Export Middleware and Functions (Keep This at the Bottom)
 module.exports = {
-    authenticate,
-    requireRole,
-    authenticateWebSocket,
-    setupWebSocketServer,
+    authenticate,             // Ensure this function exists
+    requireRole,              // Now properly defined
+    authenticateWebSocket,    // Ensure this function exists
+    setupWebSocketServer,     // Ensure this function exists
 };

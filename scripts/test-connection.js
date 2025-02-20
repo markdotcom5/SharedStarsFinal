@@ -2,7 +2,8 @@
 const mongoose = require('mongoose');
 
 // Hard-code the connection string
-const MONGODB_URI = 'mongodb+srv://MarkAdmin:0Bg7fwUuTNgQ2o3L@cluster0.20bhg.mongodb.net/StelTrek_MVP5';
+require("dotenv").config();
+const MONGO_URI = process.env.MONGO_URI;
 
 async function testConnection() {
   try {
