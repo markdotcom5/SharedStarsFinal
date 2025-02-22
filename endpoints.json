@@ -1,5 +1,124 @@
 [
   {
+    "path": "/api/progress/:userId",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/progress/session",
+    "methods": [
+      "POST"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/progress/milestone",
+    "methods": [
+      "POST"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/progress/ai-feedback/:userId",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/progress/:userId/certifications",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/social/announce/join",
+    "methods": [
+      "POST"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/social/announce/certification/:id",
+    "methods": [
+      "POST"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/social/share/video",
+    "methods": [
+      "POST"
+    ],
+    "middlewares": [
+      "authenticate",
+      "multerMiddleware",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/social/auth/google",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/social/test",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/social/auth/google/callback",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/social/share/:platform",
+    "methods": [
+      "POST"
+    ],
+    "middlewares": [
+      "authenticate",
+      "multerMiddleware",
+      "anonymous"
+    ]
+  },
+  {
     "path": "/api/auth/signup",
     "methods": [
       "POST"
@@ -375,66 +494,6 @@
     ]
   },
   {
-    "path": "/api/progress/:userId",
-    "methods": [
-      "GET"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/progress/session",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/progress/milestone",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/progress/ai-feedback/:userId",
-    "methods": [
-      "GET"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/progress/update-score",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/progress/:userId/certifications",
-    "methods": [
-      "GET"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
     "path": "/vr/status",
     "methods": [
       "GET"
@@ -784,7 +843,7 @@
     ]
   },
   {
-    "path": "/api/ai-social/achievement/:id/share",
+    "path": "/api/ai/initialize",
     "methods": [
       "POST"
     ],
@@ -794,9 +853,10 @@
     ]
   },
   {
-    "path": "/api/ai-social/mission/:id/share",
+    "path": "/api/ai/ai-guidance",
     "methods": [
-      "POST"
+      "POST",
+      "GET"
     ],
     "middlewares": [
       "authenticate",
@@ -804,9 +864,27 @@
     ]
   },
   {
-    "path": "/api/ai-social/certification/:id/share",
+    "path": "/api/ai",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "renderAIGuidance"
+    ]
+  },
+  {
+    "path": "/api/ai/launch",
     "methods": [
       "POST"
+    ],
+    "middlewares": [
+      "launchAIGuidedTraining"
+    ]
+  },
+  {
+    "path": "/api/ai/calculate-credits/:userId",
+    "methods": [
+      "GET"
     ],
     "middlewares": [
       "authenticate",
@@ -814,7 +892,7 @@
     ]
   },
   {
-    "path": "/api/ai/training/modules",
+    "path": "/api/ai/achievements/:userId",
     "methods": [
       "GET"
     ],
@@ -904,6 +982,36 @@
     ]
   },
   {
+    "path": "/api/ai/training/modules/list",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/ai/modules/:type",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
+    "path": "/api/ai/modules/ai-guided",
+    "methods": [
+      "GET"
+    ],
+    "middlewares": [
+      "authenticate",
+      "anonymous"
+    ]
+  },
+  {
     "path": "/api/ai/guidance",
     "methods": [
       "GET"
@@ -932,71 +1040,11 @@
     ]
   },
   {
-    "path": "/api/ai/ai-guidance",
-    "methods": [
-      "GET",
-      "POST"
-    ],
-    "middlewares": [
-      "anonymous"
-    ]
-  },
-  {
     "path": "/api/ai/training-content/view/:moduleType/:module",
     "methods": [
       "GET"
     ],
     "middlewares": [
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/ai/modules/physical",
-    "methods": [
-      "GET"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/ai/modules/technical",
-    "methods": [
-      "GET"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/ai/modules/ai-guided",
-    "methods": [
-      "GET"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/ai/training/modules/list",
-    "methods": [
-      "GET"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/ai/training/modules/:moduleType/:moduleId/start",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
       "anonymous"
     ]
   },
@@ -1008,34 +1056,6 @@
     "middlewares": [
       "authenticate",
       "anonymous"
-    ]
-  },
-  {
-    "path": "/api/ai/initialize",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/ai",
-    "methods": [
-      "GET"
-    ],
-    "middlewares": [
-      "renderAIGuidance"
-    ]
-  },
-  {
-    "path": "/api/ai/launch",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "launchAIGuidedTraining"
     ]
   },
   {
@@ -1053,96 +1073,6 @@
       "GET"
     ],
     "middlewares": [
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/social/announce/join",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/social/announce/certification/:id",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/social/announce/mission/:id",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/social/announce/module/:id",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/social/announce/team/:id",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/social/announce/leaderboard/:id",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/social/announce/milestone/:id",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/social/announce/achievement/:id",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
-      "anonymous"
-    ]
-  },
-  {
-    "path": "/api/social/share/:platform/:id",
-    "methods": [
-      "POST"
-    ],
-    "middlewares": [
-      "authenticate",
       "anonymous"
     ]
   },

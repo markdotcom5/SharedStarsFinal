@@ -1,19 +1,30 @@
 require('dotenv').config();
+const fs = require('fs');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-// Use environment variables instead of hardcoding
-const MONGODB_URI = process.env.MONGO_URI;
+const MONGO_URI = process.env.MONGO_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
+const TOKEN_FILE = 'test-user-token.txt';
 
 async function createTestUser() {
   try {
-    console.log('Connecting to MongoDB...');
-    await mongoose.connect(MONGODB_URI);
+    console.log('🔄 Checking if token file exists...');
+    if (fs.existsSync(TOKEN_FILE)) {
+      const token = fs.readFileSync(TOKEN_FILE, 'utf8');
+      console.log('✅ Token already exists. Reusing stored token.\n');
+      console.log('🔑 TOKEN:', token);
+      console.log('\n🖥️ CURL EXAMPLE:\n');
+      console.log(`curl http://localhost:3000/api/modules/eva/safety -H "Authorization: Bearer ${token}"`);
+      return; // Skip database operations since we already have a token
+    }
+
+    console.log('🔄 Connecting to MongoDB...');
+    await mongoose.connect(MONGO_URI);
     console.log('✅ Connected to MongoDB');
 
-    // Load User model - adjust path if needed
+    // Define User model if not already defined
     const User = mongoose.model('User', new mongoose.Schema({
       email: String,
       username: String,
@@ -30,7 +41,7 @@ async function createTestUser() {
     let testUser = await User.findOne({ email: testEmail });
 
     if (!testUser) {
-      // Create test user if it doesn't exist
+      console.log('🆕 Creating new test user...');
       const hashedPassword = await bcrypt.hash('Test123456', 10);
       
       testUser = new User({
@@ -50,7 +61,7 @@ async function createTestUser() {
       console.log('✅ Test user already exists');
     }
 
-    // Generate token
+    // Generate JWT token
     const token = jwt.sign(
       { 
         userId: testUser._id,
@@ -58,23 +69,29 @@ async function createTestUser() {
         role: testUser.role || 'user'
       },
       JWT_SECRET,
-      { expiresIn: '24h' }
+      { expiresIn: '365d' } // 1-year validity
     );
 
-    console.log('\n✅ TEST USER CREDENTIALS');
+    // Save token to a file
+    fs.writeFileSync(TOKEN_FILE, token, 'utf8');
+    console.log('✅ Token generated and stored in', TOKEN_FILE);
+
+    console.log('\n🎫 ✅ TEST USER CREDENTIALS');
     console.log('------------------------');
-    console.log('Email:', testEmail);
-    console.log('Password: Test123456');
-    console.log('User ID:', testUser._id);
-    console.log('\n✅ AUTHENTICATION TOKEN');
+    console.log('📧 Email:', testEmail);
+    console.log('🔑 Password: Test123456');
+    console.log('🆔 User ID:', testUser._id);
+    
+    console.log('\n🔑 ✅ AUTHENTICATION TOKEN');
     console.log('------------------------');
     console.log(token);
-    console.log('\n✅ CURL COMMAND EXAMPLE');
+    
+    console.log('\n🖥️ ✅ CURL COMMAND EXAMPLE');
     console.log('------------------------');
     console.log(`curl http://localhost:3000/api/modules/eva/safety -H "Authorization: Bearer ${token}"`);
 
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('❌ Error:', error.message);
     console.error(error.stack);
   } finally {
     await mongoose.connection.close();
@@ -82,4 +99,5 @@ async function createTestUser() {
   }
 }
 
+// ✅ Run the function
 createTestUser();

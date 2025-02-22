@@ -48,7 +48,92 @@ const moduleSchema = new Schema({
             passingScore: { type: Number, min: 0, max: 100, required: true, default: 70 }
         }
     },
+// Add phase-specific structure
+trainingPhase: {
+    type: Number,
+    required: true,
+    enum: [1, 2, 3, 4, 5],
+    validate: {
+        validator: Number.isInteger,
+        message: '{VALUE} is not a valid phase number'
+    }
+},
+phaseDetails: {
+    name: {
+        type: String,
+        enum: [
+            'Home-Based Training',
+            'AR/VR Simulations',
+            'Team Training',
+            'HQ Training',
+            'Final Certification'
+        ]
+    },
+    location: {
+        type: String,
+        enum: ['remote', 'vr', 'team', 'hq', 'certification'],
+        required: true
+    },
+    deliveryMethod: {
+        type: String,
+        enum: ['self-paced', 'instructor-led', 'ai-guided', 'team-based', 'hybrid'],
+        required: true
+    }
+},
 
+// Enhanced content structure
+content: {
+    theory: [{
+        title: { type: String, required: true },
+        description: String,
+        videoId: { type: Schema.Types.ObjectId, ref: 'Video' },
+        resources: [String],
+        order: { type: Number, default: 0 }
+    }],
+    practice: [{
+        practiceType: {
+            type: String,
+            enum: ['individual', 'group', 'simulation'],
+            required: true
+        },
+        description: String,
+        duration: { type: Number, min: 0 },
+        requirements: [String],
+        difficulty: { 
+            type: String, 
+            enum: ['beginner', 'intermediate', 'advanced', 'expert']
+        }
+    }],
+    assessment: {
+        criteria: [String],
+        passingScore: { type: Number, min: 0, max: 100, required: true, default: 70 }
+    }
+},
+
+// Phase-specific requirements
+requirements: {
+    physical: {
+        endurance: {
+            type: String,
+            required: function() { return this.category === 'physical'; }
+        },
+        strength: String,
+        flexibility: String
+    },
+    technical: {
+        knowledge: [String],
+        skills: [String],
+        tools: [String]
+    },
+    equipment: {
+        required: [String],
+        optional: [String]
+    },
+    prerequisites: [{
+        moduleId: { type: String, ref: 'Module' },
+        minimumScore: { type: Number, min: 0, max: 100 }
+    }]
+},
     // ✅ AI Guidance Enhancements
     aiGuidance: {
         adaptiveDifficulty: Boolean,

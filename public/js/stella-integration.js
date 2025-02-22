@@ -1,3 +1,4 @@
+import { STELLAIntegration } from './stella-integration.js';
 const AISpaceCoach = require('../services/AISpaceCoach');
 const CreditSystem = require('../services/CreditSystem');
 
@@ -136,4 +137,14 @@ function setupWebSocket(wss) {
     });
 }
 
-module.exports = { setupWebSocket };
+class SharedStarsApp {
+    constructor() {
+        this.stella = new STELLAIntegration(AISpaceCoach);
+    }
+
+    async initialize() {
+        await this.stella.initialize();
+    }
+}
+
+module.exports = { setupWebSocket, SharedStarsApp };

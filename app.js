@@ -11,14 +11,14 @@ const path = require("path");
 const WebSocket = require("ws");
 const net = require("net");
 const mongoose = require("mongoose");
-const session = require("express-session");  // Only declare once
+const session = require("express-session");
 const MongoStore = require('connect-mongo');
+const bodyParser = require('body-parser');
 
 // Initialize Express and server
 const app = express();
 const server = http.createServer(app);
 
-// Remove any other session declarations in your file
 // ============================
 // 2. ROUTE IMPORTS
 // ============================
@@ -34,7 +34,7 @@ const vrRoutes = require("./routes/vr");
 const trainingRoutes = require("./routes/training");
 const leaderboardRoutes = require("./routes/leaderboard");
 const countdownRoutes = require("./routes/countdown");
-const progressRoutes = require("./routes/progress");
+const progressRoutes = require("./routes/progress");  // ✅ Moved here (before using)
 const advancedRoutes = require("./routes/advancedTrainingRoutes");
 
 // Simulation & Missions Routes
@@ -76,8 +76,9 @@ const helmet = require("helmet");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
-// Add or update this import
-const { authenticate } = require('./middleware/authenticate');
+const { authenticate } = require('./middleware/authenticate'); // ✅ Added properly
+const academyRoutes = require('./routes/academy');
+
 // ============================
 // 5. AI SERVICES & INTEGRATORS
 // ============================
@@ -96,6 +97,33 @@ const ImmersiveScenarios = require("./modules/vr/scenarios/ImmersiveScenarios");
 const PhysicalPropsIntegration = require("./modules/vr/props/PhysicalPropsIntegration");
 
 // ============================
+// 7. MIDDLEWARE SETUP (IMPORTANT)
+// ============================
+
+// ✅ Ensure body parsing happens before defining routes
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// ✅ Ensure express-session is set up
+app.use(session({
+    secret: process.env.SESSION_SECRET || "default_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        collectionName: "sessions"
+    }),
+    cookie: {
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    }
+}));
+
+// ✅ Register routes AFTER middleware
+app.use('/api/progress', progressRoutes);
+
+
 // 7. DATABASE CONNECTION
 // ============================
 mongoose.set("strictQuery", true);
@@ -196,6 +224,7 @@ const initWebSocket = async () => {
         console.warn("⚠️ Skipping /api/mission-control setup: WebSocket server is unavailable.");
     }
 })();
+app.use('/api/social', authenticate, socialPlatformRoutes);
 
 // ============================
 // 4. MIDDLEWARE SETUP
@@ -299,6 +328,8 @@ app.use('/api/training', authenticate, trainingRoutes);
 app.use('/api/leaderboard', authenticate, leaderboardRoutes);
 app.use('/api/countdown', authenticate, countdownRoutes);
 app.use('/api/progress', authenticate, progressRoutes);
+app.use('/', academyRoutes);
+
 
 // ✅ Module Configuration
 const modules = {
@@ -316,15 +347,15 @@ if (vrRoutes && typeof vrRoutes === "function") {
 
 
 // ✅ Initialize and Mount Module Routes with Authentication
-Object.entries(modules).forEach(([name, module]) => {
-    if (module?.router) {
-        app.use(`/api/modules/${name}`, authenticate, module.router);
-    } else if (typeof module === 'function') {
-        app.use(`/api/modules/${name}`, authenticate, module);
-    } else {
-        console.warn(`⚠️ Warning: ${name} module is not a valid router or middleware`);
-    }
-});
+Object.entries(modules).forEach(([name, module]) => {     
+    if (module?.router) {         
+        app.use(`/api/modules/${name}`, authenticate, module.router);     
+    } else if (typeof module === 'function') {         
+        app.use(`/api/modules/${name}`, authenticate, module);     
+    } else {         
+        console.warn(`⚠️ Warning: ${name} module is not a valid router or middleware`);     
+    } 
+}); 
 
 // ✅ Advanced Training & Simulation Routes
 if (typeof advancedRoutes?.upgradeConnection === 'function') {
@@ -334,9 +365,10 @@ app.use('/api/advanced', authenticate, advancedRoutes.router || advancedRoutes);
 app.use('/api/missions', authenticate, missionRoutes);
 app.use('/api/scenarios', authenticate, scenarioRoutes);
 app.use('/api/teamRoles', authenticate, teamRoleRoutes);
-app.use('/api/ai-social', aiSocialRoutes);
+// Public auth routes (NO authentication)
 app.use("/vr", vrRoutes);
-
+// Mount routes in this order
+app.use('/api/social/auth', require('./routes/googleAuth')); // Auth routes first, WITHOUT authenticate middleware
 // ✅ AI Service Routes with Rate Limiting
 app.use('/api/ai',
     rateLimit({
@@ -350,8 +382,6 @@ app.use('/api/ai',
 
 // ✅ Communication Routes
 app.use('/api/chat', authenticate, chatRoutes);
-// Replace both previous social platform routes with this one
-app.use('/api/modules/physical/share', authenticate, socialPlatformRoutes);
 // ✅ Payment & Subscription Routes
 app.use('/api/stripe', authenticate, stripeRoutes);
 app.use('/webhook/stripe', stripeWebhookRoutes);  // No auth for webhooks
@@ -482,11 +512,13 @@ app.use((err, req, res, next) => {
 
 // ============================
 // 7. START SERVER & CONNECT DB
-// ============================
+// ... all your other code ...
+
+// Start server
 connectDB()
     .then(initializeAllModules)
     .then(() => {
-        if (!server.listening) {  // ✅ Prevent multiple calls to `server.listen`
+        if (!server.listening) {
             const PORT = process.env.PORT || 3000;
             server.listen(PORT, () => {
                 console.log(`🚀 Server running on port ${PORT}`);
@@ -502,19 +534,10 @@ connectDB()
         process.exit(1);
     });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-    console.log('🛑 SIGTERM received. Shutting down gracefully...');
-    server.close(() => {
-        mongoose.connection.close(false, () => {
-            console.log('💤 Server and MongoDB connection closed.');
-            process.exit(0);
-        });
-    });
-});
+// Print available endpoints
 const listEndpoints = require("express-list-endpoints");
-
 console.log("🚀 Available API Endpoints:");
 console.log(listEndpoints(app));
 
+// Final export
 module.exports = app;

@@ -164,15 +164,19 @@ userSchema.index({ 'leaderboard.rank': 1 });
 // Password hashing middleware
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
+    console.log("Before Hashing:", this.password); // Log before hashing
     try {
       const salt = await bcrypt.genSalt(10);
       this.password = await bcrypt.hash(this.password, salt);
+      console.log("After Hashing:", this.password); // Log after hashing
     } catch (err) {
       return next(err);
     }
   }
   next();
 });
+
+
 
 // Enhanced methods
 userSchema.methods = {

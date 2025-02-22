@@ -1,51 +1,138 @@
-<!-- views/partials/ai-assistant.ejs -->
-<div class="mt-8 cosmic-card bg-blue-900/30 backdrop-blur-md rounded-xl p-8 border border-blue-500/20">
+<!-- views/partials/ai-coach.ejs -->
+<div class="cosmic-card bg-blue-900/30 backdrop-blur-md rounded-xl p-8 border border-blue-500/20">
+    <!-- AI Learning Status -->
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-white">AI Mission Assistant</h2>
-        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Online</span>
-    </div>
-
-    <!-- AI Chat Interface -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Main Chat -->
-        <div class="md:col-span-2 bg-gray-800/50 rounded-lg p-4">
-            <div class="h-96 overflow-y-auto space-y-4 mb-4" id="chatLog">
-                <!-- Chat messages will be dynamically inserted here -->
-                <div class="flex items-start space-x-3">
-                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                        <span class="text-blue-400">AI</span>
-                    </div>
-                    <div class="bg-blue-900/30 rounded-lg p-3 max-w-[80%]">
-                        <p>Welcome <%= user.username %>. How can I assist with your mission today?</p>
-                    </div>
+        <h2 class="text-2xl font-bold text-white">STELLA Training Coach</h2>
+        <div class="flex items-center gap-3">
+            <div class="ai-learning-status">
+                <!-- BayesianTracker Knowledge State -->
+                <div id="knowledge-confidence" class="text-sm">
+                    Learning Confidence: <span id="confidence-level">Analyzing...</span>
+                </div>
+                <!-- Reinforcement Learning State -->
+                <div id="learning-adaptation" class="text-sm">
+                    Adaptation Level: <span id="adaptation-level">Calibrating...</span>
                 </div>
             </div>
-            <div class="flex space-x-2">
-                <input type="text" 
-                       id="aiChatInput"
-                       class="flex-1 bg-gray-700/50 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                       placeholder="Ask your AI assistant...">
-                <button class="btn btn-primary" onclick="sendAIMessage()">Send</button>
+            <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm">AI Active</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- AI Space Coach Feedback -->
+        <div class="md:col-span-2 bg-gray-800/50 rounded-lg p-4">
+            <!-- Real-time Form Analysis -->
+            <div id="form-analysis" class="mb-4">
+                <h3 class="text-blue-400">Real-time Analysis</h3>
+                <div id="ai-feedback" class="space-y-2">
+                    <!-- AISpaceCoach real-time feedback here -->
+                </div>
+            </div>
+
+            <!-- Learning Progress -->
+            <div id="learning-progress" class="mb-4">
+                <h3 class="text-blue-400">Learning Adaptation</h3>
+                <div class="space-y-2">
+                    <!-- Current learning state -->
+                    <div id="current-learning-state"></div>
+                    <!-- Adaptation recommendations -->
+                    <div id="adaptation-recommendations"></div>
+                </div>
+            </div>
+
+            <!-- Performance Optimizations -->
+            <div id="performance-optimizations">
+                <h3 class="text-blue-400">Performance Insights</h3>
+                <div id="optimization-suggestions"></div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
+        <!-- AI Learning Metrics -->
         <div class="bg-gray-800/50 rounded-lg p-4">
-            <h3 class="text-blue-400 mb-4">Quick Commands</h3>
-            <div class="space-y-2">
-                <% const quickCommands = [
-                    'Mission Status Report',
-                    'System Diagnostics',
-                    'Emergency Protocols',
-                    'Navigation Assist'
-                ] %>
-                <% quickCommands.forEach(command => { %>
-                    <button onclick="sendQuickCommand('<%= command %>')"
-                            class="w-full text-left px-4 py-2 rounded bg-blue-900/30 hover:bg-blue-800/30">
-                        <%= command %>
-                    </button>
-                <% }) %>
+            <h3 class="text-blue-400 mb-4">AI Learning Metrics</h3>
+            <!-- BayesianTracker Metrics -->
+            <div id="bayesian-metrics" class="mb-4">
+                <!-- Knowledge state visualization -->
+            </div>
+            <!-- Reinforcement Learning Progress -->
+            <div id="rl-progress" class="mb-4">
+                <!-- Learning progress visualization -->
             </div>
         </div>
     </div>
 </div>
+
+<script type="module">
+    import AISpaceCoach from '/js/services/AISpaceCoach.js';
+    import { BayesianTracker } from '/js/services/BayesianTracker.js';
+    
+    class AICoachInterface {
+        constructor() {
+            this.spaceCoach = new AISpaceCoach();
+            this.bayesianTracker = new BayesianTracker();
+            this.learningState = {
+                confidence: 0,
+                adaptationLevel: 0,
+                recommendations: []
+            };
+        }
+
+        async initialize() {
+            // Start AI learning systems
+            await this.spaceCoach.initialize();
+            
+            // Set up real-time updates
+            this.setupRealTimeUpdates();
+            
+            // Initialize learning tracking
+            this.trackLearningProgress();
+        }
+
+        setupRealTimeUpdates() {
+            // Handle real-time form analysis
+            this.spaceCoach.on('formAnalysis', (analysis) => {
+                this.updateFormFeedback(analysis);
+            });
+
+            // Handle learning state updates
+            this.bayesianTracker.on('knowledgeUpdate', (state) => {
+                this.updateLearningState(state);
+            });
+        }
+
+        trackLearningProgress() {
+            setInterval(async () => {
+                // Update learning metrics
+                const progress = await this.bayesianTracker.getProgress();
+                this.updateLearningMetrics(progress);
+                
+                // Get new recommendations
+                const recommendations = await this.spaceCoach.getRecommendations();
+                this.updateRecommendations(recommendations);
+            }, 5000);
+        }
+
+        updateFormFeedback(analysis) {
+            const feedbackEl = document.getElementById('ai-feedback');
+            // Update real-time feedback...
+        }
+
+        updateLearningState(state) {
+            const stateEl = document.getElementById('current-learning-state');
+            // Update learning state display...
+        }
+
+        updateLearningMetrics(progress) {
+            // Update Bayesian and RL metrics displays...
+        }
+
+        updateRecommendations(recommendations) {
+            const suggestionsEl = document.getElementById('optimization-suggestions');
+            // Update recommendations display...
+        }
+    }
+
+    // Initialize the interface
+    const aiCoachInterface = new AICoachInterface();
+    aiCoachInterface.initialize();
+</script>

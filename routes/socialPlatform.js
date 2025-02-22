@@ -1,10 +1,20 @@
-// routes/socialPlatform.js
 const express = require("express");
 const router = express.Router();
 const { authenticate } = require("../middleware/authenticate");
-const SocialPlatformIntegrator = require("../services/SocialPlatformIntegrator");
+const socialPlatform = require("../services/SocialPlatformIntegrator");
 const { google } = require("googleapis");
-require("dotenv").config(); // Ensure environment variables are loaded
+const fs = require('fs');
+require("dotenv").config();
+
+// Request logging middleware
+router.use((req, res, next) => {
+    console.log('🔍 Social Platform Route Hit:', {
+        method: req.method,
+        path: req.path,
+        headers: req.headers
+    });
+    next();
+});
 
 // Load OAuth Tokens Securely
 const OAUTH_TOKENS = {
@@ -24,17 +34,23 @@ const OAUTH_TOKENS = {
     }
 };
 
-// ✅ Google OAuth Client Setup
+// Google OAuth Client Setup
 const oauth2Client = new google.auth.OAuth2(
     OAUTH_TOKENS.google.client_id,
     OAUTH_TOKENS.google.client_secret,
     OAUTH_TOKENS.google.redirect_uri
 );
 
-// ✅ Refresh Google OAuth Token
+// Set credentials if refresh token exists
+if (OAUTH_TOKENS.google.refresh_token) {
+    oauth2Client.setCredentials({
+        refresh_token: OAUTH_TOKENS.google.refresh_token
+    });
+}
+
+// Refresh Google OAuth Token
 async function refreshGoogleToken() {
     try {
-        oauth2Client.setCredentials({ refresh_token: OAUTH_TOKENS.google.refresh_token });
         const { credentials } = await oauth2Client.refreshAccessToken();
         console.log("✅ Google Token Refreshed:", credentials.access_token);
         return credentials.access_token;
@@ -44,10 +60,10 @@ async function refreshGoogleToken() {
     }
 }
 
-// ✅ Standard Social Announcements
+// Standard Social Announcements helper
 const shareEvent = async (req, res, eventType) => {
     try {
-        const result = await SocialPlatformIntegrator.shareEvent(eventType, {
+        const result = await socialPlatform.shareEvent(eventType, {
             user: req.user,
             details: { ...req.body, id: req.params.id }
         });
@@ -58,29 +74,82 @@ const shareEvent = async (req, res, eventType) => {
     }
 };
 
-// ✅ Traditional Social Sharing Routes
+// Traditional announcement routes
 router.post("/announce/join", authenticate, (req, res) => shareEvent(req, res, "newJoin"));
 router.post("/announce/certification/:id", authenticate, (req, res) => shareEvent(req, res, "certification"));
-router.post("/announce/mission/:id", authenticate, (req, res) => shareEvent(req, res, "missionComplete"));
-router.post("/announce/module/:id", authenticate, (req, res) => shareEvent(req, res, "moduleComplete"));
-router.post("/announce/team/:id", authenticate, (req, res) => shareEvent(req, res, "teamFormation"));
-router.post("/announce/leaderboard/:id", authenticate, (req, res) => shareEvent(req, res, "leaderboardUpdate"));
-router.post("/announce/milestone/:id", authenticate, (req, res) => shareEvent(req, res, "milestone"));
-router.post("/announce/achievement/:id", authenticate, (req, res) => shareEvent(req, res, "achievement"));
 
-// ✅ Standard Sharing to Social Media Platforms
-const socialPlatforms = ["facebook", "xcom", "linkedin", "tiktok", "telegram", "instagram", "youtube"];
+// ✅ FIXED: Video Upload Route - No duplicates, correct middleware
+router.post("/share/video", 
+    authenticate,
+    socialPlatform.getUploadMiddleware(),
+    async (req, res) => {
+        console.log("🚀 Incoming Video Upload Request");
+        console.log("🔍 Headers:", req.headers);
+        console.log("🔍 Body:", req.body);
+        console.log("🔍 File:", req.file);
+
+        try {
+            const { platform } = req.body;
+            
+            if (!req.file) {
+                console.log("❌ No video file uploaded");
+                return res.status(400).json({ error: "No video file uploaded" });
+            }
+            
+            const filePath = req.file.path;
+            console.log(`🔄 Uploading video to ${platform}...`, {
+                filePath,
+                title: req.body.title,
+                platform
+            });
+
+            if (!["youtube", "tiktok"].includes(platform)) {
+                console.log("❌ Invalid platform");
+                return res.status(400).json({ error: "Invalid platform. Choose YouTube or TikTok." });
+            }
+
+            const result = await socialPlatform.platforms[platform].share({
+                title: req.body.title || "SharedStars Video",
+                description: req.body.description || "Uploaded via API",
+                media: { path: filePath },
+                private: req.body.private === 'true'
+            });
+
+            console.log("✅ Video Uploaded Successfully:", result);
+            res.json({ success: true, videoURL: result.videoURL, videoId: result.videoId });
+
+        } catch (error) {
+            console.error("❌ Error Uploading Video:", error);
+            res.status(500).json({ error: "Failed to upload video", message: error.message });
+        }
+    }
+);
+
+
+// Google OAuth routes
 router.get("/auth/google", (req, res) => {
     const authUrl = oauth2Client.generateAuthUrl({
         access_type: "offline",
-        scope: ["https://www.googleapis.com/auth/youtube.upload"], // YouTube Upload Scope
+        scope: ["https://www.googleapis.com/auth/youtube.upload"],
+        prompt: "consent" // Forces refresh token every time
     });
     res.redirect(authUrl);
 });
-// Add at the top of your socialPlatform.js
+
+// Test Route
 router.get('/test', (req, res) => {
     console.log("Social platform route hit!");
     res.json({ message: "Social platform routes working" });
+});
+// In your /auth/google route
+router.get("/auth/google", (req, res) => {
+    const authUrl = oauth2Client.generateAuthUrl({
+        access_type: "offline",
+        scope: ["https://www.googleapis.com/auth/youtube.upload"],
+        prompt: "consent"
+    });
+    console.log("🔍 Generated Auth URL:", authUrl); // Add this line
+    res.redirect(authUrl);
 });
 // Google OAuth Callback Route
 router.get("/auth/google/callback", async (req, res) => {
@@ -89,157 +158,23 @@ router.get("/auth/google/callback", async (req, res) => {
         oauth2Client.setCredentials(tokens);
         console.log("✅ Google OAuth Tokens:", tokens);
 
-        // Store the refresh token for future use
-        res.send("Google authentication successful! You can now upload videos.");
+        // Display the refresh token so it can be saved
+        res.send(`
+            <h1>Authentication Successful!</h1>
+            <p>Add this refresh token to your .env file:</p>
+            <pre>GOOGLE_REFRESH_TOKEN=${tokens.refresh_token}</pre>
+            <p>Then restart your server.</p>
+        `);
     } catch (error) {
         console.error("❌ Google OAuth Failed:", error);
-        res.status(500).send("Authentication failed.");
+        res.status(500).send("Authentication failed: " + error.message);
     }
 });
 
-router.post("/share/video", authenticate, SocialPlatformIntegrator.mediaProcessor.single('media'), async (req, res) => {
-    try {
-        const { platform } = req.body;
-        const filePath = req.file.path;
-
-        if (!["youtube", "tiktok"].includes(platform)) {
-            return res.status(400).json({ error: "Invalid platform. Choose YouTube or TikTok." });
-        }
-
-        console.log(`🔄 Uploading video to ${platform}...`);
-
-        // Upload Video
-        const result = await SocialPlatformIntegrator.uploadVideo(platform, {
-            user: req.user,
-            filePath,
-            title: req.body.title || "SharedStars Video",
-            description: req.body.description || "Uploaded via API"
-        });
-
-        console.log("✅ Video Uploaded:", result);
-
-        // Cross-post the video link
-        const shareResults = [];
-        const socialPlatforms = req.body.platforms || [];
-
-        for (const sharePlatform of socialPlatforms) {
-            const shareResult = await SocialPlatformIntegrator.shareEvent(sharePlatform, {
-                user: req.user,
-                text: `Check out my new video: ${result.videoURL}`,
-                media: null
-            });
-            shareResults.push({ platform: sharePlatform, result: shareResult });
-        }
-
-        res.json({ success: true, videoURL: result.videoURL, shared: shareResults });
-    } catch (error) {
-        console.error("❌ Error Uploading & Sharing Video:", error);
-        res.status(500).json({ error: "Failed to upload & share video" });
-    }
-});
-
-
-router.post("/share/:platform/:id", authenticate, async (req, res) => {
-    const { platform, id } = req.params;
-    if (!socialPlatforms.includes(platform)) {
-        return res.status(400).json({ error: "Invalid social media platform" });
-    }
-    try {
-        const result = await SocialPlatformIntegrator.shareEvent(platform, {
-            user: req.user,
-            details: { ...req.body, id }
-        });
-        res.json(result);
-    } catch (error) {
-        console.error(`❌ Error sharing on ${platform}:`, error);
-        res.status(500).json({ error: `Failed to share on ${platform}` });
-    }
-});
-router.post("/share/youtube", authenticate, async (req, res) => {
-    try {
-        // Refresh Google Token
-        const accessToken = await refreshGoogleToken();
-        if (!accessToken) {
-            return res.status(500).json({ error: "Google token refresh failed" });
-        }
-
-        // Upload Video to YouTube
-        const youtube = google.youtube({ version: "v3", auth: oauth2Client });
-        const response = await youtube.videos.insert({
-            part: "snippet,status",
-            requestBody: {
-                snippet: {
-                    title: req.body.title || "SharedStars Video",
-                    description: req.body.description || "Uploaded via API",
-                },
-                status: { privacyStatus: "public" }
-            },
-            media: { body: require("fs").createReadStream(req.file.path) }
-        });
-
-        console.log("✅ Video Uploaded:", response.data);
-        
-        // Get YouTube Video URL
-        const youtubeURL = `https://www.youtube.com/watch?v=${response.data.id}`;
-
-        // Share on Other Platforms
-        const platforms = req.body.platforms || []; // List of platforms to share on
-        const shareResults = [];
-
-        for (const platform of platforms) {
-            const result = await SocialPlatformIntegrator.shareEvent(platform, {
-                user: req.user,
-                text: `Check out my new video on YouTube: ${youtubeURL}`,
-                media: null // No need to attach media, just link
-            });
-            shareResults.push({ platform, result });
-        }
-
-        res.json({ youtubeURL, shared: shareResults });
-    } catch (error) {
-        console.error("❌ Error Uploading & Sharing:", error);
-        res.status(500).json({ error: "Failed to upload & share video" });
-    }
-});
-router.post("/share/xcom", authenticate, async (req, res) => {
-    try {
-        const text = req.body.text;
-        if (!text) {
-            return res.status(400).json({ error: "Tweet content is required." });
-        }
-
-        // Post on X.com
-        const tweetResult = await SocialPlatformIntegrator.shareEvent("xcom", {
-            user: req.user,
-            text
-        });
-
-        console.log("✅ Tweet Posted:", tweetResult);
-        
-        // Share Tweet on Other Platforms
-        const platforms = req.body.platforms || []; // List of platforms to share on
-        const shareResults = [];
-
-        for (const platform of platforms) {
-            const result = await SocialPlatformIntegrator.shareEvent(platform, {
-                user: req.user,
-                text: `I just tweeted: "${text}"! Check it out!`,
-                media: null
-            });
-            shareResults.push({ platform, result });
-        }
-
-        res.json({ tweetResult, shared: shareResults });
-    } catch (error) {
-        console.error("❌ Error Posting Tweet & Sharing:", error);
-        res.status(500).json({ error: "Failed to post & share tweet." });
-    }
-});
-
-// ✅ Secure Media Sharing with OAuth Token Handling
+// ✅ FIXED: Platform-specific share route with proper middleware
 router.post("/share/:platform", 
     authenticate,
-    SocialPlatformIntegrator.mediaProcessor.single('media'),
+    socialPlatform.getUploadMiddleware(), // Fixed: Only call middleware once
     async (req, res) => {
         try {
             let token = null;
@@ -250,7 +185,7 @@ router.post("/share/:platform",
                 }
             }
 
-            const result = await SocialPlatformIntegrator.shareEvent(
+            const result = await socialPlatform.shareEvent(
                 req.params.platform, 
                 {
                     text: req.body.text,
@@ -261,12 +196,12 @@ router.post("/share/:platform",
             );
             res.json(result);
         } catch (error) {
-            if (error instanceof RateLimitError) {
+            if (error.name === 'RateLimitError') {
                 res.status(429).json({
                     error: error.message,
                     resetTime: error.resetTime
                 });
-            } else if (error instanceof MediaProcessingError) {
+            } else if (error.name === 'MediaProcessingError') {
                 res.status(400).json({
                     error: error.message
                 });
@@ -277,7 +212,6 @@ router.post("/share/:platform",
                 });
             }
         }
-    }
-);
+    });
 
 module.exports = router;

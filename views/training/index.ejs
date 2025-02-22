@@ -1,0 +1,108 @@
+<%- include('partials/head', { title: title }) %>
+<%- include('partials/header') %>
+
+<section class="training-module py-8 bg-gray-900 text-white">
+  <div class="container mx-auto px-4">
+    <!-- AI Coach Interface -->
+    <div id="ai-coach" class="bg-blue-900/30 p-4 rounded-lg mb-6">
+      <div class="flex items-center gap-4">
+        <div class="ai-status-indicator"></div>
+        <h3 class="text-blue-400 font-bold">STELLA AI Coach</h3>
+      </div>
+      <div id="ai-feedback" class="mt-2 space-y-2">
+        <!-- AI messages will appear here -->
+      </div>
+    </div>
+
+    <!-- Module Header -->
+    <div class="flex justify-between items-start mb-8">
+      <div>
+        <h1 class="text-4xl font-bold mb-4"><%= content.title %></h1>
+        <p class="mb-6"><%= content.description %></p>
+      </div>
+      
+      <!-- Real-time Metrics Dashboard -->
+      <div class="bg-gray-800 p-4 rounded-lg">
+        <h3 class="text-green-400 font-bold mb-4">Performance Metrics</h3>
+        <div class="grid grid-cols-2 gap-4" id="metrics-display">
+          <!-- Metrics populated by TrainingHandler -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Biometric Monitoring -->
+    <div class="bg-gray-800 p-4 rounded-lg mb-6">
+      <h3 class="text-green-400 font-bold mb-4">Biometric Data</h3>
+      <div class="grid grid-cols-4 gap-4" id="biometric-displays">
+        <!-- Biometric data populated by ModuleInterface -->
+      </div>
+    </div>
+    
+    <!-- Training Objectives with AI Tracking -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">Training Objectives:</h2>
+      <div class="space-y-4">
+        <% content.objectives.forEach(function(obj, index) { %>
+          <div class="objective-item bg-gray-800 p-4 rounded-lg" data-objective-id="<%= index %>">
+            <div class="flex items-center gap-4">
+              <div class="objective-status"></div>
+              <p><%= obj %></p>
+            </div>
+            <!-- AI feedback specific to this objective -->
+            <div class="ai-objective-feedback mt-2 hidden"></div>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+    
+    <!-- Interactive Training Area -->
+    <div id="module-interactive" class="bg-gray-800 p-6 rounded-lg">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold">Active Training Session</h3>
+        <div id="session-timer" class="text-blue-400"></div>
+      </div>
+      
+      <!-- Training Content -->
+      <div id="training-content" class="mb-6">
+        <!-- Dynamic content loaded by ModuleInterface -->
+      </div>
+
+      <!-- Real-time AI Guidance -->
+      <div id="real-time-guidance" class="bg-blue-900/30 p-4 rounded-lg mb-4 hidden">
+        <!-- Real-time AI feedback during exercises -->
+      </div>
+
+      <!-- Performance Feedback -->
+      <div id="performance-feedback" class="grid grid-cols-2 gap-4">
+        <!-- Performance metrics updated by ProgressAssessment -->
+      </div>
+    </div>
+
+    <!-- Achievement Tracking -->
+    <div id="achievements" class="mt-8">
+      <h3 class="text-2xl font-semibold mb-4">Session Achievements</h3>
+      <div class="grid grid-cols-3 gap-4" id="achievement-display">
+        <!-- Achievements populated by ProgressAssessment -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
+
+<!-- Core Training Scripts -->
+<script src="/js/modules/training/AIHandler.js" type="module"></script>
+<script src="/js/modules/training/TrainingHandler.js" type="module"></script>
+<script src="/js/modules/training/moduleInterface.js" type="module"></script>
+<script src="/js/modules/training/progressAssessment.js" type="module"></script>
+
+<script type="module">
+  // Initialize training systems
+  const aiHandler = new AIHandler();
+  const trainingHandler = new TrainingHandler(userId);
+  const moduleInterface = new ModuleInterface('<%= content.moduleId %>');
+  const progressAssessment = new ProgressAssessment(fsdTraining, aiHandler);
+
+  // Start training session
+  await moduleInterface.initialize();
+</script>
