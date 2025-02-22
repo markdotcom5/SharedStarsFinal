@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
@@ -69,6 +69,7 @@ router.post('/signup', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
 // =======================
 // Login Route
 router.post('/login', async (req, res) => {
@@ -88,7 +89,9 @@ router.post('/login', async (req, res) => {
         console.log('🔑 Stored Hashed Password:', user.password);
         console.log('🔑 Entered Password:', req.body.password);
 
-        const isMatch = await bcrypt.compare(String(req.body.password), String(user.password));
+        console.log(typeof req.body.password, typeof user.password);
+
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
         console.log('🔍 Password Match Result:', isMatch);
 
         if (!isMatch) {
