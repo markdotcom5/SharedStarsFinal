@@ -68,5 +68,3 @@ document.addEventListener("DOMContentLoaded", () => {
         moduleModal.classList.add("hidden");
     });
 });
-
-

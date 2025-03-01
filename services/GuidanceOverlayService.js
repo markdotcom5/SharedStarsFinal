@@ -1,5 +1,4 @@
-// services/GuidanceOverlayService.js
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const User = require('../models/User');
 
 class GuidanceOverlayService extends EventEmitter {

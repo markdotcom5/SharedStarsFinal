@@ -1,10 +1,19 @@
-const { OpenAI } = require("openai");
-const User = require("../models/User");
-const UserProgress = require("../models/UserProgress");
+const User = require("../models/User.js");
+const UserProgress = require("../models/UserProgress.js");
 
+
+require('dotenv').config(); // ✅ Ensure env is loaded
+
+const OpenAI = require("openai");
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+    apiKey: process.env.OPENAI_API_KEY || "MISSING_KEY"
 });
+
+if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "MISSING_KEY") {
+    console.error("❌ ERROR: Missing OpenAI API Key!");
+    process.exit(1);  // ✅ Stop the server if key is missing
+}
+
 
 // ✅ Move AI Training Models Outside AIAssistant
 class ReinforcementLearning {

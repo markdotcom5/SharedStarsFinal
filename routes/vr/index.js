@@ -1,6 +1,4 @@
-// routes/vr/index.js
 const express = require('express');
-const router = express.Router();
 const { authenticate } = require('../../middleware/authenticate');
 const VRSession = require('../../models/vr/VRSession');
 const PhysicalPropsIntegration = require('../../modules/vr/props/PhysicalPropsIntegration');

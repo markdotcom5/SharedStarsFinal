@@ -1,15 +1,17 @@
-// services/UnifiedEVAAIService.js
 const OpenAI = require('openai');
-const EventEmitter = require('events');
-const aiLearningInstance = require('./AILearningSystem');
-const ProgressTracking = require('../services/ProgressTracker');  // ✅ Correct path
+const { EventEmitter } = require('events');
+const TrainingLearningSystem = require('./TrainingLearningSystem');
 
 class UnifiedEVAAIService extends EventEmitter {
     constructor() {
         super();
         this.openai = new OpenAI(process.env.OPENAI_API_KEY);
-        this.aiLearning = aiLearningInstance;
-        this.progressTracker = ProgressTracking;  // ✅ Correct reference
+        
+        // Get components from TrainingLearningSystem
+        this.aiLearning = TrainingLearningSystem.AILearning || {};
+        this.progressTracker = TrainingLearningSystem.ProgressTracker || {};
+        this.learningSystem = TrainingLearningSystem.LearningSystem || this.aiLearning || {};
+        
         this.initialized = false;
     }
 
@@ -17,11 +19,15 @@ class UnifiedEVAAIService extends EventEmitter {
         try {
             console.log("🚀 Initializing Unified EVA AI Service");
             
-            // Initialize learning system
-            await this.learningSystem.initialize();
+            // Initialize learning system if available
+            if (typeof this.learningSystem.initialize === 'function') {
+                await this.learningSystem.initialize();
+            }
             
-            // Initialize progress tracking
-            await this.progressTracker.initialize();
+            // Initialize progress tracking if available
+            if (typeof this.progressTracker.initialize === 'function') {
+                await this.progressTracker.initialize();
+            }
             
             this.initialized = true;
             console.log("✅ Unified EVA AI Service Initialized");
@@ -50,8 +56,10 @@ class UnifiedEVAAIService extends EventEmitter {
                 max_tokens: 1000
             });
 
-            // Track AI interaction
-            await this.trackAIInteraction(procedure, userLevel, 'guidance');
+            // Track AI interaction if method available
+            if (typeof this.trackAIInteraction === 'function') {
+                await this.trackAIInteraction(procedure, userLevel, 'guidance');
+            }
 
             return response.choices[0].message.content;
         } catch (error) {
@@ -63,6 +71,12 @@ class UnifiedEVAAIService extends EventEmitter {
     // Learning System Integration
     async updateLearningModel(userId, sessionData) {
         try {
+            // Check if learning system is available
+            if (!this.learningSystem || typeof this.learningSystem.getState !== 'function') {
+                console.warn('Learning system not available or properly initialized');
+                return null;
+            }
+            
             // Update reinforcement learning model
             const state = await this.learningSystem.getState(userId);
             const action = await this.learningSystem.getOptimalAction(state);
@@ -85,11 +99,16 @@ class UnifiedEVAAIService extends EventEmitter {
         try {
             const metrics = {
                 performance: this.calculatePerformanceMetrics(sessionData),
-                learning: await this.learningSystem.getMetrics(userId),
-                aiInteractions: await this.getAIInteractionMetrics(userId)
+                learning: typeof this.learningSystem.getMetrics === 'function' ? 
+                          await this.learningSystem.getMetrics(userId) : {},
+                aiInteractions: typeof this.getAIInteractionMetrics === 'function' ?
+                               await this.getAIInteractionMetrics(userId) : {}
             };
 
-            await this.progressTracker.updateMetrics(userId, metrics);
+            if (typeof this.progressTracker.updateMetrics === 'function') {
+                await this.progressTracker.updateMetrics(userId, metrics);
+            }
+            
             return metrics;
         } catch (error) {
             console.error('Error tracking metrics:', error);
@@ -118,12 +137,14 @@ class UnifiedEVAAIService extends EventEmitter {
 
     async trackAIInteraction(type, level, interactionType) {
         try {
-            await this.progressTracker.logAIInteraction({
-                type,
-                level,
-                interactionType,
-                timestamp: new Date()
-            });
+            if (typeof this.progressTracker.logAIInteraction === 'function') {
+                await this.progressTracker.logAIInteraction({
+                    type,
+                    level,
+                    interactionType,
+                    timestamp: new Date()
+                });
+            }
         } catch (error) {
             console.error('Error tracking AI interaction:', error);
         }
@@ -162,12 +183,20 @@ class UnifiedEVAAIService extends EventEmitter {
     }
 
     async getAIInteractionMetrics(userId) {
-        return await this.progressTracker.getAIInteractionStats(userId);
+        if (typeof this.progressTracker.getAIInteractionStats === 'function') {
+            return await this.progressTracker.getAIInteractionStats(userId);
+        }
+        return {};
     }
 
     // Real-time Feedback
     async provideFeedback(userId, currentAction) {
         try {
+            if (!this.learningSystem || typeof this.learningSystem.getState !== 'function') {
+                console.warn('Learning system not available or properly initialized');
+                return "Feedback system unavailable";
+            }
+            
             const learningState = await this.learningSystem.getState(userId);
             const feedback = await this.generateActionFeedback(currentAction, learningState);
             

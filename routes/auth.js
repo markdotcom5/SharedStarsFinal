@@ -68,53 +68,41 @@ router.post("/signup", async (req, res) => {
     }
 });
 // =======================
-// Login Route
-router.post("/login", async (req, res) => {
-    try {
-        console.log("🔍 Received login request:", req.body);
+async function validatePassword(enteredPassword, storedHashedPassword) {
+    return await bcrypt.compare(enteredPassword, storedHashedPassword);
+}
 
-        const email = req.body.email.trim().toLowerCase();
+// Inside your login route
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
         const user = await User.findOne({ email });
 
-        console.log("✅ Found User:", user ? user.email : "No user found");
-
         if (!user) {
-            console.error("🚨 User not found in database.");
-            return res.status(400).json({ error: "Invalid email or password" });
+            return res.status(400).json({ error: "User not found" });
         }
 
-        console.log("🔑 Stored Hashed Password:", user.password);
-        console.log("🔑 Entered Password:", req.body.password);
-
-        const isMatch = await bcrypt.compare(String(req.body.password), String(user.password));
-        console.log("🔍 Password Match Result:", isMatch);
+        const isMatch = await validatePassword(password, user.password);
 
         if (!isMatch) {
-            console.error("🚨 Password does NOT match.");
-            return res.status(400).json({ error: "Invalid email or password" });
+            return res.status(401).json({ error: "Authentication failed" });
         }
 
-        // In auth.js and signup.js, standardize all token generations to:
-const token = jwt.sign(
-    { userId: user._id.toString() },  // Always convert _id to string
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-);
+        // Generate JWT Token
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
 
-        res.json({
-            success: true,
-            token,
-            user: {
-                id: user._id.toString(),
-                email: user.email,
-                name: user.name
-            }
-        });
+        res.json({ success: true, token });
+
     } catch (error) {
-        console.error("🚨 Login Error:", error.message);
-        res.status(500).json({ error: "An unexpected error occurred. Please try again." });
+        console.error("❌ Login Error:", error);
+        res.status(500).json({ error: "Server error" });
     }
 });
+
 
 // Register Route
 router.post("/register", async (req, res) => {

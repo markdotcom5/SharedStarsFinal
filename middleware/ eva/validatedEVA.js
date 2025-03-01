@@ -152,7 +152,7 @@ const authenticateEVAWebSocket = (request) => {
     }
 };
 
-module.exports = {
+module.exports = { 
     authenticateEVA,
     validateEVASession,
     validateSafetyRequirements,

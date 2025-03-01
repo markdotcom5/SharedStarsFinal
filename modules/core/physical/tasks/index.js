@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../../../../middleware/authenticate');
-const TrainingSession = require('../../../../models/TrainingSession');
-const data = require('./data'); // Import task data
+const TrainingSession = require('../../../../models/TrainingSession.js'); // ✅ Ensure `.js` extension
+const data = require('./data.js'); // ✅ Ensure `.js` extension
+
 
 // ✅ Define getTasks() to retrieve all tasks
 function getTasks() {

@@ -1,4 +1,4 @@
-const SocialPlatformIntegrator = require("../services/SocialPlatformIntegrator");
+const SocialPlatformIntegrator = require("../services/SocialPlatformIntegrator.js");
 
 // ✅ When an achievement is earned
 const handleAchievementUnlock = async (user, achievementData) => {

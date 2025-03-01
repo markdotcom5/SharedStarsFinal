@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const UserProgress = require('../models/UserProgress');
 
 const cache = {

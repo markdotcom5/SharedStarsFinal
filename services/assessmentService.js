@@ -1,4 +1,4 @@
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const UserProgress = require('../models/UserProgress');
 
 class AssessmentService extends EventEmitter {

@@ -43,5 +43,5 @@ subscriptionSchema.methods.adjustAIEngagement = async function() {
         recommendations: engagementAnalysis.recommendations
     };
 };
-
-module.exports = mongoose.model("Subscription", subscriptionSchema);
+const Subscription = mongoose.model('Subscription', subscriptionSchema);
+module.exports = Subscription;

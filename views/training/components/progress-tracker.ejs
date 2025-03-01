@@ -1,0 +1,103 @@
+<div class="bg-gray-800 rounded-xl p-6">
+    <h2 class="text-xl font-bold mb-4">Training Progress</h2>
+    
+    <!-- Progress Circle -->
+    <div class="relative w-32 h-32 mx-auto mb-6">
+      <svg class="w-full h-full" viewBox="0 0 100 100">
+        <!-- Background circle -->
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#374151" stroke-width="10" />
+        
+        <!-- Progress circle -->
+        <% const circumference = 2 * Math.PI * 45; %>
+        <% const offset = circumference - (progress / 100) * circumference; %>
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#3B82F6" stroke-width="10"
+                stroke-dasharray="<%= circumference %>" 
+                stroke-dashoffset="<%= offset %>"
+                transform="rotate(-90 50 50)" />
+        
+        <!-- Percentage text handled by JS -->
+      </svg>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="text-2xl font-bold"><%= progress %>%</span>
+      </div>
+    </div>
+    
+    <!-- Module Progress -->
+    <div class="space-y-3">
+      <% if (modules && modules.length > 0) { %>
+        <% modules.forEach(function(module) { %>
+          <div class="mb-3">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-sm"><%= module.name %></span>
+              <span class="text-blue-400 text-sm"><%= module.progress %>%</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-2">
+              <div class="bg-blue-500 h-2 rounded-full" style="width: <%= module.progress %>%"></div>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="text-gray-400 text-center py-4">
+          No modules started yet
+        </div>
+      <% } %>
+    </div>
+    
+    <!-- AI Learning Metrics -->
+    <div class="mt-6 pt-6 border-t border-gray-700">
+      <h3 class="text-lg font-semibold mb-3">STELLA's Assessment</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-gray-700/50 p-3 rounded-lg">
+          <div class="text-sm text-gray-400">Focus</div>
+          <div class="text-xl font-semibold text-blue-300">
+            <span id="focus-score">85</span><span class="text-sm">/100</span>
+          </div>
+        </div>
+        <div class="bg-gray-700/50 p-3 rounded-lg">
+          <div class="text-sm text-gray-400">Technique</div>
+          <div class="text-xl font-semibold text-green-300">
+            <span id="technique-score">78</span><span class="text-sm">/100</span>
+          </div>
+        </div>
+        <div class="bg-gray-700/50 p-3 rounded-lg">
+          <div class="text-sm text-gray-400">Adaptation</div>
+          <div class="text-xl font-semibold text-purple-300">
+            <span id="adaptation-score">92</span><span class="text-sm">/100</span>
+          </div>
+        </div>
+        <div class="bg-gray-700/50 p-3 rounded-lg">
+          <div class="text-sm text-gray-400">Knowledge</div>
+          <div class="text-xl font-semibold text-yellow-300">
+            <span id="knowledge-score">81</span><span class="text-sm">/100</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Session Stats -->
+    <div class="mt-6">
+      <div class="flex justify-between text-sm text-gray-400">
+        <span>Session Duration</span>
+        <span id="session-duration">00:00:00</span>
+      </div>
+      <div class="flex justify-between text-sm text-gray-400 mt-1">
+        <span>Credits Earned</span>
+        <span id="credits-earned">0</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Update session duration
+    document.addEventListener('DOMContentLoaded', () => {
+      const startTime = new Date();
+      setInterval(() => {
+        const now = new Date();
+        const diff = Math.floor((now - startTime) / 1000);
+        const hours = Math.floor(diff / 3600).toString().padStart(2, '0');
+        const minutes = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
+        const seconds = Math.floor(diff % 60).toString().padStart(2, '0');
+        document.getElementById('session-duration').textContent = `${hours}:${minutes}:${seconds}`;
+      }, 1000);
+    });
+  </script>

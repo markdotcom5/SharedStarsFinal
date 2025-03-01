@@ -167,4 +167,4 @@ class AchievementsController {
     }
 }
 
-export default AchievementsController;
+module.exports =  AchievementsController;

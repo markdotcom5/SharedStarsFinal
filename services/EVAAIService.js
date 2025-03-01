@@ -1,6 +1,5 @@
-// services/EVAAIService.js
 const OpenAI = require('openai');
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 
 class EVAAIService extends EventEmitter {
     constructor() {

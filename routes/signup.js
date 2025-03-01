@@ -90,19 +90,19 @@ const token = jwt.sign(
                 token
             }
         });
-
     } catch (error) {
         console.error('❌ Signup Error Details:', {
             message: error.message,
             stack: error.stack,
             name: error.name
         });
-
+    
         res.status(500).json({
             success: false,
             error: 'Houston, we have a problem. Please try again.'
         });
     }
-}); 
-
-module.exports = router;
+    
+    // Ensure `router` is defined before exporting
+    module.exports = router;
+    

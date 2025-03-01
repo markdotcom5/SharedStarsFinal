@@ -30,4 +30,3 @@ function applyTranslations(lang) {
         if (translation) element.textContent = translation;
     });
 }
-

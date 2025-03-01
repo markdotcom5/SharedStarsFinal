@@ -1,0 +1,225 @@
+<div class="training-module" data-module="endurance">
+    <!-- STELLA Endurance Monitoring HUD -->
+    <div class="ai-monitoring-status">
+      <div class="flex items-center justify-between bg-blue-900/30 p-4 rounded-lg">
+        <div class="flex items-center gap-3">
+          <div class="pulse-dot"></div>
+          <p class="text-sm text-blue-300" id="stella-monitor-status">
+            STELLA monitoring cardiovascular metrics...
+          </p>
+        </div>
+        <!-- Critical Stats -->
+        <div class="flex gap-4">
+          <div class="stat">
+            <span class="text-sm text-gray-400">Heart Rate</span>
+            <span id="current-hr" class="text-xl font-bold text-blue-300">--</span>
+          </div>
+          <div class="stat">
+            <span class="text-sm text-gray-400">O₂ Sat</span>
+            <span id="current-o2" class="text-xl font-bold text-blue-300">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Main Training Interface -->
+    <div class="space-y-6">
+      <div class="bg-gray-800 rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-4">Zero-G Endurance Training</h2>
+  
+        <!-- STELLA's Real-time Analysis -->
+        <div class="mb-6 border-l-4 border-blue-500 pl-4">
+          <h3 class="text-blue-400 font-semibold">STELLA's Assessment</h3>
+          <p id="stella-endurance-feedback" class="text-gray-300">
+            Analyzing cardiovascular response and adaptation...
+          </p>
+        </div>
+  
+        <!-- Training Zones -->
+        <div class="training-zones space-y-4">
+          <% enduranceZones.forEach(function(zone) { %>
+            <div class="zone-card" 
+                 data-zone-id="<%= zone.id %>"
+                 data-target-hr="<%= zone.targetHR %>">
+              <div class="flex justify-between items-center">
+                <h4 class="text-lg font-semibold"><%= zone.name %></h4>
+                <span class="text-blue-400"><%= zone.duration %></span>
+              </div>
+  
+              <!-- Zone Metrics -->
+              <div class="mt-2 grid grid-cols-4 gap-2">
+                <div class="metric-box">
+                  <span class="text-sm text-gray-400">Zone</span>
+                  <span class="hr-zone">--</span>
+                </div>
+                <div class="metric-box">
+                  <span class="text-sm text-gray-400">Time in Zone</span>
+                  <span class="zone-time">--</span>
+                </div>
+                <div class="metric-box">
+                  <span class="text-sm text-gray-400">Efficiency</span>
+                  <span class="efficiency-score">--</span>
+                </div>
+                <div class="metric-box">
+                  <span class="text-sm text-gray-400">Recovery</span>
+                  <span class="recovery-rate">--</span>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+  
+      <!-- Performance Analytics -->
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Heart Rate Variability -->
+        <div class="bg-gray-800 rounded-xl p-6">
+          <h3 class="text-lg font-semibold mb-4">Heart Rate Variability</h3>
+          <div class="hrv-graph h-48"></div>
+        </div>
+  
+        <!-- Oxygen Utilization -->
+        <div class="bg-gray-800 rounded-xl p-6">
+          <h3 class="text-lg font-semibold mb-4">O₂ Utilization</h3>
+          <div class="o2-graph h-48"></div>
+        </div>
+      </div>
+  
+      <!-- STELLA's Training Insights -->
+      <div class="bg-gray-800 rounded-xl p-6">
+        <h3 class="text-lg font-semibold mb-4">Training Insights</h3>
+        <div id="training-insights" class="space-y-3">
+          <!-- Populated by STELLA -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  class EnduranceTracker {
+      constructor() {
+          this.metrics = {
+              heartRate: 0,
+              o2Saturation: 0,
+              hrv: 0,
+              vo2: 0,
+              timeInZone: {},
+              recoveryRate: 0
+          };
+          this.stella = new STELLAInterface('endurance');
+          this.graphs = {};
+      }
+  
+      async initialize() {
+          await this.stella.connect();
+          this.setupGraphs();
+          this.setupZoneTracking();
+          this.startMonitoring();
+      }
+  
+      setupGraphs() {
+          this.graphs.hrv = new PerformanceGraph('.hrv-graph', {
+              type: 'line',
+              label: 'HRV',
+              color: '#3B82F6'
+          });
+  
+          this.graphs.o2 = new PerformanceGraph('.o2-graph', {
+              type: 'line',
+              label: 'O₂ Utilization',
+              color: '#10B981'
+          });
+      }
+  
+      setupZoneTracking() {
+          document.querySelectorAll('.zone-card').forEach(card => {
+              card.addEventListener('zoneStart', async (e) => {
+                  const zoneId = card.dataset.zoneId;
+                  const targetHR = parseInt(card.dataset.targetHR);
+                  
+                  const metrics = await this.stella.startZoneTracking({
+                      zoneId,
+                      targetHR
+                  });
+  
+                  this.updateZoneMetrics(card, metrics);
+              });
+          });
+      }
+  
+      updateZoneMetrics(card, metrics) {
+          card.querySelector('.hr-zone').textContent = metrics.currentZone;
+          card.querySelector('.zone-time').textContent = 
+              this.formatTime(metrics.timeInZone);
+          card.querySelector('.efficiency-score').textContent = 
+              `${metrics.efficiency}%`;
+          card.querySelector('.recovery-rate').textContent = 
+              `${metrics.recovery}bpm`;
+  
+          // Update main metrics
+          document.getElementById('current-hr').textContent = 
+              `${metrics.heartRate} bpm`;
+          document.getElementById('current-o2').textContent = 
+              `${metrics.o2Saturation}%`;
+  
+          // Update graphs
+          this.graphs.hrv.addDataPoint(metrics.hrv);
+          this.graphs.o2.addDataPoint(metrics.o2Saturation);
+  
+          // Get STELLA's analysis
+          this.stella.getEnduranceFeedback(metrics).then(feedback => {
+              this.updateFeedback(feedback);
+          });
+      }
+  
+      startMonitoring() {
+          setInterval(async () => {
+              const currentMetrics = await this.stella.getCurrentMetrics();
+              this.updateMetrics(currentMetrics);
+  
+              // Check for overexertion
+              if (currentMetrics.heartRate > this.getMaxSafeHR()) {
+                  this.triggerSafetyAlert();
+              }
+          }, 1000);
+      }
+  
+      updateFeedback(feedback) {
+          const feedbackElement = document.getElementById('stella-endurance-feedback');
+          feedbackElement.textContent = feedback.message;
+  
+          // Update insights
+          const insightsContainer = document.getElementById('training-insights');
+          insightsContainer.innerHTML = feedback.insights
+              .map(insight => `
+                  <div class="insight p-3 bg-gray-700/50 rounded-lg">
+                      <h4 class="font-semibold">${insight.title}</h4>
+                      <p class="text-sm text-gray-300">${insight.description}</p>
+                  </div>
+              `).join('');
+      }
+  
+      formatTime(seconds) {
+          const mins = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          return `${mins}:${secs.toString().padStart(2, '0')}`;
+      }
+  
+      getMaxSafeHR() {
+          // Calculate based on user profile and training phase
+          return this.stella.getMaxSafeHeartRate();
+      }
+  
+      triggerSafetyAlert() {
+          const monitorStatus = document.getElementById('stella-monitor-status');
+          monitorStatus.textContent = "WARNING: Heart rate exceeding safe limits";
+          monitorStatus.classList.add('text-yellow-300');
+      }
+  }
+  
+  // Initialize when document loads
+  document.addEventListener('DOMContentLoaded', () => {
+      const tracker = new EnduranceTracker();
+      tracker.initialize();
+  });
+  </script>

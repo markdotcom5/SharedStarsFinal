@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const { authenticate } = require("../middleware/authenticate");
-const AISocialIntegrator = require("../services/AIServiceIntegrator");
+const { AIServiceIntegrator: AISocialIntegrator } = require("../services/CoreAIServices");
 
 // ✅ AI-Enhanced Achievement Sharing
 router.post("/achievement/:id/share", authenticate, async (req, res) => {

@@ -6,8 +6,9 @@ const { authenticate } = require('../middleware/authenticate');
 const User = require('../models/User');
 const Module = require('../models/Module');
 const TrainingSession = require('../models/TrainingSession');
-const { generateTrainingContent, provideProblemSolvingScenario } = require('../services/AISpaceCoach');
-const { ObjectId } = require('mongodb');  // Import ObjectId for correct usage
+const { generateTrainingContent, provideProblemSolvingScenario } = require('../services/AISpaceCoach.js');
+const { ObjectId } = require('mongodb');  // ✅ Correct import remains unchanged
+
 
 // Debugging Log
 console.log('Authenticate Middleware:', typeof authenticate);

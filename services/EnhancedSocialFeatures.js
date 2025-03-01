@@ -1,5 +1,4 @@
-// services/EnhancedSocialFeatures.js
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const QuestVRFeatures = require('../modules/vr/features/QuestVRFeatures');
 
 class EnhancedSocialFeatures extends EventEmitter {

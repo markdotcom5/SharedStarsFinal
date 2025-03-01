@@ -58,7 +58,6 @@ const UI = {
 };
 
 // Leaderboard Manager Class
-// Leaderboard Manager Class
 class LeaderboardManager extends window.CustomEventEmitter {
     constructor(webSocketService) {
         super();
@@ -67,80 +66,19 @@ class LeaderboardManager extends window.CustomEventEmitter {
             data: new Map(),
             timeout: 5 * 60 * 1000
         };
-        this.leaderboardElement = document.getElementById('leaderboard-container');
-        this.scoreElement = document.getElementById('user-score');
-        this.rankElement = document.getElementById('user-rank');
-        this.historyElement = document.getElementById('score-history');
         this.bindEvents();
-        this.initialize();
-    }
-
-    async initialize() {
-        await this.fetchAndUpdateLeaderboard();
-        this.setupRefreshInterval();
     }
 
     bindEvents() {
         this.on('rankUpdate', this.handleRankUpdate.bind(this));
         this.on('achievementUnlocked', this.handleAchievement.bind(this));
         this.on('scoreUpdate', this.handleScoreUpdate.bind(this));
-
-        // Add WebSocket event listeners
-        this.ws.on('rank_change', data => this.handleRankUpdate(data));
-        this.ws.on('score_update', data => this.handleScoreUpdate(data));
-        this.ws.on('achievement_unlock', data => this.handleAchievement(data));
-    }
-
-    async fetchAndUpdateLeaderboard() {
-        try {
-            const response = await fetch('/api/leaderboard/rankings', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            const data = await response.json();
-            this.updateDisplay(data);
-            this.cache.data.set('rankings', data);
-        } catch (error) {
-            console.error('Error fetching leaderboard:', error);
-        }
-    }
-
-    updateDisplay(data) {
-        // Update user's stats
-        if (this.scoreElement) this.scoreElement.textContent = data.userStats.score;
-        if (this.rankElement) this.rankElement.textContent = `Rank: ${data.userStats.rank}`;
-
-        // Update rankings list with animation
-        if (this.leaderboardElement) {
-            const rankingsList = data.rankings.map((user, index) => `
-                <div class="leaderboard-item ${user._id === localStorage.getItem('userId') ? 'current-user' : ''}"
-                     data-user-id="${user._id}">
-                    <span class="rank">#${index + 1}</span>
-                    <span class="name">${user.name}</span>
-                    <span class="score">${user.leaderboard.score}</span>
-                    ${this.getAchievementBadges(user)}
-                </div>
-            `).join('');
-
-            AnimationController.fadeOut(this.leaderboardElement, () => {
-                this.leaderboardElement.innerHTML = rankingsList;
-                AnimationController.fadeIn(this.leaderboardElement);
-            });
-        }
     }
 
     async handleRankUpdate({ userId, newRank }) {
         try {
             await this.broadcastUpdate('rank_change', { userId, newRank });
             this.clearCache();
-            await this.fetchAndUpdateLeaderboard();
-            
-            // Animate rank change
-            const userElement = document.querySelector(`[data-user-id="${userId}"]`);
-            if (userElement) {
-                AnimationController.highlight(userElement);
-            }
         } catch (error) {
             console.error('Error handling rank update:', error);
         }
@@ -150,138 +88,29 @@ class LeaderboardManager extends window.CustomEventEmitter {
         try {
             const rankings = await this.calculateNewRankings(userId, newScore);
             await this.broadcastUpdate('score_update', { userId, newScore, rankings });
-            await this.fetchAndUpdateLeaderboard();
-
-            // Animate score change
-            const scoreElement = document.querySelector(`[data-user-id="${userId}"] .score`);
-            if (scoreElement) {
-                AnimationController.countUp(scoreElement, parseInt(scoreElement.textContent), newScore);
-            }
         } catch (error) {
             console.error('Error handling score update:', error);
         }
-    }
-
-    async handleAchievement(achievement) {
-        this.showAchievementNotification(achievement);
-        await this.fetchAndUpdateLeaderboard();
-    }
-
-    getAchievementBadges(user) {
-        const badges = [];
-        if (user.leaderboard.score > 1000) badges.push('🏆');
-        if (user.leaderboard.score > 2000) badges.push('👑');
-        return badges.length ? `<span class="badges">${badges.join(' ')}</span>` : '';
-    }
-
-    async calculateNewRankings(userId, newScore) {
-        // Implement local ranking calculation to reduce server calls
-        const rankings = Array.from(this.cache.data.get('rankings') || []);
-        const userIndex = rankings.findIndex(r => r._id === userId);
-        
-        if (userIndex !== -1) {
-            rankings[userIndex].leaderboard.score = newScore;
-            rankings.sort((a, b) => b.leaderboard.score - a.leaderboard.score);
-        }
-        
-        return rankings;
-    }
-
-    showAchievementNotification(achievement) {
-        const notification = createNotification('Achievement Unlocked!', achievement);
-        AnimationController.fadeIn(notification);
-        setTimeout(() => {
-            AnimationController.fadeOut(notification, () => notification.remove());
-        }, 5000);
-    }
-
-    showLevelUpNotification(level, rewards) {
-        const notification = createNotification('Level Up!', { level, rewards });
-        AnimationController.fadeIn(notification);
-        setTimeout(() => {
-            AnimationController.fadeOut(notification, () => notification.remove());
-        }, 5000);
     }
 
     clearCache() {
         this.cache.data.clear();
     }
 
-    setupRefreshInterval() {
-        setInterval(() => this.fetchAndUpdateLeaderboard(), 60000); // Refresh every minute
+    showAchievementNotification(achievement) {
+        console.log("🏆 Achievement Unlocked:", achievement);
+        const notification = createNotification('Achievement Unlocked!', achievement);
+        AnimationController.fadeIn(notification);
+        setTimeout(() => notification.remove(), 5000);
     }
 
-    broadcastUpdate(type, data) {
-        this.ws.emit(type, data);
-        return new Promise(resolve => setTimeout(resolve, 100)); // Simulated delay
+    showLevelUpNotification(level, rewards) {
+        console.log("⬆️ Level Up:", { level, rewards });
+        const notification = createNotification('Level Up!', { level, rewards });
+        AnimationController.fadeIn(notification);
+        setTimeout(() => notification.remove(), 5000);
     }
 }
-
-// Helper function to create notifications
-function createNotification(title, content) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.innerHTML = `
-        <h4>${title}</h4>
-        <p>${typeof content === 'string' ? content : JSON.stringify(content)}</p>
-    `;
-    document.body.appendChild(notification);
-    return notification;
-}
-
-// Animation Controller
-const AnimationController = {
-    fadeIn(element, callback) {
-        element.style.opacity = 0;
-        element.style.display = 'block';
-        let opacity = 0;
-        const interval = setInterval(() => {
-            opacity += 0.1;
-            element.style.opacity = opacity;
-            if (opacity >= 1) {
-                clearInterval(interval);
-                if (callback) callback();
-            }
-        }, 50);
-    },
-
-    fadeOut(element, callback) {
-        let opacity = 1;
-        const interval = setInterval(() => {
-            opacity -= 0.1;
-            element.style.opacity = opacity;
-            if (opacity <= 0) {
-                clearInterval(interval);
-                element.style.display = 'none';
-                if (callback) callback();
-            }
-        }, 50);
-    },
-
-    highlight(element) {
-        element.classList.add('highlight');
-        setTimeout(() => element.classList.remove('highlight'), 2000);
-    },
-
-    countUp(element, start, end) {
-        let current = start;
-        const step = Math.ceil((end - start) / 20);
-        const interval = setInterval(() => {
-            current += step;
-            if (current >= end) {
-                current = end;
-                clearInterval(interval);
-            }
-            element.textContent = current;
-        }, 50);
-    }
-};
-
-// Initialize when document is ready
-document.addEventListener('DOMContentLoaded', () => {
-    const webSocketService = window.webSocketService; // Assuming this is available
-    const leaderboard = new LeaderboardManager(webSocketService);
-});
 
 // WebSocket Manager
 const WebSocketManager = {
@@ -758,13 +587,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function updateModuleProgress(moduleId, progress) {
-    const moduleCard = document.querySelector(`[data-module="${moduleId}"]`);
-    const progressCircle = moduleCard.querySelector('.radial-progress');
-    const progressText = moduleCard.querySelector('.progress-text');
-    
-    progressCircle.style.setProperty('--value', progress);
-    progressText.textContent = `${progress}%`;
+function updateURL() {
+    if (typeof state === 'undefined') {
+        console.error("State object is not defined.");
+        return;
+    }
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(state)) {
+        if (value !== null && value !== undefined) {
+            params.set(key, value);
+        }
+    }
+    window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
 }
 
 function debounce(fn, delay) {
@@ -807,4 +641,4 @@ function showError(message) {
 
 document.getElementById("closeModal")?.addEventListener("click", () => {
     document.getElementById("moduleModal")?.classList.add("hidden");
-}); // Fixed: Added closing parenthesis here
+});

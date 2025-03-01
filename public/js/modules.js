@@ -1,43 +1,70 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Function to fetch and update content for a given module
-  async function loadModuleContent(endpoint, elementId) {
-    try {
-      const response = await fetch(endpoint);
+document.addEventListener("DOMContentLoaded", () => {
+    async function openModuleModal(moduleType) {
+        try {
+            const token = localStorage.getItem("jwtToken"); // Ensure token is included
+            const response = await fetch(`/api/modules/${moduleType}/details`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` // Attach token if needed
+                }
+            });
 
-      // ✅ Check if the response is OK before processing
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+            if (!response.ok) throw new Error("Module not found");
+            const data = await response.json();
+            const moduleData = data.module;
 
-      const result = await response.json();
+            // Get modal elements
+            const moduleName = document.getElementById("moduleName");
+            const moduleContent = document.getElementById("moduleContent");
+            const subModulesList = document.getElementById("moduleSubModules");
+            const moduleModal = document.getElementById("moduleModal");
 
-      if (result.success && result.data) {
-        const data = result.data;
-        const container = document.getElementById(elementId);
+            if (!moduleName || !moduleContent || !subModulesList || !moduleModal) {
+                console.error("❌ One or more modal elements not found in DOM.");
+                return;
+            }
 
-        // ✅ Check if the element exists before updating
-        if (!container) {
-          console.warn(`Element with ID '${elementId}' not found.`);
-          return;
+            // Update modal content
+            moduleName.innerText = moduleData.name;
+            moduleContent.innerText = moduleData.content;
+            subModulesList.innerHTML = ""; // Clear previous items
+
+            moduleData.subModules.forEach(sub => {
+                const li = document.createElement("li");
+                li.innerText = sub;
+                subModulesList.appendChild(li);
+            });
+
+            // Display the modal (remove the 'hidden' class)
+            moduleModal.classList.remove("hidden");
+        } catch (error) {
+            console.error("❌ Error loading module:", error);
         }
-
-        container.innerHTML = `
-          <h3 class="text-2xl font-semibold">${data.title}</h3>
-          <p class="mb-2">${data.description || ''}</p>
-          ${ data.objectives 
-              ? `<ul class="list-disc pl-5">${data.objectives.map(obj => `<li>${obj}</li>`).join('')}</ul>` 
-              : '' }
-        `;
-      } else {
-        console.error('Failed to load module content:', result.error || 'Invalid API response');
-      }
-    } catch (error) {
-      console.error('Error fetching module content:', error);
     }
-  }
 
-  // Load content for each module section
-  loadModuleContent('/api/training/modules/physical', 'physical-content');
-  loadModuleContent('/api/training/modules/technical', 'technical-content');
-  loadModuleContent('/api/training/modules/ai-guided', 'ai-content');
+    // Attach event listeners to module buttons
+    document.querySelectorAll(".module-button").forEach(button => {
+        button.addEventListener("click", (e) => {
+            const moduleType = e.currentTarget.getAttribute("data-module");
+            if (!moduleType) {
+                console.error("❌ Module type not found on button.");
+                return;
+            }
+            openModuleModal(moduleType);
+        });
+    });
+
+    // Close modal functionality
+    const closeModalBtn = document.getElementById("closeModal");
+    const moduleModal = document.getElementById("moduleModal");
+
+    if (!closeModalBtn || !moduleModal) {
+        console.error("❌ Close button or modal not found in DOM. Make sure #closeModal and #moduleModal exist.");
+        return;
+    }
+
+    closeModalBtn.addEventListener("click", () => {
+        moduleModal.classList.add("hidden");
+    });
 });

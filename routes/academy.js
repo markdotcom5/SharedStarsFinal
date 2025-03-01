@@ -1,9 +1,13 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router();  
 const { authenticate } = require('../middleware/authenticate');
 const Module = require('../models/Module');
 
 // Main academy page route
+router.get('/', (req, res) => {
+    res.send("Welcome to the Academy Page");
+});
+
 router.get('/', authenticate, async (req, res) => {
     try {
         // Fetch modules
@@ -93,6 +97,57 @@ router.get('/', authenticate, async (req, res) => {
         res.status(500).render('error', { 
             message: 'Error loading academy page',
             error 
+        });
+    }
+});
+// Quick Pre-Application Route
+router.post('/pre-assess', (req, res) => {
+    const { name, email, spaceInterest, vrExperience } = req.body;
+
+    if (!name || !email) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Simulate AI evaluation
+    const accepted = Math.random() > 0.5;
+
+    if (accepted) {
+        return res.json({
+            status: "accepted",
+            message: "Congratulations! You have been accepted into SharedStars Academy.",
+            redirect: "/training-hub"
+        });
+    } else {
+        return res.json({
+            status: "needs_review",
+            message: "Additional application details required.",
+            redirect: "/profile"
+        });
+    }
+});
+
+// Full Digital Application Submission Route
+router.post('/sessions', authenticate, async (req, res) => {
+    res.json({ message: "Session created successfully!" });
+
+    if (!name || !email || !age || !background) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Simulate AI evaluation & selection board review
+    const accepted = Math.random() > 0.5;
+
+    if (accepted) {
+        return res.json({
+            status: "accepted",
+            message: "Your application has been successfully submitted and approved!",
+            redirect: "/training-hub"
+        });
+    } else {
+        return res.json({
+            status: "review",
+            message: "Your application has been submitted for review.",
+            redirect: "/profile"
         });
     }
 });

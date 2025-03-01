@@ -1,0 +1,68 @@
+<div class="training-phases mb-8">
+  <div class="flex justify-between items-center mb-2">
+    <h2 class="text-xl font-bold">Training Phase <%= currentPhase %> of 5</h2>
+    <div class="text-sm text-blue-400">
+      <% if (typeof phaseDescription !== 'undefined') { %>
+        <%= phaseDescription %>
+      <% } else { %>
+        <% const phaseDescriptions = [
+          "Foundation Training",
+          "Skill Development",
+          "Advanced Techniques",
+          "Mission Simulations",
+          "Certification Readiness"
+        ]; %>
+        <%= phaseDescriptions[currentPhase - 1] || "Custom Training Phase" %>
+      <% } %>
+    </div>
+  </div>
+  
+  <!-- Phase Progress Bar -->
+  <div class="relative">
+    <div class="w-full h-3 bg-gray-700 rounded-full">
+      <% for (let i = 1; i <= 5; i++) { %>
+        <div class="absolute top-0 h-3 <%= i <= currentPhase ? 'bg-blue-500' : 'bg-gray-700' %> <%= i === 1 ? 'rounded-l-full' : '' %> <%= i === 5 ? 'rounded-r-full' : '' %>"
+             style="width: 20%; left: <%= (i-1) * 20 %>%;"></div>
+      <% } %>
+    </div>
+    
+    <!-- Phase Markers -->
+    <div class="flex justify-between mt-1">
+      <% for (let i = 1; i <= 5; i++) { %>
+        <div class="flex flex-col items-center">
+          <div class="w-6 h-6 rounded-full flex items-center justify-center
+                    <%= i < currentPhase ? 'bg-blue-500 text-white' : 
+                       i === currentPhase ? 'bg-blue-600 ring-2 ring-blue-300 text-white' : 
+                       'bg-gray-700 text-gray-400' %>">
+            <%= i %>
+          </div>
+          <div class="text-xs mt-1 <%= i <= currentPhase ? 'text-blue-400' : 'text-gray-500' %>">
+            Phase <%= i %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+  
+  <!-- Phase Actions -->
+  <div class="flex justify-between mt-4">
+    <div>
+      <% if (currentPhase > 1) { %>
+        <a href="/training/phase/<%= currentPhase - 1 %>" class="text-sm text-blue-400 hover:underline">
+          ← Previous Phase
+        </a>
+      <% } %>
+    </div>
+    <div>
+      <% if (currentPhase < 5) { %>
+        <a href="/training/phase/<%= currentPhase + 1 %>" class="text-sm text-blue-400 hover:underline">
+          Next Phase →
+        </a>
+      <% } else { %>
+        <a href="/training/certification" class="text-sm text-green-400 hover:underline">
+          Certification Ready →
+        </a>
+      <% } %>
+    </div>
+  </div>
+</div>

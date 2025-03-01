@@ -1,0 +1,28 @@
+{
+    "restartable": "rs",
+    "ignore": [
+      ".git",
+      "node_modules/**/node_modules",
+      "public/**/*"
+    ],
+    "verbose": true,
+    "execMap": {
+      "js": "node"
+    },
+    "watch": [
+      "*.js",
+      "routes/",
+      "controllers/",
+      "models/",
+      "middleware/"
+    ],
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "ext": "js,json",
+    "delay": "1000",
+    "events": {
+      "start": "clear || cls",
+      "restart": "clear || cls"
+    }
+  }

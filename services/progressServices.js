@@ -1,4 +1,3 @@
-// services/progressService.js
 const UserProgress = require('../models/UserProgress');
 
 class ProgressService {

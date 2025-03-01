@@ -39,7 +39,7 @@
       <!-- Logo -->
       <div class="flex items-center mb-2 md:mb-0">
         <a href="/index.html" aria-label="SharedStars Homepage" class="group">
-          <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
         </a>
       </div>
       <!-- Navigation Links -->
@@ -898,13 +898,12 @@
 </script>
 
 <!-- Module Scripts -->
-<script type="module">
-  import SpaceTrainingFSD from '/js/modules/training/fsdTraining.js';
-  import AIHandler from '/js/modules/training/AIHandler.js';
-  import AIGuidanceSystem from '/js/modules/training/aiGuidanceSystem.js';
-  import ProgressAssessment from '/js/modules/training/progressAssessment.js';
-  import { initModules, loadModuleContent } from '/js/modules/training/index.js';
-  import { setupWebSocket, handleWebSocketMessages } from '/js/modules/core/websocket.js';
+</script>
+<script src="/js/modules/training/fsdTraining.js"></script>
+<script src="/js/modules/training/AIHandler.js"></script>
+<script src="/js/modules/training/aiGuidanceSystem.js"></script>
+<script src="/js/modules/training/progressAssessment.js"></script>
+
 
   document.addEventListener('DOMContentLoaded', async () => {
     try {

@@ -1,0 +1,50 @@
+<%- include('../../../partials/head', { title: 'Technical Training Module' }) %>
+<%- include('../../../partials/header') %>
+
+<section class="training-module py-8 bg-gray-900 text-white">
+  <div class="container mx-auto px-4">
+    <!-- STELLA AI Coach Integration -->
+    <div id="ai-coach" class="bg-blue-900/30 p-4 rounded-lg mb-6">
+      <h3 class="text-blue-400 font-bold">STELLA AI Coach</h3>
+      <div id="technical-ai-feedback" class="mt-2">
+        <!-- Real-time technical training feedback -->
+      </div>
+    </div>
+
+    <!-- Technical Training Overview -->
+    <div class="bg-gray-800 p-6 rounded-lg">
+      <h1 class="text-4xl font-bold mb-4">Technical Training Overview</h1>
+      <p class="text-gray-300">
+        Learn spacecraft systems, navigation, and emergency diagnostics.
+      </p>
+
+      <!-- Progress Tracker -->
+      <%- include('../../components/progress-tracker') %>
+
+      <!-- Training Modules -->
+      <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <% modules.forEach(module => { %>
+          <a href="<%= module.route %>" class="block bg-gray-700 p-6 rounded-lg hover:bg-blue-500/30 transition">
+            <h3 class="text-xl font-semibold text-blue-400"><%= module.name %></h3>
+            <p class="text-sm text-gray-300"><%= module.description %></p>
+            <div class="progress-bar mt-2 bg-gray-600 rounded-full h-2">
+              <div class="bg-blue-500 h-2 rounded-full" style="width: <%= module.progress %>%"></div>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../../../partials/footer') %>
+
+<!-- Technical Training Scripts -->
+<script src="/js/visualizations/progressUI.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const tracker = new ProgressUI();
+    tracker.loadProgress();
+});
+</script>
+

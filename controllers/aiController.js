@@ -1,6 +1,6 @@
 const AIAssistant = require('../services/aiAssistant');
 const aiGuidance = require('../services/aiGuidance.js');
-const aiServices = require('../services/aiServices.js');
+const aiServices = require('../services/CoreAIServices');
 const cache = require('../utils/cache');
 const logger = require('../utils/logger');
 
@@ -206,5 +206,6 @@ class AIController {
     };
   }
 }
+console.log("✅ AIController is loading aiServices.js");
 
 module.exports = new AIController();

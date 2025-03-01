@@ -1,0 +1,1482 @@
+// /public/js/training/physical/mission-handler.js
+try {
+class MissionHandler {
+    constructor() {
+      // Load missions from the global variable set by mission-data.js
+      this.missions = window.physicalMissions || [];
+      this.currentMission = null;
+      this.sessionId = null;
+      this.exerciseTimers = {};
+      this.currentMetricsInterval = null;
+    }
+    
+    initialize() {
+      this.renderMissionList();
+      this.setupEventListeners();
+      
+      // Check if URL has a mission parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const missionId = urlParams.get('mission');
+      
+      if (missionId) {
+        this.loadMission(missionId);
+      }
+    }
+    renderMissionList() {
+      const missionListEl = document.getElementById('mission-list');
+      if (!missionListEl) return;
+      
+      missionListEl.innerHTML = this.missions.map(mission => `
+        <div class="mission-card" data-mission-id="${mission.id}">
+          <div class="flex justify-between items-center cursor-pointer mission-header">
+            <div class="flex-grow">
+              <h3 class="text-xl font-bold">${mission.name}</h3>
+              <div class="flex items-center mt-2">
+                <div class="text-blue-400 text-sm mr-4">STELLA AI Tracks: ${mission.metrics?.join(', ') || 'Performance metrics'}</div>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <div class="bg-gray-700 rounded-full px-3 py-1 text-sm flex items-center">
+                <span class="text-blue-400">${mission.progress || 0}%</span>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 mission-toggle" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+          <div class="mission-content">
+            <div class="mission-progress mt-4">
+              <div class="mission-progress-fill" style="width: ${mission.progress || 0}%"></div>
+            </div>
+            <div class="mt-4 flex justify-center">
+              <button class="load-mission-btn bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-500 transition-colors"
+                      data-mission-id="${mission.id}">
+                ${mission.progress > 0 ? 'Continue Mission' : 'Start Mission'}
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      
+      // Add event listeners to mission cards
+      document.querySelectorAll('.mission-header').forEach(header => {
+        header.addEventListener('click', () => {
+          const content = header.nextElementSibling;
+          const toggle = header.querySelector('.mission-toggle');
+          
+          content.classList.toggle('expanded');
+          if (content.classList.contains('expanded')) {
+            toggle.style.transform = 'rotate(180deg)';
+          } else {
+            toggle.style.transform = 'rotate(0)';
+          }
+        });
+      });
+      
+      // Add event listeners to mission buttons
+      document.querySelectorAll('.load-mission-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const missionId = e.target.dataset.missionId;
+          this.loadMission(missionId);
+        });
+      });
+    }
+    
+    async loadMission(missionId) {
+      const mission = this.missions.find(m => m.id === missionId);
+      if (!mission) return;
+      
+      this.currentMission = mission;
+      
+      // Update URL without refreshing
+      window.history.pushState({}, '', `?mission=${missionId}`);
+      
+      // Hide mission list and show mission content
+      const missionListContainer = document.getElementById('mission-list')?.parentElement;
+      if (missionListContainer) {
+        missionListContainer.classList.add('hidden');
+      }
+      
+      const missionContentEl = document.getElementById('mission-content');
+      if (!missionContentEl) return;
+      
+      missionContentEl.classList.remove('hidden');
+      
+      // Load mission content based on ID
+      if (mission.id === 'mission1') {
+        missionContentEl.innerHTML = this.renderCoreBalanceMission(mission);
+      } else if (mission.id === 'mission2') {
+        missionContentEl.innerHTML = this.renderEnduranceMission(mission);
+      } else if (mission.id === 'mission3') {
+        missionContentEl.innerHTML = this.renderStrengthMission(mission);
+      } else if (mission.id === 'mission4') {
+        missionContentEl.innerHTML = this.renderCoordinationMission(mission);
+      } else if (mission.id === 'mission5') {
+        missionContentEl.innerHTML = this.renderGripDexterityMission(mission);
+      } else if (mission.id === 'mission6') {
+        missionContentEl.innerHTML = this.renderFlexibilityMission(mission);
+      } else if (mission.id === 'mission7') {
+        missionContentEl.innerHTML = this.renderPosturalMission(mission);
+      } else if (mission.id === 'mission8') {
+        missionContentEl.innerHTML = this.renderReactionMission(mission);
+      } else if (mission.id === 'mission9') {
+        missionContentEl.innerHTML = this.renderPowerMission(mission);
+      } else if (mission.id === 'mission10') {
+        missionContentEl.innerHTML = this.renderRecoveryMission(mission);
+      } else {
+        // Generic mission renderer
+        missionContentEl.innerHTML = this.renderGenericMission(mission);
+      }
+      
+      // Initialize STELLA integration for this mission
+      this.initializeSTELLA(mission);
+      
+      // Add back button event listener
+      document.getElementById('back-to-missions')?.addEventListener('click', () => this.showMissionList());
+      
+      // Start training session
+      await this.startTrainingSession(mission.slug || mission.id);
+      
+      // Load leaderboard if the container exists
+      if (document.getElementById('leaderboard-container')) {
+        this.loadLeaderboard();
+      }
+    }
+    
+    showMissionList() {
+      const missionListContainer = document.getElementById('mission-list')?.parentElement;
+      if (missionListContainer) {
+        missionListContainer.classList.remove('hidden');
+      }
+      
+      const missionContentEl = document.getElementById('mission-content');
+      if (missionContentEl) {
+        missionContentEl.classList.add('hidden');
+      }
+      
+      // Clear URL parameter
+      window.history.pushState({}, '', window.location.pathname);
+      
+      // Clear any active timers
+      if (this.currentMetricsInterval) {
+        clearInterval(this.currentMetricsInterval);
+        this.currentMetricsInterval = null;
+      }
+      
+      // Clear exercise timers
+      Object.values(this.exerciseTimers).forEach(timer => clearInterval(timer));
+      this.exerciseTimers = {};
+    }
+    
+    async startTrainingSession(missionSlug) {
+      try {
+        const response = await fetch(`/api/training/physical/mission/${missionSlug}/start`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include' // Include cookies for auth
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+          this.sessionId = data.sessionId;
+          console.log('Session started:', this.sessionId);
+        }
+      } catch (error) {
+        console.error('Error starting training session:', error);
+        // Fall back to a mock session ID for demo purposes
+        this.sessionId = 'mock-' + Date.now();
+      }
+    }
+    
+    initializeSTELLA(mission) {
+      if (window.stellaCore) {
+        window.stellaCore.initialize({
+          trainingType: mission.slug || mission.id,
+          metrics: mission.metrics || [],
+          adaptiveLearning: true
+        });
+      }
+    }
+    
+    // Mission type-specific renderers
+    renderCoreBalanceMission(mission) {
+      return `
+        <div class="mb-8 relative">
+          <!-- Video background -->
+          <div class="video-bg rounded-xl overflow-hidden">
+            <video autoplay muted loop playsinline>
+              <source src="/videos/core-training.mp4" type="video/mp4">
+            </video>
+          </div>
+          
+          <div class="relative z-10">
+            <div class="flex items-center mb-4">
+              <button id="back-to-missions" class="text-blue-400 hover:text-blue-300 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h1 class="text-3xl font-bold">${mission.name}</h1>
+              
+              <!-- OSHA compliance badge -->
+              <span class="ml-3 compliance-badge">
+                OSHA 1910.158 Compliant
+              </span>
+            </div>
+            <p class="text-gray-400">${mission.description}</p>
+            
+            <!-- Credit earning indicator -->
+            <div class="flex items-center mt-2 space-x-3">
+              <div class="credit-counter">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>+25 credits per exercise</span>
+              </div>
+              
+              <!-- Certification progress -->
+              <div class="flex items-center text-xs text-green-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+                <span>${mission.certification || 'Training Certification'}: ${mission.progress || 0}% Complete</span>
+              </div>
+            </div>
+            
+            <!-- Mission Progress -->
+            <div class="mt-6">
+              <div class="flex justify-between mb-2">
+                <span class="text-gray-400">Mission Progress</span>
+                <span class="text-blue-400">${mission.progress || 0}%</span>
+              </div>
+              <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 rounded-full" style="width: ${mission.progress || 0}%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- STELLA Guidance -->
+        <div class="bg-gray-800 rounded-xl p-6 mb-8 border border-blue-500/20">
+          <div class="flex items-start">
+            <div class="stella-avatar mr-4 flex-shrink-0">
+              <span class="text-2xl">🤖</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-blue-400 mb-2">STELLA's Guidance</h2>
+              <div id="stella-balance-feedback" class="text-gray-300">
+                <p>Focus on engaging your core muscles throughout each exercise. I'm monitoring your form and will provide real-time feedback.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Exercise List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          ${mission.exercises ? mission.exercises.map(exercise => `
+            <!-- Exercise: ${exercise.name} -->
+            <div class="exercise-card" data-exercise="${exercise.id}">
+              <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center">
+                  <h3 class="text-xl font-bold">${exercise.name}</h3>
+                  <span class="ml-2 badge badge-blue">${exercise.type}</span>
+                </div>
+                <div class="credit-counter">
+                  <span>+25</span>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <p class="text-gray-300 mb-2">${exercise.description}</p>
+                
+                <!-- OSHA compliance indicator -->
+                <div class="flex items-center text-xs text-green-400 mt-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>${exercise.compliance || 'Training Standard Compliant'}</span>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-2 mt-4">
+                  ${exercise.sets ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Sets</span>
+                      <div class="text-lg font-bold">${exercise.sets}</div>
+                    </div>
+                  ` : ''}
+                  
+                  ${exercise.duration ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Duration</span>
+                      <div class="text-lg font-bold">${exercise.duration}</div>
+                    </div>
+                  ` : ''}
+                  
+                  ${exercise.reps ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Reps</span>
+                      <div class="text-lg font-bold">${exercise.reps}</div>
+                    </div>
+                  ` : ''}
+                  
+                  ${exercise.rest ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Rest</span>
+                      <div class="text-lg font-bold">${exercise.rest}</div>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+              
+              <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                  <span class="mr-2 text-sm text-gray-400">Form Score:</span>
+                  <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
+                  </div>
+                </div>
+                <button class="start-exercise-btn bg-blue-600 hover:bg-blue-500 text-white text-sm px-4 py-2 rounded-full transition-colors">
+                  Start Exercise
+                </button>
+              </div>
+            </div>
+          `).join('') : ''}
+          
+          ${mission.premiumExercises ? mission.premiumExercises.map(exercise => `
+            <!-- Premium Exercise: ${exercise.name} -->
+            <div class="exercise-card premium-feature" data-exercise="${exercise.id}">
+              <!-- Premium overlay for Elite-only content -->
+              <div class="premium-overlay">
+                <div class="text-center">
+                  <div class="text-purple-400 font-bold mb-2">Elite Tier Feature</div>
+                  <button class="bg-purple-600 hover:bg-purple-500 text-white text-sm px-4 py-2 rounded-full transition-colors">
+                    Upgrade to Unlock
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Exercise content same as regular exercises -->
+              <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center">
+                  <h3 class="text-xl font-bold">${exercise.name}</h3>
+                  <span class="ml-2 badge badge-red">${exercise.type}</span>
+                </div>
+                <div class="credit-counter">
+                  <span>+50</span>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <p class="text-gray-300 mb-2">${exercise.description}</p>
+                
+                <!-- OSHA compliance indicator -->
+                <div class="flex items-center text-xs text-green-400 mt-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>${exercise.compliance || 'Training Standard Compliant'}</span>
+                </div>
+              </div>
+            </div>
+          `).join('') : ''}
+        </div>
+  
+        <!-- Performance Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div class="bg-gray-800 rounded-xl p-6">
+            <h3 class="text-xl font-bold mb-4">Core Metrics</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="metric-box">
+                <span class="text-sm text-gray-400">Core Engagement</span>
+                <div class="text-xl font-bold text-blue-400" id="core-engagement">0%</div>
+              </div>
+              <div class="metric-box">
+                <span class="text-sm text-gray-400">Balance Score</span>
+                <div class="text-xl font-bold text-blue-400" id="balance-score">0%</div>
+              </div>
+              <div class="metric-box">
+                <span class="text-sm text-gray-400">Stability Index</span>
+                <div class="text-xl font-bold text-blue-400" id="stability-score">0%</div>
+              </div>
+              <div class="metric-box">
+                <span class="text-sm text-gray-400">Posture Quality</span>
+                <div class="text-xl font-bold text-blue-400" id="posture-score">0%</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gray-800 rounded-xl p-6">
+            <h3 class="text-xl font-bold mb-4">Progress Tracking</h3>
+            <div id="progress-chart" class="h-48">
+              <!-- Chart will be rendered here -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Certification Progress -->
+        <div class="bg-gray-800 rounded-xl p-6 mb-8">
+          <h3 class="text-xl font-bold mb-4">Certification Progress</h3>
+          <div class="grid grid-cols-4 gap-2">
+            <div class="certification-milestone ${(mission.progress || 0) >= 25 ? 'completed' : ''}">
+              <div class="milestone-circle">1</div>
+              <div class="milestone-label">Basics</div>
+            </div>
+            <div class="certification-milestone ${(mission.progress || 0) >= 50 ? 'completed' : ''}">
+              <div class="milestone-circle">2</div>
+              <div class="milestone-label">Intermediate</div>
+            </div>
+            <div class="certification-milestone ${(mission.progress || 0) >= 75 ? 'completed' : ''}">
+              <div class="milestone-circle">3</div>
+              <div class="milestone-label">Advanced</div>
+            </div>
+            <div class="certification-milestone ${(mission.progress || 0) >= 100 ? 'completed' : ''}">
+              <div class="milestone-circle">4</div>
+              <div class="milestone-label">Expert</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Leaderboard -->
+        <div id="leaderboard-container" class="bg-gray-800 rounded-xl p-6 mb-8">
+          <!-- Leaderboard content will be loaded dynamically -->
+        </div>
+        
+        <!-- Next Steps -->
+        <div class="bg-gray-800 rounded-xl p-6">
+          <h3 class="text-xl font-bold mb-4">Next Steps</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="next-step-card">
+              <h4 class="text-lg font-bold mb-2">Complete All Exercises</h4>
+              <p class="text-sm text-gray-300">Finish all exercises to earn the Core Balance Specialist certification.</p>
+            </div>
+            <div class="next-step-card">
+              <h4 class="text-lg font-bold mb-2">Advanced Training</h4>
+              <p class="text-sm text-gray-300">Unlock advanced training modules by completing this mission.</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    renderEnduranceMission(mission) {
+      return `
+        <div class="mb-8 relative">
+          <!-- Video background -->
+          <div class="video-bg rounded-xl overflow-hidden">
+            <video autoplay muted loop playsinline>
+              <source src="/videos/endurance-training.mp4" type="video/mp4">
+            </video>
+          </div>
+          
+          <div class="relative z-10">
+            <div class="flex items-center mb-4">
+              <button id="back-to-missions" class="text-blue-400 hover:text-blue-300 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h1 class="text-3xl font-bold">${mission.name}</h1>
+              
+              <!-- OSHA compliance badge -->
+              <span class="ml-3 compliance-badge">
+                OSHA 1910.158 Compliant
+              </span>
+            </div>
+            <p class="text-gray-400">${mission.description}</p>
+            
+            <!-- Credit earning indicator -->
+            <div class="flex items-center mt-2 space-x-3">
+              <div class="credit-counter">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>+25 credits per exercise</span>
+              </div>
+              
+              <!-- Certification progress -->
+              <div class="flex items-center text-xs text-green-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+                <span>${mission.certification || 'Endurance Certification'}: ${mission.progress || 0}% Complete</span>
+              </div>
+            </div>
+            
+            <!-- Mission Progress -->
+            <div class="mt-6">
+              <div class="flex justify-between mb-2">
+                <span class="text-gray-400">Mission Progress</span>
+                <span class="text-blue-400">${mission.progress || 0}%</span>
+              </div>
+              <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 rounded-full" style="width: ${mission.progress || 0}%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- STELLA Guidance -->
+        <div class="bg-gray-800 rounded-xl p-6 mb-8 border border-blue-500/20">
+          <div class="flex items-start">
+            <div class="stella-avatar mr-4 flex-shrink-0">
+              <span class="text-2xl">🤖</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-blue-400 mb-2">STELLA's Guidance</h2>
+              <div id="stella-endurance-feedback" class="text-gray-300">
+                <p>Focus on maintaining your heart rate within the target zones. I'll monitor your fatigue levels and provide guidance to maximize your endurance training.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Heart Rate Zones -->
+        <div class="bg-gray-800 rounded-xl p-6 mb-8">
+          <h2 class="text-xl font-bold mb-4">Heart Rate Zones</h2>
+          <div class="space-y-4">
+            ${mission.zones ? mission.zones.map(zone => `
+              <div class="zone-card" data-zone-id="${zone.id}" data-target-hr="${zone.targetHR}">
+                <div class="flex justify-between items-center">
+                  <h4 class="text-lg font-semibold">${zone.name}</h4>
+                  <span class="text-blue-400">${zone.duration}</span>
+                </div>
+                <div class="mt-2 grid grid-cols-4 gap-2">
+                  <div class="metric-box">
+                    <span class="text-sm text-gray-400">Target HR</span>
+                    <span class="text-lg font-bold">${zone.targetHR} bpm</span>
+                  </div>
+                  <div class="metric-box">
+                    <span class="text-sm text-gray-400">Time in Zone</span>
+                    <span class="zone-time">--</span>
+                  </div>
+                  <div class="metric-box">
+                    <span class="text-sm text-gray-400">Efficiency</span>
+                    <span class="efficiency-score">--</span>
+                  </div>
+                  <div class="metric-box">
+                    <span class="text-sm text-gray-400">Recovery</span>
+                    <span class="recovery-rate">--</span>
+                  </div>
+                </div>
+              </div>
+            `).join('') : ''}
+          </div>
+        </div>
+  
+        <!-- Exercise List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          ${mission.exercises ? mission.exercises.map(exercise => `
+            <!-- Exercise: ${exercise.name} -->
+            <div class="exercise-card" data-exercise="${exercise.id}">
+              <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center">
+                  <h3 class="text-xl font-bold">${exercise.name}</h3>
+                  <span class="ml-2 badge badge-blue">${exercise.type}</span>
+                </div>
+                <div class="credit-counter">
+                  <span>+25</span>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <p class="text-gray-300 mb-2">${exercise.description}</p>
+                
+                <!-- OSHA compliance indicator -->
+                <div class="flex items-center text-xs text-green-400 mt-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>${exercise.compliance || 'Training Standard Compliant'}</span>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-2 mt-4">
+                  ${exercise.sets ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Sets</span>
+                      <div class="text-lg font-bold">${exercise.sets}</div>
+                    </div>
+                  ` : ''}
+                  
+                  ${exercise.duration ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Duration</span>
+                      <div class="text-lg font-bold">${exercise.duration}</div>
+                    </div>
+                  ` : ''}
+                  
+                  ${exercise.reps ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Reps</span>
+                      <div class="text-lg font-bold">${exercise.reps}</div>
+                    </div>
+                  ` : ''}
+                  
+                  ${exercise.rest ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Rest</span>
+                      <div class="text-lg font-bold">${exercise.rest}</div>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+              
+              <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                  <span class="mr-2 text-sm text-gray-400">Form Score:</span>
+                  <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
+                  </div>
+                </div>
+                <button class="start-exercise-btn bg-blue-600 hover:bg-blue-500 text-white text-sm px-4 py-2 rounded-full transition-colors">
+                  Start Exercise
+                </button>
+              </div>
+            </div>
+          `).join('') : ''}
+        </div>
+        
+        <!-- Performance Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div class="bg-gray-800 rounded-xl p-6">
+            <h3 class="text-xl font-bold mb-4">Endurance Metrics</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="metric-box">
+                <span class="text-sm text-gray-400">Heart Rate</span>
+                <div class="text-xl font-bold text-blue-400" id="heart-rate">0 bpm</div>
+              </div>
+              <div class="metric-box">
+                <span class="text-sm text-gray-400">O₂ Saturation</span>
+                <div class="text-xl font-bold text-blue-400" id="o2-saturation">0%</div>
+              </div>
+              <div class="metric-box">
+                <span class="text-sm text-gray-400">HRV</span>
+                <div class="text-xl font-bold text-blue-400" id="hrv">0 ms</div>
+              </div>
+              <div class="metric-box">
+                <span class="text-sm text-gray-400">VO₂ Estimate</span>
+                <div class="text-xl font-bold text-blue-400" id="vo2">0 ml/kg/min</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gray-800 rounded-xl p-6">
+            <h3 class="text-xl font-bold mb-4">Heart Rate Monitoring</h3>
+            <div id="hr-chart" class="h-48">
+              <!-- Heart rate chart will be rendered here -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Certification Progress -->
+        <div class="bg-gray-800 rounded-xl p-6 mb-8">
+          <h3 class="text-xl font-bold mb-4">Certification Progress</h3>
+          <div class="grid grid-cols-4 gap-2">
+            <div class="certification-milestone ${(mission.progress || 0) >= 25 ? 'completed' : ''}">
+              <div class="milestone-circle">1</div>
+              <div class="milestone-label">Basic Endurance</div>
+            </div>
+            <div class="certification-milestone ${(mission.progress || 0) >= 50 ? 'completed' : ''}">
+              <div class="milestone-circle">2</div>
+              <div class="milestone-label">Advanced Zones</div>
+            </div>
+            <div class="certification-milestone ${(mission.progress || 0) >= 75 ? 'completed' : ''}">
+              <div class="milestone-circle">3</div>
+              <div class="milestone-label">Recovery Pro</div>
+            </div>
+            <div class="certification-milestone ${(mission.progress || 0) >= 100 ? 'completed' : ''}">
+              <div class="milestone-circle">4</div>
+              <div class="milestone-label">Elite Endurance</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Leaderboard -->
+        <div id="leaderboard-container" class="bg-gray-800 rounded-xl p-6 mb-8">
+          <!-- Leaderboard content will be loaded dynamically -->
+        </div>
+      `;
+    }
+    
+    // For simplicity, we'll use a generic mission renderer for the remaining mission types
+    renderStrengthMission(mission) {
+      return this.renderGenericMission(mission);
+    }
+    
+    renderCoordinationMission(mission) {
+      return this.renderGenericMission(mission);
+    }
+    
+    renderGripDexterityMission(mission) {
+      return this.renderGenericMission(mission);
+    }
+    
+    renderFlexibilityMission(mission) {
+      return this.renderGenericMission(mission);
+    }
+    
+    renderPosturalMission(mission) {
+      return this.renderGenericMission(mission);
+    }
+    
+    renderReactionMission(mission) {
+      return this.renderGenericMission(mission);
+    }
+    
+    renderPowerMission(mission) {
+      return this.renderGenericMission(mission);
+    }
+    
+    renderRecoveryMission(mission) {
+      return this.renderGenericMission(mission);
+    }
+    
+    renderGenericMission(mission) {
+      // Generic mission renderer that works for any mission type
+      return `
+        <div class="mb-8 relative">
+          <div class="relative z-10">
+            <div class="flex items-center mb-4">
+              <button id="back-to-missions" class="text-blue-400 hover:text-blue-300 mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h1 class="text-3xl font-bold">${mission.name}</h1>
+              
+              <!-- OSHA compliance badge -->
+              <span class="ml-3 compliance-badge">
+                OSHA 1910.158 Compliant
+              </span>
+            </div>
+            <p class="text-gray-400">${mission.description}</p>
+            
+            <!-- Credit earning indicator -->
+            <div class="flex items-center mt-2 space-x-3">
+              <div class="credit-counter">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>+25 credits per exercise</span>
+              </div>
+              
+              <!-- Certification progress -->
+              <div class="flex items-center text-xs text-green-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+                <span>${mission.certification || 'Training Certification'}: ${mission.progress || 0}% Complete</span>
+              </div>
+            </div>
+            
+            <!-- Mission Progress -->
+            <div class="mt-6">
+              <div class="flex justify-between mb-2">
+                <span class="text-gray-400">Mission Progress</span>
+                <span class="text-blue-400">${mission.progress || 0}%</span>
+              </div>
+              <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 rounded-full" style="width: ${mission.progress || 0}%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- STELLA Guidance -->
+        <div class="bg-gray-800 rounded-xl p-6 mb-8 border border-blue-500/20">
+          <div class="flex items-start">
+            <div class="stella-avatar mr-4 flex-shrink-0">
+              <span class="text-2xl">🤖</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-blue-400 mb-2">STELLA's Guidance</h2>
+              <div id="stella-generic-feedback" class="text-gray-300">
+                <p>I'm monitoring your performance metrics and will provide real-time guidance to optimize your training.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Exercise List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          ${mission.exercises ? mission.exercises.map(exercise => `
+            <div class="exercise-card" data-exercise="${exercise.id}">
+              <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center">
+                  <h3 class="text-xl font-bold">${exercise.name}</h3>
+                  <span class="ml-2 badge badge-blue">${exercise.type}</span>
+                </div>
+                <div class="credit-counter">
+                  <span>+25</span>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <p class="text-gray-300 mb-2">${exercise.description}</p>
+                
+                <!-- OSHA compliance indicator -->
+                <div class="flex items-center text-xs text-green-400 mt-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>${exercise.compliance || 'Training Standard Compliant'}</span>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-2 mt-4">
+                  ${exercise.sets ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Sets</span>
+                      <div class="text-lg font-bold">${exercise.sets}</div>
+                    </div>
+                  ` : ''}
+                  
+                  ${exercise.duration ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Duration</span>
+                      <div class="text-lg font-bold">${exercise.duration}</div>
+                    </div>
+                  ` : ''}
+                  
+                  ${exercise.reps ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Reps</span>
+                      <div class="text-lg font-bold">${exercise.reps}</div>
+                    </div>
+                  ` : ''}
+                  
+                  ${exercise.rest ? `
+                    <div class="metric-box">
+                      <span class="text-xs text-gray-400">Rest</span>
+                      <div class="text-lg font-bold">${exercise.rest}</div>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+              
+              <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                  <span class="mr-2 text-sm text-gray-400">Progress:</span>
+                  <div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
+                  </div>
+                </div>
+                <button class="start-exercise-btn bg-blue-600 hover:bg-blue-500 text-white text-sm px-4 py-2 rounded-full transition-colors">
+                  Start Exercise
+                </button>
+              </div>
+            </div>
+          `).join('') : ''}
+        </div>
+        
+        <!-- Generic metrics based on mission type -->
+        <div class="bg-gray-800 rounded-xl p-6 mb-8">
+          <h3 class="text-xl font-bold mb-4">Performance Metrics</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            ${mission.metrics ? mission.metrics.map(metric => `
+              <div class="metric-box">
+                <span class="text-sm text-gray-400">${this.formatMetricName(metric)}</span>
+                <div class="text-xl font-bold text-blue-400" id="${metric}-value">--</div>
+              </div>
+            `).join('') : ''}
+          </div>
+        </div>
+        
+        <!-- Leaderboard -->
+        <div id="leaderboard-container" class="bg-gray-800 rounded-xl p-6 mb-8">
+          <!-- Leaderboard content will be loaded dynamically -->
+        </div>
+      `;
+    }
+    
+    // Helper to format metric names for display
+    formatMetricName(metric) {
+      // Convert camelCase to Title Case with spaces
+      return metric
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, str => str.toUpperCase());
+    }
+    
+    setupEventListeners() {
+      // Global event listeners
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('start-exercise-btn')) {
+          this.handleExerciseStart(e.target);
+        }
+      });
+    }
+    
+    handleExerciseStart(button) {
+      const exerciseCard = button.closest('.exercise-card');
+      if (!exerciseCard) return;
+      
+      const exerciseId = exerciseCard.dataset.exercise;
+      if (!exerciseId) return;
+      
+      // Find the exercise data from the current mission
+      const exercise = this.findExerciseById(exerciseId);
+      if (!exercise) return;
+      
+      // Toggle button text/state
+      if (button.textContent.trim() === 'Start Exercise') {
+        button.textContent = 'In Progress...';
+        exerciseCard.classList.add('ring', 'ring-blue-500');
+        
+        // Start exercise timer if duration is available
+        if (exercise.duration) {
+          this.startExerciseTimer(exercise.duration, exerciseId);
+        }
+        
+        // Start metrics simulation based on mission ID
+        this.startMetricsSimulation(exerciseId);
+        
+      } else {
+        button.textContent = 'Start Exercise';
+        exerciseCard.classList.remove('ring', 'ring-blue-500');
+        
+        // Clear any ongoing simulations
+        if (this.currentMetricsInterval) {
+          clearInterval(this.currentMetricsInterval);
+          this.currentMetricsInterval = null;
+        }
+      }
+    }
+    
+    findExerciseById(exerciseId) {
+      if (!this.currentMission) return null;
+      
+      // Check in regular exercises
+      if (this.currentMission.exercises) {
+        const exercise = this.currentMission.exercises.find(e => e.id === exerciseId);
+        if (exercise) return exercise;
+      }
+      
+      // Check in premium exercises
+      if (this.currentMission.premiumExercises) {
+        const premiumExercise = this.currentMission.premiumExercises.find(e => e.id === exerciseId);
+        if (premiumExercise) return premiumExercise;
+      }
+      
+      return null;
+    }
+    
+    startExerciseTimer(duration, exerciseId) {
+      // Convert duration to seconds (e.g., "30s", "2m", "60 sec")
+      let seconds = this.parseDuration(duration);
+      if (seconds <= 0) return;
+      
+      const originalSeconds = seconds;
+      
+      // Create timer display if it doesn't exist
+      let timerElement = document.querySelector(`.exercise-card[data-exercise="${exerciseId}"] .exercise-timer`);
+      if (!timerElement) {
+        timerElement = document.createElement('div');
+        timerElement.className = 'exercise-timer mt-2 text-center text-xl font-bold text-blue-400';
+        
+        // Add progress bar
+        const progressBar = document.createElement('div');
+        progressBar.className = 'mt-1 w-full h-2 bg-gray-700 rounded-full overflow-hidden';
+        progressBar.innerHTML = '<div class="progress-bar-fill h-full bg-blue-500 rounded-full" style="width: 0%"></div>';
+        
+        // Add to exercise card
+        const exerciseCard = document.querySelector(`.exercise-card[data-exercise="${exerciseId}"]`);
+        if (exerciseCard) {
+          exerciseCard.querySelector('.mb-4').appendChild(timerElement);
+          exerciseCard.querySelector('.mb-4').appendChild(progressBar);
+        }
+      }
+      
+      // Clear any existing timer
+      if (this.exerciseTimers[exerciseId]) {
+        clearInterval(this.exerciseTimers[exerciseId]);
+      }
+      
+      const updateTimer = () => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        timerElement.textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        
+        // Update progress bar
+        const progressBar = document.querySelector(`.exercise-card[data-exercise="${exerciseId}"] .progress-bar-fill`);
+        if (progressBar) {
+          const percentage = 100 - ((seconds / originalSeconds) * 100);
+          progressBar.style.width = `${percentage}%`;
+        }
+      };
+      
+      // Initial display
+      updateTimer();
+      
+      // Start countdown
+      this.exerciseTimers[exerciseId] = setInterval(() => {
+        seconds--;
+        updateTimer();
+        
+        if (seconds <= 0) {
+          clearInterval(this.exerciseTimers[exerciseId]);
+          delete this.exerciseTimers[exerciseId];
+          this.completeExercise(exerciseId);
+        }
+      }, 1000);
+    }
+    
+    parseDuration(duration) {
+      if (typeof duration === 'number') return duration;
+      if (!duration) return 30; // Default to 30 seconds
+      
+      // Parse duration formats: "30s", "2m", "60 sec", etc.
+      const match = duration.match(/(\d+)\s*([a-z]*)/i);
+      if (!match) return 30;
+      
+      const value = parseInt(match[1]);
+      const unit = (match[2] || 's').toLowerCase();
+      
+      if (unit.startsWith('m')) {
+        return value * 60; // Minutes to seconds
+      } else {
+        return value; // Assume seconds
+      }
+    }
+    
+    startMetricsSimulation(exerciseId) {
+      // Clear any existing simulation
+      if (this.currentMetricsInterval) {
+        clearInterval(this.currentMetricsInterval);
+      }
+      
+      // Choose simulation based on mission type
+      if (this.currentMission.id === 'mission1') {
+        this.simulateCoreBalanceMetrics(exerciseId);
+      } else if (this.currentMission.id === 'mission2') {
+        this.simulateEnduranceMetrics(exerciseId);
+      } else {
+        this.simulateGenericMetrics(exerciseId);
+      }
+    }
+    
+    simulateCoreBalanceMetrics(exerciseId) {
+      // Simulate metrics for core balance mission
+      this.currentMetricsInterval = setInterval(() => {
+        const coreEngagement = Math.floor(70 + Math.random() * 20);
+        const balanceScore = Math.floor(65 + Math.random() * 25);
+        const stabilityScore = Math.floor(75 + Math.random() * 15);
+        const postureScore = Math.floor(80 + Math.random() * 10);
+        
+        // Update UI
+        document.getElementById('core-engagement')?.textContent = `${coreEngagement}%`;
+        document.getElementById('balance-score')?.textContent = `${balanceScore}%`;
+        document.getElementById('stability-score')?.textContent = `${stabilityScore}%`;
+        document.getElementById('posture-score')?.textContent = `${postureScore}%`;
+        
+        // Update form score
+        const formBar = document.querySelector(`.exercise-card[data-exercise="${exerciseId}"] .bg-green-500`);
+        if (formBar) {
+          const formScore = Math.floor((coreEngagement + balanceScore + stabilityScore + postureScore) / 4);
+          formBar.style.width = `${formScore}%`;
+        }
+        
+        // Send metrics to backend
+        this.sendMetrics(exerciseId, {
+          coreEngagement,
+          balanceScore,
+          stabilityScore,
+          postureScore
+        });
+      }, 3000);
+    }
+    
+    simulateEnduranceMetrics(exerciseId) {
+      let heartRate = 90; // Starting HR
+      
+      this.currentMetricsInterval = setInterval(() => {
+        // Simulate gradual heart rate increase with some variability
+        heartRate = Math.min(180, heartRate + Math.floor(Math.random() * 5) - 1);
+        const o2Saturation = Math.floor(94 + Math.random() * 5);
+        const hrv = Math.floor(30 + Math.random() * 20);
+        const vo2 = Math.floor(35 + Math.random() * 15);
+        
+        // Update UI
+        document.getElementById('heart-rate')?.textContent = `${heartRate} bpm`;
+        document.getElementById('o2-saturation')?.textContent = `${o2Saturation}%`;
+        document.getElementById('hrv')?.textContent = `${hrv} ms`;
+        document.getElementById('vo2')?.textContent = `${vo2} ml/kg/min`;
+        
+        // Update heart rate zones
+        if (this.currentMission.zones) {
+          this.updateHeartRateZones(heartRate);
+        }
+        
+        // Send metrics to backend
+        this.sendMetrics(exerciseId, {
+          heartRate,
+          o2Saturation,
+          hrv,
+          vo2
+        });
+      }, 3000);
+    }
+    
+    updateHeartRateZones(heartRate) {
+      if (!this.currentMission.zones) return;
+      
+      this.currentMission.zones.forEach(zone => {
+        const zoneElement = document.querySelector(`.zone-card[data-zone-id="${zone.id}"]`);
+        if (!zoneElement) return;
+        
+        const targetHR = parseInt(zone.targetHR || 0);
+        const hrDiff = Math.abs(heartRate - targetHR);
+        
+        // Check if user is in this zone (within 10 bpm)
+        if (hrDiff <= 10) {
+          zoneElement.classList.add('active-zone');
+          
+          // Update time in zone
+          const timeElement = zoneElement.querySelector('.zone-time');
+          if (timeElement && timeElement.textContent === '--') {
+            timeElement.textContent = '00:30';
+          } else if (timeElement) {
+            const [mins, secs] = timeElement.textContent.split(':').map(Number);
+            let newSecs = secs + 30;
+            let newMins = mins;
+            
+            if (newSecs >= 60) {
+              newSecs = 0;
+              newMins += 1;
+            }
+            
+            timeElement.textContent = `${String(newMins).padStart(2, '0')}:${String(newSecs).padStart(2, '0')}`;
+          }
+          
+          // Update efficiency score based on how close to target HR
+          const efficiencyElement = zoneElement.querySelector('.efficiency-score');
+          if (efficiencyElement) {
+            const efficiency = Math.max(0, 100 - hrDiff * 10);
+            efficiencyElement.textContent = `${efficiency}%`;
+          }
+        } else {
+          zoneElement.classList.remove('active-zone');
+        }
+      });
+    }
+    
+    simulateGenericMetrics(exerciseId) {
+      // Get metrics from current mission or use defaults
+      const metrics = this.currentMission.metrics || [
+        'progress', 'formScore', 'intensity', 'technique'
+      ];
+      
+      this.currentMetricsInterval = setInterval(() => {
+        // Generate random metrics for each type
+        const metricValues = {};
+        
+        metrics.forEach(metric => {
+          const value = Math.floor(70 + Math.random() * 20);
+          metricValues[metric] = value;
+          
+          // Update UI if element exists
+          const element = document.getElementById(`${metric}-value`);
+          if (element) {
+            if (metric.toLowerCase().includes('rate')) {
+              element.textContent = `${value} bpm`;
+            } else if (metric.toLowerCase().includes('percentage') || 
+                      metric.toLowerCase().includes('score')) {
+              element.textContent = `${value}%`;
+            } else {
+              element.textContent = `${value}`;
+            }
+          }
+        });
+        
+        // Update form score bar
+        const formBar = document.querySelector(`.exercise-card[data-exercise="${exerciseId}"] .bg-green-500`);
+        if (formBar) {
+          const formScore = metricValues.formScore || Math.floor(70 + Math.random() * 20);
+          formBar.style.width = `${formScore}%`;
+        }
+        
+        // Send metrics to backend
+        this.sendMetrics(exerciseId, metricValues);
+      }, 3000);
+    }
+    
+    completeExercise(exerciseId) {
+      // Handle exercise completion
+      const exerciseCard = document.querySelector(`.exercise-card[data-exercise="${exerciseId}"]`);
+      if (!exerciseCard) return;
+      
+      // Clear any ongoing metrics simulation
+      if (this.currentMetricsInterval) {
+        clearInterval(this.currentMetricsInterval);
+        this.currentMetricsInterval = null;
+      }
+      
+      // Update UI
+      exerciseCard.classList.add('completed');
+      const button = exerciseCard.querySelector('.start-exercise-btn');
+      if (button) {
+        button.textContent = 'Completed';
+        button.disabled = true;
+      }
+      
+      // Award credits
+      this.awardCredits(exerciseId);
+      
+      // Update mission progress
+      this.updateMissionProgress();
+      
+      // Send completion to STELLA
+      if (window.stellaCore) {
+        window.stellaCore.exerciseCompleted({
+          exerciseId,
+          missionId: this.currentMission.id,
+          performance: 'good'
+        });
+      }
+    }
+    
+    updateMissionProgress() {
+      if (!this.currentMission) return;
+      
+      // Calculate new progress percentage based on completed exercises
+      const completedExercises = document.querySelectorAll('.exercise-card.completed').length;
+      const totalExercises = document.querySelectorAll('.exercise-card:not(.premium-feature)').length;
+      
+      if (totalExercises === 0) return;
+      
+      const newProgress = Math.min(100, Math.round((completedExercises / totalExercises) * 100));
+      
+      // Update progress in the UI
+      const progressEl = document.querySelector('.text-blue-400');
+      if (progressEl) {
+        progressEl.textContent = `${newProgress}%`;
+      }
+      
+      const progressBar = document.querySelector('.bg-blue-500');
+      if (progressBar) {
+        progressBar.style.width = `${newProgress}%`;
+      }
+      
+      // Update certification milestones
+      document.querySelectorAll('.certification-milestone').forEach((milestone, index) => {
+        const threshold = (index + 1) * 25; // 25%, 50%, 75%, 100%
+        if (newProgress >= threshold) {
+          milestone.classList.add('completed');
+        } else {
+          milestone.classList.remove('completed');
+        }
+      });
+      
+      // Update mission object
+      this.currentMission.progress = newProgress;
+      
+      // Send progress update to server
+      this.updateMissionProgressOnServer(newProgress);
+    }
+    
+    async updateMissionProgressOnServer(progress) {
+      if (!this.sessionId || !this.currentMission) return;
+      
+      try {
+        await fetch(`/api/training/physical/mission/${this.currentMission.id}/progress`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            progress,
+            sessionId: this.sessionId
+          })
+        });
+      } catch (error) {
+        console.error('Error updating mission progress:', error);
+      }
+    }
+    
+    async awardCredits(exerciseId) {
+      if (!this.sessionId || !this.currentMission) return;
+      
+      const exercise = this.findExerciseById(exerciseId);
+      const creditAmount = exercise && exercise.premium ? 50 : 25;
+      
+      try {
+        const response = await fetch(`/api/training/physical/mission/${this.currentMission.id}/credits`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            exerciseId,
+            sessionId: this.sessionId,
+            amount: creditAmount
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Show credit notification
+          this.showCreditNotification(creditAmount);
+          
+          // Update total credits display if it exists
+          const totalCreditsEl = document.getElementById('total-credits');
+          if (totalCreditsEl && data.totalCredits) {
+            totalCreditsEl.textContent = data.totalCredits;
+          }
+        }
+      } catch (error) {
+        console.error('Error awarding credits:', error);
+        
+        // Show notification anyway for better UX
+        this.showCreditNotification(creditAmount);
+      }
+    }
+    
+    showCreditNotification(amount) {
+      const notification = document.createElement('div');
+      notification.className = 'credit-notification';
+      notification.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="font-bold">+${amount} Credits Earned!</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Add animation class
+      setTimeout(() => notification.classList.add('credit-earned'), 10);
+      
+      // Remove after animation
+      setTimeout(() => {
+        notification.classList.remove('credit-earned');
+        setTimeout(() => notification.remove(), 500);
+      }, 3000);
+    }
+    
+    async loadLeaderboard() {
+      if (!this.currentMission) return;
+      
+      const leaderboardEl = document.getElementById('leaderboard-container');
+      if (!leaderboardEl) return;
+      
+      try {
+        const response = await fetch(`/api/training/physical/mission/${this.currentMission.id}/leaderboard`);
+        const data = await response.json();
+        
+        if (data.success && data.leaderboard) {
+          this.renderLeaderboard(data.leaderboard);
+        } else {
+          // Fallback to mock data
+          this.renderLeaderboard(this.getMockLeaderboardData());
+        }
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        this.renderLeaderboard(this.getMockLeaderboardData());
+      }
+    }
+    
+    getMockLeaderboardData() {
+      // Fallback mock data for leaderboard
+      return [
+        { username: 'AstroTrainer', points: 1250, isCurrentUser: false },
+        { username: 'SpaceCommander', points: 1120, isCurrentUser: false },
+        { username: 'StarFit', points: 980, isCurrentUser: false },
+        { username: 'GravityHero', points: 920, isCurrentUser: true },
+        { username: 'MoonRunner', points: 850, isCurrentUser: false }
+      ];
+    }
+    
+    renderLeaderboard(leaderboardData) {
+      const leaderboardEl = document.getElementById('leaderboard-container');
+      if (!leaderboardEl) return;
+      
+      // Sort by points
+      const sortedLeaderboard = [...leaderboardData].sort((a, b) => b.points - a.points);
+      
+      // Find current user position
+      const userPosition = sortedLeaderboard.findIndex(entry => entry.isCurrentUser);
+      
+      leaderboardEl.innerHTML = `
+        <h3 class="text-xl font-bold mb-4">Leaderboard</h3>
+        <div class="space-y-3">
+          <!-- Top 3 users -->
+          ${sortedLeaderboard.slice(0, 3).map((entry, index) => `
+            <div class="flex items-center p-2 ${entry.isCurrentUser ? 'bg-blue-900/30 border border-blue-500/30' : 'bg-gray-700/30'} rounded-lg">
+              <div class="w-6 text-center ${index === 0 ? 'text-yellow-400' : index === 1 ? 'text-gray-300' : 'text-yellow-700'} font-bold">#${index + 1}</div>
+              <div class="ml-3 flex-grow">${entry.username}</div>
+              <div class="font-bold ${index === 0 ? 'text-yellow-400' : index === 1 ? 'text-gray-300' : 'text-yellow-700'}">${entry.points}</div>
+            </div>
+          `).join('')}
+          
+          ${userPosition > 2 ? `
+            <!-- Divider if user is not in top 3 -->
+            <div class="py-1 text-center text-gray-500 text-sm">•••</div>
+            
+            <!-- User position -->
+            <div class="flex items-center p-2 bg-blue-900/30 rounded-lg border border-blue-500/30">
+              <div class="w-6 text-center text-blue-400 font-bold">#${userPosition + 1}</div>
+              <div class="ml-3 flex-grow">You</div>
+              <div class="text-blue-400 font-bold">${sortedLeaderboard[userPosition].points}</div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+    
+    async sendMetrics(exerciseId, metrics) {
+      if (!this.sessionId || !this.currentMission) return;
+      
+      try {
+        const response = await fetch(`/api/training/physical/mission/${this.currentMission.id}/metrics`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            exerciseId,
+            sessionId: this.sessionId,
+            metrics
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success && data.feedback) {
+          // Update STELLA feedback
+          const feedbackElement = document.getElementById(`stella-${this.currentMission.id.replace('mission', '')}-feedback`) || 
+                                 document.getElementById('stella-generic-feedback');
+          
+          if (feedbackElement) {
+            feedbackElement.innerHTML = `
+              <p>${data.feedback.message}</p>
+              ${data.feedback.corrections ? `
+                <ul class="mt-2 space-y-1 list-disc list-inside">
+                  ${data.feedback.corrections.map(correction => `
+                    <li class="text-yellow-300">${correction}</li>
+                  `).join('')}
+                </ul>
+              ` : ''}
+            `;
+          }
+        }
+      } catch (error) {
+        console.error('Error sending metrics:', error);
+      }
+    }
+  }
+  
+  // Initialize when document loads
+  document.addEventListener('DOMContentLoaded', () => {
+    const missionHandler = new MissionHandler();
+    missionHandler.initialize();
+  });
+} catch (error) {
+  console.error('Mission handler error:', error);
+  console.error('Line number:', error.lineNumber);
+  console.error('Stack trace:', error.stack);
+}

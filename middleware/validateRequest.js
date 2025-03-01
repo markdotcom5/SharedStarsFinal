@@ -115,5 +115,5 @@ const validateRequestBySchemaPath = (schemaPath) => {
     }
   };
 };
-
 module.exports = validateRequestBySchemaPath;
+

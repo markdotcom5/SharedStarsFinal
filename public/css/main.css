@@ -15,7 +15,20 @@
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
 }
+/* Add this to your CSS */
+:root {
+  --space-black: #000000;
+  --dark-gray: #0D0D0D;
+  --blue-accent: #1F7AFF;
+  --blue-light: #64A1FF;
+  --text-white: #FFFFFF;
+  --text-gray: #A0A0A0;
+}
 
+body {
+  background-color: var(--space-black);
+  color: var(--text-white);
+}
 /* Apply Global Styles */
 body {
   font-family: var(--font-main);

@@ -1,0 +1,155 @@
+<div class="training-module" data-module="flexibility">
+    <!-- STELLA Real-time Monitoring Banner -->
+    <div class="ai-monitoring-status">
+      <div class="flex items-center gap-3 bg-blue-900/30 p-4 rounded-lg">
+        <div class="pulse-dot"></div>
+        <p class="text-sm text-blue-300">STELLA analyzing flexibility metrics...</p>
+      </div>
+    </div>
+  
+    <!-- Module Content -->
+    <div class="space-y-6">
+      <div class="bg-gray-800 rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-4">Zero-G Flexibility Training</h2>
+        
+        <!-- STELLA's Personalized Recommendations -->
+        <div class="mb-6 border-l-4 border-blue-500 pl-4">
+          <h3 class="text-blue-400 font-semibold">STELLA's Assessment</h3>
+          <p id="stella-flexibility-feedback" class="text-gray-300">
+            Based on your last session, focus on improving hip flexor mobility...
+          </p>
+        </div>
+  
+        <!-- Exercise Program -->
+        <div class="exercise-sequence space-y-4">
+          <% exercises.forEach(function(exercise) { %>
+            <div class="exercise-card" data-exercise-id="<%= exercise.id %>">
+              <div class="flex justify-between items-center">
+                <h4 class="text-lg font-semibold"><%= exercise.name %></h4>
+                <span class="text-blue-400"><%= exercise.duration %></span>
+              </div>
+              <div class="mt-2">
+                <div class="progress-bar"></div>
+                <div class="flex justify-between text-sm text-gray-400">
+                  <span>Form Score: <span class="form-score">--</span></span>
+                  <span>Range: <span class="range-score">--</span></span>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+  
+      <!-- Real-time Metrics -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="metric-card">
+          <h5>ROM Progress</h5>
+          <div class="metric" id="rom-metric">0°</div>
+        </div>
+        <div class="metric-card">
+          <h5>Symmetry Score</h5>
+          <div class="metric" id="symmetry-metric">0%</div>
+        </div>
+        <div class="metric-card">
+          <h5>Stability Index</h5>
+          <div class="metric" id="stability-metric">0.0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+   class FlexibilityTracker {
+    constructor() {
+        this.metrics = {
+            rom: 0,
+            symmetry: 0,
+            stability: 0
+        };
+        this.stella = new STELLAInterface('flexibility');
+    }
+
+    async initialize() {
+        await this.stella.connect();
+        this.setupRealTimeTracking();
+        this.startMonitoring();
+    }
+
+    async updateMetrics(newMetrics) {
+        this.metrics = { ...this.metrics, ...newMetrics };
+        
+        // Update UI
+        Object.keys(newMetrics).forEach(metric => {
+            document.getElementById(`${metric}-metric`).textContent = 
+                this.formatMetric(metric, newMetrics[metric]);
+        });
+
+        // Get STELLA's analysis
+        const feedback = await this.stella.analyzeMetrics(this.metrics);
+        this.updateFeedback(feedback);
+    }
+
+    setupRealTimeTracking() {
+        // Track exercise form
+        document.querySelectorAll('.exercise-card').forEach(card => {
+            card.addEventListener('exerciseStart', async (e) => {
+                const exerciseId = card.dataset.exerciseId;
+                const metrics = await this.stella.startExerciseTracking(exerciseId);
+                this.updateExerciseMetrics(card, metrics);
+            });
+        });
+    }
+
+    updateExerciseMetrics(card, metrics) {
+        // Update form score
+        card.querySelector('.form-score').textContent = 
+            `${metrics.formScore}%`;
+        
+        // Update range of motion
+        card.querySelector('.range-score').textContent = 
+            `${metrics.rangeOfMotion}°`;
+        
+        // Get STELLA's real-time feedback
+        this.stella.getExerciseFeedback(metrics)
+            .then(feedback => {
+                this.updateFeedback(feedback);
+            });
+    }
+
+    updateFeedback(feedback) {
+        const feedbackElement = document.getElementById('stella-flexibility-feedback');
+        feedbackElement.textContent = feedback.message;
+        
+        // Add visual indicator if correction needed
+        if (feedback.requiresCorrection) {
+            feedbackElement.classList.add('needs-attention');
+        }
+    }
+
+    startMonitoring() {
+        // Set up continuous monitoring interval
+        setInterval(async () => {
+            const currentMetrics = await this.stella.getCurrentMetrics();
+            this.updateMetrics(currentMetrics);
+        }, 1000); // Update every second
+    }
+
+    formatMetric(metricName, value) {
+        switch(metricName) {
+            case 'rom':
+                return `${value}°`;
+            case 'symmetry':
+                return `${value}%`;
+            case 'stability':
+                return value.toFixed(1);
+            default:
+                return value;
+        }
+    }
+}
+
+// Initialize when document loads
+document.addEventListener('DOMContentLoaded', () => {
+    const tracker = new FlexibilityTracker();
+    tracker.initialize();
+});

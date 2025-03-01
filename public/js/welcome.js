@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userSignedUp = localStorage.getItem('signedUp');
         if (userSignedUp) {
             alert('Welcome back! Redirecting to your dashboard...');
-            window.location.href = '/mission-control.html';
+            window.location.href = '/dashboard.html';
         } else {
             alert('Redirecting to the sign-up page...');
             window.location.href = '/signup.html'; // or whatever your correct signup page path is
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle Proceed Button
     function handleProceed() {
         alert('Welcome back! Proceeding to your dashboard...');
-        window.location.href = '/mission-control.html';
+        window.location.href = '/dashboard.html';
     }
 
     // Apply Translations

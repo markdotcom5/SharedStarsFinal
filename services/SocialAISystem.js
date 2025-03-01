@@ -1,5 +1,4 @@
-// services/SocialAISystem.js
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const OpenAI = require('openai');
 
 class SocialAISystem extends EventEmitter {

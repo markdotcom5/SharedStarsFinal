@@ -1,5 +1,4 @@
-// services/AIIntegrationService.js
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const AIGuidanceSystem = require('./AIGuidanceSystem');
 const AIOrchestrator = require('./AIOrchestrator');
 const AISpaceCoach = require('./AISpaceCoach');

@@ -1,10 +1,9 @@
-// services/ServiceIntegrator.js
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const AISpaceCoach = require('./AISpaceCoach');
 const AIGuidanceSystem = require('./AIGuidanceSystem');
 const aiGuidance = require('./aiGuidance');
 const aiAssistant = require('./aiAssistant');
-const User = require('../models/User');  // Add this as the first new line after your existing requires
+const User = require('../models/User');
 
 class ServiceIntegrator extends EventEmitter {
     constructor() {
@@ -293,4 +292,4 @@ class ServiceIntegrator extends EventEmitter {
     }
 };
 
-module.exports = new ServiceIntegrator();
+module.exports = ServiceIntegrator;

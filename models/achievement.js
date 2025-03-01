@@ -76,6 +76,6 @@ AchievementSchema.methods.getSummary = function() {
 };
 
 // Prevent OverwriteModelError by checking if the model already exists
-module.exports = mongoose.models.Achievement
-  ? mongoose.models.Achievement
-  : mongoose.model('Achievement', AchievementSchema);
+const Achievement = mongoose.models.Achievement || mongoose.model('Achievement', AchievementSchema);
+
+module.exports = Achievement;

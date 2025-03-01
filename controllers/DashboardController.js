@@ -188,4 +188,4 @@ exports.renderDashboard = async (req, res) => {
     }
   };
   
-export default DashboardController;
+  module.exports =  DashboardController;

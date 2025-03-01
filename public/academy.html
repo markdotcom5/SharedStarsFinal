@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="StelTrek Academy Training Modules" />
+  <meta name="description" content="SharedStars Academy - The World's Largest AI-Powered Space Training Program" />
   <title>SharedStars Academy</title>
 
   <!-- Security Headers -->
@@ -23,12 +23,228 @@
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/ai-assistant.css" />
 
+  <style>
+    /* Custom styles to match Figma design */
+    body {
+      background-color: #0F172A;
+      color: #F8FAFC;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .hero-text {
+      font-size: 3.5rem;
+      line-height: 1.2;
+    }
+    
+    .cosmic-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .cosmic-hover:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+    }
+    
+    .step-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .module-card {
+      transition: all 0.3s ease;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.7) 0%, rgba(9, 14, 27, 0.9) 100%);
+    }
+    
+    .module-card:hover {
+      border-color: rgba(59, 130, 246, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(30, 64, 175, 0.2);
+    }
+
+    .pulse-dot {
+      position: relative;
+    }
+    
+    .pulse-dot::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+      background-color: rgba(59, 130, 246, 0.7);
+      z-index: -1;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      70% {
+        transform: scale(2);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* Added styles to match Figma design */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 8px;
+      border-radius: 4px;
+      background-color: rgba(59, 130, 246, 0.2);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: #3B82F6;
+      border-radius: 4px;
+    }
+
+    .certification-card {
+      background: linear-gradient(135deg, rgba(13, 22, 41, 0.8) 0%, rgba(9, 16, 32, 0.9) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .countdown-item {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(15, 23, 42, 0.8);
+      border-radius: 8px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .tier-card {
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.7) 0%, rgba(9, 14, 27, 0.9) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .tier-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(59, 130, 246, 0.6);
+      box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.4);
+    }
+
+    .ai-assistant-bubble {
+      background-color: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .ai-assistant-bubble:before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 20px;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 10px solid rgba(59, 130, 246, 0.3);
+    }
+    
+    .module-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+    
+    .phase-card {
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.7) 0%, rgba(9, 14, 27, 0.9) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .phase-card:hover {
+      border-color: rgba(59, 130, 246, 0.6);
+      transform: translateY(-3px);
+    }
+    
+    .chart-gradient {
+      background: linear-gradient(180deg, rgba(37, 99, 235, 0.5) 0%, rgba(37, 99, 235, 0) 100%);
+    }
+    
+    /* Chart point styles */
+    .chart-point {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #3B82F6;
+      position: relative;
+    }
+    
+    .chart-point::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: -5px;
+      left: -5px;
+      border-radius: 50%;
+      background-color: rgba(59, 130, 246, 0.3);
+      animation: pulse 2s infinite;
+    }
+    
+    .qualification-item {
+      position: relative;
+      padding-left: 30px;
+    }
+    
+    .qualification-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      background-color: #1E40AF;
+      border-radius: 50%;
+    }
+    
+    .qualification-item.completed::before {
+      background-color: #10B981;
+    }
+  </style>
+
   <!-- Include language selection script -->
   <script src="/js/languageSelection.js" defer></script>
+  <script src="/js/academy.js" defer></script>
+  <script src="/js/modules.js" defer></script>
+  <script src="/js/aiAssistant.js" defer></script>
+  <script src="/js/stella-integration.js" defer></script>
+  <script src="/js/stella-core.js" defer></script>
 </head>
-<body class="bg-slate-900 text-white min-h-screen">
+<body class="bg-gray-900 text-white min-h-screen">
   <!-- HEADER (consistent across pages) -->
-  <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg">
+  <header class="site-header bg-black/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg">
     <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
       <!-- Logo -->
       <div class="flex items-center mb-2 md:mb-0">
@@ -38,424 +254,272 @@
       </div>
       <!-- Navigation Links -->
       <ul class="flex flex-wrap gap-4">
-        <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
-        <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
-        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
-        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
-        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
-        <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
-        <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
-        <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-        <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
-        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
-        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+        <li><a href="/index.html" class="hover:text-blue-400 transition-colors">Home</a></li>
+        <li><a href="/academy.html" class="text-blue-400 font-bold">Academy</a></li>
+        <li><a href="/about.html" class="hover:text-blue-400 transition-colors">About</a></li>
+        <li><a href="/leaderboard.html" class="hover:text-blue-400 transition-colors">Leaderboard</a></li>
+        <li><a href="/subscribe.html" class="hover:text-blue-400 transition-colors">Subscribe</a></li>
       </ul>
-      <!-- Language Selector in Header -->
-      <div class="language-selector flex gap-2">
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+      <!-- Right side with language and profile -->
+      <div class="flex items-center gap-4">
+        <!-- Language Selector -->
+        <div class="language-selector flex gap-2">
+          <button class="lang-btn text-2xl opacity-50 hover:opacity-100 transition-opacity" data-lang="en" aria-label="Switch to English">🇺🇸</button>
+          <button class="lang-btn text-2xl opacity-50 hover:opacity-100 transition-opacity" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+          <button class="lang-btn text-2xl opacity-50 hover:opacity-100 transition-opacity" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+          <button class="lang-btn text-2xl opacity-50 hover:opacity-100 transition-opacity" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+        </div>
+        <!-- Get Started button -->
+        <a href="#application-process" class="hidden md:block bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-white font-medium transition-colors">
+          Apply Now
+        </a>
       </div>
     </nav>
   </header>
 
-  <!-- AI Coach Status Bar -->
-  <div id="ai-status-bar" class="fixed top-0 w-full bg-gray-800/95 border-b border-blue-500/20 z-50">
-    <div class="container mx-auto px-4 py-2 flex items-center justify-between">
-      <div id="ai-status" class="flex items-center space-x-3">
-        <!-- Pulse Dot with Tailwind animate-ping -->
-        <div class="pulse-dot w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
-        <span>Initializing AI Coach...</span>
-      </div>
-      <div class="flex items-center space-x-6">
-        <div id="session-metrics" class="flex items-center space-x-6">
-          <div class="flex items-center space-x-2">
-            <span class="text-blue-400">Focus Score:</span>
-            <span id="focus-score">--</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <span class="text-green-400">Progress:</span>
-            <span id="progress-percentage">0%</span>
-          </div>
-        </div>
-        <!-- Language Selector inside AI Coach Status Bar -->
-        <div class="language-selector flex gap-2">
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Include any additional page content below -->
-  <script src="/js/academy.js"></script>
-</body>
-<body>
-    <!-- AOS Initialization -->
-    <script>
-        AOS.init({
-            duration: 1000, // Animation duration in milliseconds
-            easing: 'ease', // Easing style for animations
-            once: true, // Whether animation should happen only once
-        });
-    </script>
-</body>
-</html>
-    <!-- AOS Initialization -->
-    <script>
-        AOS.init({
-            duration: 1000, // Animation duration in milliseconds
-            easing: 'ease', // Easing style for animations
-            once: true, // Whether animation should happen only once
-        });
-    </script>
-</body>
-</html>
-    <!-- Hero Section -->
-    <section id="hero" class="min-h-screen flex items-center justify-center relative bg-black">
-        <div class="absolute inset-0">
-            <video autoplay muted loop playsinline class="w-full h-full object-cover">
-                <source src="./videos/academy10.mp4" type="video/mp4">
-            </video>
-            <div class="absolute inset-0 bg-transparent"></div>
-        </div>
-        <div class="relative z-10 text-center text-white">
-            <h1 class="hero-text font-extrabold text-blue-400">Welcome to SharedStars Academy</h1>
-            <p class="mt-4 text-lg text-gray-300 max-w-xl mx-auto">
-                Begin your journey to the stars with advanced space training and astronaut preparation.
-            </p>
-            <div class="mt-6 flex justify-center gap-6">
-                <a href="./signup.html" class="bg-blue-500 text-white font-bold py-4 px-8 rounded-lg shadow-lg text-lg hover:bg-blue-600 transition cosmic-hover">
-                    Join Now
-                </a>
-                <a href="./subscribe.html" class="bg-gray-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg text-lg hover:bg-gray-800 transition cosmic-hover">
-                    Subscribe
-                </a>
-            </div>
-        </div>
-    </section>    
-</body>
-</html>
-<!-- Drop the Updated Space Section Code Here -->
-<section id="space-section" class="min-h-screen flex items-center justify-center relative bg-black">
-    <!-- Video Background -->
+  <!-- Hero Section -->
+  <section id="hero" class="min-h-screen flex items-center justify-center relative">
     <div class="absolute inset-0">
-        <video autoplay muted loop playsinline loading="lazy" poster="./images/space-placeholder.jpg" class="w-full h-full object-cover">
-            <source src="./videos/space1.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <!-- Gradient Overlay -->
-        <div class="absolute inset-0 bg-transparent"></div>
+      <video autoplay muted loop playsinline class="w-full h-full object-cover">
+        <source src="./videos/academy10.mp4" type="video/mp4">
+      </video>
+      <div class="absolute inset-0 bg-black/40"></div>
     </div>
-    <!-- Content Overlay -->
-    <div class="relative z-10 text-center text-white">
-        <h2 class="text-5xl md:text-6xl font-extrabold text-blue-400 drop-shadow-md">Explore the Cosmos</h2>
-        <p class="mt-4 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Take your first step into the infinite possibilities of space exploration. At SharedStars Academy, we prepare the next generation of pioneers through world-class training, immersive simulations, and a vibrant community.
+    <div class="relative z-10 text-center text-white max-w-5xl mx-auto px-4">
+      <div data-aos="fade-up">
+        <p class="text-blue-400 mb-2 uppercase tracking-wider font-semibold">Welcome to the Future of Space</p>
+        <h1 class="hero-text font-extrabold text-white mb-6">The World's Largest AI-Powered<br>Space Training Program!</h1>
+        <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+          SharedStars Academy is not just another training program—it's the future of space readiness, powered by cutting-edge AI.
         </p>
-        <!-- Call-to-Action Button -->
-        <div class="mt-8">
-            <a href="#subscribe" class="bg-blue-500 text-white font-bold py-4 px-12 rounded-lg shadow-lg text-lg hover:bg-blue-600 transition cosmic-hover" aria-label="Subscribe to SharedStars">
-                Subscribe
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+          <a href="#training-phases" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg text-lg hover:bg-blue-500 transition cosmic-hover">
+            Explore Training
+          </a>
+          <a href="#application-process" class="bg-gray-800 text-white font-bold py-3 px-8 rounded-lg shadow-lg text-lg hover:bg-gray-700 transition cosmic-hover">
+            Apply Now
+          </a>
+        </div>
+        <p class="mt-4 text-red-400 font-semibold">Only 18 founding member spots remaining in the initial cohort</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Personalized Feedback Section -->
+  <section id="ai-feedback" class="py-16 bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row gap-8">
+        <!-- AI Feedback -->
+        <div class="md:w-1/2">
+          <div class="p-6 bg-gray-800/50 backdrop-blur-sm border border-blue-500/30 rounded-xl h-full" data-aos="fade-up">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">AI-Powered Feedback</h3>
+            <p class="text-gray-300 mb-4">STELLA provides real-time guidance throughout your training journey.</p>
+            
+            <div class="py-4">
+              <div class="flex items-start mb-4">
+                <div class="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center pulse-dot mr-3 flex-shrink-0">
+                  <span class="text-xl">🤖</span>
+                </div>
+                <div class="bg-blue-900/20 backdrop-blur-sm border border-blue-500/20 rounded-lg p-3">
+                  <p class="text-blue-300">STELLA analyzes your progress in real-time, identifying strengths and weaknesses to accelerate your training.</p>
+                </div>
+              </div>
+              <div class="flex items-start mb-4">
+                <div class="w-10 h-10 rounded-full bg-gray-600/20 flex items-center justify-center mr-3 flex-shrink-0">
+                  <span class="text-xl">👨‍🚀</span>
+                </div>
+                <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-500/20 rounded-lg p-3">
+                  <p class="text-gray-300">How does STELLA adapt to my personal training needs?</p>
+                </div>
+              </div>
+              <div class="flex items-start">
+                <div class="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center pulse-dot mr-3 flex-shrink-0">
+                  <span class="text-xl">🤖</span>
+                </div>
+                <div class="bg-blue-900/20 backdrop-blur-sm border border-blue-500/20 rounded-lg p-3">
+                  <p class="text-blue-300">I monitor over 200 competencies, creating a dynamic training plan that evolves as you progress, focusing on areas that need improvement while building on your strengths.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Initial Qualification -->
+        <div class="md:w-1/2">
+          <div class="p-6 bg-gray-800/50 backdrop-blur-sm border border-blue-500/30 rounded-xl h-full" data-aos="fade-up" data-aos-delay="100">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Initial Qualification Required</h3>
+            <p class="text-gray-300 mb-4">Complete these steps to begin your space training journey:</p>
+            
+            <div class="space-y-4">
+              <div class="flex items-start">
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center mr-3 text-white font-bold flex-shrink-0">1</div>
+                <div>
+                  <h4 class="font-medium text-white">Basic Eligibility Questions</h4>
+                  <p class="text-gray-400 text-sm mt-1">Verify you meet our baseline requirements for space training.</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center mr-3 text-white font-bold flex-shrink-0">2</div>
+                <div>
+                  <h4 class="font-medium text-white">STELLA AI Skills Assessment</h4>
+                  <p class="text-gray-400 text-sm mt-1">Our AI evaluates your existing skills and future potential.</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center mr-3 text-white font-bold flex-shrink-0">3</div>
+                <div>
+                  <h4 class="font-medium text-white">Select Training Path</h4>
+                  <p class="text-gray-400 text-sm mt-1">Choose from specialized training tracks based on your goals.</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center mr-3 text-white font-bold flex-shrink-0">4</div>
+                <div>
+                  <h4 class="font-medium text-white">Secure Your Position</h4>
+                  <p class="text-gray-400 text-sm mt-1">Select your subscription tier and begin your journey.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-6">
+              <a href="#application-process" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-center py-3 px-4 rounded-lg font-bold transition-colors">
+                Begin Qualification
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Subscription Tiers Section -->
+  <section id="subscription-tiers" class="py-16 bg-black">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h2 class="text-3xl font-bold mb-4">Subscription Tiers & Benefits</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Higher tiers = Faster progress & more AI-driven guidance.</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <!-- Explorer Tier -->
+        <div class="tier-card rounded-xl overflow-hidden" data-aos="fade-up">
+          <div class="p-6">
+            <h3 class="text-xl font-bold mb-2">Explorer Tier</h3>
+            <div class="text-3xl font-bold text-blue-400 mb-4">$ 49<span class="text-sm text-gray-400 font-normal">/month</span></div>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Standard AI coaching</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Basic training modules</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Daily Presidential Briefing</span>
+              </li>
+            </ul>
+            <a href="/subscribe.html?tier=explorer" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-center py-3 px-4 rounded-lg font-medium transition-colors">
+              Subscribe Now
             </a>
+          </div>
         </div>
-    </div>
-</section>
-
-<!-- Why Choose SharedStars Academy? -->
-<section id="why-sharedstars" class="py-16 bg-gray-50 text-center">
-    <div class="container mx-auto px-4">
-        <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800">Why Choose SharedStars Academy?</h2>
-        <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            SharedStars Academy combines innovation, community, and personalized training to prepare you for the next frontier.
-        </p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-            <!-- Card 1 -->
-            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition-transform transform hover:scale-105">
-                <div class="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <!-- Icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7H9l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-blue-500">AI-Powered Learning</h3>
-                <p class="mt-4 text-gray-600">Personalized training paths powered by AI to optimize your learning journey.</p>
-            </div>
-            <!-- Card 2 -->
-            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition-transform transform hover:scale-105">
-                <div class="h-16 w-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <!-- Icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7H9l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-purple-500">Immersive VR Simulations</h3>
-                <p class="mt-4 text-gray-600">Experience realistic space scenarios through cutting-edge VR modules.</p>
-            </div>
-            <!-- Card 3 -->
-            <div class="p-8 bg-white shadow-lg rounded-2xl hover:shadow-xl transition-transform transform hover:scale-105">
-                <div class="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <!-- Icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7H9l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-green-500">Global Community</h3>
-                <p class="mt-4 text-gray-600">Connect, learn, and grow with a global network of space enthusiasts.</p>
-            </div>
+        
+        <!-- Pioneer Tier -->
+        <div class="tier-card rounded-xl overflow-hidden border-blue-500/40 transform scale-105 relative z-10" data-aos="fade-up" data-aos-delay="100">
+          <div class="absolute top-0 left-0 right-0 bg-blue-600 text-white text-xs font-bold text-center py-1">
+            MOST POPULAR
+          </div>
+          <div class="p-6 pt-8">
+            <h3 class="text-xl font-bold mb-2">Pioneer Tier</h3>
+            <div class="text-3xl font-bold text-blue-400 mb-4">$ 99<span class="text-sm text-gray-400 font-normal">/month</span></div>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Advanced AI coaching</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">All training modules</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Enhanced Presidential Briefing</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">VR training modules</span>
+              </li>
+            </ul>
+            <a href="/subscribe.html?tier=pioneer" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-center py-3 px-4 rounded-lg font-medium transition-colors">
+              Subscribe Now
+            </a>
+          </div>
         </div>
-    </div>
-</section>
-<!-- Mission and Vision Section -->
-<section id="mission-vision" class="py-16 bg-gray-900 text-white text-center relative">
-    <!-- Background Glow -->
-    <div class="absolute inset-0 bg-gradient-to-b from-black via-gray-800 to-transparent"></div>
-    <div class="container mx-auto px-4 relative z-10">
-        <!-- Mission Section -->
-        <div class="mb-12">
-            <div class="flex justify-center items-center mb-6">
-                <div class="bg-blue-500/20 p-4 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11l3-3m0 0l-3-3m3 3H9m11 10H9l-3-3m0 0l3-3m-3 3h11" />
-                    </svg>
-                </div>
-            </div>
-            <h2 class="text-6xl md:text-8xl font-extrabold text-blue-400 drop-shadow-md">Our Mission</h2>
-            <p class="mt-6 text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                <span class="font-semibold">At SharedStars Academy</span>, our mission is to <span class="text-blue-400 font-bold">democratize space exploration</span> by providing accessible, cutting-edge education, training, and simulations. We empower individuals to <span class="italic">dream beyond the stars</span> and prepare for humanity’s next frontier with a strong foundation in innovation, community, and resilience.
-            </p>
+        
+        <!-- Elite Tier -->
+        <div class="tier-card rounded-xl overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+          <div class="p-6">
+            <h3 class="text-xl font-bold mb-2">Elite Tier</h3>
+            <div class="text-3xl font-bold text-blue-400 mb-4">$ 299<span class="text-sm text-gray-400 font-normal">/month</span></div>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Elite AI personalization</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">All training + exclusive modules</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Top-level Presidential Briefing</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Live astronaut Q&A sessions</span>
+              </li>
+            </ul>
+            <a href="/subscribe.html?tier=elite" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-center py-3 px-4 rounded-lg font-medium transition-colors">
+              Subscribe Now
+            </a>
+          </div>
         </div>
+      </div>
+      
+      <div class="text-center mt-8 text-gray-400 text-sm" data-aos="fade-up">
+        <p>All subscribers receive Daily Confidential Presidential Space Briefings</p>
 
-        <!-- Vision Section -->
-        <div class="mt-16">
-            <div class="flex justify-center items-center mb-6">
-                <div class="bg-purple-500/20 p-4 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m0 0l3-3m-3 3l3 3m-6 0l-3-3m3 3l-3 3" />
-                    </svg>
-                </div>
-            </div>
-            <h2 class="text-6xl md:text-8xl font-extrabold text-purple-400 drop-shadow-md">Our Vision</h2>
-            <p class="mt-6 text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                To create a world where <span class="text-purple-400 font-bold">space exploration is within reach for everyone</span>, SharedStars Academy will be the global leader in <span class="font-semibold">education, training, and experiential learning</span> for aspiring space travelers and enthusiasts, building a community driven by <span class="italic">passion, purpose, and possibility</span>.
-            </p>
-        </div>
-    </div>
-</section>
 
-              <!-- Training Modules Section -->
-<section id="training-modules" class="relative min-h-screen bg-black text-white">
-    <!-- Video Background -->
-    <div class="absolute inset-0">
-        <video autoplay muted loop playsinline class="w-full h-full object-cover">
-            <source src="./videos/trainingmods1.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <!-- Gradient Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
-    </div>
 
-    <!-- Content Overlay -->
-    <div class="relative z-10 container mx-auto px-4 py-16">
-        <h2 class="text-4xl md:text-5xl font-extrabold text-center text-blue-400 mb-12">Explore Our Training Modules</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Module 1 -->
-            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-1">
-                <div class="h-16 w-16 bg-blue-500/20 rounded-full flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-blue-400 mb-4">Physical Training</h3>
-                <p class="text-gray-300">Build strength, endurance, and flexibility to handle the physical demands of space travel.</p>
-            </div>
-            <!-- Module 2 -->
-            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-2">
-                <div class="h-16 w-16 bg-purple-500/20 rounded-full flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-purple-400 mb-4">Mental Development</h3>
-                <p class="text-gray-300">Sharpen your cognitive skills with memory games, problem-solving challenges, and simulations.</p>
-            </div>
-            <!-- Module 3 -->
-            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-3">
-                <div class="h-16 w-16 bg-green-500/20 rounded-full flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-green-400 mb-4">Psychological Preparation</h3>
-                <p class="text-gray-300">Enhance stress management, mindfulness, and resilience to thrive in challenging environments.</p>
-            </div>
-            <!-- Module 4 -->
-            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-4">
-                <div class="h-16 w-16 bg-yellow-500/20 rounded-full flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-yellow-400 mb-4">Spiritual Growth</h3>
-                <p class="text-gray-300">Engage in guided meditation, outdoor mindfulness, and reflection to maintain inner balance.</p>
-            </div>
-            <!-- Module 5 -->
-            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-5">
-                <div class="h-16 w-16 bg-red-500/20 rounded-full flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-red-400 mb-4">Technical Training</h3>
-                <p class="text-gray-300">Master coding, robotics, and spacecraft systems to develop technical expertise.</p>
-            </div>
-            <!-- Module 6 -->
-            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-6">
-                <div class="h-16 w-16 bg-indigo-500/20 rounded-full flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-indigo-400 mb-4">Community Engagement</h3>
-                <p class="text-gray-300">Participate in group challenges, mentorship programs, and collaborative projects.</p>
-            </div>
-            <!-- Module 7 -->
-            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-7">
-                <div class="h-16 w-16 bg-pink-500/20 rounded-full flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-pink-400 mb-4">Space Simulations</h3>
-                <p class="text-gray-300">Train in docking, landing, and mission-critical operations through immersive simulations.</p>
-            </div>
-            <!-- Module 8 -->
-            <div class="p-8 bg-gray-800 rounded-2xl shadow-lg transform opacity-0 scale-90" id="module-8">
-                <div class="h-16 w-16 bg-teal-500/20 rounded-full flex items-center justify-center mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h-6l3-7zM3 13h18v2H3v-2z" />
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-teal-400 mb-4">Creative Contributions</h3>
-                <p class="text-gray-300">Earn rewards for writing blogs, creating tutorials, and proposing innovative solutions.</p>
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- GSAP Animations -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        gsap.registerPlugin(ScrollTrigger);
 
-        for (let i = 1; i <= 8; i++) {
-            gsap.fromTo(
-                `#module-${i}`,
-                { y: -50, scale: 0.9, opacity: 0 },
-                {
-                    y: 0,
-                    scale: 1,
-                    opacity: 1,
-                    duration: 0.8,
-                    delay: i * 0.2,
-                    scrollTrigger: {
-                        trigger: `#module-${i}`,
-                        start: "top 90%",
-                    },
-                }
-            );
-        }
-    });
-</script>
-
-<!-- Certification Paths -->
-<section id="certification-paths" class="py-32 bg-gray-900 text-center relative">
-    <div class="container mx-auto px-4">
-        <h2 class="text-4xl md:text-6xl font-bold text-white mb-16">Certification Paths</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Level 1 -->
-            <div class="bg-black/50 backdrop-blur-lg p-8 rounded-2xl border border-gray-800 hover:shadow-xl transition-shadow">
-                <h3 class="text-2xl font-bold text-blue-400 mb-4">Level 1: Space Safety</h3>
-                <ul class="space-y-4 text-gray-400">
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-                        Basic Equipment Training
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-                        Safety Fundamentals
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-                        ISO 9001:2015 Standards
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Level 2 -->
-            <div class="bg-black/50 backdrop-blur-lg p-8 rounded-2xl border border-gray-800 hover:shadow-xl transition-shadow">
-                <h3 class="text-2xl font-bold text-green-400 mb-4">Level 2: Advanced Operations</h3>
-                <ul class="space-y-4 text-gray-400">
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                        Spacecraft Systems Safety
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                        Zero Gravity Operations
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                        Emergency Protocols
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Level 3 -->
-            <div class="bg-black/50 backdrop-blur-lg p-8 rounded-2xl border border-gray-800 hover:shadow-xl transition-shadow">
-                <h3 class="text-2xl font-bold text-yellow-400 mb-4">Level 3: Professional Manager</h3>
-                <ul class="space-y-4 text-gray-400">
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                        Leadership Training
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                        Advanced Safety Management
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                        Audit Procedures
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Level 4 -->
-            <div class="bg-black/50 backdrop-blur-lg p-8 rounded-2xl border border-gray-800 hover:shadow-xl transition-shadow">
-                <h3 class="text-2xl font-bold text-red-400 mb-4">Level 4: Industry-Specific Certifications</h3>
-                <ul class="space-y-4 text-gray-400">
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-                        Space Vehicle Operations
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-                        EVA (Spacewalk) Safety
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-                        Emergency Response
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
 <!-- Community Section -->
 <!-- Community Section -->
 <section id="community" class="py-16 bg-gray-900 text-white relative overflow-hidden">

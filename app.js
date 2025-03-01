@@ -1,543 +1,731 @@
-// ============================ 
-// 1. ENV & REQUIRED MODULES 
-// ============================ 
-require('dotenv').config();
-console.log("✅ .env file loaded:", process.env.TWITTER_API_KEY ? "Yes" : "No");
+const dotenv = require('dotenv');
+dotenv.config();
 
-// Core modules
-const express = require("express");
 const http = require("http");
 const path = require("path");
 const WebSocket = require("ws");
 const net = require("net");
-const mongoose = require("mongoose");
-const session = require("express-session");
-const MongoStore = require('connect-mongo');
-const bodyParser = require('body-parser');
-
-// Initialize Express and server
-const app = express();
-const server = http.createServer(app);
-
-// ============================
-// 2. ROUTE IMPORTS
-// ============================
-
-// Core Routes
-const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/auth");
-const creditRoutes = require("./routes/credits");
-const paymentRoutes = require("./routes/payment");
-const vrRoutes = require("./routes/vr");
-
-// Training & Progress Routes
-const trainingRoutes = require("./routes/training");
-const leaderboardRoutes = require("./routes/leaderboard");
-const countdownRoutes = require("./routes/countdown");
-const progressRoutes = require("./routes/progress");  // ✅ Moved here (before using)
-const advancedRoutes = require("./routes/advancedTrainingRoutes");
-
-// Simulation & Missions Routes
-const simulationRoutes = require("./routes/simulation/simulation");
-const missionRoutes = require("./routes/simulation/missions");
-const scenarioRoutes = require("./routes/simulation/scenarios");
-const teamRoleRoutes = require("./routes/simulation/teamRoles");
-
-// Additional Imports
-const { Simulation } = require("./models/simulation");
-const physicalRoutes = require("./routes/physical");
-
-// ============================
-// 3. MODULE IMPORTS
-// ============================
-
-const physicalModule = require("./modules/core/physical");
-const technicalModule = require("./modules/core/technical");
-const simulationModule = require("./modules/core/simulation");
-const evaModule = require("./modules/core/eva");
-const evaRoutes = require("./routes/eva");
-const vrModule = require("./modules/vr/QuestModule");
-
-// Service Routes
-const missionControlRoutes = require("./routes/mission-control");
-const chatRoutes = require("./routes/chat");
-const stripeRoutes = require("./routes/stripe");
-const stripeWebhookRoutes = require("./webhooks/stripe");
-const subscriptionRoutes = require("./routes/subscription");
-const aiRoutes = require("./routes/aiRoutes");
-const socialPlatformRoutes = require("./routes/socialPlatform");
-
-// ============================
-// 4. MIDDLEWARE IMPORTS
-// ============================
-const vrMiddleware = require("./middleware/vr");
+const bodyParser = require("body-parser");
+const crypto = require("crypto");
+const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
-const { authenticate } = require('./middleware/authenticate'); // ✅ Added properly
-const academyRoutes = require('./routes/academy');
+const listEndpoints = require("express-list-endpoints");
+const session = require("express-session");
+const EventEmitter = require('events');
+const User = require('./models/User');
+const UserProgress = require("./models/UserProgress");
+const trainingPhysicalApiRoutes = require('./routes/api/training-physical');
+const trainingPhysicalRoutes = require('./routes/training/physical');
+const cron = require('node-cron');
+const dailyBriefingService = require('./services/dailyBriefingService');
+
+
+// Define ObjectId class for mock mongoose
+class ObjectId {
+  constructor(id) {
+    this.id = id || crypto.randomUUID().replace(/-/g, '');
+  }
+  
+  toString() {
+    return this.id;
+  }
+  
+  equals(other) {
+    return other && this.id === other.id;
+  }
+}
 
 // ============================
-// 5. AI SERVICES & INTEGRATORS
+// 0. MOCK MONGOOSE SETUP - HAS TO BE FIRST
 // ============================
-const AILearningSystem = require("./services/AILearningSystem");
-const TrainingModuleIntegrator = require("./services/TrainingModuleIntegrator");
-const ProgressTracking = require("./services/ProgressTracker");
-const EVAAIService = require("./services/EVAAIService");
-const ModuleSystemIntegrator = require("./services/ModuleSystemIntegrator");
-const ServiceIntegrator = require("./services/ServiceIntegrator");
-const aiSocialRoutes = require('./routes/aiSocial');
+// Create mock MongoDB compatibility layer
+const mongoose = require("mongoose");
+
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("✅ MongoDB Connected"))
+    .catch(err => console.error("❌ MongoDB Connection Error:", err));
+
+
+
+const mockMongoose = {
+  connect: () => {
+    console.log('✅ Mock mongoose connect called (no actual connection)');
+    return Promise.resolve();
+  },
+  disconnect: () => {
+    console.log('✅ Mock mongoose disconnect called');
+    return Promise.resolve();
+  },
+  connection: {
+    on: (event, callback) => {
+      console.log(`✅ Mock MongoDB ${event} event registered`);
+      if (event === 'connected') {
+        // Call the connected callback immediately
+        setTimeout(callback, 10);
+      }
+    },
+    once: (event, callback) => {
+      console.log(`✅ Mock MongoDB ${event} event registered (once)`);
+      if (event === 'connected') {
+        // Call the connected callback immediately
+        setTimeout(callback, 10);
+      }
+    },
+    close: (force, callback) => {
+      console.log(`✅ Mock MongoDB connection closed`);
+      if (callback) callback();
+      return Promise.resolve();
+    }
+  },
+  // Add Types directly on mongoose
+  Types: {
+    ObjectId: ObjectId,
+    String: String,
+    Number: Number,
+    Boolean: Boolean,
+    Date: Date,
+    Mixed: Object,
+    Array: Array,
+    Buffer: Buffer
+  },
+  Schema: function(definition, options) {
+    const mockSchema = {
+      ...definition,
+      set: () => mockSchema,
+      pre: (hook, fn) => {
+        // Store the pre-save hook
+        if (!mockSchema._hooks) mockSchema._hooks = {};
+        if (!mockSchema._hooks[hook]) mockSchema._hooks[hook] = [];
+        mockSchema._hooks[hook].push(fn);
+        return {
+          post: () => mockSchema
+        };
+      },
+      methods: {},
+      statics: {},
+      virtual: (field) => {
+        return {
+          get: (fn) => mockSchema
+        };
+      },
+      path: () => ({
+        validate: () => mockSchema
+      }),
+      index: () => mockSchema
+    };
+    
+    // Add Types to Schema
+    mockSchema.Types = {
+      ObjectId: ObjectId,
+      String: String,
+      Number: Number,
+      Boolean: Boolean,
+      Date: Date,
+      Mixed: Object,
+      Array: Array,
+      Buffer: Buffer
+    };
+    
+    return mockSchema;
+  }
+};
+
+// Add Schema.Types property to Schema constructor
+mockMongoose.Schema.Types = {
+  ObjectId: ObjectId,
+  String: String,
+  Number: Number,
+  Boolean: Boolean,
+  Date: Date, 
+  Mixed: Object,
+  Array: Array,
+  Buffer: Buffer
+};
 
 // ============================
-// 6. VR SERVICES
+// 0. IMPORTANT: MONGOOSE COMPLETE CUTOFF
 // ============================
-const ImmersiveScenarios = require("./modules/vr/scenarios/ImmersiveScenarios");
-const PhysicalPropsIntegration = require("./modules/vr/props/PhysicalPropsIntegration");
+// This needs to be at the very top, before any other modules are loaded
+// It will prevent any real mongoose connections
+const fs = require('fs');
+const Module = require('module');
+const originalRequire = Module.prototype.require;
+
+// Mock mongoose completely - all modules that try to use mongoose will get this mock
+Module.prototype.require = function(id) {
+  if (id === 'mongoose') {
+    return mockMongoose;
+  }
+  
+  // Special case for moduleLoader
+  if (id === './modules/moduleLoader' || id === '../modules/moduleLoader') {
+    return {
+      init: function() {
+        console.log('✅ Mock module loader initialized (no database)');
+        return Promise.resolve();
+      },
+      loadModules: function() {
+        console.log('✅ Mock modules loaded (no database)');
+        return Promise.resolve([
+          { 
+            moduleId: 'eva-basic',
+            name: 'EVA Basics',
+            description: 'Introduction to Extravehicular Activity',
+            category: 'EVA',
+            level: 'Basic',
+            points: 100
+          },
+          {
+            moduleId: 'emergency-procedures',
+            name: 'Emergency Procedures',
+            description: 'How to handle emergency situations in space',
+            category: 'Safety',
+            level: 'Advanced',
+            points: 250
+          },
+          {
+            moduleId: 'navigation',
+            name: 'Space Navigation',
+            description: 'Fundamentals of navigation in space',
+            category: 'Navigation',
+            level: 'Intermediate',
+            points: 150
+          }
+        ]);
+      },
+      getModuleById: function(moduleId) {
+        const modules = [
+          { 
+            moduleId: 'eva-basic',
+            name: 'EVA Basics',
+            description: 'Introduction to Extravehicular Activity',
+            category: 'EVA',
+            level: 'Basic',
+            points: 100
+          },
+          {
+            moduleId: 'emergency-procedures',
+            name: 'Emergency Procedures',
+            description: 'How to handle emergency situations in space',
+            category: 'Safety',
+            level: 'Advanced',
+            points: 250
+          },
+          {
+            moduleId: 'navigation',
+            name: 'Space Navigation',
+            description: 'Fundamentals of navigation in space',
+            category: 'Navigation',
+            level: 'Intermediate',
+            points: 150
+          }
+        ];
+        
+        return Promise.resolve(modules.find(m => m.moduleId === moduleId) || null);
+      }
+    };
+  }
+  
+  return originalRequire.call(this, id);
+};
+
+const app = express();
+const server = http.createServer(app);
+
+// Simple in-memory database replacement
+const inMemoryDB = {
+  users: [],
+  sessions: [],
+  modules: [],
+  progress: [],
+  leaderboard: []
+};
 
 // ============================
-// 7. MIDDLEWARE SETUP (IMPORTANT)
+// 1. PROPER MEMORY STORE
 // ============================
+// Create a proper memory store that extends EventEmitter 
+class MemoryStore extends EventEmitter {
+  constructor() {
+    super();
+    this.sessions = {};
+  }
 
-// ✅ Ensure body parsing happens before defining routes
-app.use(bodyParser.json());
+  get(sid, callback) {
+    const data = this.sessions[sid];
+    callback(null, data || null);
+  }
+
+  set(sid, session, callback) {
+    this.sessions[sid] = session;
+    if (callback) callback(null);
+  }
+
+  destroy(sid, callback) {
+    delete this.sessions[sid];
+    if (callback) callback(null);
+  }
+
+  clear(callback) {
+    this.sessions = {};
+    if (callback) callback(null);
+  }
+
+  length(callback) {
+    const count = Object.keys(this.sessions).length;
+    if (callback) callback(null, count);
+  }
+
+  all(callback) {
+    const sessions = Object.entries(this.sessions).map(([sid, session]) => {
+      return [sid, session];
+    });
+    if (callback) callback(null, sessions);
+  }
+
+  touch(sid, session, callback) {
+    if (this.sessions[sid]) {
+      this.sessions[sid] = session;
+    }
+    if (callback) callback(null);
+  }
+}
+
+// ============================
+// 2. MIDDLEWARE SETUP
+// ============================
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cors());
+app.use(helmet());
+app.use(compression());
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// ✅ Ensure express-session is set up
+// Ensure JavaScript files are served with the correct MIME type
+app.use((req, res, next) => {
+  if (req.path.endsWith('.js')) {
+    res.type('application/javascript');
+  }
+  next();
+});
+// Add Content Security Policy middleware
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "script-src 'self' 'unsafe-inline'"
+  );
+  next();
+});
+// ✅ Rate Limiting - Prevent API abuse
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100,
+    message: { error: "Too many requests, please try again later." }
+});
+app.use("/api/", apiLimiter);
+app.use((req, res, next) => {
+  if (req.path.endsWith('.css')) {
+    res.type('text/css');
+  }
+  next();
+});
+// Create instance of memory store
+const sessionStore = new MemoryStore();
+
+// Session middleware using memory store instead of MongoDB
 app.use(session({
     secret: process.env.SESSION_SECRET || "default_secret_key",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
-        collectionName: "sessions"
-    }),
-    cookie: {
-        secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-    }
+    store: sessionStore,
+    cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 }
 }));
 
-// ✅ Register routes AFTER middleware
-app.use('/api/progress', progressRoutes);
-
-
-// 7. DATABASE CONNECTION
-// ============================
-mongoose.set("strictQuery", true);
-mongoose.set("debug", process.env.NODE_ENV === "development");
-
-// Add session configuration before DB connection
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'your_secret_key',
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI || process.env.MONGO_URI,
-        ttl: 14 * 24 * 60 * 60,
-        autoRemove: "native",
-      }),
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 1000 * 60 * 60 * 24
-    }
-}));
-
-const connectDB = async () => {
-    try {
-        console.log("🔄 Connecting to MongoDB...");
-        
-        await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, {
-            serverSelectionTimeoutMS: process.env.MONGO_TIMEOUT ? parseInt(process.env.MONGO_TIMEOUT, 10) : 5000,
-            autoIndex: process.env.MONGO_AUTO_INDEX === "true",
-            maxPoolSize: process.env.MONGO_POOL_SIZE ? parseInt(process.env.MONGO_POOL_SIZE, 10) : 10,
-            socketTimeoutMS: process.env.MONGO_SOCKET_TIMEOUT ? parseInt(process.env.MONGO_SOCKET_TIMEOUT, 10) : 45000,
-            retryWrites: true,
+// Enhance the mockMongoose with the model function
+mockMongoose.model = function(name, schema) {
+  // Initialize collection if it doesn't exist
+  if (!inMemoryDB[name.toLowerCase()]) {
+    inMemoryDB[name.toLowerCase()] = [];
+  }
+  
+  // Create a mock model with basic CRUD operations
+  const collection = inMemoryDB[name.toLowerCase()];
+  
+  // Check if this model has already been created
+  if (mockMongoose.models && mockMongoose.models[name]) {
+    return mockMongoose.models[name];
+  }
+  
+  const mockModel = {
+    find: (criteria) => {
+      const results = collection.filter(item => {
+        if (!criteria) return true;
+        return Object.keys(criteria).every(key => {
+          if (criteria[key] instanceof ObjectId) {
+            return item[key] && item[key].toString() === criteria[key].toString();
+          }
+          return item[key] === criteria[key];
         });
-
-        console.log("✅ MongoDB Connected Successfully!");
-
-        // Rest of your code remains the same...
-    } catch (error) {
-        console.error("❌ MongoDB Connection Error:", error.message);
-        process.exit(1);
-    }
-};
-
-// Initialize database connection
-connectDB();
-
-// ============================
-// ============================
-// 3. WEBSOCKET SETUP
-// ============================
-let wss; // ✅ Declare `wss` at the top so it’s globally available
-
-// ✅ Check if port 8081 is free before initializing WebSocket
-const checkPort = (port) => {
-    return new Promise((resolve) => {
-        const tester = net.createServer()
-            .once("error", (err) => {
-                if (err.code === "EADDRINUSE") {
-                    console.warn(`⚠️ Port ${port} is already in use. Skipping WebSocket initialization.`);
-                    resolve(false);
-                }
-            })
-            .once("listening", () => {
-                tester.close();
-                resolve(true);
-            })
-            .listen(port);
-    });
-};
-
-const initWebSocket = async () => {
-    const portFree = await checkPort(8081);
-    if (!portFree) {
-        console.warn("⚠️ WebSocket not initialized: Port 8081 is already in use.");
-        return null;
-    }
-
-    const wss = new WebSocket.Server({ noServer: true });
-    console.log("✅ WebSocket Server Created on Port 8081");
-
-    wss.on("connection", (ws) => {
-        console.log("🔗 New WebSocket Connection Established");
-    });
-
-    wss.on("error", (error) => {
-        console.error("❌ WebSocket Server Error:", error);
-    });
-
-    return wss;
-};
-
-// ✅ Ensure WebSocket is available before using it
-(async () => {
-    const wss = await initWebSocket();
-    
-    if (wss) {
-        app.use('/api/mission-control', authenticate, missionControlRoutes(wss));
-    } else {
-        console.warn("⚠️ Skipping /api/mission-control setup: WebSocket server is unavailable.");
-    }
-})();
-app.use('/api/social', authenticate, socialPlatformRoutes);
-
-// ============================
-// 4. MIDDLEWARE SETUP
-// ============================
-
-// ✅ Security Middleware (Only Declared Once)
-app.use(helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-}));
-app.use(cors());
-app.use(compression());
-
-// ✅ Body Parsing Middleware (Only Declared Once)
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-
-// ✅ Check if `vrModule` has an `initialize` function before calling it
-if (typeof vrModule.initialize === "function") {
-    vrModule.initialize();
-} else {
-    console.warn("⚠️ vrModule does not have an initialize() function.");
-}
-
-// ✅ Session Handling (Only Declared Once)
-app.use(session({
-    secret: process.env.JWT_SECRET || "your_secret_key",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
-        ttl: 14 * 24 * 60 * 60,
-        autoRemove: "native",
-    }),
-    cookie: {
-        secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-        sameSite: "strict",
-        maxAge: 14 * 24 * 60 * 60 * 1000,
+      });
+      
+      return {
+        sort: () => ({ 
+          exec: (cb) => cb ? cb(null, results) : Promise.resolve(results),
+          limit: () => ({ exec: (cb) => cb ? cb(null, results.slice(0, 10)) : Promise.resolve(results.slice(0, 10)) })
+        }),
+        limit: () => ({ 
+          exec: (cb) => cb ? cb(null, results.slice(0, 10)) : Promise.resolve(results.slice(0, 10)),
+          sort: () => ({ exec: (cb) => cb ? cb(null, results) : Promise.resolve(results) })
+        }),
+        exec: (cb) => cb ? cb(null, results) : Promise.resolve(results),
+        populate: () => ({
+          exec: (cb) => cb ? cb(null, results) : Promise.resolve(results),
+          sort: () => ({ exec: (cb) => cb ? cb(null, results) : Promise.resolve(results) })
+        })
+      };
     },
-}));
-
-// ✅ Initialize AI Systems (Only Runs Once)
-(async () => {
-    try {
-        if (!app.locals.aiSystemsInitialized) {
-            console.log("🔄 Initializing AI systems...");
-
-            await ServiceIntegrator.initialize();
-            await TrainingModuleIntegrator.initialize();
-            await ProgressTracking.getProgress("example-user-id");
-
-            console.log("✅ AI systems initialized");
-            app.locals.aiSystemsInitialized = true;
+    findOne: (criteria) => {
+      const result = collection.find(item => {
+        if (!criteria) return true;
+        return Object.keys(criteria).every(key => {
+          if (criteria[key] instanceof ObjectId) {
+            return item[key] && item[key].toString() === criteria[key].toString();
+          }
+          return item[key] === criteria[key];
+        });
+      });
+      
+      return {
+        exec: (cb) => cb ? cb(null, result) : Promise.resolve(result),
+        populate: () => ({
+          exec: (cb) => cb ? cb(null, result) : Promise.resolve(result)
+        })
+      };
+    },
+    findById: (id) => {
+      const idStr = id instanceof ObjectId ? id.toString() : id;
+      const result = collection.find(item => {
+        const itemId = item._id instanceof ObjectId ? item._id.toString() : item._id;
+        return itemId === idStr;
+      });
+      
+      return {
+        exec: (cb) => cb ? cb(null, result) : Promise.resolve(result),
+        populate: () => ({
+          exec: (cb) => cb ? cb(null, result) : Promise.resolve(result)
+        })
+      };
+    },
+    create: function(data) {
+      const processData = (item) => {
+        // Create a new object from the data
+        const newItem = { ...item };
+        
+        // Generate an _id if one doesn't exist
+        if (!newItem._id) {
+          newItem._id = new ObjectId();
         }
-    } catch (error) {
-        console.error("❌ Error initializing AI systems:", error);
-        process.exit(1);  // Exit if initialization fails
+        
+        // Apply any pre-save hooks if they exist
+        if (schema && schema._hooks && schema._hooks.save) {
+          schema._hooks.save.forEach(hook => {
+            // Mock the next function
+            const next = (err) => {
+              if (err) throw err;
+            };
+            
+            // Set 'this' context to the new item
+            const context = {
+              ...newItem,
+              isModified: (field) => true, // Always return true for simplicity
+            };
+            
+            // Execute the hook
+            hook.call(context, next);
+          });
+        }
+        
+        return newItem;
+      };
+      
+      if (Array.isArray(data)) {
+        const newItems = data.map(processData);
+        collection.push(...newItems);
+        return Promise.resolve(newItems);
+      } else {
+        const newItem = processData(data);
+        collection.push(newItem);
+        return Promise.resolve(newItem);
+      }
+    },
+    updateOne: (criteria, update) => {
+      const index = collection.findIndex(item => {
+        return Object.keys(criteria).every(key => {
+          if (criteria[key] instanceof ObjectId) {
+            return item[key] && item[key].toString() === criteria[key].toString();
+          }
+          return item[key] === criteria[key];
+        });
+      });
+      
+      if (index !== -1) {
+        if (update.$set) {
+          collection[index] = { ...collection[index], ...update.$set };
+        }
+        if (update.$inc) {
+          Object.entries(update.$inc).forEach(([key, value]) => {
+            collection[index][key] = (collection[index][key] || 0) + value;
+          });
+        }
+        return Promise.resolve({ nModified: 1, modifiedCount: 1 });
+      }
+      
+      return Promise.resolve({ nModified: 0, modifiedCount: 0 });
+    },
+    findByIdAndUpdate: (id, update, options) => {
+      const idStr = id instanceof ObjectId ? id.toString() : id;
+      const index = collection.findIndex(item => {
+        const itemId = item._id instanceof ObjectId ? item._id.toString() : item._id;
+        return itemId === idStr;
+      });
+      
+      if (index !== -1) {
+        if (update.$set) {
+          collection[index] = { ...collection[index], ...update.$set };
+        } else {
+          collection[index] = { ...collection[index], ...update };
+        }
+        
+        return options && options.new 
+          ? Promise.resolve(collection[index])
+          : Promise.resolve({ nModified: 1, modifiedCount: 1 });
+      }
+      
+      return Promise.resolve(null);
+    },
+    deleteOne: (criteria) => {
+      const initialLength = collection.length;
+      const newCollection = collection.filter(item => {
+        return !Object.keys(criteria).every(key => {
+          if (criteria[key] instanceof ObjectId) {
+            return item[key] && item[key].toString() === criteria[key].toString();
+          }
+          return item[key] === criteria[key];
+        });
+      });
+      
+      inMemoryDB[name.toLowerCase()] = newCollection;
+      
+      return Promise.resolve({ deletedCount: initialLength - newCollection.length });
+    },
+    countDocuments: (criteria) => {
+      const count = collection.filter(item => {
+        if (!criteria) return true;
+        return Object.keys(criteria).every(key => {
+          if (criteria[key] instanceof ObjectId) {
+            return item[key] && item[key].toString() === criteria[key].toString();
+          }
+          return item[key] === criteria[key];
+        });
+      }).length;
+      
+      return Promise.resolve(count);
     }
-})();
+  };
+  
+  // Store the model
+  if (!mockMongoose.models) {
+    mockMongoose.models = {};
+  }
+  mockMongoose.models[name] = mockModel;
+  
+  return mockModel;
+};
+// Schedule daily briefing generation at 5 AM
+cron.schedule('0 5 * * *', async () => {
+  console.log('Running scheduled daily briefing generation');
+  try {
+    const result = await dailyBriefingService.scheduleDailyBriefing();
+    console.log('Completed daily briefing generation:', result);
+  } catch (error) {
+    console.error('Error in scheduled briefing generation:', error);
+  }
+});
 
+// You can add other scheduled tasks here as needed
 // ============================
-// ✅ Start the Express Server (Only Declared Once)
+// 4. ROUTE IMPORTS & SETUP
 // ============================
+try {
+  // Import all routes
+  const userRoutes = require("./routes/userRoutes");   
+  const authRoutes = require("./routes/auth");   
+  const creditRoutes = require("./routes/credits");   
+  const paymentRoutes = require("./routes/payment");   
+  const trainingRoutes = require('./routes/training');   
+  const leaderboardRoutes = require("./routes/leaderboard");   
+  const countdownRoutes = require("./routes/countdown");   
+  const progressRoutes = require("./routes/progress");   
+  const academyRoutes = require("./routes/academy");   
+  const socialPlatformRoutes = require("./routes/socialPlatform");   
+  const chatRoutes = require("./routes/chat");   
+  const stripeRoutes = require("./routes/stripe/index");   
+  const stripeWebhookRoutes = require("./webhooks/stripe");   
+  const subscriptionRoutes = require("./routes/subscription");   
+  const aiRoutes = require("./routes/aiRoutes");   
+  const aiSocialRoutes = require("./routes/aiSocial");   
+  const physicalTrainingRoutes = require("./routes/training/physical");   
+  const briefingRoutes = require('./routes/api/briefings');   
+  const userRoutesAlt = require('./routes/user'); // This one stays
 
-server.listen(3000, () => {
-    console.log("🚀 Server running on port 3000");
+// Import routes
+  console.log("✅ Routes imported successfully");
+
+  // Set up routes
+  app.use("/api/auth", authRoutes);
+  app.use("/api/credits", creditRoutes);
+  app.use("/api/users", userRoutes);
+  app.use("/api/payment", paymentRoutes);
+  app.use("/api/training", trainingRoutes);
+  app.use("/api/leaderboard", leaderboardRoutes);
+  app.use("/api/countdown", countdownRoutes);
+  app.use("/api/progress", progressRoutes);
+  app.use("/api/academy", academyRoutes);
+  app.use("/api/social", socialPlatformRoutes);
+  app.use("/api/chat", chatRoutes);
+  app.use("/api/stripe", stripeRoutes);
+  app.use("/webhook/stripe", stripeWebhookRoutes);
+  app.use("/api/subscription", subscriptionRoutes);
+  app.use("/api/ai", aiRoutes);
+  app.use("/api/social/auth", aiSocialRoutes);
+  app.use("/api/training/physical", physicalTrainingRoutes);
+  app.use('/api/training/physical', require('./routes/api/training-physical'));
+  app.use('/api/training/physical', trainingPhysicalApiRoutes);
+  app.use('/training/physical', trainingPhysicalRoutes);
+  app.use('/api/users', userRoutes);
+  app.use('/api/users', userRoutesAlt);
+
+// Setup briefing routes
+app.use('/api/briefings', briefingRoutes);
+} catch (error) {
+  console.error('❌ Error importing routes:', error);
+  
+  // Set up basic routes for testing if the main routes fail
+  app.get('/api/training/physical', async (req, res) => {
+    const progress = await getPhysicalTrainingProgress(req.session.user.id);
+    res.json(progress);
+});
+
+  
+  app.get('/api/auth/test', (req, res) => {
+    res.json({ message: 'Auth routes are available' });
+  });
+}
+// Add this middleware after your Content Security Policy middleware
+app.use((req, res, next) => {
+  if (req.path.endsWith('.css')) {
+    res.type('text/css');
+  }
+  next();
 });
 // ============================
+// 5. STATIC FILES
 // ============================
-// 5. ROUTES SETUP
-// ============================
+app.use(express.static(path.join(__dirname, "public")));
 
-// ✅ Static File Serving
-app.use("/js", express.static(path.join(__dirname, "public/js"), {
-    setHeaders: (res, filePath) => {
-        if (filePath.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript');
-        }
-    }
-}));
-app.use(express.static(path.join(__dirname, 'public')));
-
-// ✅ Core API Routes
-app.use("/api/auth", authRoutes);
-app.use('/api/credits', creditRoutes);
-app.use("/api/users", userRoutes);
-app.use('/api/payment', paymentRoutes);
-
-// ✅ VR Routes (Only if `vrRoutes` is defined)
-if (vrRoutes) {
-    app.use('/api/vr', vrRoutes);
-} else {
-    console.warn("⚠️ Warning: `vrRoutes` is undefined.");
-}
-
-// ✅ Training & Progress Routes
-app.use('/api/training', authenticate, trainingRoutes);
-app.use('/api/leaderboard', authenticate, leaderboardRoutes);
-app.use('/api/countdown', authenticate, countdownRoutes);
-app.use('/api/progress', authenticate, progressRoutes);
-app.use('/', academyRoutes);
-
-
-// ✅ Module Configuration
-const modules = {
-    physical: physicalModule,
-    technical: technicalModule,
-    simulation: simulationModule,
-    eva: evaModule,
-};
-
-if (vrRoutes && typeof vrRoutes === "function") {
-    app.use("/vr", vrRoutes);
-} else {
-    console.warn("⚠️ Warning: `vrRoutes` is not a valid Express router.");
-}
-
-
-// ✅ Initialize and Mount Module Routes with Authentication
-Object.entries(modules).forEach(([name, module]) => {     
-    if (module?.router) {         
-        app.use(`/api/modules/${name}`, authenticate, module.router);     
-    } else if (typeof module === 'function') {         
-        app.use(`/api/modules/${name}`, authenticate, module);     
-    } else {         
-        console.warn(`⚠️ Warning: ${name} module is not a valid router or middleware`);     
-    } 
-}); 
-
-// ✅ Advanced Training & Simulation Routes
-if (typeof advancedRoutes?.upgradeConnection === 'function') {
-    advancedRoutes.upgradeConnection(server);
-}
-app.use('/api/advanced', authenticate, advancedRoutes.router || advancedRoutes);
-app.use('/api/missions', authenticate, missionRoutes);
-app.use('/api/scenarios', authenticate, scenarioRoutes);
-app.use('/api/teamRoles', authenticate, teamRoleRoutes);
-// Public auth routes (NO authentication)
-app.use("/vr", vrRoutes);
-// Mount routes in this order
-app.use('/api/social/auth', require('./routes/googleAuth')); // Auth routes first, WITHOUT authenticate middleware
-// ✅ AI Service Routes with Rate Limiting
-app.use('/api/ai',
-    rateLimit({
-        windowMs: 15 * 60 * 1000,
-        max: 100,
-        message: { error: "AI service rate limit exceeded" }
-    }),
-    authenticate,
-    aiRoutes.router || aiRoutes
-);
-
-// ✅ Communication Routes
-app.use('/api/chat', authenticate, chatRoutes);
-// ✅ Payment & Subscription Routes
-app.use('/api/stripe', authenticate, stripeRoutes);
-app.use('/webhook/stripe', stripeWebhookRoutes);  // No auth for webhooks
-app.use('/api/subscription', authenticate, subscriptionRoutes);
-
-// ============================
-// MODULE INITIALIZATION
-// ============================
-
-const initializeAllModules = async () => {
-    const modules = {};
-    const sharedModules = {};
-    
-    try {
-        const { ModuleLoader, moduleLoader } = require('./modules/moduleLoader');
-
-        console.log('\n🚀 Loading Core Modules...');
-
-        const coreModules = {
-            physical: './modules/core/physical/index.js',
-            technical: './modules/core/technical/index.js',
-            simulation: './modules/core/simulation/index.js',
-            eva: './modules/core/eva/index.js'
-        };
-
-        // ✅ Load Core Modules Dynamically
-        for (const [moduleName, path] of Object.entries(coreModules)) {
-            try {
-                modules[moduleName] = require(path);
-                console.log(`✅ Loaded ${moduleName}`);
-            } catch (error) {
-                console.warn(`⚠️ Warning: Could not load ${moduleName}:`, error.message);
-            }
-        }
-
-        console.log('\n📚 Loading Shared Modules...');
-        const sharedModulePaths = {
-            types: './modules/shared/types/ModuleTypes.js',
-            achievements: './modules/shared/achievements/badges.js',
-            progression: './modules/shared/progression/requirements.js',
-            credits: './modules/shared/credits/calculation.js'
-        };
-
-        // ✅ Load Shared Modules Dynamically
-        for (const [category, path] of Object.entries(sharedModulePaths)) {
-            try {
-                sharedModules[category] = require(path);
-                console.log(`✅ Loaded shared/${category}`);
-            } catch (error) {
-                console.warn(`⚠️ Warning: Could not load shared/${category}:`, error.message);
-            }
-        }
-
-        console.log('\n🔍 Validating Module Structures...');
-        Object.entries(modules).forEach(([name, module]) => {
-            if (!module) {
-                console.warn(`⚠️ Warning: ${name} module is missing main index.js`);
-            } else {
-                console.log(`✅ ${name} module structure validated`);
-            }
-        });
-
-        if (moduleLoader?.initializeModules) {
-            console.log('\n🚀 Initializing ModuleLoader...');
-            await moduleLoader.initializeModules();
-            console.log('✅ ModuleLoader initialized successfully');
-        }
-
-        console.log('\n✅ All modules loaded and initialized successfully');
-
-    } catch (error) {
-        console.error('\n❌ Critical Error during module initialization:', error);
-        throw error;
-    } finally {
-        console.log('\n📊 Module Initialization Summary:');
-        console.log(`Core Modules: ${Object.keys(modules).length}`);
-        console.log(`Shared Module Categories: ${Object.keys(sharedModules).length}`);
-    }
-
-    return { modules, sharedModules };
-};
-
-module.exports = { initializeAllModules };
-
-// Static Pages
 const staticPages = [
     { route: "/", file: "index.html" },
-    { route: "/welcome", file: "Welcome.html" },
     { route: "/about", file: "about.html" },
     { route: "/academy", file: "academy.html" },
-    { route: "/mission-control", file: "mission-control.html" },
     { route: "/leaderboard", file: "leaderboard.html" },
     { route: "/login", file: "login.html" },
-    { route: "/profile", file: "profile.html" },
     { route: "/signup", file: "signup.html" },
     { route: "/subscribe", file: "subscribe.html" },
-    { route: "/training", file: "training.html" },
-    { route: "/why-sharedstars", file: "why-sharedstars.html" }
+    { route: "/training", file: "training.html" }
 ];
-
 staticPages.forEach(({ route, file }) => {
-    app.get(route, (req, res) => {
-        res.sendFile(path.join(__dirname, "public", file));
-    });
+    app.get(route, (req, res) => res.sendFile(path.join(__dirname, "public", file)));
 });
+app.use(express.static('public'));
 
 // ============================
 // 6. ERROR HANDLING
 // ============================
-// 404 Handler
 app.use((req, res, next) => {
     console.log(`⚠️ 404 Not Found: ${req.originalUrl}`);
-    res.status(404).json({
-        error: "Not Found",
-        path: req.originalUrl,
-    });
+    res.status(404).json({ error: "Not Found", path: req.originalUrl });
 });
 
-// Global Error Handler
 app.use((err, req, res, next) => {
     console.error("❌ Server Error:", err);
-    res.status(500).json({
-        error: "Internal Server Error",
-        message: process.env.NODE_ENV === 'development' ? err.message : 'An error occurred',
-        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-    });
+    res.status(500).json({ error: "Internal Server Error", message: err.message });
 });
 
 // ============================
-// 7. START SERVER & CONNECT DB
-// ... all your other code ...
+// 7. SHUTDOWN HANDLING
+// ============================
+process.on('SIGINT', () => {
+    console.log('🛑 Gracefully shutting down');
+    server.close(() => {
+        console.log('✅ HTTP server closed');
+        process.exit(0);
+    });
+    
+    // Force close if it takes too long
+    setTimeout(() => {
+        console.error('⚠️ Could not close connections in time, forcefully shutting down');
+        process.exit(1);
+    }, 5000);
+});
+
+// Handle nodemon restarts
+process.once('SIGUSR2', () => {
+    console.log('🔄 Nodemon restart received');
+    server.close(() => {
+        console.log('✅ Server closed for nodemon restart');
+        process.kill(process.pid, 'SIGUSR2');
+    });
+    
+    // Force close if it takes too long
+    setTimeout(() => {
+        console.error('⚠️ Could not close server for nodemon restart, forcing');
+        process.kill(process.pid, 'SIGUSR2');
+    }, 2000);
+});
+
+// ============================
+// 8. START SERVER
+// ============================
+const PORT = process.env.PORT || 3000;
+
+function startServer(port) {
+    if (port > 65535) {
+        console.error("❌ No available ports. Exiting.");
+        process.exit(1);
+    }
+
+    server.listen(port, () => {
+        console.log(`🚀 Server running on port ${port}`);
+    }).on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            console.error(`❌ Port ${port} is in use. Trying next available port...`);
+            startServer(port + 1); // ✅ Fix: Add 1 instead of appending digits
+        } else {
+            console.error("❌ Server error:", err);
+            process.exit(1);
+        }
+    });
+}
 
 // Start server
-connectDB()
-    .then(initializeAllModules)
-    .then(() => {
-        if (!server.listening) {
-            const PORT = process.env.PORT || 3000;
-            server.listen(PORT, () => {
-                console.log(`🚀 Server running on port ${PORT}`);
-                console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-                console.log(`📡 WebSocket server initialized`);
-            });
-        } else {
-            console.warn("⚠️ Server is already running. Skipping redundant `server.listen()` call.");
-        }
-    })
-    .catch(error => {
-        console.error('❌ Failed to start server:', error);
-        process.exit(1);
-    });
+startServer(PORT);
 
-// Print available endpoints
-const listEndpoints = require("express-list-endpoints");
-console.log("🚀 Available API Endpoints:");
-console.log(listEndpoints(app));
 
-// Final export
-module.exports = app;
+// Export for testing
+module.exports = { app, server };

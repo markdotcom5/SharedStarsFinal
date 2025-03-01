@@ -1,5 +1,4 @@
-// services/CommunityHub.js
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const { StudyGroup, TrainingSession, Challenge, Discussion, PeerMatch } = require('../models/CommunityModels');
 const ServiceIntegrator = require('./ServiceIntegrator');
 const aiGuidance = require('./aiGuidance');

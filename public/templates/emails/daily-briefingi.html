@@ -1,0 +1,238 @@
+<!-- templates/emails/daily-briefing.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAILY PRESIDENTIAL SPACE BRIEFING</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #0F172A;
+      color: #F8FAFC;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      background-color: #0F172A;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+      text-align: center;
+      padding: 20px 0;
+    }
+    
+    .logo {
+      max-width: 200px;
+      margin-bottom: 15px;
+    }
+    
+    .classification-bar {
+      background-color: #1E3A8A;
+      color: #FFFFFF;
+      text-align: center;
+      padding: 10px 0;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    
+    .alert-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    
+    .alert-green {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .alert-amber {
+      background-color: rgba(245, 158, 11, 0.2);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    
+    .alert-red {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .briefing-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #FFFFFF;
+    }
+    
+    .briefing-date {
+      color: #94A3B8;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    
+    .section {
+      background-color: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .section-title {
+      margin-top: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #60A5FA;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .training-directive {
+      background-color: rgba(30, 58, 138, 0.3);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .directive-title {
+      margin-top: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #60A5FA;
+      margin-bottom: 15px;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background-color: #2563EB;
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-top: 10px;
+      text-align: center;
+    }
+    
+    .cta-button:hover {
+      background-color: #1D4ED8;
+    }
+    
+    .footer {
+      text-align: center;
+      color: #64748B;
+      font-size: 12px;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    .security-notice {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: #FDA4AF;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-top: 20px;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .redacted {
+      position: relative;
+      display: inline-block;
+      background-color: #000;
+      color: transparent;
+      border-radius: 2px;
+      user-select: none;
+      margin: 0 3px;
+    }
+    
+    /* Responsive styling */
+    @media only screen and (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .briefing-title {
+        font-size: 20px;
+      }
+      
+      .section, .training-directive {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <img src="{{baseUrl}}/images/SharedStars.svg" alt="SharedStars Logo" class="logo">
+      <div class="classification-bar">⚠️ TOP SECRET // SHAREDSTARS CLEARANCE ONLY ⚠️</div>
+    </div>
+    
+    <!-- Briefing Content -->
+    <div class="alert-status alert-{{alertStatus|lower}}">ALERT STATUS: {{alertStatus}}</div>
+    
+    <h1 class="briefing-title">DAILY PRESIDENTIAL SPACE BRIEFING</h1>
+    <p class="briefing-date">DATE: {{formattedDate}} | CLASSIFICATION: COSMIC-1 CLEARANCE</p>
+    
+    <!-- Section 1: Strategic Developments -->
+    <div class="section">
+      <h2 class="section-title">1. STRATEGIC DEVELOPMENTS</h2>
+      <p>{{sections.strategic}}</p>
+    </div>
+    
+    <!-- Section 2: Astronomical Phenomena -->
+    <div class="section">
+      <h2 class="section-title">2. ASTRONOMICAL PHENOMENA</h2>
+      <p>{{sections.astronomical}}</p>
+    </div>
+    
+    <!-- Section 3: Technological Breakthrough -->
+    <div class="section">
+      <h2 class="section-title">3. TECHNOLOGICAL BREAKTHROUGH</h2>
+      <p>{{sections.technological}}</p>
+      <p>Technical specifications: <span class="redacted" style="width: 60px;">█████</span> fusion <span class="redacted" style="width: 120px;">███████████</span> efficiency rating of <span class="redacted" style="width: 40px;">████</span>.</p>
+    </div>
+    
+    <!-- Training Directive -->
+    <div class="training-directive">
+      <h2 class="directive-title">4. TRAINING DIRECTIVE</h2>
+      <p>{{trainingDirective}}</p>
+      <a href="{{baseUrl}}/training?ref=briefing" class="cta-button">Access Training Module</a>
+    </div>
+    
+    <div class="security-notice">
+      ⚠️ INFORMATION CONTAINED HEREIN IS CLASSIFIED ⚠️<br>
+      Unauthorized disclosure subject to Enhanced Administrative Action EO-43276.2
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p>© {{currentYear}} SharedStars | This communication is for authorized personnel only</p>
+      <p>
+        <a href="{{baseUrl}}/briefings/preferences" style="color: #60A5FA; text-decoration: none;">Update Preferences</a> | 
+        <a href="{{baseUrl}}/briefings/archive" style="color: #60A5FA; text-decoration: none;">View Archive</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

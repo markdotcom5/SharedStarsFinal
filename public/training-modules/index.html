@@ -1,0 +1,573 @@
+<!-- public/physical-training.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physical Training Module | SharedStars</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .pulse-dot {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+      
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+      
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+
+    .metric-box {
+      @apply bg-gray-700/50 p-2 rounded-lg text-center;
+    }
+
+    .zone-card {
+      @apply bg-gray-700/50 p-4 rounded-lg;
+    }
+
+    .bg-glass {
+      @apply bg-blue-900/20 backdrop-blur-lg border border-blue-500/20;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+  <!-- STELLA AI Status Bar -->
+  <div class="fixed top-0 w-full bg-gray-800/95 border-b border-blue-500/20 z-50">
+    <div class="container mx-auto px-4 py-2 flex items-center justify-between">
+      <div id="ai-status" class="flex items-center space-x-3">
+        <div class="pulse-dot w-3 h-3 bg-blue-500 rounded-full"></div>
+        <span id="stella-status-message">STELLA: <span class="text-blue-400">Initializing physical training module...</span></span>
+      </div>
+      <div class="flex items-center space-x-6">
+        <div id="session-metrics" class="flex items-center space-x-6">
+          <div class="flex items-center space-x-2">
+            <span class="text-blue-400">Focus:</span>
+            <span id="focus-score">87%</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-green-400">Progress:</span>
+            <span id="progress-percentage">0%</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-purple-400">Session:</span>
+            <span id="session-timer">00:00:00</span>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center space-x-2">
+          <button id="ai-help-button" class="px-3 py-1 bg-blue-600 text-sm rounded-full hover:bg-blue-500 transition-colors">
+            Ask STELLA
+          </button>
+          <button id="pause-session" class="px-3 py-1 bg-gray-700 text-sm rounded-full hover:bg-gray-600 transition-colors">
+            Pause
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 pt-20 pb-32">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold">Physical Training Module</h1>
+      <p class="text-gray-400">Prepare your body for the demands of space travel</p>
+    </div>
+
+    <!-- Phase Navigation -->
+    <nav class="bg-gray-800 rounded-xl p-4 mb-8">
+      <div class="flex justify-between items-center">
+        <div class="text-center">
+          <div class="relative">
+            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center cursor-pointer hover:bg-blue-600">
+              1
+              <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          <span class="text-xs text-gray-400 mt-1 block">Fundamentals</span>
+        </div>
+        <div class="h-0.5 w-full bg-gray-700 mx-2"></div>
+        <div class="text-center">
+          <div class="relative">
+            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer hover:bg-blue-600">
+              2
+            </div>
+          </div>
+          <span class="text-xs text-gray-400 mt-1 block">Endurance</span>
+        </div>
+        <div class="h-0.5 w-full bg-gray-700 mx-2"></div>
+        <div class="text-center">
+          <div class="relative">
+            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer hover:bg-blue-600">
+              3
+            </div>
+          </div>
+          <span class="text-xs text-gray-400 mt-1 block">Strength</span>
+        </div>
+        <div class="h-0.5 w-full bg-gray-700 mx-2"></div>
+        <div class="text-center">
+          <div class="relative">
+            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer hover:bg-blue-600">
+              4
+            </div>
+          </div>
+          <span class="text-xs text-gray-400 mt-1 block">Balance</span>
+        </div>
+        <div class="h-0.5 w-full bg-gray-700 mx-2"></div>
+        <div class="text-center">
+          <div class="relative">
+            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer hover:bg-blue-600">
+              5
+            </div>
+          </div>
+          <span class="text-xs text-gray-400 mt-1 block">Integration</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Module Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      <!-- Balance Module -->
+      <div class="bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+        <div class="h-40 bg-gradient-to-br from-blue-600 to-purple-600 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <img src="/images/training/balance.svg" alt="Balance" class="w-24 h-24">
+          </div>
+          <div class="absolute bottom-0 right-0 m-2 bg-blue-500 text-xs px-2 py-1 rounded-full">
+            Core
+          </div>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-2">Zero-G Balance</h3>
+          <p class="text-gray-400 text-sm mb-4">Master the art of maintaining balance in zero gravity environments.</p>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-blue-400">Progress:</span>
+              <div class="w-24 h-2 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 30%"></div>
+              </div>
+            </div>
+            <a href="/training/physical/balance" class="px-3 py-1 bg-blue-600 text-sm rounded-full hover:bg-blue-500 transition-colors">
+              Continue
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Endurance Module -->
+      <div class="bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+        <div class="h-40 bg-gradient-to-br from-green-600 to-blue-600 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <img src="/images/training/endurance.svg" alt="Endurance" class="w-24 h-24">
+          </div>
+          <div class="absolute bottom-0 right-0 m-2 bg-green-500 text-xs px-2 py-1 rounded-full">
+            Cardio
+          </div>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-2">Space Endurance</h3>
+          <p class="text-gray-400 text-sm mb-4">Build cardiovascular strength for the rigors of extended missions.</p>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-blue-400">Progress:</span>
+              <div class="w-24 h-2 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 15%"></div>
+              </div>
+            </div>
+            <a href="/training/physical/endurance" class="px-3 py-1 bg-blue-600 text-sm rounded-full hover:bg-blue-500 transition-colors">
+              Continue
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dexterity Module -->
+      <div class="bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+        <div class="h-40 bg-gradient-to-br from-purple-600 to-pink-600 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <img src="/images/training/dexterity.svg" alt="Dexterity" class="w-24 h-24">
+          </div>
+          <div class="absolute bottom-0 right-0 m-2 bg-purple-500 text-xs px-2 py-1 rounded-full">
+            Fine Motor
+          </div>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-2">Micro-Gravity Dexterity</h3>
+          <p class="text-gray-400 text-sm mb-4">Develop precision hand movements for delicate space operations.</p>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-blue-400">Progress:</span>
+              <div class="w-24 h-2 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 45%"></div>
+              </div>
+            </div>
+            <a href="/training/physical/dexterity" class="px-3 py-1 bg-blue-600 text-sm rounded-full hover:bg-blue-500 transition-colors">
+              Continue
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strength Module -->
+      <div class="bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+        <div class="h-40 bg-gradient-to-br from-red-600 to-orange-600 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <img src="/images/training/strength.svg" alt="Strength" class="w-24 h-24">
+          </div>
+          <div class="absolute bottom-0 right-0 m-2 bg-red-500 text-xs px-2 py-1 rounded-full">
+            Power
+          </div>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-2">Resistance Training</h3>
+          <p class="text-gray-400 text-sm mb-4">Build muscle mass to counteract the effects of muscle atrophy in space.</p>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-blue-400">Progress:</span>
+              <div class="w-24 h-2 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 10%"></div>
+              </div>
+            </div>
+            <a href="/training/physical/strength" class="px-3 py-1 bg-blue-600 text-sm rounded-full hover:bg-blue-500 transition-colors">
+              Continue
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flexibility Module -->
+      <div class="bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+        <div class="h-40 bg-gradient-to-br from-yellow-600 to-green-600 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <img src="/images/training/flexibility.svg" alt="Flexibility" class="w-24 h-24">
+          </div>
+          <div class="absolute bottom-0 right-0 m-2 bg-yellow-500 text-xs px-2 py-1 rounded-full">
+            Mobility
+          </div>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-2">Range of Motion</h3>
+          <p class="text-gray-400 text-sm mb-4">Maintain flexibility crucial for EVA operations and confined spaces.</p>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-blue-400">Progress:</span>
+              <div class="w-24 h-2 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 20%"></div>
+              </div>
+            </div>
+            <a href="/training/physical/flexibility" class="px-3 py-1 bg-blue-600 text-sm rounded-full hover:bg-blue-500 transition-colors">
+              Continue
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proprioception Module -->
+      <div class="bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+        <div class="h-40 bg-gradient-to-br from-teal-600 to-cyan-600 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <img src="/images/training/proprioception.svg" alt="Proprioception" class="w-24 h-24">
+          </div>
+          <div class="absolute bottom-0 right-0 m-2 bg-teal-500 text-xs px-2 py-1 rounded-full">
+            Spatial
+          </div>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-bold mb-2">Spatial Awareness</h3>
+          <p class="text-gray-400 text-sm mb-4">Develop body position awareness in three-dimensional space.</p>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-blue-400">Progress:</span>
+              <div class="w-24 h-2 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 5%"></div>
+              </div>
+            </div>
+            <a href="/training/physical/proprioception" class="px-3 py-1 bg-blue-600 text-sm rounded-full hover:bg-blue-500 transition-colors">
+              Continue
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="bg-gray-800 rounded-xl p-6 md:col-span-2">
+        <h2 class="text-2xl font-bold mb-4">Training Progress</h2>
+        <div class="space-y-6">
+          <!-- Phase Progress -->
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-gray-400">Current Phase</span>
+              <span class="text-blue-400">Phase 1: Fundamentals</span>
+            </div>
+            <div class="relative h-2 bg-gray-700 rounded-full">
+              <div class="absolute h-full bg-blue-500 rounded-full transition-all duration-500" style="width: 20%"></div>
+            </div>
+          </div>
+
+          <!-- Skills Progress -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Balance</span>
+                <span class="text-blue-400">30%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 30%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Endurance</span>
+                <span class="text-blue-400">15%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 15%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Dexterity</span>
+                <span class="text-blue-400">45%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 45%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Strength</span>
+                <span class="text-blue-400">10%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 10%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Flexibility</span>
+                <span class="text-blue-400">20%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 20%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Proprioception</span>
+                <span class="text-blue-400">5%</span>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 5%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-4">STELLA's Assessment</h2>
+        <div class="space-y-4">
+          <div class="border-l-4 border-blue-500 pl-4">
+            <p class="text-sm text-blue-300">Based on your progress, I recommend focusing on dexterity training next. You're showing excellent progress in this area.</p>
+          </div>
+          <div class="border-l-4 border-yellow-500 pl-4">
+            <p class="text-sm text-yellow-300">Your strength training needs more attention. I've adjusted your training plan to include more resistance exercises.</p>
+          </div>
+          <div class="border-l-4 border-green-500 pl-4">
+            <p class="text-sm text-green-300">Great work maintaining your balance training schedule. Your consistency is showing in your results.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STELLA Interface -->
+  <div id="stella-interface" class="fixed bottom-4 right-4 w-96 bg-blue-900/20 rounded-xl backdrop-blur-lg border border-blue-500/20 shadow-2xl">
+    <div class="p-4">
+      <!-- STELLA Status -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+              <span class="text-xl">🤖</span>
+            </div>
+            <div id="stella-status" class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+          </div>
+          <div>
+            <h3 class="font-bold text-blue-400">STELLA</h3>
+            <p class="text-xs text-gray-400">Phase 1 Support</p>
+          </div>
+        </div>
+        <button id="expand-stella" class="text-blue-400 hover:text-blue-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Real-time Guidance -->
+      <div id="stella-guidance" class="mb-4">
+        <div class="bg-blue-500/10 rounded-lg p-3">
+          <p class="text-sm text-blue-300">I'm monitoring your physical training progress. How can I assist you today?</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-2 gap-2">
+        <button class="bg-blue-500/20 hover:bg-blue-500/30 rounded-lg p-2 text-sm">
+          Get Guidance
+        </button>
+        <button class="bg-blue-500/20 hover:bg-blue-500/30 rounded-lg p-2 text-sm">
+          View Progress
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STELLA AI Help Modal (hidden by default) -->
+  <div id="stella-help-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center">
+    <div class="bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold">Ask STELLA</h3>
+        <button id="close-stella-modal" class="text-gray-400 hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="stella-conversation mb-4 max-h-60 overflow-y-auto">
+        <!-- STELLA conversation will appear here -->
+      </div>
+      <div class="flex">
+        <input type="text" id="stella-question" class="flex-grow bg-gray-700 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="How can I improve my form?">
+        <button id="send-to-stella" class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-500">
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Session timer
+      const startTime = new Date();
+      const timerElement = document.getElementById('session-timer');
+      
+      setInterval(() => {
+        const now = new Date();
+        const diff = Math.floor((now - startTime) / 1000);
+        const hours = Math.floor(diff / 3600).toString().padStart(2, '0');
+        const minutes = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
+        const seconds = Math.floor(diff % 60).toString().padStart(2, '0');
+        timerElement.textContent = `${hours}:${minutes}:${seconds}`;
+      }, 1000);
+      
+      // STELLA help modal
+      const helpButton = document.getElementById('ai-help-button');
+      const helpModal = document.getElementById('stella-help-modal');
+      const closeModal = document.getElementById('close-stella-modal');
+      const stellaQuestion = document.getElementById('stella-question');
+      const sendToStella = document.getElementById('send-to-stella');
+      
+      helpButton.addEventListener('click', () => {
+        helpModal.classList.remove('hidden');
+      });
+      
+      closeModal.addEventListener('click', () => {
+        helpModal.classList.add('hidden');
+      });
+      
+      sendToStella.addEventListener('click', () => {
+        sendQuestionToStella();
+      });
+      
+      stellaQuestion.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          sendQuestionToStella();
+        }
+      });
+      
+      function sendQuestionToStella() {
+        const question = stellaQuestion.value.trim();
+        if (!question) return;
+        
+        const conversationDiv = document.querySelector('.stella-conversation');
+        
+        // Add user question
+        conversationDiv.innerHTML += `
+          <div class="mb-2 text-right">
+            <div class="inline-block bg-blue-600 px-3 py-2 rounded-lg max-w-xs">
+              ${question}
+            </div>
+          </div>
+        `;
+        
+        // Clear input
+        stellaQuestion.value = '';
+        
+        // Scroll to bottom
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+        
+        // Simulate STELLA thinking
+        setTimeout(() => {
+          // In a real app, you'd call your STELLA AI service here
+          // For now, we'll simulate a response
+          const stellaResponse = getSTELLAResponse(question);
+          
+          conversationDiv.innerHTML += `
+            <div class="mb-2">
+              <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+                ${stellaResponse}
+              </div>
+            </div>
+          `;
+          
+          // Scroll to bottom
+          conversationDiv.scrollTop = conversationDiv.scrollHeight;
+        }, 1000);
+      }
+      
+      function getSTELLAResponse(question) {
+        // This would be replaced with real AI calls
+        const responses = [
+          "Focus on keeping your core engaged during this exercise.",
+          "Your form is looking good, but try to maintain a steady breathing pattern.",
+          "I've noticed your right side is slightly stronger. Let's work on balancing that out.",
+          "Based on your heart rate, I recommend a short recovery period before continuing.",
+          "You're making excellent progress! Your technique has improved 23% since last session."
+        ];
+        
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+
+      // Update progress percentage randomly for demo
+      const progressElement = document.getElementById('progress-percentage');
+      setInterval(() => {
+        const progress = Math.min(100, parseFloat(progressElement.textContent) + 0.1);
+        progressElement.textContent = progress.toFixed(1) + '%';
+      }, 5000);
+
+      // STELLA Interface toggling
+      const expandButton = document.getElementById('expand-stella');
+      const stellaInterface = document.getElementById('stella-interface');
+      const stellaGuidance = document.getElementById('stella-guidance');
+      
+      expandButton.addEventListener('click', () => {
+        stellaGuidance.classList.toggle('hidden');
+      });
+    });
+  </script>
+</body>
+</html>

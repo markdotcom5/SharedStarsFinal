@@ -1,5 +1,4 @@
-// services/EventHandlingSystem.js
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const CoreTrainingSystem = require('./CoreTrainingSystem');
 
 class EventHandlingSystem extends EventEmitter {

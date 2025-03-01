@@ -1,4 +1,4 @@
-import { checkOpenAiConnection } from './checkOpenAi';
+const { checkOpenAiConnection } = require('./checkOpenAi');
 
 checkOpenAiConnection()
   .then(() => console.log('OpenAI API connected successfully.'))

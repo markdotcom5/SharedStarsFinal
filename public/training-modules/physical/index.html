@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="SharedStars Physical Training - Master Your Physical Readiness for Space Missions" />
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <title>SharedStars Physical Training</title>
+  
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self'; 
+      script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+      style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data:;
+      frame-src 'self' https://www.sora.com;
+      child-src 'self' https://www.sora.com;
+">
+  
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/training.css" />
+  
+    <style>
+      /* Custom styles to match Figma design */
+      body {
+        background-color: #0F172A;
+        color: #F8FAFC;
+        font-family: 'Inter', sans-serif;
+      }
+      
+      .hero-text {
+        font-size: 3.5rem;
+        line-height: 1.2;
+      }
+      
+      /* Add the new status-bar class here */
+      .status-bar {
+        font-size: clamp(0.7rem, 2vw, 0.9rem);
+        padding: 0.5rem clamp(0.5rem, 2vw, 1rem);
+      }
+      
+      /* Your other existing styles */
+      .cosmic-hover {
+        transition: all 0.3s ease;
+      }
+      
+      .cosmic-hover:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+      }
+      
+      .step-circle {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+      
+      .module-card {
+        transition: all 0.3s ease;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        background: linear-gradient(180deg, rgba(17, 24, 39, 0.7) 0%, rgba(9, 14, 27, 0.9) 100%);
+      }
+      
+      .module-card:hover {
+        border-color: rgba(59, 130, 246, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(30, 64, 175, 0.2);
+      }
+  
+      .pulse-dot {
+        position: relative;
+      }
+      
+      .pulse-dot::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        background-color: rgba(59, 130, 246, 0.7);
+        z-index: -1;
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        70% {
+          transform: scale(2);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0;
+        }
+      }
+  
+      /* Added styles to match Figma design */
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+  
+      .progress-bar {
+        height: 8px;
+        border-radius: 4px;
+        background-color: rgba(59, 130, 246, 0.2);
+        overflow: hidden;
+      }
+  
+      .progress-fill {
+        height: 100%;
+        background-color: #3B82F6;
+        border-radius: 4px;
+      }
+  
+      .certification-card {
+        background: linear-gradient(135deg, rgba(13, 22, 41, 0.8) 0%, rgba(9, 16, 32, 0.9) 100%);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+  
+      .countdown-item {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(15, 23, 42, 0.8);
+        border-radius: 8px;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+  
+      .tier-card {
+        background: linear-gradient(180deg, rgba(17, 24, 39, 0.7) 0%, rgba(9, 14, 27, 0.9) 100%);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .tier-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(59, 130, 246, 0.6);
+        box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.4);
+      }
+  
+      .ai-assistant-bubble {
+        background-color: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 16px;
+        padding: 20px;
+        position: relative;
+      }
+  
+      .ai-assistant-bubble:before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 20px;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid rgba(59, 130, 246, 0.3);
+      }
+      
+      .module-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 10px;
+      }
+      
+      .phase-card {
+        background: linear-gradient(180deg, rgba(17, 24, 39, 0.7) 0%, rgba(9, 14, 27, 0.9) 100%);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .phase-card:hover {
+        border-color: rgba(59, 130, 246, 0.6);
+        transform: translateY(-3px);
+      }
+      
+      .chart-gradient {
+        background: linear-gradient(180deg, rgba(37, 99, 235, 0.5) 0%, rgba(37, 99, 235, 0) 100%);
+      }
+      
+      /* Chart point styles */
+      .chart-point {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #3B82F6;
+        position: relative;
+      }
+      
+      .chart-point::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: -5px;
+        left: -5px;
+        border-radius: 50%;
+        background-color: rgba(59, 130, 246, 0.3);
+        animation: pulse 2s infinite;
+      }
+      
+      .qualification-item {
+        position: relative;
+        padding-left: 30px;
+      }
+      
+      .qualification-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        background-color: #1E40AF;
+        border-radius: 50%;
+      }
+      
+      .qualification-item.completed::before {
+        background-color: #10B981;
+      }
+
+      /* Mission-specific styles */
+      .mission-card {
+        transition: all 0.3s ease;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        background: linear-gradient(180deg, rgba(17, 24, 39, 0.7) 0%, rgba(9, 14, 27, 0.9) 100%);
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+      
+      .mission-card:hover {
+        border-color: rgba(59, 130, 246, 0.5);
+      }
+
+      .mission-header {
+        cursor: pointer;
+        padding: 1.25rem;
+      }
+
+      .mission-content {
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .mission-content.expanded {
+        padding: 1.25rem;
+        max-height: 1000px;
+      }
+
+      .mission-progress-fill {
+        height: 100%;
+        background-color: #3B82F6;
+        transition: width 0.5s ease;
+      }
+
+      .exercise-card {
+        background-color: rgba(30, 41, 59, 0.7);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .exercise-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+      }
+
+      .badge-blue {
+        background-color: rgba(59, 130, 246, 0.2);
+        color: #60A5FA;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-white min-h-screen">
+    <!-- HEADER (consistent across pages) -->
+    <header class="site-header bg-black/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg">
+      <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
+        <!-- Logo -->
+        <div class="flex items-center mb-2 md:mb-0">
+          <a href="/index.html" aria-label="SharedStars Homepage" class="group">
+            <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+          </a>
+        </div>
+        <!-- Navigation Links -->
+        <ul class="flex flex-wrap gap-4">
+          <li><a href="/index.html" class="hover:text-blue-400 transition-colors">Home</a></li>
+          <li><a href="/academy.html" class="hover:text-blue-400 transition-colors">Academy</a></li>
+          <li><a href="/about.html" class="hover:text-blue-400 transition-colors">About</a></li>
+          <li><a href="/leaderboard.html" class="hover:text-blue-400 transition-colors">Leaderboard</a></li>
+          <li><a href="/subscribe.html" class="hover:text-blue-400 transition-colors">Subscribe</a></li>
+        </ul>
+        <!-- Right side with language and profile -->
+        <div class="flex items-center gap-4">
+          <!-- Language Selector -->
+          <div class="language-selector flex gap-2">
+            <button class="lang-btn text-2xl opacity-50 hover:opacity-100 transition-opacity" data-lang="en" aria-label="Switch to English">🇺🇸</button>
+            <button class="lang-btn text-2xl opacity-50 hover:opacity-100 transition-opacity" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+            <button class="lang-btn text-2xl opacity-50 hover:opacity-100 transition-opacity" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+            <button class="lang-btn text-2xl opacity-50 hover:opacity-100 transition-opacity" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+          </div>
+          <!-- Apply Now button -->
+          <a href="#" class="hidden md:block bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-white font-medium transition-colors">
+            Apply Now
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- STELLA AI Status Bar -->
+    <div class="fixed top-0 w-full bg-gray-800/95 border-b border-blue-500/20 z-50 status-bar">
+      <div class="container mx-auto px-4 py-2 flex items-center justify-between">
+        <div id="ai-status" class="flex items-center space-x-3">
+          <div class="pulse-dot w-3 h-3 bg-blue-500 rounded-full"></div>
+          <span id="stella-status-message">STELLA: <span class="text-blue-400" data-i18n="stella-initializing">Initializing physical training module...</span></span>
+        </div>
+        <div class="flex items-center space-x-6">
+          <div id="session-metrics" class="flex items-center space-x-6">
+            <div class="flex items-center space-x-2">
+              <span class="text-blue-400" data-i18n="focus">Focus:</span>
+              <span id="focus-score">87%</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-green-400" data-i18n="progress">Progress:</span>
+              <span id="progress-percentage">0%</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-purple-400" data-i18n="session">Session:</span>
+              <span id="session-timer">00:00:00</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-yellow-400" data-i18n="credits">Credits:</span>
+              <span id="total-credits">150</span>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-2">
+            <button id="ai-help-button" class="px-3 py-1 bg-blue-600 text-sm rounded-full hover:bg-blue-500 transition-colors" data-i18n="ask-stella">
+              Ask STELLA
+            </button>
+            <button id="pause-session" class="px-3 py-1 bg-gray-700 text-sm rounded-full hover:bg-gray-600 transition-colors" data-i18n="pause">
+              Pause
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Section with Video Background -->
+    <section id="hero" class="min-h-screen flex items-center justify-center relative">
+      <div class="absolute inset-0">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover">
+          <source src="/videos/training1.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-black/40"></div>
+      </div>
+      <div class="relative z-10 text-center text-white max-w-5xl mx-auto px-4 pt-24">
+        <div data-aos="fade-up">
+          <div class="inline-block px-3 py-1 bg-blue-900/70 rounded-full text-blue-400 text-sm font-semibold mb-4">
+            STELLA: Initializing physical training module... Focus: 87%
+          </div>
+          <h1 class="hero-text font-extrabold text-white mb-6">Welcome to Physical Training</h1>
+          <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+            Master Your Physical Readiness for Space Missions!
+          </p>
+          <p class="text-blue-300 mt-2">
+            Zero-G movement, endurance training, and astronaut fitness all in one AI-powered module.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-12 bg-gray-900/80 relative z-10">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Completion Time -->
+          <div class="bg-gray-800/70 rounded-xl p-6 border border-blue-900/30">
+            <div class="flex items-center">
+              <div class="bg-blue-900/50 rounded-full p-3 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-gray-400 text-sm">Estimated Completion Time</p>
+                <h3 class="text-2xl font-bold text-white">5D : 15H : 20M</h3>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Training Credits -->
+          <div class="bg-gray-800/70 rounded-xl p-6 border border-blue-900/30">
+            <div class="flex items-center">
+              <div class="bg-blue-900/50 rounded-full p-3 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-gray-400 text-sm">Training Credits Earned</p>
+                <h3 class="text-2xl font-bold text-white">150 Points</h3>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Progress -->
+          <div class="bg-gray-800/70 rounded-xl p-6 border border-blue-900/30 md:col-span-2 lg:col-span-1">
+            <p class="text-gray-400 text-sm mb-2">Overall Progress</p>
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-2xl font-bold text-white">Training Progress</h3>
+              <span class="text-blue-400 font-bold">70%</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+              <div class="bg-blue-600 h-2.5 rounded-full" style="width: 70%"></div>
+            </div>
+            <div class="flex justify-end">
+              <button class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg text-white font-semibold transition-colors mt-2">
+                Resume Training
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 pt-20 pb-32">
+      <!-- Mission List View -->
+      <div id="missions-container">
+        <!-- Training Requirements -->
+        <div class="bg-gray-800/70 rounded-xl p-6 mb-8">
+          <h2 class="text-xl font-bold mb-4" data-i18n="training-requirements">Training Requirements Before Starting</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-5 h-5 bg-gray-700 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span class="text-gray-300" data-i18n="req-clothes">Comfortable workout clothes</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-5 h-5 bg-gray-700 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span class="text-gray-300" data-i18n="req-bands">Standard resistance bands</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-5 h-5 bg-gray-700 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span class="text-gray-300" data-i18n="req-mat">Yoga mat or padded surface</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div class="w-5 h-5 bg-gray-700 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span class="text-gray-300" data-i18n="req-weights">Dumbbells or weighted objects</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STELLA AI Fitness Guide -->
+        <div class="bg-gray-800/70 rounded-xl p-6 mb-8">
+          <h2 class="text-xl font-bold mb-4" data-i18n="stella-guide">STELLA AI Fitness Guide</h2>
+          <div class="relative">
+            <div class="bg-gray-900 rounded-lg overflow-hidden">
+              <div class="w-full h-48 bg-blue-900/20 flex items-center justify-center">
+                <div class="flex flex-col items-center">
+                  <div class="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <span class="text-blue-400" data-i18n="watch-guide">Watch STELLA's fitness guide</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission List -->
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold mb-6" data-i18n="training-missions">Training Missions</h2>
+          <div id="mission-list" class="space-y-4">
+            <!-- Mission list will be dynamically rendered here by mission-handler.js -->
+          </div>
+        </div>
+      </div>
+
+     <!-- Mission Content View -->
+<div id="mission-content" class="hidden">
+  <!-- Mission content will be dynamically rendered here by mission-handler.js -->
+</div>
+
+<!-- Language Translation Data -->
+<script>
+  // Simple i18n implementation
+  const translations = {
+    'en': {
+      'stella-initializing': 'Initializing physical training module...',
+      'focus': 'Focus:',
+      'progress': 'Progress:',
+      'session': 'Session:',
+      'credits': 'Credits:',
+      'ask-stella': 'Ask STELLA',
+      'pause': 'Pause',
+      'welcome-physical': 'Welcome to Physical Training',
+      'physical-subtitle': 'Master Your Physical Readiness for Space Missions!',
+      'estimated-time': 'Estimated Completion Time',
+      'credits-earned': 'Training Credits Earned',
+      'overall-progress': 'Overall Progress',
+      'resume-training': 'Resume Training',
+      'training-requirements': 'Training Requirements Before Starting',
+      'req-clothes': 'Comfortable workout clothes',
+      'req-bands': 'Standard resistance bands',
+      'req-mat': 'Yoga mat or padded surface',
+      'req-weights': 'Dumbbells or weighted objects',
+      'stella-guide': 'STELLA AI Fitness Guide',
+      'watch-guide': 'Watch STELLA\'s fitness guide',
+      'training-missions': 'Training Missions'
+    },
+    'zh': {
+      'stella-initializing': '正在初始化物理训练模块...',
+      'focus': '专注:',
+      'progress': '进度:',
+      'session': '会话:',
+      'credits': '积分:',
+      'ask-stella': '询问STELLA',
+      'pause': '暂停',
+      'welcome-physical': '欢迎来到体能训练',
+      'physical-subtitle': '掌握太空任务所需的体能准备!',
+      'estimated-time': '预计完成时间',
+      'credits-earned': '已获训练积分',
+      'overall-progress': '总体进度',
+      'resume-training': '继续训练',
+      'training-requirements': '开始前的训练要求',
+      'req-clothes': '舒适的训练服装',
+      'req-bands': '标准阻力带',
+      'req-mat': '瑜伽垫或有垫表面',
+      'req-weights': '哑铃或重物',
+      'stella-guide': 'STELLA人工智能健身指南',
+      'watch-guide': '观看STELLA的健身指南',
+      'training-missions': '训练任务'
+    },
+    'ko': {
+      'stella-initializing': '물리적 훈련 모듈 초기화 중...',
+      'focus': '집중:',
+      'progress': '진행도:',
+      'session': '세션:',
+      'credits': '크레딧:',
+      'ask-stella': 'STELLA에게 질문하기',
+      'pause': '일시정지',
+      'welcome-physical': '신체 훈련에 오신 것을 환영합니다',
+      'physical-subtitle': '우주 임무를 위한 신체 준비도를 마스터하세요!',
+      'estimated-time': '예상 완료 시간',
+      'credits-earned': '획득한 훈련 크레딧',
+      'overall-progress': '전체 진행도',
+      'resume-training': '훈련 계속하기',
+      'training-requirements': '시작 전 훈련 요구사항',
+      'req-clothes': '편안한 운동복',
+      'req-bands': '표준 저항 밴드',
+      'req-mat': '요가 매트 또는 패딩 표면',
+      'req-weights': '덤벨 또는 무게 물체',
+      'stella-guide': 'STELLA AI 피트니스 가이드',
+      'watch-guide': 'STELLA의 피트니스 가이드 보기',
+      'training-missions': '훈련 미션'
+    },
+    'es': {
+      'stella-initializing': 'Inicializando módulo de entrenamiento físico...',
+      'focus': 'Enfoque:',
+      'progress': 'Progreso:',
+      'session': 'Sesión:',
+      'credits': 'Créditos:',
+      'ask-stella': 'Preguntar a STELLA',
+      'pause': 'Pausa',
+      'welcome-physical': 'Bienvenido al Entrenamiento Físico',
+      'physical-subtitle': '¡Domina tu Preparación Física para Misiones Espaciales!',
+      'estimated-time': 'Tiempo Estimado de Finalización',
+      'credits-earned': 'Créditos de Entrenamiento Ganados',
+      'overall-progress': 'Progreso General',
+      'resume-training': 'Continuar Entrenamiento',
+      'training-requirements': 'Requisitos de Entrenamiento Antes de Comenzar',
+      'req-clothes': 'Ropa cómoda para ejercicio',
+      'req-bands': 'Bandas de resistencia estándar',
+      'req-mat': 'Colchoneta de yoga o superficie acolchada',
+      'req-weights': 'Mancuernas u objetos con peso',
+      'stella-guide': 'Guía de Fitness de STELLA IA',
+      'watch-guide': 'Ver la guía de fitness de STELLA',
+      'training-missions': 'Misiones de Entrenamiento'
+    }
+  };
+  
+  // Function to apply translations
+  function applyTranslations(lang) {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[lang] && translations[lang][key]) {
+        el.textContent = translations[lang][key];
+      }
+    });
+  }
+
+  // Language switcher functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.getAttribute('data-lang');
+        applyTranslations(lang);
+        // Update active state
+        document.querySelectorAll('.lang-btn').forEach(b => b.style.opacity = '0.5');
+        btn.style.opacity = '1';
+        // Store language preference
+        localStorage.setItem('language', lang);
+      });
+    });
+    
+    // Load saved language preference or default to English
+    const savedLang = localStorage.getItem('language') || 'en';
+    applyTranslations(savedLang);
+    // Update active state
+    document.querySelector(`.lang-btn[data-lang="${savedLang}"]`).style.opacity = '1';
+  });
+</script>
+
+<!-- Core Scripts -->
+<script src="/js/stella-core.js"></script>
+<script src="/js/training-ui.js"></script>
+<script src="/js/TrainingModule.js"></script>
+<script src="/js/training/physical/mission-data.js"></script>
+<script src="/js/training/physical/mission-handler.js"></script>
+<script src="/js/training/physical/endurance-tracker.js"></script>

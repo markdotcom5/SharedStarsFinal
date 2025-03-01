@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const User = require('../models/User'); // Adjust the path if necessary
+const User = require('../models/User'); // Adjust the path if necessary.
 
 const connectAndUpdate = async () => {
     try {

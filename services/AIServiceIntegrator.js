@@ -1,5 +1,5 @@
-const EventEmitter = require('events');
-const AILearningSystem = require('./AILearningSystem');  // ✅ Import the correct module
+const { EventEmitter } = require('events');
+const AILearningSystem = require('./AILearningSystem');
 const AIGuidanceSystem = require('./AIGuidanceSystem');
 const AIOrchestrator = require('./AIOrchestrator');
 const AISpaceCoach = require('./AISpaceCoach');

@@ -1,7 +1,7 @@
 const { TwitterApi } = require('twitter-api-v2');
 const TelegramBot = require('node-telegram-bot-api');
 const { google } = require('googleapis');
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const axios = require('axios');
 const multer = require('multer');
 const sharp = require('sharp');

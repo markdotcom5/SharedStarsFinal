@@ -1,4 +1,3 @@
-// services/certificationService.js
 const UserProgress = require('../models/UserProgress');
 const Module = require('../models/Module');
 

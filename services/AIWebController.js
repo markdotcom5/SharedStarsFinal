@@ -1,6 +1,6 @@
-const EventEmitter = require("events");
+const { EventEmitter } = require("events");
 const { OpenAI } = require("openai");
-const User = require("../models/User");
+const User = require("../models/User.js");
 
 class AIWebController extends EventEmitter {
     constructor() {

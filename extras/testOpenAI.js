@@ -1,5 +1,6 @@
 require('dotenv').config(); // Load environment variables
-const { OpenAI } = require('openai'); // Import OpenAI
+const OpenAI = require('openai'); // ✅ Ensure CommonJS format
+
 
 // Initialize OpenAI client
 const openai = new OpenAI({

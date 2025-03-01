@@ -1,4 +1,3 @@
-// services/taskCompletionService.js
 const UserProgress = require('../models/UserProgress');
 
 class TaskCompletionService {

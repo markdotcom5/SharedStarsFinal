@@ -1,21 +1,16 @@
-// routes/advancedTrainingRoutes.js
-
 const express = require('express');
 const mongoose = require('mongoose'); // Required for ObjectId conversion
-const router = express.Router();
 const WebSocket = require('ws');
 const { authenticate, authenticateWebSocket } = require('../middleware/authenticate');
 const TrainingSession = require('../models/TrainingSession');
 const aiCoachInstance = require('../services/AISpaceCoach');
 const moduleLoader = require('../modules/moduleLoader');
 
-// Create a WebSocket server instance for advanced routes if needed
-const wsServer = new WebSocket.Server({ noServer: true });
-const clients = new Map();
+// ✅ Create a WebSocket server if it's missing
+const wss = new WebSocket.Server({ noServer: true });
 
-/* =====================================================
-   Advanced Training Module Routes
-===================================================== */
+const router = express.Router();
+const clients = new Map();
 
 // 1. Task-specific progress tracking
 router.post('/training/modules/:moduleType/:moduleId/task/:taskId', authenticate, async (req, res) => {
@@ -376,28 +371,25 @@ function handleError(res, error, message = 'An error occurred') {
     timestamp: new Date().toISOString()
   });
 }
-/* =====================================================
-   Final Combined Export
-===================================================== */
-module.exports = {
-  router,
-  upgradeConnection: (server) => {
-    server.on('upgrade', async (request, socket, head) => {
-      try {
-        const userId = await authenticateWebSocket(request);
-        if (!userId) {
-          socket.destroy();
-          return;
-        }
-        request.userId = userId;
-        wsServer.handleUpgrade(request, socket, head, (ws) => {
-          wsServer.emit('connection', ws, request);
-        });
-      } catch (error) {
-        console.error('WebSocket upgrade error:', error);
+/// ✅ WebSocket Upgrade Connection
+const upgradeConnection = (server) => {
+  server.on('upgrade', async (request, socket, head) => {
+    try {
+      const userId = await authenticateWebSocket(request);
+      if (!userId) {
         socket.destroy();
+        return;
       }
-    });
-  },
-  wss: wsServer
+      request.userId = userId;
+      wss.handleUpgrade(request, socket, head, (ws) => {
+        wss.emit('connection', ws, request);
+      });
+    } catch (error) {
+      console.error('WebSocket upgrade error:', error);
+      socket.destroy();
+    }
+  });
 };
+
+// ✅ Export the Correct Variables
+module.exports = { router, wss, upgradeConnection };

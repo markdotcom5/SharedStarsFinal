@@ -11,6 +11,9 @@ router.use((req, res, next) => {
     console.log(`🔍 Progress Route Hit: ${req.method} ${req.path}`);
     next();
 });
+router.get('/', authenticate, async (req, res) => {
+    res.json({ message: "User progress retrieved successfully!" });
+});
 
 // 📌 🏆 GET User Training Progress
 router.get('/:userId', authenticate, async (req, res) => {

@@ -1,9 +1,9 @@
-export function renderTimelineChart(elementId) {
+imexport function renderTimelineChart(elementId) {
     const ctx = document.getElementById(elementId).getContext('2d');
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ["2024", "2029", "2034", "2043"],
+            labels: ["2024", "2029", "2034", "2049"],
             datasets: [
                 {
                     label: "Cost of Space Travel",

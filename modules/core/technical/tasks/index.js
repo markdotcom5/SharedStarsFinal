@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const data = require('./data'); // Import technical tasks
+const data = require('./data.js'); // ✅ Ensure `.js` extension
+
 
 // ✅ API Endpoint: Get All Technical Tasks
 router.get('/', (req, res) => {

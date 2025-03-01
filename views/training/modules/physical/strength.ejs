@@ -1,0 +1,195 @@
+<div class="training-module" data-module="strength">
+    <!-- STELLA Strength Monitoring Interface -->
+    <div class="ai-monitoring-status">
+      <div class="flex items-center gap-3 bg-red-900/30 p-4 rounded-lg">
+        <div class="pulse-dot"></div>
+        <p class="text-sm text-red-300" id="stella-monitor-status">
+          STELLA monitoring force output and form...
+        </p>
+      </div>
+    </div>
+  
+    <!-- Main Training Interface -->
+    <div class="space-y-6">
+      <div class="bg-gray-800 rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-4">Zero-G Strength Training</h2>
+  
+        <!-- STELLA's Real-time Analysis -->
+        <div class="mb-6 border-l-4 border-red-500 pl-4">
+          <h3 class="text-red-400 font-semibold">STELLA's Assessment</h3>
+          <p id="stella-strength-feedback" class="text-gray-300">
+            Analyzing your strength patterns and muscle engagement...
+          </p>
+        </div>
+  
+        <!-- Exercise Program -->
+        <div class="exercise-sequence space-y-4">
+          <% strengthExercises.forEach(function(exercise) { %>
+            <div class="exercise-card" 
+                 data-exercise-id="<%= exercise.id %>"
+                 data-muscle-group="<%= exercise.muscleGroup %>">
+              <div class="flex justify-between items-center">
+                <h4 class="text-lg font-semibold"><%= exercise.name %></h4>
+                <div class="flex items-center gap-2">
+                  <span class="text-red-400"><%= exercise.weight %>kg</span>
+                  <span class="text-gray-400">×</span>
+                  <span class="text-red-400"><%= exercise.reps %></span>
+                </div>
+              </div>
+  
+              <!-- Real-time Metrics -->
+              <div class="mt-2 grid grid-cols-3 gap-2">
+                <div class="metric-box">
+                  <span class="text-sm text-gray-400">Force</span>
+                  <span class="force-output">--</span>
+                </div>
+                <div class="metric-box">
+                  <span class="text-sm text-gray-400">Form</span>
+                  <span class="form-score">--</span>
+                </div>
+                <div class="metric-box">
+                  <span class="text-sm text-gray-400">Power</span>
+                  <span class="power-output">--</span>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+  
+      <!-- Performance Metrics -->
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Force Production -->
+        <div class="bg-gray-800 rounded-xl p-6">
+          <h3 class="text-lg font-semibold mb-4">Force Output</h3>
+          <div class="force-graph h-48"></div>
+        </div>
+  
+        <!-- Muscle Activation -->
+        <div class="bg-gray-800 rounded-xl p-6">
+          <h3 class="text-lg font-semibold mb-4">Muscle Activation</h3>
+          <div class="muscle-map h-48"></div>
+        </div>
+      </div>
+  
+      <!-- STELLA's Training Recommendations -->
+      <div class="bg-gray-800 rounded-xl p-6">
+        <h3 class="text-lg font-semibold mb-4">STELLA's Recommendations</h3>
+        <div id="training-recommendations" class="space-y-3">
+          <!-- Dynamically populated by STELLA -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  class StrengthTracker {
+      constructor() {
+          this.metrics = {
+              force: 0,
+              power: 0,
+              muscleActivation: {},
+              formAccuracy: 0,
+              fatigue: 0
+          };
+          this.stella = new STELLAInterface('strength');
+          this.graphs = {};
+      }
+  
+      async initialize() {
+          await this.stella.connect();
+          this.setupGraphs();
+          this.setupExerciseTracking();
+          this.startMonitoring();
+      }
+  
+      setupGraphs() {
+          // Initialize force output graph
+          this.graphs.force = new PerformanceGraph('.force-graph', {
+              type: 'line',
+              label: 'Force Output',
+              color: '#EF4444'
+          });
+  
+          // Initialize muscle activation map
+          this.graphs.muscles = new MuscleActivationMap('.muscle-map');
+      }
+  
+      setupExerciseTracking() {
+          document.querySelectorAll('.exercise-card').forEach(card => {
+              card.addEventListener('exerciseStart', async (e) => {
+                  const exerciseId = card.dataset.exerciseId;
+                  const muscleGroup = card.dataset.muscleGroup;
+                  
+                  // Start STELLA's tracking for this exercise
+                  const metrics = await this.stella.startStrengthTracking({
+                      exerciseId,
+                      muscleGroup,
+                      targetWeight: parseFloat(card.dataset.weight),
+                      targetReps: parseInt(card.dataset.reps)
+                  });
+  
+                  this.updateExerciseMetrics(card, metrics);
+              });
+          });
+      }
+  
+      updateExerciseMetrics(card, metrics) {
+          // Update real-time metrics
+          card.querySelector('.force-output').textContent = 
+              `${metrics.force.toFixed(1)}N`;
+          card.querySelector('.form-score').textContent = 
+              `${metrics.formAccuracy}%`;
+          card.querySelector('.power-output').textContent = 
+              `${metrics.power}W`;
+  
+          // Update graphs
+          this.graphs.force.addDataPoint(metrics.force);
+          this.graphs.muscles.updateActivation(metrics.muscleActivation);
+  
+          // Get STELLA's feedback
+          this.stella.getStrengthFeedback(metrics).then(feedback => {
+              this.updateFeedback(feedback);
+          });
+      }
+  
+      startMonitoring() {
+          setInterval(async () => {
+              const currentMetrics = await this.stella.getCurrentMetrics();
+              this.updateMetrics(currentMetrics);
+  
+              // Check fatigue levels
+              if (currentMetrics.fatigue > 80) {
+                  this.triggerFatigueWarning();
+              }
+          }, 1000);
+      }
+  
+      updateFeedback(feedback) {
+          const feedbackElement = document.getElementById('stella-strength-feedback');
+          feedbackElement.textContent = feedback.message;
+  
+          // Update recommendations
+          const recommendationsContainer = document.getElementById('training-recommendations');
+          recommendationsContainer.innerHTML = feedback.recommendations
+              .map(rec => `
+                  <div class="recommendation p-3 bg-gray-700/50 rounded-lg">
+                      <h4 class="font-semibold">${rec.title}</h4>
+                      <p class="text-sm text-gray-300">${rec.description}</p>
+                  </div>
+              `).join('');
+      }
+  
+      triggerFatigueWarning() {
+          const monitorStatus = document.getElementById('stella-monitor-status');
+          monitorStatus.textContent = "WARNING: High fatigue detected. Consider rest period.";
+          monitorStatus.classList.add('text-yellow-300');
+      }
+  }
+  
+  // Initialize when document loads
+  document.addEventListener('DOMContentLoaded', () => {
+      const tracker = new StrengthTracker();
+      tracker.initialize();
+  });
+  </script>

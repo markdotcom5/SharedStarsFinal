@@ -1,4 +1,7 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Stripe = require('stripe');
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 
 const prices = {
     individual: process.env.STRIPE_INDIVIDUAL_PRICE_ID,

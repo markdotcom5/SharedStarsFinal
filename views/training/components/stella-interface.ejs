@@ -1,0 +1,101 @@
+<!-- views/training/components/stella-interface.ejs -->
+<div id="stella-interface" class="fixed bottom-4 right-4 w-96 bg-blue-900/20 rounded-xl backdrop-blur-lg border border-blue-500/20 shadow-2xl">
+    <div class="p-4">
+        <!-- STELLA Status -->
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-xl">🤖</span>
+                    </div>
+                    <div id="stella-status" class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-blue-400">STELLA</h3>
+                    <p class="text-xs text-gray-400">Phase <%= currentPhase %> Support</p>
+                </div>
+            </div>
+            <button id="expand-stella" class="text-blue-400 hover:text-blue-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Real-time Guidance -->
+        <div id="stella-guidance" class="mb-4">
+            <div class="bg-blue-500/10 rounded-lg p-3">
+                <p class="text-sm text-blue-300"></p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 gap-2">
+            <button class="bg-blue-500/20 hover:bg-blue-500/30 rounded-lg p-2 text-sm">
+                Get Guidance
+            </button>
+            <button class="bg-blue-500/20 hover:bg-blue-500/30 rounded-lg p-2 text-sm">
+                View Progress
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- views/training/components/progress-tracker.ejs -->
+<div class="bg-gray-800 rounded-xl p-6">
+    <h2 class="text-2xl font-bold mb-4">Training Progress</h2>
+    <div class="space-y-6">
+        <!-- Phase Progress -->
+        <div>
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-400">Current Phase</span>
+                <span class="text-blue-400">Phase <%= currentPhase %></span>
+            </div>
+            <div class="relative h-2 bg-gray-700 rounded-full">
+                <div class="absolute h-full bg-blue-500 rounded-full transition-all duration-500"
+                     style="width: <%= phaseProgress %>%"></div>
+            </div>
+        </div>
+
+        <!-- Skills Progress -->
+        <div class="grid grid-cols-2 gap-4">
+            <% Object.entries(skills).forEach(function([skill, level]) { %>
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-gray-400"><%= skill %></span>
+                        <span class="text-blue-400"><%= level %>%</span>
+                    </div>
+                    <div class="h-1.5 bg-gray-700 rounded-full">
+                        <div class="h-full bg-blue-500 rounded-full" 
+                             style="width: <%= level %>%"></div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</div>
+
+<!-- views/training/components/phase-nav.ejs -->
+<nav class="bg-gray-800 rounded-xl p-4 mb-8">
+    <div class="flex justify-between items-center">
+        <% for(let i = 1; i <= 5; i++) { %>
+            <div class="text-center">
+                <div class="relative">
+                    <div class="w-10 h-10 rounded-full <%= i <= currentPhase ? 'bg-blue-500' : 'bg-gray-700' %> 
+                                flex items-center justify-center cursor-pointer hover:bg-blue-600">
+                        <%= i %>
+                        <% if (i === currentPhase) { %>
+                            <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        <% } %>
+                    </div>
+                </div>
+                <span class="text-xs text-gray-400 mt-1 block">
+                    <%= phaseNames[i-1] %>
+                </span>
+            </div>
+            <% if(i < 5) { %>
+                <div class="h-0.5 w-full bg-gray-700 mx-2"></div>
+            <% } %>
+        <% } %>
+    </div>
+</nav>

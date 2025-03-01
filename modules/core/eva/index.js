@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');  // ✅ Import mongoose
+const mongoose = require('mongoose');  
 const express = require('express');
 const router = express.Router();
 const Module = require('../../../models/Module');  // ✅ Ensure Module model is correctly referenced
 
 // ✅ Import Submodules Correctly
-const procedures = require('./procedures');  
+const procedures = require('./procedures/index.js'); // ✅ Ensure `.js` extension if needed
 const equipment = require('./equipment');  
 const safety = require('./safety');  
 

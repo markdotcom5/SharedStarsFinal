@@ -1,5 +1,5 @@
-const AISpaceCoach = require('../services/AISpaceCoach');
-const CreditSystem = require('../services/CreditSystem');
+const AISpaceCoach = require('../services/AISpaceCoach.js');
+const STELLAIntegration = require('../services/stella-integration.js');
 
 function setupWebSocket(wss) {
     wss.on('connection', (ws) => {
@@ -135,5 +135,6 @@ function setupWebSocket(wss) {
         });
     });
 }
-
 module.exports = { setupWebSocket };
+
+const CreditSystem = require('../services/CreditSystem');

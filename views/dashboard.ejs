@@ -7,6 +7,7 @@
         'https://cdn.jsdelivr.net/npm/daisyui@3.9.0/dist/full.css'
     ]
 }) %>
+<%- include('../components/progress-tracker') %>
 
 <body class="bg-black min-h-screen overflow-y-auto text-white">
     <%- include('partials/nav') %>
@@ -90,8 +91,8 @@
     <%- include('partials/footer') %>
 
     <!-- Dashboard Scripts -->
-    <script type="module">
-        import { initializeDashboard } from '/js/modules/dashboard/index.js';
+    <script>
+         src="/js/modules/dashboard/index.js">
         
         document.addEventListener('DOMContentLoaded', () => {
             initializeDashboard({

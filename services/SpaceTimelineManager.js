@@ -1,9 +1,8 @@
-// creditSystem.js
 const mongoose = require('mongoose');
 const User = require('../models/User');
 const UserProgress = require('../models/UserProgress');
-const Subscription = require('../models/Subscription');
-const Achievement = require('../models/achievement');
+const Subscription = require('../models/Subscription');  // ✅ Correct!
+const Achievement = require('../models/Achievement');
 const TrainingSession = require('../models/TrainingSession');
 
 class SpaceTimelineManager {

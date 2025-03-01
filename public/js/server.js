@@ -11,38 +11,16 @@ const app = express();
 app.use(cors());
 
 // Connect to MongoDB
-const connectDB = async () => {
-  try {
-      await mongoose.connect(process.env.MONGO_URI, {
-          serverSelectionTimeoutMS: parseInt(process.env.MONGO_TIMEOUT, 10) || 5000,
-          autoIndex: process.env.MONGO_AUTO_INDEX === "true",
-          maxPoolSize: parseInt(process.env.MONGO_POOL_SIZE, 10) || 10,
-          socketTimeoutMS: parseInt(process.env.MONGO_SOCKET_TIMEOUT, 10) || 45000,
-          retryWrites: true,
-      });
-      console.log("✅ MongoDB Connected");
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/leaderboardDB";
 
-      // Add model logging
-      const modelNames = mongoose.modelNames();
-      console.log("\n📚 Connected Models:");
-      modelNames.forEach(model => {
-          console.log(`✅ ${model} model connected`);
-      });
-      console.log(`\n🔢 Total Models Connected: ${modelNames.length}\n`);
+mongoose
+  .connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
-      mongoose.connection.on("disconnected", () => {
-          console.warn("⚠️ MongoDB Disconnected. Attempting to reconnect...");
-          setTimeout(connectDB, 5000);
-      });
-
-      mongoose.connection.on("reconnected", () => {
-          console.log("🔄 MongoDB Reconnected Successfully");
-      });
-  } catch (error) {
-      console.error("❌ MongoDB Connection Error:", error);
-      process.exit(1);
-  }
-};
 // Define Leaderboard Schema
 const leaderboardSchema = new mongoose.Schema({
   username: { type: String, required: true },

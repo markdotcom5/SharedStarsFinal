@@ -1,6 +1,5 @@
-// services/LeaderboardService.js
-const SocialPlatformIntegrator = require("../services/SocialPlatformIntegrator");
-const User = require("../models/User"); // ✅ Assuming a User model exists
+const SocialPlatformIntegrator = require("../services/SocialPlatformIntegrator.js");
+const User = require("../models/User.js"); // ✅ Assuming a User model exists
 const mongoose = require("mongoose");
 
 class LeaderboardService {

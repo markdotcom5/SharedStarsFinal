@@ -54,7 +54,6 @@ const vrMiddleware = {
         });
     }
 };
-
 module.exports = (req, res, next) => {
     console.log("✅ VR Middleware triggered");
     next();  // ✅ Ensures Express continues processing

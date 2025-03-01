@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Simulation = require('../../models/simulation/simulations'); // Ensure correct import path
+const Simulation = require('../../models/simulation/simulations.js'); // ✅ Ensure `.js` extension
 
 // Middleware to validate simulation input
 const validateSimulation = (req, res, next) => {
@@ -43,3 +43,4 @@ router.post('/simulations', validateSimulation, async (req, res) => {
 });
 
 module.exports = router;
+

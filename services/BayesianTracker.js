@@ -1,4 +1,3 @@
-// services/BayesianTracker.js
 const mongoose = require('mongoose');
 
 // Schema for storing knowledge states

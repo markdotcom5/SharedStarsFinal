@@ -1,10 +1,10 @@
-const EventEmitter = require("events");
 const OpenAI = require("openai");
-const User = require("../models/User");
-const TrainingSession = require("../models/TrainingSession");
-const Intervention = require("../models/Intervention");
-const UserProgress = require("../models/UserProgress");
-const Achievement = require("../models/Achievement");
+const User = require("../models/User.js");
+const TrainingSession = require("../models/TrainingSession.js");
+const Intervention = require("../models/Intervention.js");
+const UserProgress = require("../models/UserProgress.js");
+const Achievement = require("../models/Achievement.js");
+const { EventEmitter } = require('events'); 
 
 class AIGuidanceSystem extends EventEmitter {
     constructor() {

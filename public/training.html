@@ -93,20 +93,20 @@
       <!-- Logo -->
       <div class="flex items-center mb-2 md:mb-0">
         <a href="/index.html" aria-label="SharedStars Homepage" class="group">
-          <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
         </a>
       </div>
       <!-- Navigation Links -->
       <ul class="flex flex-wrap gap-4">
         <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
-        <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
+        <li><a href="/Why-SharedStars.html" data-i18n="nav.why">Why SharedStars</a></li>
         <li><a href="/about.html" data-i18n="nav.about">About</a></li>
         <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
         <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
         <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
         <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
         <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-        <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
+        <li><a href="/academy.html" data-i18n="nav.academy">SharedStars Academy</a></li>
         <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
         <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
       </ul>
@@ -383,47 +383,59 @@
   </script>
   
   <!-- Module Scripts -->
-  <script type="module">
-    import trainingModules from '/js/modules/training/moduleContent.js';
+ <!-- ✅ Load `trainingModules` Before Executing Script -->
+<script src="/js/moduleContent.js"></script>
 
-    function renderModuleDetails(module) {
-      const detailsContainer = document.getElementById('module-details');
-      let html = `<h3 class="text-2xl font-bold">${module.title}</h3>
-      <p class="text-gray-300 mb-2">${module.description}</p>
-      <p class="text-blue-400">Duration: ${module.duration}</p>
-      <p class="text-blue-400">Certifications: ${module.certifications.join(', ')}</p>`;
-      
-      if(module.levels && module.levels.length > 0) {
-        html += `<div class="levels mt-4">
-          <h4 class="text-xl font-semibold mb-2">Levels</h4>`;
-        module.levels.forEach(level => {
-          html += `<div class="level mb-4">
-            <h5 class="text-lg font-bold">${level.name}</h5>
-            <p>ID: ${level.id}</p>`;
-          if(level.content && level.content.length > 0) {
-            html += `<ul class="list-disc list-inside">`;
-            level.content.forEach(contentItem => {
-              html += `<li><strong>${contentItem.title}</strong> (${contentItem.type})</li>`;
-            });
-            html += `</ul>`;
-          }
-          html += `</div>`;
-        });
+<script>
+  function renderModuleDetails(module) {
+    const detailsContainer = document.getElementById('module-details');
+    let html = `<h3 class="text-2xl font-bold">${module.title}</h3>
+    <p class="text-gray-300 mb-2">${module.description}</p>
+    <p class="text-blue-400">Duration: ${module.duration}</p>
+    <p class="text-blue-400">Certifications: ${module.certifications.join(', ')}</p>`;
+    
+    if (module.levels && module.levels.length > 0) {
+      html += `<div class="levels mt-4">
+        <h4 class="text-xl font-semibold mb-2">Levels</h4>`;
+      module.levels.forEach(level => {
+        html += `<div class="level mb-4">
+          <h5 class="text-lg font-bold">${level.name}</h5>
+          <p>ID: ${level.id}</p>`;
+        if (level.content && level.content.length > 0) {
+          html += `<ul class="list-disc list-inside">`;
+          level.content.forEach(contentItem => {
+            html += `<li><strong>${contentItem.title}</strong> (${contentItem.type})</li>`;
+          });
+          html += `</ul>`;
+        }
         html += `</div>`;
-      }
-      detailsContainer.innerHTML = html;
+      });
+      html += `</div>`;
     }
-  
-    // Initially render physical training module details as an example
-    renderModuleDetails(trainingModules.physical);
-  
-    // Refresh button event
-    document.getElementById('refresh-module').addEventListener('click', () => {
-      document.getElementById('module-details').innerHTML = `<p class="text-gray-400">Reloading module details...</p>`;
-      setTimeout(() => {
+    detailsContainer.innerHTML = html;
+  }
+
+  // Ensure `trainingModules` is available before calling it
+  document.addEventListener("DOMContentLoaded", () => {
+    if (typeof trainingModules !== "undefined") {
+      renderModuleDetails(trainingModules.physical);
+    } else {
+      console.error("❌ trainingModules is not defined. Ensure moduleContent.js is loaded correctly.");
+    }
+  });
+
+  // Refresh button event
+  document.getElementById('refresh-module').addEventListener('click', () => {
+    document.getElementById('module-details').innerHTML = `<p class="text-gray-400">Reloading module details...</p>`;
+    setTimeout(() => {
+      if (typeof trainingModules !== "undefined") {
         renderModuleDetails(trainingModules.physical);
-      }, 500);
-    });
-  </script>
+      } else {
+        console.error("❌ trainingModules is not defined.");
+      }
+    }, 500);
+  });
+</script>
+
 </body>
 </html>

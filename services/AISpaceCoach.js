@@ -1,6 +1,5 @@
-// Core dependencies
 const { OpenAI } = require("openai");
-const EventEmitter = require('events');
+const { EventEmitter } = require('events');
 const Achievement = require('../models/Achievement');
 const UserProgress = require('../models/UserProgress');
 const User = require('../models/User');
@@ -9,14 +8,12 @@ const Subscription = require('../models/Subscription');
 class AISpaceCoach extends EventEmitter {
     constructor() {
         super();
-        this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY
-        });
-        this.initializeSystems();
-     // Bind event emitter methods
-     this.on = this.on.bind(this);
-     this.emit = this.emit.bind(this);
- }
+        console.log("✅ AISpaceCoach Initialized Successfully");
+    }
+
+    async initialize() {
+        console.log("🚀 Initializing AI Coaching System...");
+    }
 
     // =====================
     // System Initialization
@@ -816,4 +813,4 @@ const aiCoachInstance = new AISpaceCoach();
 // Verify it's an EventEmitter
 console.log('Is EventEmitter:', aiCoachInstance instanceof EventEmitter);
 
-module.exports = aiCoachInstance;
+module.exports = new AISpaceCoach(); // ✅ This ensures it is a singleton instance

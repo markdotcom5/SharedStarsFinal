@@ -1,0 +1,489 @@
+<%- include('./partials/head', { title: 'SharedStars Mission Control' }) %>
+<%- include('../components/progress-tracker') %>
+
+<body class="bg-black text-white">
+  <main class="flex flex-col min-h-screen">
+    <!-- Include Header/Nav -->
+    <%- include('./partials/header') %>
+    
+    <!-- Main Content -->
+    <div class="flex-grow pt-20">
+      <!-- Hero Section -->
+      <section class="relative min-h-screen" data-aos="fade">
+        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+          <source src="/videos/commandctr1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent"></div>
+  
+        <!-- Content Overlay -->
+        <div class="relative z-10 container mx-auto px-6 pt-20 text-center">
+          <h1 class="text-6xl font-extrabold mb-4" data-i18n="missionControl.heroTitle">Mission Control Center</h1>
+          <p class="text-xl text-blue-300" data-i18n="missionControl.heroSubtitle">
+            Track your progress, missions, and achievements with clarity and ease.
+          </p>
+        </div>
+      </section>
+  
+      <!-- Stats Grid -->
+      <div class="container mx-auto px-6 my-16">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          <div class="cosmic-card bg-blue-950/50 p-6 rounded-xl border border-blue-400/20">
+            <h3 class="text-blue-300 text-sm" data-i18n="missionControl.stats.creditsTitle">Mission Credits</h3>
+            <p class="text-4xl font-bold" data-stat="points">0</p>
+            <p class="text-sm text-green-400" data-i18n="missionControl.stats.creditsToday">+2,300 today</p>
+          </div>
+          <div class="cosmic-card bg-blue-950/50 p-6 rounded-xl border border-blue-400/20">
+            <h3 class="text-blue-300 text-sm" data-i18n="missionControl.stats.activeMissionsTitle">Active Missions</h3>
+            <p class="text-4xl font-bold" data-stat="activeMissions">0</p>
+            <p class="text-sm text-yellow-400" data-i18n="missionControl.stats.pendingReview">1 pending review</p>
+          </div>
+          <div class="cosmic-card bg-blue-950/50 p-6 rounded-xl border border-blue-400/20">
+            <h3 class="text-blue-300 text-sm" data-i18n="missionControl.stats.successRateTitle">Success Rate</h3>
+            <p class="text-4xl font-bold" data-stat="successRate">0%</p>
+            <p class="text-sm text-green-400" data-i18n="missionControl.stats.weeklyIncrease">+4% this week</p>
+          </div>
+          <div class="cosmic-card bg-blue-950/50 p-6 rounded-xl border border-blue-400/20">
+            <h3 class="text-blue-300 text-sm" data-i18n="missionControl.stats.eventsTitle">Upcoming Events</h3>
+            <p class="text-4xl font-bold" data-stat="events">0</p>
+            <p class="text-sm text-blue-300" data-i18n="missionControl.stats.checkSchedule">Check schedule</p>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Action Buttons -->
+      <div class="container mx-auto px-6 mb-16">
+        <div class="flex flex-wrap justify-center gap-4">
+          <button class="btn bg-blue-500 hover:bg-blue-600" data-i18n="missionControl.btn.resumeMission">Resume Mission</button>
+          <a href="/training" class="btn bg-purple-500 hover:bg-purple-600" data-i18n="missionControl.btn.startTraining">Start Training</a>
+          <button class="btn bg-green-500 hover:bg-green-600" data-i18n="missionControl.btn.viewMetrics">View Metrics</button>
+          <a href="/academy" class="btn bg-yellow-500 hover:bg-yellow-600" data-i18n="missionControl.btn.visitAcademy">Visit Academy</a>
+        </div>
+      </div>
+      
+      <!-- Presidential Space Briefing -->
+      <section class="container mx-auto px-6 mb-16">
+        <div class="cosmic-card bg-blue-900/30 backdrop-blur p-8 border border-blue-500/20">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold">Presidential Space Briefing</h2>
+            <div class="px-2 py-1 bg-red-900/50 text-red-300 rounded-full text-xs">CONFIDENTIAL</div>
+          </div>
+          <div class="space-y-4">
+            <div class="p-4 bg-gray-700/50 rounded-lg">
+              <div class="flex justify-between mb-2">
+                <h3 class="font-semibold">Artemis Mission Update</h3>
+                <span class="text-xs text-gray-400">08:30 ET</span>
+              </div>
+              <p class="text-sm text-gray-300">
+                NASA's Artemis program accelerating with three new launch dates confirmed. Potential crew assignments opening in Q3 2025.
+              </p>
+            </div>
+            <div class="p-4 bg-gray-700/50 rounded-lg">
+              <div class="flex justify-between mb-2">
+                <h3 class="font-semibold">Commercial Space Station Progress</h3>
+                <span class="text-xs text-gray-400">10:15 ET</span>
+              </div>
+              <p class="text-sm text-gray-300">
+                Assembly of the first commercial space station module completed ahead of schedule. Training for station operations crew to begin next month.
+              </p>
+            </div>
+            <div class="p-4 bg-gray-700/50 rounded-lg">
+              <div class="flex justify-between mb-2">
+                <h3 class="font-semibold">Mars Mission Preparation</h3>
+                <span class="text-xs text-gray-400">14:45 ET</span>
+              </div>
+              <p class="text-sm text-gray-300">
+                Advanced life support systems testing successful. Crew selection criteria updated with greater emphasis on technical skills and psychological resilience.
+              </p>
+            </div>
+          </div>
+          <div class="mt-4 text-right">
+            <button class="text-sm text-blue-400 hover:underline">View Full Briefing</button>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Priority Tasks -->
+      <section class="container mx-auto px-6 mb-16">
+        <div class="cosmic-card bg-blue-900/30 backdrop-blur p-8 border border-blue-500/20">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold" data-i18n="missionControl.priorityTasks.title">Priority Tasks</h2>
+            <button class="btn btn-primary btn-sm" data-i18n="missionControl.priorityTasks.newTask">+ New Task</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Task Card -->
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+              <h3 class="text-lg font-bold">Complete Technical Assessment</h3>
+              <p class="text-sm">Navigation systems and spacecraft operations evaluation</p>
+              <div class="mt-2 flex justify-between items-center">
+                <span class="text-xs text-blue-300">Due: Feb 26, 2025</span>
+                <span class="px-2 py-1 bg-yellow-600/50 text-yellow-300 rounded text-xs">High Priority</span>
+              </div>
+            </div>
+            
+            <!-- Task Card -->
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+              <h3 class="text-lg font-bold">Zero-G Simulation</h3>
+              <p class="text-sm">Complete physical adaptation training sequence</p>
+              <div class="mt-2 flex justify-between items-center">
+                <span class="text-xs text-blue-300">Due: Mar 3, 2025</span>
+                <span class="px-2 py-1 bg-blue-600/50 text-blue-300 rounded text-xs">Medium Priority</span>
+              </div>
+            </div>
+            
+            <!-- Task Card -->
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+              <h3 class="text-lg font-bold">Team Mission Planning</h3>
+              <p class="text-sm">Collaborative mission strategy session</p>
+              <div class="mt-2 flex justify-between items-center">
+                <span class="text-xs text-blue-300">Due: Mar 10, 2025</span>
+                <span class="px-2 py-1 bg-green-600/50 text-green-300 rounded text-xs">Low Priority</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Mission Status Dashboard -->
+      <section class="container mx-auto px-6 mb-16">
+        <div class="cosmic-card bg-blue-900/30 backdrop-blur-md rounded-xl p-8 border border-blue-500/20">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold" data-i18n="missionControl.missionStatus.title">Active Mission Status</h2>
+            <div class="flex space-x-4">
+              <span class="text-green-400">●</span>
+              <span data-i18n="missionControl.missionStatus.liveData">Live Data</span>
+            </div>
+          </div>
+  
+          <!-- Mission Vitals -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+              <h4 class="text-blue-400 text-sm" data-i18n="missionControl.vitals.oxygenTitle">Oxygen Levels</h4>
+              <div class="flex justify-between items-end">
+                <span class="text-2xl font-bold">98%</span>
+                <span class="text-green-400 text-sm" data-i18n="missionControl.vitals.oxygenStatus">Optimal</span>
+              </div>
+              <div class="w-full h-2 bg-blue-900 rounded-full mt-2">
+                <div class="h-full bg-green-400 rounded-full" style="width: 98%"></div>
+              </div>
+            </div>
+            
+            <!-- Fuel Status -->
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+              <h4 class="text-blue-400 text-sm">Fuel Reserves</h4>
+              <div class="flex justify-between items-end">
+                <span class="text-2xl font-bold">85%</span>
+                <span class="text-blue-400 text-sm">Sufficient</span>
+              </div>
+              <div class="w-full h-2 bg-blue-900 rounded-full mt-2">
+                <div class="h-full bg-blue-400 rounded-full" style="width: 85%"></div>
+              </div>
+            </div>
+            
+            <!-- Shield Integrity -->
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+              <h4 class="text-blue-400 text-sm">Shield Integrity</h4>
+              <div class="flex justify-between items-end">
+                <span class="text-2xl font-bold">92%</span>
+                <span class="text-green-400 text-sm">Strong</span>
+              </div>
+              <div class="w-full h-2 bg-blue-900 rounded-full mt-2">
+                <div class="h-full bg-green-400 rounded-full" style="width: 92%"></div>
+              </div>
+            </div>
+            
+            <!-- Communications -->
+            <div class="bg-gray-800/50 p-4 rounded-lg">
+              <h4 class="text-blue-400 text-sm">Comms Signal</h4>
+              <div class="flex justify-between items-end">
+                <span class="text-2xl font-bold">79%</span>
+                <span class="text-yellow-400 text-sm">Good</span>
+              </div>
+              <div class="w-full h-2 bg-blue-900 rounded-full mt-2">
+                <div class="h-full bg-yellow-400 rounded-full" style="width: 79%"></div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Current Objectives -->
+          <div class="bg-gray-800/50 p-4 rounded-lg">
+            <h3 class="text-blue-400 mb-4" data-i18n="missionControl.objectives.title">Mission Objectives</h3>
+            <div class="space-y-4">
+              <div class="flex items-center space-x-4">
+                <span class="text-green-400" data-i18n="missionControl.objectives.completedSymbol">✓</span>
+                <span data-i18n="missionControl.objectives.objective1">Launch Sequence Complete</span>
+              </div>
+              <div class="flex items-center space-x-4">
+                <span class="text-yellow-400" data-i18n="missionControl.objectives.inProgressSymbol">●</span>
+                <span data-i18n="missionControl.objectives.objective2">Orbit Stabilization In Progress</span>
+              </div>
+              <div class="flex items-center space-x-4">
+                <span class="text-gray-400">○</span>
+                <span>Deploy Scientific Instruments</span>
+              </div>
+              <div class="flex items-center space-x-4">
+                <span class="text-gray-400">○</span>
+                <span>Conduct Experimental Procedures</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- AI Mission Assistant Section -->
+      <section id="ai-mission-assistant" class="py-16 bg-gray-900 text-white">
+        <div class="container mx-auto px-6">
+          <h2 class="text-3xl font-bold mb-6" data-i18n="missionControl.aiAssistant.title">AI Mission Assistant</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Main Chat Interface -->
+            <div class="md:col-span-2 bg-gray-800/50 rounded-lg p-4">
+              <div class="h-72 overflow-y-auto space-y-4 mb-4" id="aiChatLog">
+                <!-- Chat messages -->
+                <div class="flex items-start space-x-3">
+                  <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                    <span class="text-blue-400">STELLA</span>
+                  </div>
+                  <div class="ai-message-bubble bg-blue-900/30 rounded-lg p-3 max-w-[80%]">
+                    <p data-i18n="missionControl.aiAssistant.greeting">Welcome back, Commander. Ready for today's briefing?</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start space-x-3 justify-end">
+                  <div class="user-message-bubble bg-blue-700/30 rounded-lg p-3 max-w-[80%]">
+                    <p>Yes, please give me today's mission updates.</p>
+                  </div>
+                  <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                    <span class="text-blue-400">You</span>
+                  </div>
+                </div>
+                
+                <div class="flex items-start space-x-3">
+                  <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                    <span class="text-blue-400">STELLA</span>
+                  </div>
+                  <div class="ai-message-bubble bg-blue-900/30 rounded-lg p-3 max-w-[80%]">
+                    <p>Today's focus is on technical systems training. Your navigation module is scheduled for 15:00 ET. Would you like me to prepare a pre-training briefing?</p>
+                  </div>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <input id="aiChatInput" type="text" placeholder="Ask STELLA..." class="flex-1 p-2 rounded bg-gray-700 text-white" />
+                <button id="aiSendChat" class="btn btn-primary" data-i18n="missionControl.aiAssistant.send">Send</button>
+              </div>
+            </div>
+            
+            <!-- Quick Commands / Shortcuts -->
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <h3 class="text-blue-400 mb-4" data-i18n="missionControl.aiAssistant.quickCommandsTitle">Quick Commands</h3>
+              <div class="space-y-2">
+                <button class="w-full text-left px-4 py-2 rounded bg-blue-900/30 hover:bg-blue-800/30">
+                  Mission Status Report
+                </button>
+                <button class="w-full text-left px-4 py-2 rounded bg-blue-900/30 hover:bg-blue-800/30">
+                  System Diagnostics
+                </button>
+                <button class="w-full text-left px-4 py-2 rounded bg-blue-900/30 hover:bg-blue-800/30">
+                  Emergency Protocols
+                </button>
+                <button class="w-full text-left px-4 py-2 rounded bg-blue-900/30 hover:bg-blue-800/30">
+                  Navigation Assist
+                </button>
+                <button class="w-full text-left px-4 py-2 rounded bg-blue-900/30 hover:bg-blue-800/30">
+                  Schedule Overview
+                </button>
+                <button class="w-full text-left px-4 py-2 rounded bg-blue-900/30 hover:bg-blue-800/30">
+                  Personal Readiness Assessment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Training Modules Section -->
+      <section id="training-modules" class="py-16 bg-black text-white">
+        <div class="container mx-auto px-6">
+          <h2 class="text-3xl font-bold mb-6">Training Modules</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Module Card: Zero-G Operations -->
+            <div class="cosmic-card bg-blue-950/50 p-6 rounded-xl border border-blue-400/20">
+              <h3 class="text-blue-300 mb-2">Zero-G Operations</h3>
+              <p class="text-sm text-blue-300 mb-4">
+                Master zero-gravity navigation techniques.
+              </p>
+              <div class="relative w-full h-2 bg-blue-900 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 75%;"></div>
+              </div>
+              <p class="text-sm mt-2 text-blue-300">75% Completed</p>
+              <a href="/training/physical/zero-g" class="block w-full py-2 bg-blue-700 hover:bg-blue-600 text-center rounded-lg transition-colors mt-4">
+                Continue Training
+              </a>
+            </div>
+            
+            <!-- Module Card: Advanced Navigation -->
+            <div class="cosmic-card bg-blue-950/50 p-6 rounded-xl border border-blue-400/20">
+              <h3 class="text-blue-300 mb-2">Advanced Navigation</h3>
+              <p class="text-sm text-blue-300 mb-4">
+                Enhance your space navigation skills.
+              </p>
+              <div class="relative w-full h-2 bg-blue-900 rounded-full">
+                <div class="h-full bg-green-400 rounded-full" style="width: 40%;"></div>
+              </div>
+              <p class="text-sm mt-2 text-blue-300">40% Completed</p>
+              <a href="/training/technical/navigation" class="block w-full py-2 bg-blue-700 hover:bg-blue-600 text-center rounded-lg transition-colors mt-4">
+                Continue Training
+              </a>
+            </div>
+            
+            <!-- Module Card: Space Simulation -->
+            <div class="cosmic-card bg-blue-950/50 p-6 rounded-xl border border-blue-400/20">
+              <h3 class="text-blue-300 mb-2">Space Simulation</h3>
+              <p class="text-sm text-blue-300 mb-4">
+                Engage in realistic space mission simulations.
+              </p>
+              <div class="relative w-full h-2 bg-blue-900 rounded-full">
+                <div class="h-full bg-purple-400 rounded-full" style="width: 55%;"></div>
+              </div>
+              <p class="text-sm mt-2 text-blue-300">55% Completed</p>
+              <a href="/training/simulation/mission" class="block w-full py-2 bg-blue-700 hover:bg-blue-600 text-center rounded-lg transition-colors mt-4">
+                Continue Training
+              </a>
+            </div>
+          </div>
+          
+          <div class="text-center mt-8">
+            <a href="/training" class="btn bg-blue-600 hover:bg-blue-500">View All Training Modules</a>
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    <!-- Include Footer -->
+    <%- include('./partials/footer') %>
+  </main>
+  
+  <!-- Mission Control Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize STELLA connection
+      console.log("Initializing STELLA for Mission Control...");
+      
+      // Simulated stats update
+      const statElements = document.querySelectorAll('[data-stat]');
+      const stats = {
+        points: 24580,
+        activeMissions: 3,
+        successRate: 87,
+        events: 5
+      };
+      
+      statElements.forEach(elem => {
+        const statType = elem.getAttribute('data-stat');
+        if (stats[statType] !== undefined) {
+          // Add animation for number counting
+          animateValue(elem, 0, stats[statType], 1500);
+        }
+      });
+      
+      // AI Chat functionality
+      const chatInput = document.getElementById('aiChatInput');
+      const sendButton = document.getElementById('aiSendChat');
+      const chatLog = document.getElementById('aiChatLog');
+      
+      if (chatInput && sendButton && chatLog) {
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            sendMessage();
+          }
+        });
+      }
+      
+      function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+        
+        // Add user message
+        addChatMessage('You', message, true);
+        chatInput.value = '';
+        
+        // Simulate STELLA thinking
+        setTimeout(() => {
+          // Get a response from STELLA (in real app, this would call an AI service)
+          const stellaResponse = getSTELLAResponse(message);
+          addChatMessage('STELLA', stellaResponse, false);
+        }, 1000);
+      }
+      
+      function addChatMessage(sender, message, isUser) {
+        const messageHTML = `
+          <div class="flex items-start space-x-3 ${isUser ? 'justify-end' : ''}">
+            ${isUser ? '' : `
+              <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                <span class="text-blue-400">${sender}</span>
+              </div>
+            `}
+            <div class="${isUser ? 'user-message-bubble bg-blue-700/30' : 'ai-message-bubble bg-blue-900/30'} rounded-lg p-3 max-w-[80%]">
+              <p>${message}</p>
+            </div>
+            ${isUser ? `
+              <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                <span class="text-blue-400">${sender}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+        
+        chatLog.innerHTML += messageHTML;
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+      
+      function getSTELLAResponse(message) {
+        const responses = [
+          "I've updated your training schedule based on your recent progress. Your technical skills are improving at an impressive rate.",
+          "The navigation simulation is ready for your next session. Would you like to focus on orbital mechanics or docking procedures?",
+          "I've analyzed your recent performance data. Your reflexes have improved by 12% since last month.",
+          "Your next mission briefing is scheduled for 14:00 ET. Would you like me to prepare a summary of the objectives?",
+          "Based on your progress, I estimate you'll be ready for the advanced EVA training module within two weeks."
+        ];
+        
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+      
+      function animateValue(elem, start, end, duration) {
+        let startTime = null;
+        const statType = elem.getAttribute('data-stat');
+        let suffix = statType === 'successRate' || statType === 'completionRate' ? '%' : '';
+        
+        function animate(currentTime) {
+          if (!startTime) startTime = currentTime;
+          const timeElapsed = currentTime - startTime;
+          const progress = Math.min(timeElapsed / duration, 1);
+          const value = Math.floor(progress * (end - start) + start);
+          elem.textContent = value + suffix;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      
+      // Activate Quick Command buttons
+      document.querySelectorAll('#ai-mission-assistant button').forEach(button => {
+        button.addEventListener('click', () => {
+          const command = button.textContent.trim();
+          chatInput.value = command;
+          sendMessage();
+        });
+      });
+    });
+  </script>
+</body>
+
+<%- include('./partials/scripts') %>
+<script nonce="<%= nonce %>">
+    // Your inline script
+  </script>
+<script src="/js/mission-control.js"></script>

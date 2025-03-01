@@ -140,8 +140,9 @@
 
     <%- include('partials/footer') %>
 
-    <script type="module">
-        import { initializeLeaderboard } from '/js/modules/leaderboard/index.js';
+    <script>
+        src="/js/modules/dashboard/index.js"
+
         
         document.addEventListener('DOMContentLoaded', () => {
             initializeLeaderboard({

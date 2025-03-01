@@ -66,4 +66,3 @@ function determineNextStep() {
         sendAIMessage("Touch the screen when you see the countdown reach 0!");
     }, 2000);
 }
-

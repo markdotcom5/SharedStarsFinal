@@ -62,23 +62,60 @@
     <%- include('partials/footer') %>
 
     <!-- Training Module Scripts -->
-    <script type="module">
-      import { initializeTrainingModules } from '/js/modules/training/index.js';
+    <!-- ✅ Load STELLA and Training Modules First -->
+<script src="/js/services/stella-integration.js"></script>
+<script src="/js/modules/training/index.js"></script>
 
-      document.addEventListener('DOMContentLoaded', () => {
-        initializeTrainingModules({
-          modules: ['physical', 'technical', 'simulation'],
-          endpoints: {
-            physical: '/api/training/modules/physical',
-            technical: '/api/training/modules/technical',
-            simulation: '/api/training/modules/simulation'
-          }
-        });
-        const currentLang = localStorage.getItem('preferredLanguage') || 'en';
-        document.documentElement.setAttribute('lang', currentLang);
+<!-- Training Scripts -->
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      // ✅ Ensure STELLA and TrainingModule are available
+      if (typeof STELLAInterface === "undefined" || typeof TrainingModule === "undefined") {
+        throw new Error("STELLAInterface or TrainingModule is not defined. Check your script paths.");
+      }
+
+      // ✅ Define module details safely
+      const moduleId = "<%= content.moduleId %>";
+      const moduleType = "<%= content.moduleType %>";
+      const phase = "<%= content.currentPhase %>";
+
+      // ✅ Initialize STELLA
+      const stella = new STELLAInterface();
+      await stella.initialize(moduleId, moduleType, phase);
+
+      // ✅ Load module-specific training
+      const trainingModule = new TrainingModule(moduleId, stella);
+      await trainingModule.initialize();
+
+      // ✅ Set up real-time feedback
+      stella.on("feedback", (feedback) => {
+        document.getElementById("stella-feedback").innerHTML += `
+          <div class="feedback-message bg-blue-900/30 p-3 rounded-lg">
+            <p>${feedback.message}</p>
+          </div>
+        `;
       });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script type="module" src="/js/modules/core/index.js"></script>
-  </body>
-</html>
+
+      // ✅ Track progress
+      stella.on("progress-update", (data) => {
+        // Update UI with progress
+        const progressCircle = document.querySelector(".progress-circle");
+        if (progressCircle) {
+          progressCircle.dataset.progress = data.progress;
+          progressCircle.querySelector("span").textContent = `${data.progress}%`;
+        }
+      });
+
+    } catch (error) {
+      console.error("❌ Error initializing training:", error);
+      document.getElementById("module-interactive").innerHTML = `
+        <div class="text-center py-8 text-red-400">
+          <p>Error loading training module. Please try again.</p>
+        </div>
+      `;
+    }
+  });
+</script>
+
+<%- include("../partials/footer") %>

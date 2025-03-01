@@ -1,8 +1,10 @@
 // Load environment variables
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 const jwt = require("jsonwebtoken");
 const WebSocket = require("ws");
 const mongoose = require("mongoose");
+
 const SECRET_KEY = process.env.JWT_SECRET; // Ensure this is set in .env
 
 // Middleware: Authenticate HTTP Requests
@@ -10,59 +12,51 @@ const authenticate = async (req, res, next) => {
     try {
         const authHeader = req.header("Authorization");
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401).json({ 
+            return res.status(401).json({
+                success: false,
                 error: "Authentication required",
-                message: "Please provide a valid Bearer token" 
+                message: "Please provide a valid Bearer token.",
             });
         }
 
         const token = authHeader.replace("Bearer ", "").trim();
-        
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Token decoded:", decoded);
+        const decoded = jwt.verify(token, SECRET_KEY);
 
-        // Add ObjectId requirement at the top of the file
-        const { ObjectId } = require('mongodb');
+        console.log("🔓 Token Decoded:", decoded);
 
-        // Set user info on request
+        // Ensure ObjectId is properly required
+        const { ObjectId } = require("mongodb");
+
+        // Attach user details to the request object
         req.user = {
             _id: new ObjectId(decoded.userId),
             role: decoded.role,
-            email: decoded.email // Add email if it exists in token
+            email: decoded.email || null, // Ensure email is optional but present
         };
 
         next();
     } catch (error) {
-        console.error("Auth Error:", error);
+        console.error("❌ Authentication Error:", error);
 
-        if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({
-                error: "Token expired",
-                message: "Your session has expired. Please log in again."
-            });
+        let errorMessage = "Authentication failed";
+        if (error.name === "TokenExpiredError") {
+            errorMessage = "Token expired. Please log in again.";
+        } else if (error.name === "JsonWebTokenError") {
+            errorMessage = "Invalid token provided.";
         }
 
-        if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({
-                error: "Invalid token",
-                message: "Authentication failed. Invalid token provided."
-            });
-        }
-
-        res.status(401).json({
+        return res.status(401).json({
             success: false,
-            message: 'Authentication failed',
-            error: error.message
+            error: errorMessage,
         });
     }
 };
 
-module.exports = authenticate;
 // WebSocket Authentication Function
 function authenticateWebSocket(req) {
     try {
-        const params = new URLSearchParams(req.url.split('?')[1]);
-        const token = params.get('token');
+        const params = new URLSearchParams(req.url.split("?")[1]);
+        const token = params.get("token");
 
         if (!token) {
             console.warn("❌ No token provided for WebSocket connection.");
@@ -72,7 +66,7 @@ function authenticateWebSocket(req) {
         // Verify JWT Token
         const decoded = jwt.verify(token, SECRET_KEY);
         console.log("✅ WebSocket Token Verified:", decoded);
-        
+
         return decoded; // Return user info
     } catch (error) {
         console.error("❌ Invalid WebSocket token:", error.message);
@@ -80,13 +74,20 @@ function authenticateWebSocket(req) {
     }
 }
 
-// ✅ WebSocket Server Setup (UPDATED)
+// ✅ WebSocket Server Setup
 const setupWebSocketServer = (server) => {
-    const { wss } = require("../app");  // ✅ Use the WebSocket instance from `app.js`
-    const clients = new Map(); // Store userId to WebSocket instance
+    const wss = new WebSocket.Server({ server });
+    const clients = new Map();
 
     wss.on("connection", (ws, req) => {
-        const { userId, role } = req.authData;
+        const authData = authenticateWebSocket(req);
+        if (!authData) {
+            console.warn("⚠️ WebSocket authentication failed: Closing connection.");
+            ws.close();
+            return;
+        }
+
+        const { userId, role } = authData;
         clients.set(userId, ws);
 
         ws.isAlive = true;
@@ -134,20 +135,30 @@ const setupWebSocketServer = (server) => {
         });
     });
 
-    // ✅ Broadcast Messages to Specific Users
-    const broadcastMessage = (userIds, message) => {
+    return { wss, broadcastMessage: (userIds, message) => {
         userIds.forEach((userId) => {
             const client = clients.get(userId);
             if (client && client.readyState === WebSocket.OPEN) {
                 client.send(JSON.stringify(message));
             }
         });
-    };
-
-    return { wss, broadcastMessage };
+    }};
 };
 
-// ✅ Training Module Schema (Kept Your Original Schema)
+// ✅ Require Role Middleware
+const requireRole = (role) => {
+    return (req, res, next) => {
+        if (!req.user || req.user.role !== role) {
+            return res.status(403).json({
+                success: false,
+                message: `Access denied: You must be a ${role} to perform this action.`,
+            });
+        }
+        next();
+    };
+};
+
+// ✅ Training Module Schema
 const moduleSchema = new mongoose.Schema(
     {
         name: { type: String, required: true, trim: true },
@@ -181,37 +192,35 @@ const moduleSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// ✅ Schema Methods (Kept Your Original Logic)
+// ✅ Schema Methods
 moduleSchema.methods.getSummary = function () {
+    if (!this.name || !this.category || !this.description) {
+        return "Incomplete module details.";
+    }
     return `${this.name} (${this.category}) - ${this.description}`;
 };
 
 moduleSchema.methods.generateAIContent = async function (prompt) {
     try {
-        const response = await openai.chat.completions.create({
-            model: "text-davinci-003",
-            messages: [{ role: "user", content: `Generate a detailed explanation for the module: ${prompt}` }],
+        const openai = require("openai");
+        const openaiClient = new openai.OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+        const response = await openaiClient.chat.completions.create({
+            model: "gpt-4",
+            messages: [{ role: "system", content: `Generate a detailed explanation for the module: ${prompt}` }],
         });
-        return response.choices[0].message.content.trim();
+
+        return response.choices[0]?.message?.content?.trim() || "No response from AI.";
     } catch (error) {
-        console.error("Error generating AI content:", error);
-        throw new Error("Failed to generate AI content");
+        console.error("❌ Error generating AI content:", error);
+        throw new Error("AI content generation failed.");
     }
 };
-// ✅ Require Role Middleware (Add This at the Top)
-const requireRole = (role) => {
-    return (req, res, next) => {
-        if (!req.user || req.user.role !== role) {
-            return res.status(403).json({ message: "Access denied: Insufficient permissions" });
-        }
-        next();
-    };
-};
 
-// ✅ Export Middleware and Functions (Keep This at the Bottom)
-module.exports = {
-    authenticate,             // Ensure this function exists
-    requireRole,              // Now properly defined
-    authenticateWebSocket,    // Ensure this function exists
-    setupWebSocketServer,     // Ensure this function exists
+// ✅ Final Export
+module.exports = { 
+    authenticate, 
+    requireRole, 
+    authenticateWebSocket, 
+    setupWebSocketServer 
 };
