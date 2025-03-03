@@ -317,8 +317,6 @@ class ModuleLoader {
 
 // Create a single instance
 const moduleLoader = new ModuleLoader();
-
-// Export both class and instance
 module.exports = {
     ModuleLoader,
     moduleLoader,

@@ -13,13 +13,6 @@ const {
 } = require('./recommendations');
 const aiAssistant = require('../../services/aiAssistant'); // ✅ Import AI Assistant
 
-// ✅ Debugging: Ensure analyzeAchievementProgress exists
-console.log('aiAssistant Object:', aiAssistant);
-console.log(
-    'aiAssistant.analyzeAchievementProgress Type:',
-    typeof aiAssistant.analyzeAchievementProgress
-);
-
 // 📌 Test route
 router.get('/test', (req, res) => {
     console.log('Test route hit!');
