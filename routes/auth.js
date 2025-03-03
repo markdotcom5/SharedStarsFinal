@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
@@ -32,6 +32,7 @@ const authenticate = async (req, res, next) => {
     }
 };
 
+
 // =======================
 // Signup Route
 // =======================
@@ -48,6 +49,8 @@ router.post('/signup', async (req, res) => {
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 12);
+
+        console.log("Hashed Password:::", hashedPassword);
 
         // Create new user with the correct fields
         user = new User({
@@ -89,9 +92,7 @@ router.post('/login', async (req, res) => {
         console.log('🔑 Stored Hashed Password:', user.password);
         console.log('🔑 Entered Password:', req.body.password);
 
-        console.log(typeof req.body.password, typeof user.password);
-
-        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        const isMatch = await bcrypt.compare(String(req.body.password), String(user.password));
         console.log('🔍 Password Match Result:', isMatch);
 
         if (!isMatch) {
@@ -170,6 +171,8 @@ router.post('/register', async (req, res) => {
 router.get("/linkedin/callback", async (req, res) => {
     const authorizationCode = req.query.code;
 
+    console.log("🔑 LinkedIn Authorization Code:", authorizationCode);
+
     if (!authorizationCode) {
         return res.status(400).json({ error: 'Authorization code is missing' });
     }
@@ -214,7 +217,8 @@ router.get("/linkedin/callback", async (req, res) => {
 // Get Current User
 router.get('/me', async (req, res) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1];
+        console.log('Token:', req.headers.authorization);
+        const token = req.headers.authorization?.split(/\s+/)[1];
         if (!token) {
             return res.status(401).json({ error: 'No token provided' });
         }

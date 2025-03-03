@@ -6,6 +6,7 @@ const {
     validateCreateSubscription,
     validateUpdatePaymentStatus,
 } = require('../validators/subscriptionValidator'); // Import validators
+const User = require('../models/User');
 
 // ========================
 // Subscription Routes
@@ -28,6 +29,7 @@ router.post(
     validateUpdatePaymentStatus,
     async (req, res, next) => {
         try {
+            console.log("req.body", req.body);
             await subscriptionController.updatePaymentStatus(req, res, next);
         } catch (error) {
             console.error('Error in /update-payment-status:', error.message);

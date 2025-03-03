@@ -58,6 +58,7 @@ const authenticate = async (req, res, next) => {
 };
 
 module.exports = authenticate;
+
 // WebSocket Authentication Function
 function authenticateWebSocket(req) {
     try {

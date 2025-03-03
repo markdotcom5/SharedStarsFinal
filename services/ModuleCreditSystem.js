@@ -35,6 +35,7 @@ class ModuleCreditSystem {
             credits *= performanceMultiplier;
 
             const streak = await this.calculateCurrentStreak(session.userId);
+            console.log(`Current streak: ${streak}`);
             const streakMultiplier = this.getStreakMultiplier(streak);
             credits *= streakMultiplier;
 

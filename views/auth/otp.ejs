@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head', { title: 'SharedStars Home' }) %>
+
+  <body class="bg-black overflow-x-hidden">
+
+    <img src="/public/images/ShatteredStars.png" class="absolute bottom-0 left-0 -z-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute bottom-0 left-0 -z-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute bottom-0 left-20 -z-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute bottom-0 left-20 -z-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute bottom-0 -left-10 -z-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute bottom-0 -left-10 -z-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+
+    <img src="/public/images/ShatteredStars.png" class="absolute top-0 -right-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute top-0 -right-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute top-10 -right-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute top-10 -right-10 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute top-14 -right-32 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute top-14 -right-32 w-[500px] h-[300px] bg-contain bg-no-repeat"></img>
+
+    <img src="/public/images/ShatteredStars.png" class="absolute top-24 right-[545px] w-[400px] h-[400px] bg-contain bg-no-repeat rotate-[40deg]"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute top-12 right-[545px] w-[400px] h-[400px] bg-contain bg-no-repeat rotate-[220deg]"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute top-28 right-[545px] w-[400px] h-[400px] bg-contain bg-no-repeat rotate-[220deg]"></img>
+    <img src="/public/images/ShatteredStars.png" class="absolute top-28 right-[545px] w-[400px] h-[400px] bg-contain bg-no-repeat rotate-[220deg]"></img>
+  
+   
+  <%- include('../partials/header') %>
+
+  <!-- Background Glow Effects -->    <!-- Glowing Lines -->
+    <div class="absolute bottom-0 left-0 w-full h-full pointer-events-none">
+      <div class="absolute -bottom-32 left-64 w-2 h-[500px] bg-brand-600 blur-[50px] rotate-[55deg]"></div>
+      <div class="absolute -bottom-32 left-64 w-2 h-[500px] bg-brand-600 blur-[50px] rotate-[55deg]"></div>
+      <div class="absolute -bottom-32 left-16 w-2 h-[500px] bg-brand-600 blur-[50px] rotate-[55deg]"></div>
+      <div class="absolute -bottom-32 left-16 w-2 h-[500px] bg-brand-600 blur-[50px] rotate-[55deg]"></div>
+    </div>
+   
+    <div class="absolute top-0 right-0 w-full h-full pointer-events-none overflow-x-hidden">
+      <div class="absolute -top-32 right-64 w-2 h-[500px] bg-brand-600 blur-[60px] rotate-[55deg]"></div>
+      <div class="absolute -top-32 right-64 w-2 h-[500px] bg-brand-600 blur-[50px] rotate-[55deg]"></div>
+      <div class="absolute -top-32 right-16 w-2 h-[500px] bg-brand-600 blur-[60px] rotate-[55deg]"></div>
+      <div class="absolute -top-32 right-16 w-2 h-[500px] bg-brand-600 blur-[50px] rotate-[55deg]"></div>
+    </div>
+
+  <section class="h-[1024px]">
+    <div class="flex flex-col items-center justify-between">
+      <div class="w-[496px] mt-52 rounded-3xl bg-black border-white-100 border-2 items-center justify-between">
+        <div class="flex flex-col items-center justify-between">
+          <img src="/public/icons/Vector.png" class="w-[248px] h-[139px]" ></img>
+          <image src="/public/icons/Logo (1).png" class="w-16 h-16"></image>
+        </div>
+        <div class="flex flex-col items-center justify-between">          
+          <h2 class="text-white text-heading5 text-center mt-8">Enter verification code</h2>
+          <p class="text-gray-400 text-center text-body-base mt-4">We've sent a code to <span class="font-medium text-white">hello@sharedstars.com</span></p>
+    
+          <!-- OTP Inputs -->
+          <form action="/verify-otp" method="POST" class="mt-9 flex flex-col items-center">
+            <div class="flex gap-3">
+              <% for(let i = 0; i < 6; i++) { %>
+                <input type="text" maxlength="1" class="w-14 h-14 bg-[#1a1a1a] text-white-300 text-body-xsmall-medium text-center border border-white-200 rounded-full focus:outline-none focus:border-blue-500 otp-input bg-gradient-to-br from-black to-white-00">
+              <% } %>
+            </div>
+    
+            <!-- Verify Button -->
+            <button type="submit" class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white text-body-xsmall-semibold py-3 rounded-full transition">Verify</button>
+    
+            <!-- Timer and Resend OTP -->
+            <div class="flex justify-between w-full mt-4 mb-10 text-gray-400 text-sm">
+              <div class="flex items-center justify-between gap-1">
+                <img src="/public/icons/timer.png" class="w-5 h-5" alt="otp timer">
+                <span id="otp-timer" class="text-body-xsmall-medium text-white-300">01:59</span>
+              </div>
+              <a href="#" class="text-white hover:text-blue-400 transition">Resend OTP</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const inputs = document.querySelectorAll(".otp-input");
+    inputs.forEach((input, index) => {
+      input.addEventListener("input", (e) => {
+        if (e.target.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && index > 0 && !e.target.value) {
+          inputs[index - 1].focus();
+        }
+      });
+    });
+
+    // OTP Timer
+    let timeLeft = 119;
+    const timerElement = document.getElementById("otp-timer");
+    const interval = setInterval(() => {
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        timerElement.textContent = "00:00";
+      } else {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerElement.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      }
+      timeLeft--;
+    }, 1000);
+  </script>
+</body>
+</html>

@@ -11,6 +11,10 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/login', (req, res) => {
+    res.render('auth/login', { title: 'Login Page' });
+});
+
 // Handle language selection
 router.post('/set-language', (req, res) => {
     const { language } = req.body;

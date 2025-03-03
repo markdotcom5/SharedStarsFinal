@@ -194,6 +194,7 @@ const initWebSocket = async () => {
     const wss = await initWebSocket();
 
     if (wss) {
+        console.log('🚀 WebSocket server initialized');
         app.use('/api/mission-control', authenticate, missionControlRoutes(wss));
     } else {
         console.warn('⚠️ Skipping /api/mission-control setup: WebSocket server is unavailable.');
@@ -294,6 +295,30 @@ app.use('/js', express.static(path.join(__dirname, 'public/js'))); // Serve JS f
 // ✅ Sample Route to Render an EJS Template
 app.get('/', (req, res) => {
     res.render('index', { title: 'Home Page', message: 'Welcome to my site!' });
+});
+
+app.get('/login', (req, res) => {
+    res.render('auth/login', { title: 'Login Page' });
+});
+
+app.get('/signup', (req, res) => {
+    res.render('auth/signup', { title: 'SignUp Page' });
+});
+
+app.get('/otp', (req, res) => {
+    res.render('auth/otp', { title: 'OTP Page' });
+});
+
+app.get('/reset-password', (req, res) => {
+    res.render('auth/reset-password', { title: 'Reset Password Page' });
+});
+
+app.get('/change-password', (req, res) => {
+    res.render('auth/change-password', { title: 'Change Password Page' });
+});
+
+app.get('/onboard', (req, res) => {
+    res.render('auth/onboard', { title: 'Onbnoard Page' });
 });
 
 // ============================

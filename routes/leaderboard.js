@@ -32,6 +32,7 @@ router.post('/update', authenticate, async (req, res) => {
         res.status(500).json({ error: 'Failed to update leaderboard' });
     }
 });
+
 router.get('/rankings', authenticate, async (req, res) => {
     try {
         const rankings = await User.find({})
@@ -333,6 +334,7 @@ router.post('/track-progress', authenticate, async (req, res) => {
 
 // Quick Stats with AI insights
 router.get('/stats', authenticate, async (req, res) => {
+    console.log("Request user", req.user);
     try {
         const [stats, aiAnalysis] = await Promise.all([
             Leaderboard.aggregate([

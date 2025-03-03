@@ -112,7 +112,7 @@ class DashboardController {
             }
         };
         // Add to dashboard.js
-          checkWebSocketConnection() {
+          checkWebSocketConnection(); {
            if (this.ws.readyState === WebSocket.OPEN) {
          console.log('WebSocket connected');
           this.requestInitialStats();

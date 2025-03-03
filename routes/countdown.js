@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/authenticate');
 const UserProgress = require('../models/UserProgress');
+const User = require('../models/User');
 
 // Helper function to calculate time remaining
 function calculateTimeRemaining(targetDate) {

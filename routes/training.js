@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const AISpaceCoach = require('../services/AISpaceCoach');
 const Joi = require('joi');
 const Module = require('../models/Module');
+const UserProgress = require('../models/UserProgress');
 const mongoose = require('mongoose');
 const SpaceTimelineManager = require('../services/SpaceTimelineManager');
 const webSocketService = require('../services/webSocketService');
@@ -175,8 +176,15 @@ router.post('/modules/:moduleId/start', authenticate, async (req, res) => {
         });
     }
 });
+
 router.post('/modules/:moduleId/complete', authenticate, async (req, res) => {
     try {
+        console.log('Completing module with:', {
+            moduleId: req.params.moduleId,
+            body: req.body,
+            user: req.user._id,
+        });
+
         const session = await TrainingSession.findOneAndUpdate(
             {
                 userId: req.user._id,
@@ -194,6 +202,8 @@ router.post('/modules/:moduleId/complete', authenticate, async (req, res) => {
             },
             { new: true }
         );
+
+        console.log('Completed session:', session);
 
         if (!session) {
             return res.status(404).json({ error: 'Active session not found' });
@@ -238,12 +248,17 @@ router.post('/modules/:moduleId/complete', authenticate, async (req, res) => {
         });
     }
 });
+
 // ============================
 // Training Session Routes
 // ============================
 
 // Create Training Session
 router.post('/sessions', authenticate, async (req, res) => {
+    console.log('Creating training session with:', {
+        body: req.body,
+        user: req.user._id,
+    });
     try {
         const { userId, moduleId, sessionData } = req.body;
 
@@ -289,6 +304,7 @@ router.post('/sessions', authenticate, async (req, res) => {
 
 // Update Training Session
 router.patch('/sessions/:sessionId', authenticate, sessionLimiter, async (req, res) => {
+    console.log("Request body::::::", req.body);
     try {
         const session = await TrainingSession.findOneAndUpdate(
             { _id: req.params.sessionId, userId: req.user._id },

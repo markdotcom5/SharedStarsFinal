@@ -5,6 +5,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Subscription = require('../models/Subscription');
 
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    console.log('Stripe webhook received');
     const sig = req.headers['stripe-signature'];
     let event;
 

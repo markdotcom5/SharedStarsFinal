@@ -25,6 +25,8 @@ const paymentLimiter = rateLimit({
 router.post('/subscribe', authenticate, async (req, res) => {
     const { plan } = req.body;
 
+    console.log('Plan:', plan);
+
     // Validate input
     if (!plan || !ALLOWED_PLANS.includes(plan)) {
         return res.status(400).json({

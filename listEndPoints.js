@@ -13,7 +13,7 @@ if (!endpoints || endpoints.length === 0) {
 }
 
 // Print endpoints to console for verification
-console.log('🚀 Available API Endpoints:', endpoints);
+// console.log('🚀 Available API Endpoints:', endpoints);
 
 // Save to a JSON file
 fs.writeFileSync('endpoints.json', JSON.stringify(endpoints, null, 2));

@@ -53,7 +53,9 @@ router.post('/:taskId/start', authenticate, async (req, res) => {
             },
         });
 
+        
         await session.save();
+        console.log("Task: ", task);
 
         res.json({
             success: true,

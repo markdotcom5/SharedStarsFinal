@@ -92,6 +92,7 @@ class SubscriptionController {
     }
 
     async upgradeSubscription(req, res) {
+        console.log("req.body111", req.body);
         const { subscriptionId, newPlan } = req.body;
 
         try {

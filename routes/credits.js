@@ -9,6 +9,7 @@ const TrainingSession = require('../models/TrainingSession');
 router.get('/balance', authenticate, async (req, res) => {
     try {
         const user = await User.findById(req.user._id).select('credits');
+        console.log('User:', req.user);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -65,6 +66,8 @@ router.post('/award', authenticate, async (req, res) => {
             { $inc: { credits: amount } },
             { new: true }
         );
+
+        console.log("sessionId", sessionId);
 
         if (sessionId) {
             await TrainingSession.findByIdAndUpdate(sessionId, {

@@ -657,6 +657,8 @@ const fetchTrainingContent = async (req, res, viewMode = false) => {
   try {
     const contentResponse = await aiController.generateTrainingContent(req, res);
 
+    console.log("📚 Training Content:", contentResponse.content);
+
     if (viewMode) {
       res.render('training-content', {
         title: 'Training Content',
