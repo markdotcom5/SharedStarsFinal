@@ -643,6 +643,9 @@ video {
 .-left-10 {
     left: -2.5rem;
 }
+.-left-4 {
+    left: -1rem;
+}
 .-right-10 {
     right: -2.5rem;
 }
@@ -706,9 +709,6 @@ video {
 .top-4 {
     top: 1rem;
 }
-.-left-4 {
-    left: -1rem;
-}
 .-z-10 {
     z-index: -10;
 }
@@ -745,10 +745,6 @@ video {
 .my-8 {
     margin-top: 2rem;
     margin-bottom: 2rem;
-}
-.my-20 {
-    margin-top: 5rem;
-    margin-bottom: 5rem;
 }
 .mb-10 {
     margin-bottom: 2.5rem;
@@ -1192,6 +1188,10 @@ video {
 .border-l {
     border-left-width: 1px;
 }
+.border-black {
+    --tw-border-opacity: 1;
+    border-color: rgb(0 0 0 / var(--tw-border-opacity, 1));
+}
 .border-blue-400\/20 {
     border-color: rgb(96 165 250 / 0.2);
 }
@@ -1205,8 +1205,20 @@ video {
 .border-blue-500\/20 {
     border-color: rgb(59 130 246 / 0.2);
 }
+.border-gray-600 {
+    --tw-border-opacity: 1;
+    border-color: rgb(75 85 99 / var(--tw-border-opacity, 1));
+}
+.border-gray-700 {
+    --tw-border-opacity: 1;
+    border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
+}
 .border-purple-500\/20 {
     border-color: rgb(168 85 247 / 0.2);
+}
+.border-red-600 {
+    --tw-border-opacity: 1;
+    border-color: rgb(220 38 38 / var(--tw-border-opacity, 1));
 }
 .border-white-100 {
     border-color: rgba(255, 255, 255, 0.1);
@@ -1216,22 +1228,6 @@ video {
 }
 .border-white-300 {
     border-color: rgba(255, 255, 255, 0.3);
-}
-.border-red-600 {
-    --tw-border-opacity: 1;
-    border-color: rgb(220 38 38 / var(--tw-border-opacity, 1));
-}
-.border-black {
-    --tw-border-opacity: 1;
-    border-color: rgb(0 0 0 / var(--tw-border-opacity, 1));
-}
-.border-gray-600 {
-    --tw-border-opacity: 1;
-    border-color: rgb(75 85 99 / var(--tw-border-opacity, 1));
-}
-.border-gray-700 {
-    --tw-border-opacity: 1;
-    border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
 }
 .bg-\[\#1a1a1a\] {
     --tw-bg-opacity: 1;
@@ -1523,6 +1519,9 @@ video {
 .pl-5 {
     padding-left: 1.25rem;
 }
+.pl-6 {
+    padding-left: 1.5rem;
+}
 .pr-2 {
     padding-right: 0.5rem;
 }
@@ -1546,9 +1545,6 @@ video {
 }
 .pt-\[120px\] {
     padding-top: 120px;
-}
-.pl-6 {
-    padding-left: 1.5rem;
 }
 .text-left {
     text-align: left;
