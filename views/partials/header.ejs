@@ -12,23 +12,23 @@
   <!-- Navigation Links -->
   <ul class="flex flex-wrap items-center justify-between gap-2 text-body-small-medium font-body text-white-700">
       <li class="relative group py-8">
-          <a href="/" data-i18n="nav.home" class="px-4 text-white-700 hover:text-white">Home</a>
+          <a href="/" data-i18n="nav.home" class="px-4 <%= currentPage === 'home' ? 'text-white' : 'text-white-700' %> hover:text-white">Home</a>
+          <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent <%= currentPage === 'home' ? 'scale-x-100' : 'scale-x-0' %> scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
+      </li>
+      <li class="relative group py-8">
+          <a href="/academy" data-i18n="nav.academy" class="px-4 py-6 hover:text-white">Academy</a>
           <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
       </li>
       <li class="relative group py-8">
-          <a href="/" data-i18n="nav.academy" class="px-4 py-6 hover:text-white">Academy</a>
+          <a href="/about" data-i18n="nav.about" class="px-4 py-6 hover:text-white">About</a>
           <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
       </li>
       <li class="relative group py-8">
-          <a href="/" data-i18n="nav.about" class="px-4 py-6 hover:text-white">About</a>
+          <a href="/leaderboard" data-i18n="nav.leaderboard" class="px-4 py-6 hover:text-white">Leaderboard</a>
           <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
       </li>
       <li class="relative group py-8">
-          <a href="/" data-i18n="nav.leaderboard" class="px-4 py-6 hover:text-white">Leaderboard</a>
-          <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
-      </li>
-      <li class="relative group py-8">
-          <a href="/" data-i18n="nav.subscribe" class="px-4 py-6 hover:text-white">Subscribe</a>
+          <a href="/subscribe" data-i18n="nav.subscribe" class="px-4 py-6 hover:text-white">Subscribe</a>
           <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
       </li>
   </ul>

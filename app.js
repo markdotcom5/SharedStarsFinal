@@ -666,7 +666,23 @@ app.use('/js', express.static(path.join(__dirname, 'public/js'))); // Serve JS f
 
 // ✅ Sample Route to Render an EJS Template
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Home Page', message: 'Welcome to my site!' });
+    res.render('index', { title: 'Home Page', message: 'Welcome to my site!', currentPage: "home" });
+});
+
+app.get("/academy", (req, res) => {
+  res.render("academy", { title: 'Academy Page', currentPage: "academy" });
+});
+
+app.get("/about", (req, res) => {
+  res.render("about", { title: 'About Page', currentPage: "about" });
+});
+
+app.get("/leaderboard", (req, res) => {
+  res.render("leaderboard", { title: "Leaderboard Page", currentPage: "leaderboard" });
+});
+
+app.get("/subscribe", (req, res) => {
+  res.render("subscribe", { title: "Subscribe Page", currentPage: "subscribe" });
 });
 
 app.get('/login', (req, res) => {
