@@ -1,0 +1,27 @@
+/* Bold */
+@font-face {
+  font-family: 'aeonik';
+  src: url('/public/fonts/Aeonik-Bold.ttf') format('truetype');
+  font-style: normal;
+}
+
+/* Bold Italic */
+@font-face {
+  font-family: 'aeonik';
+  src: url('/public/fonts/Aeonik-BoldItalic.ttf') format('truetype');
+  font-style: italic;
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  @apply antialiased;
+}
+
+.antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
