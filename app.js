@@ -637,22 +637,61 @@ app.use((req, res, next) => {
 // ============================
 // 5. STATIC FILES
 // ============================
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
-const staticPages = [
-    { route: "/", file: "index.html" },
-    { route: "/about", file: "about.html" },
-    { route: "/academy", file: "academy.html" },
-    { route: "/leaderboard", file: "leaderboard.html" },
-    { route: "/login", file: "login.html" },
-    { route: "/signup", file: "signup.html" },
-    { route: "/subscribe", file: "subscribe.html" },
-    { route: "/training", file: "training.html" }
-];
-staticPages.forEach(({ route, file }) => {
-    app.get(route, (req, res) => res.sendFile(path.join(__dirname, "public", file)));
+// const staticPages = [
+//     { route: "/", file: "index.html" },
+//     { route: "/about", file: "about.html" },
+//     { route: "/academy", file: "academy.html" },
+//     { route: "/leaderboard", file: "leaderboard.html" },
+//     { route: "/login", file: "login.html" },
+//     { route: "/signup", file: "signup.html" },
+//     { route: "/subscribe", file: "subscribe.html" },
+//     { route: "/training", file: "training.html" }
+// ];
+// staticPages.forEach(({ route, file }) => {
+//     app.get(route, (req, res) => res.sendFile(path.join(__dirname, "public", file)));
+// });
+// app.use(express.static('public'));
+
+// ✅ Set EJS as the view engine
+app.set('view engine', 'ejs');
+
+// ✅ Set views directory
+app.set('views', path.join(__dirname, 'views'));
+
+// ✅ Serve Static Files (Ensure this does NOT override EJS rendering)
+app.use('/public', express.static(path.join(__dirname, 'public'))); // Serve assets like CSS, images
+app.use('/js', express.static(path.join(__dirname, 'public/js'))); // Serve JS files separately
+
+// ✅ Sample Route to Render an EJS Template
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Home Page', message: 'Welcome to my site!' });
 });
-app.use(express.static('public'));
+
+app.get('/login', (req, res) => {
+    res.render('auth/login', { title: 'Login Page' });
+});
+
+app.get('/signup', (req, res) => {
+    res.render('auth/signup', { title: 'SignUp Page' });
+});
+
+app.get('/otp', (req, res) => {
+    res.render('auth/otp', { title: 'OTP Page' });
+});
+
+app.get('/reset-password', (req, res) => {
+    res.render('auth/reset-password', { title: 'Reset Password Page' });
+});
+
+app.get('/change-password', (req, res) => {
+    res.render('auth/change-password', { title: 'Change Password Page' });
+});
+
+app.get('/onboard', (req, res) => {
+    res.render('auth/onboard', { title: 'Onbnoard Page' });
+});
 
 // ============================
 // 6. ERROR HANDLING
