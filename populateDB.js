@@ -15,12 +15,12 @@ const Trial = require("./models/Trial");
 const User = require("./models/User");
 const UserProgress = require("./models/UserProgress");
 const Video = require("./models/Video");
-const Achievement = require("./models/achievement"); // make sure the filename matches casing
+const Achievement = require("./models/Achievement"); // make sure the filename matches casing
 const Challenge = require("./models/challenge");
 const Dashboard = require("./models/dashboard");
 const Discussion = require("./models/discussion");
 const GroupSession = require("./models/groupSession");
-const Leaderboard = require("./models/leaderboard");
+const Leaderboard = require("./models/Leaderboard");
 const PeerMatch = require("./models/peerMatch");
 const StudyGroup = require("./models/studyGroup");
 
