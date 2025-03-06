@@ -25,7 +25,8 @@
     <link rel="stylesheet" href="/css/ai-assistant.css" />
     
     <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
-    <script src="/js/languageSelection.js" defer></script>
+    <!-- <script src="/js/languageSelection.js" defer></script> -->
+    <script src="/js/languageManager.js" defer></script>
     <script type="module" src="/js/CountdownTimer.js"></script>
     <script type="module" src="/js/HomepageHandler.js"></script>  
 
@@ -57,29 +58,23 @@
         <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
       </ul>
 
-      <!-- Language Selector Dropdown -->
-      <!-- <div class="relative language-selector inline-block">
-        <button id="language-selector" class="lang-btn flex items-center bg-gray-700 px-4 py-3 rounded-full">
-          <img id="selectedFlag" src="/images/USflag.png" alt="Selected language flag" class="w-6 h-6" />
-          <span id="selectedLang" class="ml-2">English</span>
-          <img src="/icons/chevron-down.png" class="w-4 h-4 ml-2" />
+      <div class="relative">
+        <button id="langDropdownBtn" class="flex items-center gap-2 text-white bg-gray-700 px-4 py-2 rounded-lg">
+          <span id="selectedLangIcon">🇺🇸</span>
+          <span id="selectedLangText">English</span>
+          <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
         </button>
-
-        <ul id="langDropdownMenu language-selector" class="absolute left-0 mt-2 hidden bg-gray-800 text-white border w-40 rounded-lg shadow-md transition-opacity duration-300">
-          <li><button class="lang-btn btn btn-ghost flex items-center px-4 py-2 w-full text-left" data-lang="en" aria-label="Switch to English" data-flag="/images/USflag.png">🇺🇸 English</button></li>
-          <li><button class="lang-btn btn btn-ghost dropdown-item flex items-center px-4 py-2 w-full text-left" data-lang="zh" aria-label="Switch to Chinese" data-flag="/images/ChinaFlag.png">🇨🇳 中文</button></li>
-          <li><button class="lang-btn btn btn-ghost dropdown-item flex items-center px-4 py-2 w-full text-left" data-lang="ko" aria-label="Switch to Korean" data-flag="/images/KoreaFlag.png">🇰🇷 한국어</button></li>
-          <li><button class="lang-btn btn btn-ghost dropdown-item flex items-center px-4 py-2 w-full text-left" data-lang="es" aria-label="Switch to Spanish" data-flag="/images/SpainFlag.png">🇪🇸 Español</button></li>
+        <ul id="langDropdownMenu" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 py-2 w-40">
+          <li><button class="dropdown-item" data-lang="en" data-flag="🇺🇸" aria-label="Switch to English">🇺🇸 English</button></li>
+          <li><button class="dropdown-item" data-lang="zh" data-flag="🇨🇳" aria-label="Switch to Chinese">🇨🇳 Chinese</button></li>
+          <li><button class="dropdown-item" data-lang="ko" data-flag="🇰🇷" aria-label="Switch to Korean">🇰🇷 Korean</button></li>
+          <li><button class="dropdown-item" data-lang="es" data-flag="🇪🇸" aria-label="Switch to Spanish">🇪🇸 Spanish</button></li>
         </ul>
-      </div> -->
-
-      <!-- Language Selector -->
-      <div class="language-selector flex gap-2">
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
       </div>
+      <button data-i18n="nav.getStarted" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">
+      </button>
     </nav>      
   </header>
   
@@ -90,10 +85,12 @@
       Your browser does not support the video tag.
     </video>
     <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
-    <div class="relative z-10 max-w-4xl px-4">
-      <h1 data-i18n="heroTitle" class="hero-text text-white mb-4"></h1>
+    <div class="relative z-10 px-4">
+      <h1 data-i18n="hero.title" class="hero-text text-white mb-4"></h1>
       <p data-i18n="hero.subtitle" class="text-xl text-white mb-4"></p>
-      <a data-i18n="hero.beginTraining" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+      <a data-i18n="hero.startTraining" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+      <a data-i18n="hero.seeCountdown" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+      <a data-i18n="hero.exploreMembership" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
     </div>
   </section>
 

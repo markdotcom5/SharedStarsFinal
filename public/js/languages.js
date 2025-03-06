@@ -39,7 +39,7 @@ const translations = {
             teslaTagline: "像特斯拉FSD一样的太空训练：智能、适应性、革命性"
         },
         banner: {
-            title: "36个月到太空：",
+            title: "36个月到太jfjkhkfu空：",
             subtitle: "完成训练并获得太空飞行批准"
         }
     },
