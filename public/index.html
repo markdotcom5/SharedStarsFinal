@@ -23,18 +23,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/ai-assistant.css" />
-  
+    
     <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
-    <script src="/js/languageSelection.js" defer></script>
+    <!-- <script src="/js/languageSelection.js" defer></script> -->
+    <script src="/js/languageManager.js" defer></script>
     <script type="module" src="/js/CountdownTimer.js"></script>
-    <script type="module" src="/js/HomepageHandler.js"></script>
-  </head>
-  
+    <script type="module" src="/js/HomepageHandler.js"></script>  
+
 </head>
+
 <body class="bg-slate-900 text-white min-h-screen">
-  
   <!-- HEADER -->
-  <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg">
+  <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg py-4">
     <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
       <!-- Logo -->
       <div class="flex items-center mb-2 md:mb-0">
@@ -45,56 +45,38 @@
       <!-- Navigation Links -->
       <ul class="flex flex-wrap gap-4">
         <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
-        <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
+        <li><a href="/academy.html" data-i18n="nav.academy">Academy</a></li>
         <li><a href="/about.html" data-i18n="nav.about">About</a></li>
         <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+
+        <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
         <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
         <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
         <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
         <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-        <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
-        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
-        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
       </ul>
-      <!-- Language Selector -->
-      <div class="language-selector flex gap-2">
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+
+      <div class="relative">
+        <button id="langDropdownBtn" class="flex items-center gap-2 text-white bg-gray-700 px-4 py-2 rounded-lg">
+          <span id="selectedLangIcon">🇺🇸</span>
+          <span id="selectedLangText">English</span>
+          <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <ul id="langDropdownMenu" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 py-2 w-40">
+          <li><button class="dropdown-item" data-lang="en" data-flag="🇺🇸" aria-label="Switch to English">🇺🇸 English</button></li>
+          <li><button class="dropdown-item" data-lang="zh" data-flag="🇨🇳" aria-label="Switch to Chinese">🇨🇳 Chinese</button></li>
+          <li><button class="dropdown-item" data-lang="ko" data-flag="🇰🇷" aria-label="Switch to Korean">🇰🇷 Korean</button></li>
+          <li><button class="dropdown-item" data-lang="es" data-flag="🇪🇸" aria-label="Switch to Spanish">🇪🇸 Spanish</button></li>
+        </ul>
       </div>
-    </nav>
+      <button data-i18n="nav.getStarted" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">
+      </button>
+    </nav>      
   </header>
-  
-  <!-- AI COACH STATUS BAR -->
-  <div id="ai-status-bar" class="fixed top-0 w-full bg-gray-800/95 border-b border-blue-500/20 z-50">
-    <div class="container mx-auto px-4 py-2 flex items-center justify-between">
-      <div id="ai-status" class="flex items-center space-x-3">
-        <!-- Pulse Dot with animation -->
-        <div class="pulse-dot w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
-        <span>Initializing AI Coach...</span>
-      </div>
-      <div class="flex items-center space-x-6">
-        <div id="session-metrics" class="flex items-center space-x-6">
-          <div class="flex items-center space-x-2">
-            <span class="text-blue-400">Focus Score:</span>
-            <span id="focus-score">--</span>
-          </div>
-          <div class="flex items-center space-x-2">
-            <span class="text-green-400">Progress:</span>
-            <span id="progress-percentage">0%</span>
-          </div>
-        </div>
-        <!-- Secondary Language Selector (optional redundancy) -->
-        <div class="language-selector flex gap-2">
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-          <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
-        </div>
-      </div>
-    </div>
-  </div>
   
   <!-- HERO SECTION -->
   <section id="hero" class="relative min-h-screen flex items-center justify-center text-center pt-20">
@@ -103,17 +85,21 @@
       Your browser does not support the video tag.
     </video>
     <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
-    <div class="relative z-10 max-w-4xl px-4">
-      <h1 data-i18n="heroTitle" class="hero-text text-white mb-4"></h1>
+    <div class="relative z-10 px-4">
+      <h1 data-i18n="hero.title" class="hero-text text-white mb-4"></h1>
       <p data-i18n="hero.subtitle" class="text-xl text-white mb-4"></p>
-      <a data-i18n="hero.beginTraining" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+      <a data-i18n="hero.startTraining" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+      <a data-i18n="hero.seeCountdown" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+      <a data-i18n="hero.exploreMembership" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
     </div>
   </section>
+
   <!-- Include any additional page scripts -->
   <script src="/js/modules/main.js" type="module"></script>
   <script src="/js/ai-companion.js" defer></script>
+
   <!-- COUNTDOWN & PRICE EVOLUTION SECTION -->
-<section id="countdown-price" class="relative min-h-screen py-16 text-white text-center">
+  <section id="countdown-price" class="relative min-h-screen py-16 text-white text-center">
   <!-- Background gradient overlay -->
   <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/90"></div>
 
@@ -215,7 +201,7 @@
     </div>
     
   </div>
-</section>
+  </section>
 
 <!-- MISSION CONTROL SECTION -->
 <section id="mission-control" class="relative min-h-screen py-16 text-white">
@@ -337,6 +323,7 @@
     </div>
   </div>
 </section>
+
 <!-- TRAINING MODULE PREVIEW SECTION (Existing) -->
 <section id="training-preview" class="py-16 bg-gray-900 text-white text-center">
   <div class="container mx-auto px-4">
@@ -764,6 +751,7 @@
     </div>
   </div>
 </section>
+
  <!-- FOOTER -->
  <footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
   <!-- Animated Floating Particles -->
@@ -835,10 +823,11 @@
   </div>
 </div>
 </footer>
+
   <!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-<script src="/js/language-switcher.js"></script>
-<script>
+<!-- <script src="/public/js/language-switcher.js"></script> -->
+<!-- <script>
   // Basic language initialization
   document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('preferredLanguage') || 'en';
@@ -895,16 +884,16 @@
       }
     });
   }
-</script>
+</script> -->
 
 <!-- Module Scripts -->
 </script>
-<script src="/js/modules/training/fsdTraining.js"></script>
-<script src="/js/modules/training/AIHandler.js"></script>
-<script src="/js/modules/training/aiGuidanceSystem.js"></script>
-<script src="/js/modules/training/progressAssessment.js"></script>
+<script src="/public/js/modules/training/fsdTraining.js"></script>
+<script src="/public/js/modules/training/AIHandler.js"></script>
+<script src="/public/js/modules/training/aiGuidanceSystem.js"></script>
+<script src="/public/js/modules/training/progressAssessment.js"></script>
 
-
+<script>
   document.addEventListener('DOMContentLoaded', async () => {
     try {
       // Initialize core modules
