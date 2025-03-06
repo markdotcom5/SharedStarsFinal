@@ -5,7 +5,7 @@ const translations = {
             about: "About",
             academy: "SharedStars Academy",
             profile: "Profile",
-            subscribe: "SUBSCRIBE"
+            subscribe: "EEEE"
         },
         hero: {
             beginTraining: "Begin Your Training",

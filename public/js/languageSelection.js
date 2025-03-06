@@ -3,9 +3,10 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const langButtons = document.querySelectorAll('.lang-btn');
     const contentElements = document.querySelectorAll('[data-i18n]');
-    const apiGeolocationUrl = 'https://ipapi.co/json/'; // You can change this if needed
-  
+    const apiGeolocationUrl = 'https://ipapi.co/json/'; // You can change this if needed  
     // Your translations for a few keys (extend as needed)
+
+    console.log("1111")
     const translations = {
       en: {
         heroTitle: "From Earth to Space in 36 Months",
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           'Korea': 'ko',
           'Spain': 'es',
         };
+        console.log('Detected country:', country);
         return languageMap[country] || 'en';
       } catch (error) {
         console.error('Failed to fetch geolocation data:', error);
@@ -77,6 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
     // Initialize language system
     const initLanguage = async () => {
+      console.log('Initializing language syst1111111em...');
       let selectedLang = getCookie('language');
       if (!selectedLang) {
         selectedLang = await detectLanguageByIP();
