@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SharedStars - AI-accelerated space training program" />
+  <title>Space Training | SharedStars</title>
+  
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    frame-src 'self' https://www.sora.com;
+    child-src 'self' https://www.sora.com;
+  ">
+  
+  <!-- Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/ai-assistant.css" />
+  
+  <!-- Language Selection Script -->
+  <script src="/js/languageSelection.js" defer></script>
+  
+  <style>
+    /* Custom Styles for Training Page */
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .radial-progress {
+      position: relative;
+      display: inline-grid;
+      place-content: center;
+      border-radius: 50%;
+    }
+    .radial-progress::before {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      inset: 0;
+      background: conic-gradient(from 0deg, currentColor var(--value), transparent var(--value));
+      -webkit-mask: radial-gradient(transparent var(--hollow), #000 calc(var(--hollow) + 0.5px));
+      mask: radial-gradient(transparent var(--hollow), #000 calc(var(--hollow) + 0.5px));
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10B981;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(16,185,129,0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16,185,129,0);
+      }
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(31, 41, 55, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.5);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.7);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+  
+  <!-- HEADER -->
+  <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg">
+    <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
+      <!-- Logo -->
+      <div class="flex items-center mb-2 md:mb-0">
+        <a href="/index.html" aria-label="SharedStars Homepage" class="group">
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+        </a>
+      </div>
+      <!-- Navigation Links -->
+      <ul class="flex flex-wrap gap-4">
+        <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="/Why-SharedStars.html" data-i18n="nav.why">Why SharedStars</a></li>
+        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
+        <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
+        <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
+        <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
+        <li><a href="/academy.html" data-i18n="nav.academy">SharedStars Academy</a></li>
+        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
+        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+      </ul>
+      <!-- Language Selector -->
+      <div class="language-selector flex gap-2">
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+        <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+      </div>
+    </nav>
+  </header>
+  
+  <!-- AI COACH STATUS BAR -->
+  <div id="ai-status-bar" class="fixed top-0 w-full bg-gray-800/95 border-b border-blue-500/20 z-50">
+    <div class="container mx-auto px-4 py-2 flex items-center justify-between">
+      <div id="ai-status" class="flex items-center space-x-3">
+        <div class="pulse-dot w-3 h-3 bg-blue-500 rounded-full animate-ping"></div>
+        <span>Initializing AI Coach...</span>
+      </div>
+      <div class="flex items-center space-x-6">
+        <div id="session-metrics" class="flex items-center space-x-6">
+          <div class="flex items-center space-x-2">
+            <span class="text-blue-400">Focus Score:</span>
+            <span id="focus-score">--</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-green-400">Progress:</span>
+            <span id="progress-percentage">0%</span>
+          </div>
+        </div>
+        <div class="language-selector flex gap-2">
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
+          <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- TRAINING MODULES SECTION -->
+  <section id="training-modules" class="relative min-h-screen py-16 overflow-hidden">
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+      <source src="/videos/trainingbg2.mp4" type="video/mp4">
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-blue-950/90 via-blue-900/80 to-blue-950/90"></div>
+    <div class="relative z-10 container mx-auto px-4">
+      <!-- Section Header -->
+      <header class="mb-12 text-center" data-aos="fade-up">
+        <h2 class="text-4xl font-bold mb-4" data-i18n="trainingModules.title">Training Modules</h2>
+        <p class="text-lg text-gray-300" data-i18n="trainingModules.subtitle">
+          Choose a module to begin your space training journey.
+        </p>
+      </header>
+      
+      <!-- Module Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Physical Training Module Card -->
+        <div class="card glass hover:-translate-y-2 transition-all duration-300">
+          <div class="card-body">
+            <div class="absolute top-4 right-4">
+              <div class="badge badge-primary">6-8 Months</div>
+            </div>
+            <h3 class="card-title text-2xl text-blue-400 mb-4">Physical Training</h3>
+            <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
+              <span class="text-2xl text-white">0%</span>
+            </div>
+            <div class="certification-badge mb-4">
+              <span class="text-xs text-blue-300">ISO-31000-ZG Certification</span>
+            </div>
+            <p class="text-blue-100">Master zero-gravity movement, biometric adaptation, and emergency procedures</p>
+            <div class="requirements text-xs text-gray-400 mt-2">
+              <p>Required: Medical Clearance, Basic Physics</p>
+            </div>
+            <div class="card-actions justify-between items-center mt-4">
+              <span class="text-sm text-blue-300">300 Training Hours Required</span>
+              <button class="btn btn-primary" data-module="physical">Begin Assessment</button>
+            </div>
+          </div>
+        </div>
+        <!-- Technical Systems Module Card -->
+        <div class="card glass hover:-translate-y-2 transition-all duration-300">
+          <div class="card-body">
+            <div class="absolute top-4 right-4">
+              <div class="badge badge-secondary">4-6 Months</div>
+            </div>
+            <h3 class="card-title text-2xl text-purple-400 mb-4">Technical Systems</h3>
+            <div class="radial-progress text-purple-500 mx-auto my-6" style="--value:0; --size:8rem;">
+              <span class="text-2xl text-white">0%</span>
+            </div>
+            <div class="certification-badge mb-4">
+              <span class="text-xs text-purple-300">OSHA-ST-102 Certification</span>
+            </div>
+            <p class="text-blue-100">Master spacecraft systems, maintenance, and emergency protocols</p>
+            <div class="requirements text-xs text-gray-400 mt-2">
+              <p>Required: Physical Training Completion</p>
+            </div>
+            <div class="card-actions justify-between items-center mt-4">
+              <span class="text-sm text-blue-300">200 Simulation Hours Required</span>
+              <button class="btn btn-primary" data-module="technical">Begin Assessment</button>
+            </div>
+          </div>
+        </div>
+        <!-- Mission Simulation Module Card -->
+        <div class="card glass hover:-translate-y-2 transition-all duration-300">
+          <div class="card-body">
+            <div class="absolute top-4 right-4">
+              <div class="badge badge-accent">3-4 Months</div>
+            </div>
+            <h3 class="card-title text-2xl text-blue-400 mb-4">Mission Simulation</h3>
+            <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
+              <span class="text-2xl text-white">0%</span>
+            </div>
+            <div class="certification-badge mb-4">
+              <span class="text-xs text-blue-300">ISO-31010-MO Certification</span>
+            </div>
+            <p class="text-blue-100">Complete mission scenarios and team coordination exercises</p>
+            <div class="requirements text-xs text-gray-400 mt-2">
+              <p>Required: Technical Systems Completion</p>
+            </div>
+            <div class="card-actions justify-between items-center mt-4">
+              <span class="text-sm text-blue-300">100 Mission Hours Required</span>
+              <button class="btn btn-primary" data-module="simulation">Begin Assessment</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Detailed Module Overview Section -->
+      <section id="detailed-module" class="bg-gray-800 p-8 rounded-xl mb-16" data-aos="fade-up">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-3xl font-bold">Detailed Module Overview</h2>
+          <button id="refresh-module" class="text-sm text-blue-400 hover:underline focus:outline-none">
+            Refresh Details
+          </button>
+        </div>
+        <div id="module-details" class="transition-all duration-300 ease-in-out">
+          <p class="text-gray-400">Loading module details...</p>
+        </div>
+      </section>
+      
+      <!-- Call-to-Action -->
+      <div class="mt-12" data-aos="fade-up">
+        <a href="/training.html" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full transition" data-i18n="index.exploreTrainingCTA">
+          Explore Detailed Training
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- FOOTER -->
+  <footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+      <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+      <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
+    </div>
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
+        <!-- About -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+            <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">StelTrek Academy</a></li>
+          </ul>
+        </div>
+        <!-- Community -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+            <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+          </ul>
+        </div>
+        <!-- Resources -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+            <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+          </ul>
+        </div>
+        <!-- Legal -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+            <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 text-center">
+        <h4 class="text-lg font-bold text-blue-400" data-i18n="footer.followUs">Follow Us</h4>
+        <div class="flex justify-center gap-6 mt-4">
+          <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
+            <!-- Twitter SVG -->
+          </a>
+          <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
+            <!-- Facebook SVG -->
+          </a>
+          <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
+            <!-- Instagram SVG -->
+          </a>
+        </div>
+      </div>
+      <div class="mt-12 text-center">
+        <p data-i18n="footer.copyright">© 2024 SharedStars Academy. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="/js/language-switcher.js"></script>
+  <script>
+    // Language initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+      document.documentElement.lang = savedLang;
+      applyTranslations(savedLang);
+  
+      document.querySelectorAll('.language-flag').forEach(flag => {
+        flag.addEventListener('click', () => {
+          const selectedLang = flag.dataset.lang || 'en';
+          localStorage.setItem('preferredLanguage', selectedLang);
+          applyTranslations(selectedLang);
+        });
+      });
+    });
+  
+    function applyTranslations(lang) {
+      const translations = {
+        en: {
+          news: {
+            headline: "Latest News & Insights",
+            subtitle: "Stay updated with the latest op-eds, articles, and insights in space exploration.",
+            oped: {
+              title: "It's Time to Make Space Exploration a Shared Frontier for All",
+              published: "Published in",
+              excerpt: "Discover how space exploration can be democratized and made accessible for everyone willing to reach for the stars.",
+              cta: "Read Full Article"
+            }
+          },
+          footer: {
+            copyright: "© 2024 SharedStars Academy. All rights reserved."
+          }
+          // Additional keys...
+        },
+        zh: {
+          // Chinese translations
+        },
+        ko: {
+          // Korean translations
+        },
+        es: {
+          // Spanish translations
+        }
+      };
+  
+      document.querySelectorAll("[data-i18n]").forEach(element => {
+        const key = element.dataset.i18n;
+        const keys = key.split(".");
+        let translation = translations[lang];
+        keys.forEach(k => {
+          translation = translation ? translation[k] : null;
+        });
+        if (translation) {
+          element.textContent = translation;
+        }
+      });
+    }
+  </script>
+  
+  <!-- Module Scripts -->
+ <!-- ✅ Load `trainingModules` Before Executing Script -->
+<script src="/js/moduleContent.js"></script>
+
+<script>
+  function renderModuleDetails(module) {
+    const detailsContainer = document.getElementById('module-details');
+    let html = `<h3 class="text-2xl font-bold">${module.title}</h3>
+    <p class="text-gray-300 mb-2">${module.description}</p>
+    <p class="text-blue-400">Duration: ${module.duration}</p>
+    <p class="text-blue-400">Certifications: ${module.certifications.join(', ')}</p>`;
+    
+    if (module.levels && module.levels.length > 0) {
+      html += `<div class="levels mt-4">
+        <h4 class="text-xl font-semibold mb-2">Levels</h4>`;
+      module.levels.forEach(level => {
+        html += `<div class="level mb-4">
+          <h5 class="text-lg font-bold">${level.name}</h5>
+          <p>ID: ${level.id}</p>`;
+        if (level.content && level.content.length > 0) {
+          html += `<ul class="list-disc list-inside">`;
+          level.content.forEach(contentItem => {
+            html += `<li><strong>${contentItem.title}</strong> (${contentItem.type})</li>`;
+          });
+          html += `</ul>`;
+        }
+        html += `</div>`;
+      });
+      html += `</div>`;
+    }
+    detailsContainer.innerHTML = html;
+  }
+
+  // Ensure `trainingModules` is available before calling it
+  document.addEventListener("DOMContentLoaded", () => {
+    if (typeof trainingModules !== "undefined") {
+      renderModuleDetails(trainingModules.physical);
+    } else {
+      console.error("❌ trainingModules is not defined. Ensure moduleContent.js is loaded correctly.");
+    }
+  });
+
+  // Refresh button event
+  document.getElementById('refresh-module').addEventListener('click', () => {
+    document.getElementById('module-details').innerHTML = `<p class="text-gray-400">Reloading module details...</p>`;
+    setTimeout(() => {
+      if (typeof trainingModules !== "undefined") {
+        renderModuleDetails(trainingModules.physical);
+      } else {
+        console.error("❌ trainingModules is not defined.");
+      }
+    }, 500);
+  });
+</script>
+
+</body>
+</html>

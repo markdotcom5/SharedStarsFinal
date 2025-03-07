@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Discover why StelTrek Academy is the ultimate destination for space readiness." />
+  <title>Why StelTrek - StelTrek Academy</title>
+  <!-- Tailwind CSS & DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
+  <!-- AOS CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/ai-assistant.css" />
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-white">
+
+  <!-- HEADER with Language Selector -->
+  <header class="fixed w-full bg-gray-900/90 backdrop-blur-lg z-50 shadow-lg">
+    <nav aria-label="Main Navigation" class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <!-- Language Selector -->
+      <div class="flex gap-2">
+        <button class="language-flag" data-lang="en" aria-label="English">🇺🇸</button>
+        <button class="language-flag" data-lang="zh" aria-label="Chinese">🇨🇳</button>
+        <button class="language-flag" data-lang="ko" aria-label="Korean">🇰🇷</button>
+        <button class="language-flag" data-lang="es" aria-label="Spanish">🇪🇸</button>
+      </div>
+      <!-- Navigation Menu -->
+      <ul class="flex gap-4">
+        <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="/Why-StelTrek.html" data-i18n="nav.why" aria-current="page">Why StelTrek</a></li>
+        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
+        <li><a href="/mission-control.html" data-i18n="nav.merchandise">Mission Control</a></li>
+        <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
+        <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
+        <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
+        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
+        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO SECTION with Video Background -->
+  <section class="relative w-full min-h-screen" data-aos="fade">
+    <div class="absolute inset-0">
+      <video id="heroVideo" autoplay muted loop playsinline class="w-full h-full object-cover">
+        <source src="/videos/academy10.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="absolute inset-0 bg-gradient-to-b from-slate-900/50 to-slate-900/90"></div>
+    </div>
+    <div class="relative z-10 flex items-center justify-center min-h-screen">
+      <div class="text-center px-4">
+        <h1 class="text-5xl md:text-7xl font-bold text-white mb-6" data-i18n="hero.title">
+          Why <span class="text-blue-400">SharedStars?</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-12" data-i18n="hero.subtitle">
+          Discover how SharedStars Academy can transform your journey into space readiness and beyond.
+        </p>
+        <!-- Primary CTA -->
+        <button id="openSignupModal" class="btn btn-primary btn-lg text-lg normal-case min-w-[200px] px-8 py-3" data-i18n="hero.cta">
+          Start Your Journey
+        </button>
+        <!-- AI Guidance Button -->
+        <button id="openAIGuide" class="btn btn-outline btn-lg text-lg normal-case ml-4" data-i18n="hero.aiGuide">
+          Talk to Our AI Coach
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY SHAREDSTARS SECTION -->
+  <section class="py-16 bg-gray-900 text-white text-center" data-aos="fade-up">
+    <h2 class="text-4xl font-bold">Your Path to the Stars Begins Here</h2>
+    <p class="mt-4 text-lg text-gray-300 max-w-3xl mx-auto">
+      SharedStars Academy is your launchpad to the future of space travel, training, and exploration. Whether you're an aspiring astronaut, a space enthusiast, or a professional seeking advanced training, we bring the universe closer to you.
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 max-w-6xl mx-auto">
+      <!-- Certifications -->
+      <div class="bg-slate-800 p-6 rounded-lg shadow-lg" data-aos="flip-up">
+        <h3 class="text-2xl font-semibold text-blue-400">🚀 Industry-Recognized Certifications</h3>
+        <p class="mt-3 text-gray-300">
+          Our programs prepare you for real-world space missions and are recognized by top space organizations.
+        </p>
+      </div>
+      <!-- Immersive Training -->
+      <div class="bg-slate-800 p-6 rounded-lg shadow-lg" data-aos="flip-up" data-aos-delay="100">
+        <h3 class="text-2xl font-semibold text-blue-400">🛰️ Immersive AR/VR Training</h3>
+        <p class="mt-3 text-gray-300">
+          Experience cutting-edge AR/VR simulations that place you inside real space environments.
+        </p>
+      </div>
+      <!-- Global Community -->
+      <div class="bg-slate-800 p-6 rounded-lg shadow-lg" data-aos="flip-up" data-aos-delay="200">
+        <h3 class="text-2xl font-semibold text-blue-400">🌍 A Global Space Community</h3>
+        <p class="mt-3 text-gray-300">
+          Join thousands of space explorers worldwide, attend live events, and connect with industry experts.
+        </p>
+      </div>
+    </div>
+    <div class="mt-12">
+      <a href="/signup.html" class="btn btn-primary btn-lg text-lg normal-case px-8 py-3" data-i18n="hero.cta">
+        Join Now
+      </a>
+    </div>
+  </section>
+
+<!-- AI Guidance Modal (Hidden by Default) -->
+<dialog id="aiGuideModal" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box bg-slate-800 text-white">
+    <h3 class="font-bold text-lg text-center mb-6">Your Personal AI Coach</h3>
+    <div id="aiGuideContent" class="mb-6">
+      <!-- AI guidance message will be loaded here -->
+      <p class="text-center">Connecting to AI training systems...</p>
+    </div>
+    <div class="modal-action">
+      <button id="closeModal" class="btn">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- JavaScript to handle the modal close action -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const closeModalBtn = document.getElementById("closeModal");
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener("click", function() {
+        // If using <dialog>'s native methods, you can call .close()
+        const aiGuideModal = document.getElementById("aiGuideModal");
+        if (aiGuideModal && typeof aiGuideModal.close === 'function') {
+          aiGuideModal.close();
+        } else {
+          // Alternatively, toggle a class if you're controlling visibility via CSS
+          aiGuideModal.classList.add("hidden");
+        }
+      });
+    } else {
+      console.error("Element with id 'closeModal' not found.");
+    }
+  });
+</script>
+
+
+    <!-- FOOTER -->
+    <footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
+      <!-- Animated Floating Particles -->
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+        <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+        <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
+      </div>
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
+          <!-- About -->
+          <div>
+            <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+            <ul class="space-y-2 mt-4">
+              <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+              <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">StelTrek Academy</a></li>
+            </ul>
+          </div>
+          <!-- Community -->
+          <div>
+            <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+            <ul class="space-y-2 mt-4">
+              <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+              <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+            </ul>
+          </div>
+          <!-- Resources -->
+          <div>
+            <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+            <ul class="space-y-2 mt-4">
+              <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+              <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+            </ul>
+          </div>
+          <!-- Legal -->
+          <div>
+            <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+            <ul class="space-y-2 mt-4">
+              <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+              <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-12 text-center">
+          <h4 class="text-lg font-bold text-blue-400" data-i18n="footer.followUs">Follow Us</h4>
+          <div class="flex justify-center gap-6 mt-4">
+            <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
+              </svg>
+            </a>
+            <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
+              </svg>
+            </a>
+            <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22 11.077v.82c0 4.842-3.705 10.423-10.423 10.423A10.386 10.386 0 010 18.9c.13.01.261.014.393.014 2.717 0 5.213-.913 7.204-2.449a3.677 3.677 0 01-3.434-2.553c.558.083 1.136.077 1.688-.027A3.675 3.675 0 012.68 9.9v-.047c.492.274 1.048.438 1.643.457a3.674 3.674 0 01-1.633-3.056c0-.014 0-.027.001-.041a3.65 3.65 0 001.667.46 3.671 3.671 0 01-1.144-4.901 10.428 10.428 0 007.571 3.841A3.675 3.675 0 0118.633 5.9a7.353 7.353 0 002.333-.894 3.673 3.673 0 01-1.612 2.025 7.308 7.308 0 002.102-.575"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <script>
+          // Update current year dynamically if needed
+          document.getElementById("current-year") &&
+            (document.getElementById("current-year").textContent = new Date().getFullYear());
+        </script>
+      </div>
+    </div>
+  </footer>
+  <!-- Core Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  
+  <!-- ES Module Imports for Custom JS -->
+  <script src="/js/modules/core/index.js"></script>
+<script src="/js/modules/ui/index.js"></script>
+<script src="/js/modules/training/index.js"></script>
+<script src="/js/modules/auth/index.js"></script>
+
+  
+  <!-- Legacy Scripts (Deferred) -->
+  <script src="/js/animations.js" defer></script>
+  <script src="/js/trialFlow.js" defer></script>
+  <script src="/js/leaderboard.js" defer></script>
+  <script src="/js/visualizations/ModuleHighlight.js" defer></script>
+  
+  <!-- Highlight.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  
+  <!-- Main Initialization Script -->
+  <script src="/js/main.js"></script>
+  
+  <!-- AI Guidance Modal Logic -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const aiGuideModal = document.getElementById("aiGuideModal");
+      const openAIGuideBtn = document.getElementById("openAIGuide");
+      const closeAIModalBtn = document.getElementById("closeAIModal");
+      const aiGuideContent = document.getElementById("aiGuideContent");
+
+      openAIGuideBtn.addEventListener("click", async () => {
+        // Optionally show a loading state
+        aiGuideContent.innerHTML = "<p class='text-center'>Connecting to AI Coach...</p>";
+        aiGuideModal.showModal();
+        
+        // Simulate an API call to get AI guidance
+        try {
+          const response = await fetch('/api/ai/greeting'); // Your AI endpoint
+          const data = await response.json();
+          // Update the modal with the guidance
+          aiGuideContent.innerHTML = `<p class="text-center">${data.greeting || "Hello, space explorer!"}</p>`;
+        } catch (error) {
+          console.error("Error fetching AI guidance:", error);
+          aiGuideContent.innerHTML = "<p class='text-center text-red-400'>Failed to connect to AI Coach.</p>";
+        }
+      });
+
+      closeAIModalBtn.addEventListener("click", () => {
+        aiGuideModal.close();
+      });
+    });
+  </script>
+  
+  <!-- Language & Navigation Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("✅ Language & Navigation Script Loaded");
+      const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+      document.documentElement.lang = savedLang;
+      applyTranslations(savedLang);
+      document.querySelectorAll('.language-flag').forEach(flag => {
+        flag.addEventListener('click', () => {
+          const selectedLang = flag.dataset.lang || 'en';
+          localStorage.setItem('preferredLanguage', selectedLang);
+          applyTranslations(selectedLang);
+        });
+      });
+      document.querySelectorAll("nav a").forEach(button => {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          console.log(`✅ Navigating to: ${this.href}`);
+          window.location.href = this.href;
+        });
+      });
+    });
+    function applyTranslations(lang) {
+      const translations = {
+        en: {
+          nav: {
+            home: "Home",
+            why: "Why SharedStars",
+            about: "About",
+            leaderboard: "Leaderboard",
+            login: "Login",
+            merchandise: "Retail Store",
+            profile: "Profile",
+            signup: "Sign Up",
+            academy: "StelTrek Academy",
+            welcome: "Welcome",
+            subscribe: "Subscribe"
+          },
+          hero: {
+            title: "Why SharedStars?",
+            subtitle: "Discover how SharedStars Academy can transform your journey into space readiness and beyond.",
+            cta: "Start Your Journey",
+            aiGuide: "Talk to Our AI Coach"
+          }
+        },
+        zh: {
+          nav: {
+            home: "首页",
+            why: "为什么选择SharedStars",
+            about: "关于我们",
+            leaderboard: "排行榜",
+            login: "登录",
+            merchandise: "零售店",
+            profile: "个人资料",
+            signup: "注册",
+            academy: "StelTrek学院",
+            welcome: "欢迎",
+            subscribe: "订阅"
+          },
+          hero: {
+            title: "为什么SharedStars？",
+            subtitle: "了解SharedStars学院如何改变你走向太空准备的旅程。",
+            cta: "开始你的旅程",
+            aiGuide: "与我们的AI教练对话"
+          }
+        }
+        // Add more translations (ko, es) as needed
+      };
+
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.dataset.i18n;
+        const keys = key.split('.');
+        let translation = translations[lang];
+        keys.forEach(k => {
+          translation = translation ? translation[k] : null;
+        });
+        if (translation) {
+          element.textContent = translation;
+        }
+      });
+    }
+  </script>
+</body>
+</html>

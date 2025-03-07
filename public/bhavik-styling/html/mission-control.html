@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharedStars Mission Control</title>
+
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data:;
+    connect-src 'self' https://api.sharedstars.com;
+  ">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/ai-assistant.css">
+  <link rel="stylesheet" href="/css/countdown.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <style>
+    /* Custom styles to match design */
+    body {
+      background-color: #000;
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .command-center-bg {
+      background: radial-gradient(circle at center, #0a1128 0%, #030b1a 100%);
+      position: relative;
+    }
+    
+    .mission-control-card {
+      background-color: rgba(17, 24, 39, 0.8);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+    
+    .mission-control-card:hover {
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+    }
+    
+    .orbital-ring {
+      position: absolute;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    .stella-bubble {
+      background-color: rgba(30, 64, 175, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      position: relative;
+    }
+    
+    .stella-bubble:before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 20px;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 10px solid rgba(59, 130, 246, 0.3);
+    }
+    
+    .stars-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('/images/stars-bg.png');
+      background-size: cover;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .radar-grid {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      height: 80%;
+      border-radius: 50%;
+      border: 1px solid rgba(59, 130, 246, 0.1);
+      z-index: 0;
+    }
+    
+    .radar-grid:before, .radar-grid:after {
+      content: '';
+      position: absolute;
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+    
+    .radar-grid:before {
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 1px;
+    }
+    
+    .radar-grid:after {
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100%;
+    }
+    
+    .inner-radar-circle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40%;
+      height: 40%;
+      border-radius: 50%;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    .progress-bar {
+      height: 0.5rem;
+      background-color: rgba(75, 85, 99, 0.5);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background-color: #3B82F6;
+      border-radius: 9999px;
+    }
+    
+    .assessment-card {
+      background: linear-gradient(to bottom, rgba(21, 27, 49, 0.8), rgba(13, 18, 36, 0.8));
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+    
+    .assessment-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+    }
+    
+    .assessment-icon {
+      background-color: rgba(30, 64, 175, 0.2);
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60A5FA;
+    }
+    
+    .countdown-box {
+      background-color: rgba(17, 24, 39, 0.7);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    .countdown-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .countdown-label {
+      font-size: 0.875rem;
+      color: #9CA3AF;
+    }
+  </style>
+</head>
+
+<body class="text-white">
+  <!-- STELLA AI Integration Setup -->
+  <div data-stella-auto-init="true" data-stella-debug="true" data-stella-user-id="anonymous"></div>
+  
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full bg-black bg-opacity-80 backdrop-blur-md z-50 shadow-lg">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <a href="/" class="flex items-center">
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-10">
+        </a>
+        
+        <nav class="hidden md:flex space-x-8">
+          <a href="/" class="text-gray-300 hover:text-white transition-colors">Home</a>
+          <a href="/academy.html" class="text-gray-300 hover:text-white transition-colors">Academy</a>
+          <a href="/about.html" class="text-gray-300 hover:text-white transition-colors">About</a>
+          <a href="/leaderboard.html" class="text-gray-300 hover:text-white transition-colors">Leaderboard</a>
+          <a href="/subscribe.html" class="text-gray-300 hover:text-white transition-colors">Subscribe</a>
+        </nav>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <button id="language-selector" class="flex items-center text-sm text-gray-300 hover:text-white">
+              <span class="mr-1">🇺🇸</span>
+              <span class="hidden md:inline-block">English</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <!-- Language dropdown goes here -->
+          </div>
+          
+          <a href="/get-started" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors">
+            Get Started
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content - Mission Control Dashboard -->
+  <main class="pt-20 min-h-screen command-center-bg">
+    <!-- Visual elements for command center look -->
+    <div class="stars-overlay"></div>
+    <div class="radar-grid"></div>
+    <div class="inner-radar-circle"></div>
+    <div class="orbital-ring" style="width: 60%; height: 30%;"></div>
+    <div class="orbital-ring" style="width: 70%; height: 35%;"></div>
+    <div class="orbital-ring" style="width: 80%; height: 40%;"></div>
+    
+    <div class="container mx-auto px-4 py-8 relative z-10">
+      <!-- Welcome Header -->
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-bold text-blue-400">SharedStars Command Center</h1>
+        <div class="flex items-center space-x-2">
+          <div class="bg-gray-800 bg-opacity-50 px-3 py-1 rounded-full text-sm">
+            Trainee ID: #ST-28456
+          </div>
+          <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-semibold">
+            JD
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Grid Layout -->
+      <div class="grid grid-cols-12 gap-6">
+        <!-- STELLA AI Assistant - Prominent Placement -->
+        <div class="col-span-12 lg:col-span-7 mb-6">
+          <div class="mission-control-card p-6 h-full relative overflow-hidden">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-blue-400">STELLA AI Assistant</h2>
+            </div>
+            
+            <div id="stella-message" class="stella-bubble mb-6">
+              <p>Welcome to your Mission Control, John! I'm STELLA, your AI training companion. I notice you haven't completed your initial assessment yet. This is the perfect place to start your space training journey - it will help me personalize your experience.</p>
+              <p class="mt-3">Would you like me to guide you through your initial assessment now? It will take about 15 minutes and will help us create your optimal training path.</p>
+              <p class="text-sm text-blue-300 mt-4">Ask me about assessments, training modules, or your personalized space timeline.</p>
+            </div>
+            
+            <div class="flex">
+              <input 
+                id="stella-question" 
+                type="text" 
+                placeholder="Ask STELLA a question..." 
+                class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 flex-grow mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <button 
+                id="send-to-stella" 
+                class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition-colors">
+                Ask
+              </button>
+            </div>
+            
+            <!-- Quick Action Buttons -->
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button class="bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-opacity-50 transition-colors">
+                Start Assessment
+              </button>
+              <button class="bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-opacity-50 transition-colors">
+                Show My Progress
+              </button>
+              <button class="bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-opacity-50 transition-colors">
+                Today's Training
+              </button>
+            </div>
+            
+            <!-- Conversation container for STELLA's responses - increased height -->
+            <div class="stella-conversation mt-4 max-h-64 overflow-y-auto px-1"></div>
+          </div>
+        </div>
+        
+        <!-- Countdown to Space Readiness -->
+        <div class="col-span-12 lg:col-span-5 mb-6">
+          <div class="mission-control-card p-6 h-full">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-blue-400">Countdown to Space Readiness</h2>
+            </div>
+            
+            <!-- Need assessment notification -->
+            <div class="bg-indigo-900 bg-opacity-20 border border-indigo-500 border-opacity-20 rounded-lg p-4 mb-4">
+              <div class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-indigo-300 text-sm">Complete your initial assessment to begin your countdown and unlock your personal space readiness timeline.</p>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 mb-4">
+              <div class="countdown-box">
+                <div class="countdown-value">--</div>
+                <div class="countdown-label">YEARS</div>
+              </div>
+              <div class="countdown-box">
+                <div class="countdown-value">--</div>
+                <div class="countdown-label">MONTHS</div>
+              </div>
+              <div class="countdown-box">
+                <div class="countdown-value">--</div>
+                <div class="countdown-label">DAYS</div>
+              </div>
+            </div>
+            
+            <div class="mt-4 bg-blue-900 bg-opacity-20 p-4 rounded-lg">
+              <h3 class="text-lg font-semibold text-blue-300 mb-2">Accelerate Your Timeline</h3>
+              <p class="text-sm text-gray-400 mb-3">Your journey to space can be accelerated by:</p>
+              <ul class="text-sm text-gray-400 space-y-1">
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Completing all training modules
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Subscribing to Premium Tiers
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Earning certifications & badges
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Assessment Section - Integrated with STELLA's guidance -->
+        <div class="col-span-12 mb-6">
+          <div class="mission-control-card p-6">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-blue-400">Your Assessments</h2>
+              </div>
+              
+              <div class="relative">
+                <div class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold">1</div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Assessment Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <!-- Initial Assessment Card -->
+              <div class="assessment-card p-5 border-l-4 border-blue-600">
+                <div class="flex items-start mb-4">
+                  <div class="assessment-icon mr-3 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold mb-1">Initial Readiness Assessment</h3>
+                    <p class="text-sm text-gray-400">Establish your baseline space readiness profile</p>
+                  </div>
+                </div>
+                
+                <div class="mb-4 bg-blue-900 bg-opacity-10 rounded p-3">
+                  <div class="flex justify-between text-sm mb-1">
+                    <span>Status:</span>
+                    <span class="text-red-400 font-medium">Not Started</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span>Estimated Time:</span>
+                    <span>15 minutes</span>
+                  </div>
+                </div>
+                
+                <a href="/assessment/initial" id="start-assessment-btn" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
+                  Start Assessment
+                </a>
+              </div>
+              
+              <!-- Physical Assessment Card -->
+              <div class="assessment-card p-5 border-l-4 border-indigo-600 opacity-70">
+                <div class="flex items-start mb-4">
+                  <div class="assessment-icon mr-3 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold mb-1">Physical Fitness Assessment</h3>
+                    <p class="text-sm text-gray-400">Evaluate your physical readiness for space</p>
+                  </div>
+                </div>
+                
+                <div class="mb-4 bg-blue-900 bg-opacity-10 rounded p-3">
+                  <div class="flex justify-between text-sm mb-1">
+                    <span>Status:</span>
+                    <span class="text-yellow-400 font-medium">Locked</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span>Estimated Time:</span>
+                    <span>20 minutes</span>
+                  </div>
+                </div>
+                
+                <button disabled class="block w-full bg-gray-700 cursor-not-allowed text-center text-gray-400 py-2 rounded-lg font-medium">
+                  Complete Initial Assessment First
+                </button>
+              </div>
+              
+              <!-- Mental Assessment Card -->
+              <div class="assessment-card p-5 border-l-4 border-purple-600 opacity-70">
+                <div class="flex items-start mb-4">
+                  <div class="assessment-icon mr-3 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold mb-1">Mental Resilience Assessment</h3>
+                    <p class="text-sm text-gray-400">Evaluate your psychological readiness</p>
+                  </div>
+                </div>
+                
+                <div class="mb-4 bg-blue-900 bg-opacity-10 rounded p-3">
+                  <div class="flex justify-between text-sm mb-1">
+                    <span>Status:</span>
+                    <span class="text-yellow-400 font-medium">Locked</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span>Estimated Time:</span>
+                    <span>15 minutes</span>
+                  </div>
+                </div>
+                
+                <button disabled class="block w-full bg-gray-700 cursor-not-allowed text-center text-gray-400 py-2 rounded-lg font-medium">
+                  Complete Initial Assessment First
+                </button>
+              </div>
+              
+              <!-- Technical Assessment Card -->
+              <div class="assessment-card p-5 border-l-4 border-green-600 opacity-70">
+                <div class="flex items-start mb-4">
+                  <div class="assessment-icon mr-3 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold mb-1">Technical Skills Assessment</h3>
+                    <p class="text-sm text-gray-400">Evaluate your technical aptitude</p>
+                  </div>
+                </div>
+                
+                <div class="mb-4 bg-blue-900 bg-opacity-10 rounded p-3">
+                  <div class="flex justify-between text-sm mb-1">
+                    <span>Status:</span>
+                    <span class="text-yellow-400 font-medium">Locked</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span>Estimated Time:</span>
+                    <span>25 minutes</span>
+                  </div>
+                </div>
+                
+                <button disabled class="block w-full bg-gray-700 cursor-not-allowed text-center text-gray-400 py-2 rounded-lg font-medium">
+                  Complete Initial Assessment First
+                </button>
+              </div>
+              
+              <!-- EVA Readiness Card -->
+              <div class="assessment-card p-5 border-l-4 border-yellow-600 opacity-70">
+                <div class="flex items-start mb-4">
+                  <div class="assessment-icon mr-3 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold mb-1">EVA Readiness Assessment</h3>
+                    <p class="text-sm text-gray-400">Measure your spacewalk readiness</p>
+                  </div>
+                </div>
+                
+                <div class="mb-4 bg-blue-900 bg-opacity-10 rounded p-3">
+                  <div class="flex justify-between text-sm mb-1">
+                    <span>Status:</span>
+                    <span class="text-yellow-400 font-medium">Locked</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span>Estimated Time:</span>
+                    <span>30 minutes</span>
+                  </div>
+                </div>
+                
+                <button disabled class="block w-full bg-gray-700 cursor-not-allowed text-center text-gray-400 py-2 rounded-lg font-medium">
+                  Complete Initial Assessment First
+                </button>
+              </div>
+              
+              <!-- Mission-Specific Card -->
+              <div class="assessment-card p-5 border-l-4 border-pink-600 opacity-70">
+                <div class="flex items-start mb-4">
+                  <div class="assessment-icon mr-3 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold mb-1">Mission Core & Balance</h3>
+                    <p class="text-sm text-gray-400">Assess your core strength readiness</p>
+                  </div>
+                </div>
+                
+                <div class="mb-4 bg-blue-900 bg-opacity-10 rounded p-3">
+                  <div class="flex justify-between text-sm mb-1">
+                    <span>Status:</span>
+                    <span class="text-yellow-400 font-medium">Locked</span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span>Estimated Time:</span>
+                    <span>15 minutes</span>
+                  </div>
+                </div>
+                
+                <button disabled class="block w-full bg-gray-700 cursor-not-allowed text-center text-gray-400 py-2 rounded-lg font-medium">
+                  Complete Initial Assessment First
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Training Progress & Mission Status -->
+        <div class="col-span-12 lg:col-span-7 mb-6">
+          <div class="mission-control-card p-6 h-full">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-blue-400">Training Progress</h2>
+            </div>
+            
+            <!-- Need assessment notification -->
+            <!-- Need assessment notification -->
+            <div class="bg-indigo-900 bg-opacity-20 border border-indigo-500 border-opacity-20 rounded-lg p-4 mb-4">
+              <div class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-indigo-300 text-sm">Complete your initial assessment to unlock personalized training modules and track your progress.</p>
+              </div>
+            </div>
+            
+            <!-- Module Progress Grid (Locked) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-70">
+              <!-- Physical Training -->
+              <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="font-semibold">Physical Training</h3>
+                  <span class="text-yellow-400 text-xs">LOCKED</span>
+                </div>
+                <div class="progress-bar mb-2">
+                  <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-400">
+                  <span>0% Complete</span>
+                  <span>0/4 Missions</span>
+                </div>
+              </div>
+              
+              <!-- Mental Fitness -->
+              <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="font-semibold">Mental Fitness</h3>
+                  <span class="text-yellow-400 text-xs">LOCKED</span>
+                </div>
+                <div class="progress-bar mb-2">
+                  <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-400">
+                  <span>0% Complete</span>
+                  <span>0/5 Missions</span>
+                </div>
+              </div>
+              
+              <!-- Technical Skills -->
+              <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="font-semibold">Technical Skills</h3>
+                  <span class="text-yellow-400 text-xs">LOCKED</span>
+                </div>
+                <div class="progress-bar mb-2">
+                  <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-400">
+                  <span>0% Complete</span>
+                  <span>0/6 Missions</span>
+                </div>
+              </div>
+              
+              <!-- EVA Training -->
+              <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="font-semibold">EVA Training</h3>
+                  <span class="text-yellow-400 text-xs">LOCKED</span>
+                </div>
+                <div class="progress-bar mb-2">
+                  <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-400">
+                  <span>0% Complete</span>
+                  <span>0/3 Missions</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Certifications & STELLA Recommendations -->
+        <div class="col-span-12 lg:col-span-5 mb-6">
+          <div class="mission-control-card p-6 h-full">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-blue-400">STELLA Recommendations</h2>
+            </div>
+            
+            <div class="space-y-4">
+              <!-- STELLA's Top Recommendations -->
+              <div class="bg-blue-900 bg-opacity-10 rounded-lg p-4 border border-blue-900 border-opacity-20">
+                <h3 class="font-semibold text-blue-300 mb-2">Today's Recommendations</h3>
+                <ul class="space-y-3">
+                  <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <span>Complete your initial assessment to unlock your personalized training plan</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Schedule 15 minutes to complete your assessment today</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span>Consider upgrading to Premium for 35% faster space readiness</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <!-- Presidential Briefing Preview -->
+              <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="font-semibold">Presidential Daily Briefing</h3>
+                  <span class="text-yellow-400 text-xs">LOCKED</span>
+                </div>
+                <p class="text-sm text-gray-400">Complete your assessment to unlock classified daily mission briefings directly from SharedStars Command.</p>
+              </div>
+              
+              <!-- Upcoming Events -->
+              <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700">
+                <h3 class="font-semibold mb-2">Upcoming Events</h3>
+                <ul class="space-y-3 text-sm">
+                  <li class="flex items-start">
+                    <div class="bg-blue-900 bg-opacity-30 text-blue-400 rounded-full w-8 h-8 flex items-center justify-center mr-2 flex-shrink-0">
+                      15
+                    </div>
+                    <div>
+                      <p class="font-medium">Live Astronaut Q&A</p>
+                      <p class="text-gray-400">March 15, 2025 - 6:00 PM ET</p>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <div class="bg-blue-900 bg-opacity-30 text-blue-400 rounded-full w-8 h-8 flex items-center justify-center mr-2 flex-shrink-0">
+                      22
+                    </div>
+                    <div>
+                      <p class="font-medium">VR Space Station Tour</p>
+                      <p class="text-gray-400">March 22, 2025 - 2:00 PM ET</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mission Status Section -->
+        <div class="col-span-12 mb-6">
+          <div class="mission-control-card p-6">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-blue-400">Mission Status</h2>
+              </div>
+            </div>
+            
+            <!-- Status Card -->
+            <div class="bg-indigo-900 bg-opacity-20 border border-indigo-500 border-opacity-20 rounded-lg p-4 mb-4">
+              <div class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-indigo-300">You're not yet eligible for advanced missions. Complete your initial assessment to unlock eligibility.</p>
+              </div>
+            </div>
+            
+            <!-- Next Steps -->
+            <div class="bg-blue-900 bg-opacity-10 rounded-lg p-4 border border-blue-900 border-opacity-20">
+              <h3 class="font-semibold text-blue-300 mb-2">Next Steps</h3>
+              <ol class="space-y-3">
+                <li class="flex items-start">
+                  <div class="bg-blue-900 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">1</div>
+                  <span>Complete your initial assessment</span>
+                </li>
+                <li class="flex items-start">
+                  <div class="bg-gray-700 text-gray-300 rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">2</div>
+                  <span class="text-gray-400">Receive your personalized training program</span>
+                </li>
+                <li class="flex items-start">
+                  <div class="bg-gray-700 text-gray-300 rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">3</div>
+                  <span class="text-gray-400">Begin your mission-specific training</span>
+                </li>
+                <li class="flex items-start">
+                  <div class="bg-gray-700 text-gray-300 rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">4</div>
+                  <span class="text-gray-400">Earn certifications and advance your space readiness</span>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+<!-- FOOTER -->
+<footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
+  <!-- Animated Floating Particles -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+    <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+    <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
+  </div>
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
+      <!-- About -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+          <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">StelTrek Academy</a></li>
+        </ul>
+      </div>
+      <!-- Community -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+          <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+        </ul>
+      </div>
+      <!-- Resources -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+          <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+        </ul>
+      </div>
+      <!-- Legal -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+          <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Bottom section with copyright and social media -->
+    <div class="mt-12 pt-8 border-t border-blue-900/20 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-500">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+      
+      <!-- All 7 social media links -->
+      <div class="flex space-x-4 mt-4 md:mt-0">
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/company/106241890" class="text-gray-400 hover:text-blue-400" aria-label="LinkedIn">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
+        
+        <!-- Twitter/X -->
+        <a href="https://x.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Twitter">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+        </a>
+        
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Facebook">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+        </a>
+        
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/sharedstarsacademy/" class="text-gray-400 hover:text-blue-400" aria-label="Instagram">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        
+        <!-- Telegram -->
+        <a href="https://t.me/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Telegram">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12zm3.224 17.871c.188.133.43.166.646.085.215-.082.374-.253.463-.489.089-.236.089-.498 0-.734l-1.74-4.36 4.4-2.507c.466-.265.466-.934 0-1.199l-9.65-5.514c-.465-.266-1.048.055-1.047.577l.072 12.71c0 .522.583.843 1.048.577l3.293-1.879zm-8.791-7.414l2.083 1.188-.759 1.329-1.324-.755v-1.762zm6.442 7.385l-1.621.925c-.961.548-2.132-.106-2.132-1.186l-.04-6.99 3.793 7.251z"/></svg>
+        </a>
+        
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@sharedstarsacademy" class="text-gray-400 hover:text-blue-400" aria-label="TikTok">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@SharedStarsAcademy" class="text-gray-400 hover:text-blue-400" aria-label="YouTube">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- JavaScript -->
+<script src="/js/stella-core.js"></script>
+<script src="/js/stella-integration.js"></script>
+<script src="/js/missionControl.js"></script>
+<script src="/js/countdown.js"></script>
+<script src="/js/visualizations/ProgressTracker.js"></script>
+
+<!-- STELLA AI Integration for Mission Control -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 Setting up STELLA AI in Mission Control...');
+    
+    // Get STELLA elements
+    const stellaInput = document.getElementById('stella-question');
+    const stellaButton = document.getElementById('send-to-stella');
+    const stellaConversation = document.querySelector('.stella-conversation');
+    
+    // Verify elements exist
+    if (!stellaInput || !stellaButton) {
+      console.error('❌ STELLA input or button not found!');
+      return;
+    }
+    
+    if (!stellaConversation) {
+      console.error('❌ STELLA conversation container not found!');
+      return;
+    }
+    
+    // Remove any existing event listeners
+    stellaButton.replaceWith(stellaButton.cloneNode(true));
+    stellaInput.replaceWith(stellaInput.cloneNode(true));
+    
+    // Get fresh references after replacement
+    const newStellaButton = document.getElementById('send-to-stella');
+    const newStellaInput = document.getElementById('stella-question');
+    
+    // Add event listeners
+    newStellaButton.addEventListener('click', handleStellaMessage);
+    newStellaInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        handleStellaMessage();
+      }
+    });
+    
+    console.log('✅ STELLA event listeners attached successfully');
+    
+    // Main STELLA handler function
+    async function handleStellaMessage() {
+      const question = newStellaInput.value.trim();
+      if (!question) return;
+      
+      console.log('🤖 STELLA processing question:', question);
+      
+      // Make sure conversation container is visible
+      stellaConversation.classList.remove('hidden');
+      
+      // Display user message
+      stellaConversation.innerHTML += `
+        <div class="mb-2 text-right">
+          <div class="inline-block bg-blue-600 ml-auto px-3 py-2 rounded-lg max-w-xs">
+            ${question}
+          </div>
+        </div>
+      `;
+      
+      // Clear input
+      newStellaInput.value = '';
+      
+      // Add loading indicator
+      stellaConversation.innerHTML += `
+        <div class="mb-2" id="stella-loading">
+          <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
+            <div class="flex space-x-2">
+              <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce"></div>
+              <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-75"></div>
+              <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-150"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Scroll to bottom of conversation
+      stellaConversation.scrollTop = stellaConversation.scrollHeight;
+      
+      // Extract recent conversation messages to provide context
+      const conversationHistory = [];
+      const messageElements = stellaConversation.querySelectorAll('.mb-2, .mb-4');
+      
+      // Process messages (skip the loading indicator)
+      let count = 0;
+      for (let i = messageElements.length-1; i >= 0 && count < 5; i--) {
+        const element = messageElements[i];
+        if (element.id === 'stella-loading') continue;
+        
+        const messageDiv = element.querySelector('div.inline-block');
+        if (!messageDiv) continue;
+        
+        const messageText = messageDiv.textContent.trim();
+        if (!messageText) continue;
+        
+        const isUser = element.classList.contains('text-right');
+        
+        conversationHistory.unshift({
+          fromUser: isUser,
+          content: messageText,
+          timestamp: new Date().toISOString()
+        });
+        
+        count++;
+      }
+      
+      try {
+        // Get user ID from localStorage or use a default
+        const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous';
+        const exerciseId = 'mission-control';
+        
+        let response;
+        
+        // Try to use StellaIntegration if available
+        if (window.StellaIntegration && window.StellaIntegration.isInitialized) {
+          console.log('🔍 Using StellaIntegration...');
+          
+          // Connect if not already connected
+          if (!window.StellaIntegration.isConnected) {
+            await window.StellaIntegration.connect(userId);
+          }
+          
+          // Ask STELLA through integration
+          response = await window.StellaIntegration.askQuestion(question, {
+            userId: userId,
+            exerciseId: exerciseId,
+            conversationHistory: conversationHistory
+          });
+        } else {
+          // Direct API call if integration not available
+          console.log('🔍 StellaIntegration not available, using direct API call...');
+          
+          const apiResponse = await fetch('/api/stella/guidance', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              userId: userId,
+              question: question,
+              exerciseId: exerciseId,
+              conversationHistory: conversationHistory
+            })
+          });
+          
+          if (!apiResponse.ok) {
+            throw new Error(`Failed to get STELLA response: ${apiResponse.status}`);
+          }
+          
+          response = await apiResponse.json();
+        }
+        
+        // Handle response
+        console.log('✅ STELLA response:', response);
+        
+        // Remove loading indicator
+        document.getElementById('stella-loading')?.remove();
+        
+        if (response.success && response.guidance) {
+          // Parse guidance from the response
+          const message = response.guidance.message || "I'm processing your request.";
+          let responseHTML = `
+            <div class="mb-4">
+              <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+                <p>${message}</p>
+          `;
+          
+          // Add action items if available
+          if (response.guidance.actionItems && response.guidance.actionItems.length > 0) {
+            responseHTML += `<ul class="mt-3 space-y-2">`;
+            response.guidance.actionItems.forEach(item => {
+              responseHTML += `<li class="text-blue-300">• ${item}</li>`;
+            });
+            responseHTML += `</ul>`;
+          }
+          
+          // Close containers
+          responseHTML += `
+              </div>
+            </div>
+          `;
+          
+          // Add to conversation
+          stellaConversation.innerHTML += responseHTML;
+        } else {
+          // Fallback response
+          stellaConversation.innerHTML += `
+            <div class="mb-4">
+              <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+                <p>I'm having trouble processing your request. Could you please try again?</p>
+              </div>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('❌ STELLA error:', error);
+        
+        // Remove loading indicator
+        document.getElementById('stella-loading')?.remove();
+        
+        // Fall back to local responses if API fails
+        const localResponse = getLocalStellaResponse(question);
+        
+        stellaConversation.innerHTML += `
+          <div class="mb-4">
+            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+              <p>${localResponse}</p>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Scroll to bottom regardless of outcome
+      stellaConversation.scrollTop = stellaConversation.scrollHeight;
+    }
+    
+    // Backup static responses if API fails
+    function getLocalStellaResponse(question) {
+      // Convert question to lowercase for easier matching
+      const lowerQuestion = question.toLowerCase();
+      
+      // Check for common question patterns
+      if (lowerQuestion.includes('hello') || lowerQuestion.includes('hi')) {
+        return "Hello! I'm STELLA, your AI assistant for Mission Control. How can I help you today?";
+      }
+      
+      if (lowerQuestion.includes('assessment') || lowerQuestion.includes('test')) {
+        return "Our assessments help tailor your space training program. The initial assessment is required before starting specialized training modules. Would you like to begin?";
+      }
+      
+      if (lowerQuestion.includes('physical') || lowerQuestion.includes('train')) {
+        return "Physical training is essential for space missions. It includes exercises for core strength, balance, endurance, and flexibility - all critical for zero gravity environments.";
+      }
+      
+      if (lowerQuestion.includes('start') || lowerQuestion.includes('begin')) {
+        return "Yes, you're ready to begin your training! Click one of these options to get started: Start Assessment - Begin with a personalized evaluation (recommended for new trainees), Physical Training - Jump straight into physical conditioning exercises, or Technical Skills - Start with technical knowledge modules.";
+      }
+      
+      if (lowerQuestion.includes('mission') || lowerQuestion.includes('module')) {
+        return "Mission Control tracks your progress through training modules. You'll need to complete your initial assessment to unlock mission-specific training paths.";
+      }
+      
+      if (lowerQuestion.includes('countdown') || lowerQuestion.includes('timeline')) {
+        return "Your space readiness countdown shows your estimated timeline to space. Complete assessments and training modules to accelerate your timeline.";
+      }
+      
+      // Default response if no patterns match
+      return "I'm here to help you navigate Mission Control. You can ask me about assessments, your space readiness timeline, or any aspect of your training program.";
+    }
+    
+    // Set up quick action buttons
+    document.querySelectorAll('.mission-control-card button').forEach(button => {
+      if (button.id !== 'send-to-stella') {
+        button.addEventListener('click', function() {
+          const action = this.textContent.trim();
+          newStellaInput.value = `Tell me about ${action}`;
+          handleStellaMessage();
+        });
+      }
+    });
+  });
+</script>
+</body>
+</html>
