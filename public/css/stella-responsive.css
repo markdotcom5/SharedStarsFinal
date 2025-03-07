@@ -27,7 +27,28 @@
                max-w-sm;
     }
 }
+// Updated message rendering in handleStellaQuestion
+// Display user's question
+conversationDiv.innerHTML += `
+  <div class="user-message">
+    <div class="message-bubble">
+      ${question}
+    </div>
+  </div>
+  <div style="clear: both;"></div>
+`;
 
+// For STELLA's response
+conversationDiv.innerHTML += `
+  <div class="stella-message">
+    <div class="message-bubble">
+      <p>${guidance.message}</p>
+      ${actionItemsHTML}
+      ${assessmentButtonHTML}
+    </div>
+  </div>
+  <div style="clear: both;"></div>
+`;
 /* STELLA Avatar Responsiveness */
 .stella-avatar {
     @apply w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32

@@ -1,0 +1,40 @@
+/* mission.css */
+body {
+    background-color: #000;
+    color: white;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  /* Mission page specific styles */
+  .prose-invert {
+    color: #d1d5db;
+  }
+  
+  .prose-invert strong {
+    color: #f3f4f6;
+  }
+  
+  .prose-invert h3 {
+    color: #93c5fd;
+  }
+  
+  /* Form styles */
+  input, select, textarea {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    color: white;
+    padding: 0.5rem;
+    width: 100%;
+    border-radius: 0.25rem;
+  }
+  
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  }
+  
+  /* Animation for feedback section */
+  #ai-feedback {
+    transition: all 0.5s ease;
+  }

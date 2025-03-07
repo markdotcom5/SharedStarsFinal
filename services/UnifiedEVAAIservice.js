@@ -1,4 +1,4 @@
-const OpenAI = require('openai');
+const openai = require('./openaiService'); // ✅ correct
 const { EventEmitter } = require('events');
 const TrainingLearningSystem = require('./TrainingLearningSystem');
 

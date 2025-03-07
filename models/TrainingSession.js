@@ -1,61 +1,30 @@
 const mongoose = require("mongoose");
-// Import the AIController 
-const AIController = require("../controllers/AIController"); // Adjust the path as needed
+const AIController = require("../controllers/AIController"); // Adjust path if necessary
 
+// ✅ TrainingSession Schema Definition
 const trainingSessionSchema = new mongoose.Schema({
     userId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "User", 
-        required: true 
-    },
-    moduleType: { 
         type: String, 
         required: true 
     },
-    moduleId: { 
-        type: String, 
-        required: true 
-    },
+    moduleType: { type: String, required: true },
+    moduleId: { type: String, required: true },
     status: { 
         type: String, 
         enum: ["scheduled", "in-progress", "active", "paused", "completed", "abandoned"], 
         default: "in-progress" 
     },
-    startTime: { 
-        type: Date, 
-        default: Date.now 
-    },
-    completedAt: { 
-        type: Date 
-    },
-    progress: { 
-        type: Number, 
-        min: 0, 
-        max: 100, 
-        default: 0 
-    },
-    effectivenessScore: { 
-        type: Number, 
-        min: 0, 
-        max: 100, 
-        default: 0 
-    },
-    phase: {
-        type: Number,
-        default: 1
-    },
-    stellaSupport: {
-        type: Boolean,
-        default: true
-    },
+    startTime: { type: Date, default: Date.now },
+    completedAt: Date,
+    progress: { type: Number, min: 0, max: 100, default: 0 },
+    effectivenessScore: { type: Number, min: 0, max: 100, default: 0 },
+    phase: { type: Number, default: 1 },
+    stellaSupport: { type: Boolean, default: true },
     aiGuidance: { 
         recommendations: [String], 
         liveAdjustments: [String] 
     },
-    creditsEarned: { 
-        type: Number, 
-        default: 0 
-    },
+    creditsEarned: { type: Number, default: 0 },
     assessment: {
         score: Number,
         aiRecommendations: [String],
@@ -76,7 +45,6 @@ const trainingSessionSchema = new mongoose.Schema({
             mental: { type: Number, default: 1 }
         }
     },
-    // For SPA integration - track individual exercise metrics
     exerciseMetrics: [{
         exerciseId: String,
         startTime: Date,
@@ -85,132 +53,108 @@ const trainingSessionSchema = new mongoose.Schema({
         formScore: Number,
         aiCorrections: [String]
     }],
-    lastUpdated: { 
-        type: Date, 
-        default: Date.now 
-    }
+    lastUpdated: { type: Date, default: Date.now }
 }, { timestamps: true });
 
-// Pre-save middleware
+// ✅ Pre-save middleware to update timestamps
 trainingSessionSchema.pre("save", function(next) {
     this.lastUpdated = new Date();
     next();
 });
 
-// Model methods
+// ✅ Indexes for query performance
+trainingSessionSchema.index({ userId: 1, status: 1 });
+trainingSessionSchema.index({ moduleId: 1, moduleType: 1 });
+
+// ✅ Method to complete assessments
 trainingSessionSchema.methods.completeAssessment = async function(score) {
-    if (!this.assessment) {
-        this.assessment = {};
-    }
-    
+    if (!this.assessment) this.assessment = {};
+
     try {
-        const aiAnalysis = await AIController.generateTrainingContent({
-            module: this.moduleId
-        });
-        
+        const aiAnalysis = await AIController.generateTrainingContent({ module: this.moduleId });
+
         this.assessment.score = score;
         this.assessment.aiRecommendations = aiAnalysis.content || [];
         this.assessment.completedAt = new Date();
         await this.save();
-        
-        return {
-            score,
-            recommendations: aiAnalysis.content || []
-        };
+
+        return { score, recommendations: aiAnalysis.content || [] };
     } catch (error) {
         console.error("Error completing assessment:", error);
         this.assessment.score = score;
         this.assessment.completedAt = new Date();
         await this.save();
-        
+
         return { score, recommendations: [] };
     }
 };
 
-// Method to update exercise metrics
+// ✅ Method to update exercise metrics
 trainingSessionSchema.methods.updateExerciseMetrics = async function(exerciseId, metrics) {
-    // Find existing exercise metrics or create new entry
-    let exerciseMetric = this.exerciseMetrics?.find(m => m.exerciseId === exerciseId);
-    
+    let exerciseMetric = this.exerciseMetrics.find(m => m.exerciseId === exerciseId);
+
     if (!exerciseMetric) {
-        if (!this.exerciseMetrics) {
-            this.exerciseMetrics = [];
-        }
-        
         exerciseMetric = {
             exerciseId,
             startTime: new Date(),
             metrics: {}
         };
-        
         this.exerciseMetrics.push(exerciseMetric);
     }
-    
-    // Update metrics
+
     exerciseMetric.metrics = { ...exerciseMetric.metrics, ...metrics };
-    
-    // Calculate form score if available
+
     if (metrics.formScore) {
         exerciseMetric.formScore = metrics.formScore;
-    } else if (metrics.coreEngagement || metrics.balance || metrics.stability || metrics.posture) {
-        // Calculate average form score from core metrics
-        const values = [];
-        if (metrics.coreEngagement) values.push(metrics.coreEngagement);
-        if (metrics.balance) values.push(metrics.balance);
-        if (metrics.stability) values.push(metrics.stability);
-        if (metrics.posture) values.push(metrics.posture);
-        
+    } else {
+        const values = ['coreEngagement', 'balance', 'stability', 'posture']
+            .filter(k => metrics[k] !== undefined)
+            .map(k => metrics[k]);
+
         if (values.length > 0) {
-            exerciseMetric.formScore = Math.round(values.reduce((sum, val) => sum + val, 0) / values.length);
+            exerciseMetric.formScore = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
         }
     }
-    
-    // Save changes
+
     await this.save();
-    
     return exerciseMetric;
 };
 
-// Method to complete an exercise
+// ✅ Method to complete an exercise
 trainingSessionSchema.methods.completeExercise = async function(exerciseId) {
-    // Find exercise metric
-    const exerciseMetric = this.exerciseMetrics?.find(m => m.exerciseId === exerciseId);
-    
-    if (exerciseMetric) {
-        exerciseMetric.completedAt = new Date();
-        
-        // Get AI corrections if available
-        try {
-            const aiResponse = await AIController.generateAIResponse({
-                context: "exercise_feedback",
-                metrics: exerciseMetric.metrics,
-                exerciseId,
-                moduleId: this.moduleId
-            });
-            
-            if (aiResponse && aiResponse.corrections) {
-                exerciseMetric.aiCorrections = aiResponse.corrections;
-            }
-        } catch (error) {
-            console.error("Error getting AI corrections:", error);
+    const exerciseMetric = this.exerciseMetrics.find(m => m.exerciseId === exerciseId);
+    if (!exerciseMetric) return null;
+
+    exerciseMetric.completedAt = new Date();
+
+    try {
+        const aiResponse = await AIController.generateAIResponse({
+            context: "exercise_feedback",
+            metrics: exerciseMetric.metrics,
+            exerciseId,
+            moduleId: this.moduleId
+        });
+
+        if (aiResponse?.corrections) {
+            exerciseMetric.aiCorrections = aiResponse.corrections;
         }
-        
-        // Save changes
-        await this.save();
+    } catch (error) {
+        console.error("Error getting AI corrections:", error);
     }
-    
+
+    await this.save();
     return exerciseMetric;
 };
 
-// Helper function
+// ✅ Helper function
 function calculatePhase(completedSessions) {
     return completedSessions < 10 ? 'Foundation' : 'Advanced';
 }
 
-// Function to create and save a training session
+// ✅ Function to save a new training session
 async function saveTrainingSession(userId, intensity, duration, streakMultiplier, aiAnalysis, userProgress, physicalModule) {
     const trainingSession = new TrainingSession({
-        userId: userId,
+        userId,
         moduleType: "physical",
         moduleId: "core-phys-001",
         adaptiveAI: {
@@ -231,7 +175,7 @@ async function saveTrainingSession(userId, intensity, duration, streakMultiplier
             liveAdjustments: []
         }
     });
-    
+
     try {
         await trainingSession.save();
         return trainingSession;
@@ -241,12 +185,12 @@ async function saveTrainingSession(userId, intensity, duration, streakMultiplier
     }
 }
 
-// Define the model AFTER defining the schema but BEFORE using methods on it
+// ✅ Define model after schema methods
 const TrainingSession = mongoose.models.TrainingSession || mongoose.model("TrainingSession", trainingSessionSchema);
 
 console.log("✅ TrainingSession model loaded successfully");
 
-// Export both the model and the helper function
+// ✅ Export model & helper function
 module.exports = {
     TrainingSession,
     saveTrainingSession

@@ -137,6 +137,8 @@ router.post('/mission/:missionId/start', authenticate, async (req, res) => {
     }
 });
 
+// Removed duplicate STELLA routes as they should be in stella.js
+
 /**
  * POST /api/training/physical/progress/update
  * Update training progress and get STELLA recommendations
@@ -151,11 +153,12 @@ router.post('/progress/update', authenticate, async (req, res) => {
             userId, missionId, sessionId, { exerciseId, metrics }
         );
         
-        // Get STELLA recommendations
+        // Get STELLA recommendations using updated model
         let recommendations = [];
         try {
+            // Update PhysicalTrainingService to use GPT-4.5 Plus if possible
             recommendations = await PhysicalTrainingService.getSTELLARecommendations(
-                userId, missionId
+                userId, missionId, "gpt-4.5-plus"  // Pass preferred model
             );
         } catch (error) {
             console.warn("Error getting STELLA recommendations:", error);
@@ -203,13 +206,14 @@ router.post('/mission/:missionId/metrics', authenticate, async (req, res) => {
             corrections: []
         };
         
-        // If STELLA AI service is available, get more detailed feedback
+        // If STELLA AI service is available, get more detailed feedback using GPT-4.5 Plus
         try {
             const aiResponse = await AIGuidanceSystem.generateAIResponse({
                 context: "exercise_feedback",
                 metrics,
                 exerciseId,
-                missionId
+                missionId,
+                preferredModel: "gpt-4.5-plus" // Use the preferred model
             });
             
             if (aiResponse) {
@@ -217,6 +221,23 @@ router.post('/mission/:missionId/metrics', authenticate, async (req, res) => {
             }
         } catch (error) {
             console.error("Error generating AI feedback:", error);
+            // Try fallback model if available
+            try {
+                const fallbackResponse = await AIGuidanceSystem.generateAIResponse({
+                    context: "exercise_feedback",
+                    metrics,
+                    exerciseId,
+                    missionId,
+                    preferredModel: "gpt-4o" // Fallback model
+                });
+                
+                if (fallbackResponse) {
+                    feedback = fallbackResponse;
+                    console.log("Successfully used fallback model for feedback");
+                }
+            } catch (fallbackError) {
+                console.error("Fallback model also failed:", fallbackError);
+            }
         }
         
         res.json({
@@ -394,98 +415,93 @@ router.get('/mission/:missionId/leaderboard', async (req, res) => {
  */
 
 /**
- * POST /api/stella/connect
- * Initialize STELLA for a user session
+ * POST /api/training/stella/connect
+ * Initialize STELLA for a user session (redirects to main STELLA API)
  */
 router.post('/stella/connect', authenticate, async (req, res) => {
     try {
         const { trainingType, metrics, adaptiveLearning } = req.body;
         const userId = req.user?._id || req.session.user?.id;
         
-        // Initialize STELLA for this user and training type
-        let stellaSessionId = `stella_${Date.now()}`;
+        // Forward the request to the main STELLA routes
+        // This avoids duplication and ensures consistent behavior
+        const stellaResponse = await fetch(`${req.protocol}://${req.get('host')}/api/stella/connect`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': req.headers.authorization
+            },
+            body: JSON.stringify({
+                userId,
+                trainingType,
+                metrics,
+                adaptiveLearning
+            })
+        });
         
-        // If STELLA_AI service exists, use it
-        if (STELLA_AI && typeof STELLA_AI.initializeForUser === 'function') {
-            try {
-                const stellaSession = await STELLA_AI.initializeForUser(userId, {
-                    trainingType,
-                    metrics,
-                    adaptiveLearning
-                });
-                
-                stellaSessionId = stellaSession.sessionId;
-            } catch (error) {
-                console.warn("STELLA initialization issue:", error);
-                // Continue with mock session ID
-            }
+        if (!stellaResponse.ok) {
+            throw new Error(`STELLA connect failed: ${stellaResponse.statusText}`);
         }
         
-        res.json({
-            success: true,
-            sessionId: stellaSessionId
-        });
+        const stellaData = await stellaResponse.json();
+        res.json(stellaData);
     } catch (error) {
         console.error('Error connecting to STELLA:', error);
-        res.status(500).json({ success: false, error: 'Failed to connect to STELLA' });
+        
+        // Fallback if the forward fails
+        res.json({
+            success: true,
+            sessionId: `stella_${Date.now()}`
+        });
     }
 });
 
 /**
- * POST /api/stella/guidance
- * Get real-time guidance from STELLA
+ * POST /api/training/stella/guidance
+ * Get real-time guidance from STELLA (redirects to main STELLA API)
  */
 router.post('/stella/guidance', authenticate, async (req, res) => {
     try {
-        const { sessionId, exerciseId, metrics } = req.body;
+        const { sessionId, exerciseId, metrics, question } = req.body;
         const userId = req.user?._id || req.session.user?.id;
         
-        // Default guidance
-        let guidance = {
-            message: "Focus on maintaining proper form throughout the exercise.",
-            actionItems: [
-                "Keep your core engaged",
-                "Breathe steadily",
-                "Move with control"
-            ]
-        };
+        // Forward the request to the main STELLA routes
+        const stellaResponse = await fetch(`${req.protocol}://${req.get('host')}/api/stella/guidance`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': req.headers.authorization
+            },
+            body: JSON.stringify({
+                userId,
+                sessionId,
+                exerciseId,
+                metrics,
+                question
+            })
+        });
         
-        // If STELLA_AI exists, get personalized guidance
-        if (STELLA_AI && typeof STELLA_AI.getExerciseGuidance === 'function') {
-            try {
-                guidance = await STELLA_AI.getExerciseGuidance({
-                    userId,
-                    exerciseId,
-                    metrics
-                });
-            } catch (error) {
-                console.warn("Error getting STELLA guidance:", error);
-                // Use default guidance
-            }
-        } else if (AIGuidanceSystem && typeof AIGuidanceSystem.generateAIResponse === 'function') {
-            // Use AIGuidanceSystem as fallback
-            try {
-                const aiResponse = await AIGuidanceSystem.generateAIResponse({
-                    context: "exercise_guidance",
-                    metrics,
-                    exerciseId
-                });
-                
-                if (aiResponse) {
-                    guidance = aiResponse;
-                }
-            } catch (error) {
-                console.warn("Error with AIGuidanceSystem:", error);
-            }
+        if (!stellaResponse.ok) {
+            throw new Error(`STELLA guidance failed: ${stellaResponse.statusText}`);
         }
         
-        res.json({
-            success: true,
-            guidance
-        });
+        const stellaData = await stellaResponse.json();
+        res.json(stellaData);
     } catch (error) {
         console.error('Error getting guidance:', error);
-        res.status(500).json({ success: false, error: 'Failed to get guidance' });
+        
+        // Provide a fallback response if the forward fails
+        res.json({
+            success: true,
+            guidance: {
+                message: "Focus on maintaining proper form throughout the exercise.",
+                actionItems: [
+                    "Keep your core engaged",
+                    "Breathe steadily",
+                    "Move with control"
+                ]
+            }
+        });
     }
 });
 

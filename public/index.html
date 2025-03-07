@@ -26,7 +26,7 @@
   
     <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
     <script src="/js/languageSelection.js" defer></script>
-    <script type="module" src="/js/CountdownTimer.js"></script>
+    <script src="/js/countdown.js"></script>
     <script type="module" src="/js/HomepageHandler.js"></script>
   </head>
   
@@ -58,10 +58,10 @@
       </ul>
       <!-- Language Selector -->
       <div class="language-selector flex gap-2">
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="en" aria-label="Switch to English">🇺🇸</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="zh" aria-label="Switch to Chinese">🇨🇳</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="ko" aria-label="Switch to Korean">🇰🇷</button>
-        <button class="lang-btn btn btn-ghost text-3xl" data-lang="es" aria-label="Switch to Spanish">🇪🇸</button>
+        <button class="lang-btn" data-lang="en">🇺🇸</button>
+        <button class="lang-btn" data-lang="es">🇪🇸</button>
+        <button class="lang-btn" data-lang="ko">🇰🇷</button> 
+        <button class="lang-btn" data-lang="zh">🇨🇳</button>
       </div>
     </nav>
   </header>

@@ -1,4 +1,4 @@
-const OpenAI = require("openai");
+const { openai, OpenAI } = require('./openaiService');
 const User = require("../models/User.js");
 const TrainingSession = require("../models/TrainingSession.js");
 const Intervention = require("../models/Intervention.js");
@@ -11,7 +11,7 @@ class AIGuidanceSystem extends EventEmitter {
         super(); // ✅ Enables event-based communication
 
         // ✅ Initialize OpenAI Client
-        this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        this.openai = openai;
 
         // ✅ Default AI Model
         this.defaultModel = "gpt-4-turbo";

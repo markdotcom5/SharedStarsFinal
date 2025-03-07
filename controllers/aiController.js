@@ -1,5 +1,5 @@
 const AIAssistant = require('../services/aiAssistant');
-const aiGuidance = require('../services/aiGuidance.js');
+const aiGuidance = require('../services/aiGuidance');
 const aiServices = require('../services/CoreAIServices');
 const cache = require('../utils/cache');
 const logger = require('../utils/logger');
@@ -9,9 +9,11 @@ class AIController {
     this.cache = cache;
     this.assistant = AIAssistant;
     this.retryAttempts = 3;
+
+    console.log('✅ AIController initialized successfully');
   }
 
-  // Remove one of the duplicate generateGreeting methods
+  // ✅ Generate multilingual greeting
   async generateGreeting(req, res) {
     try {
       const greetings = {
@@ -28,70 +30,50 @@ class AIController {
         greeting: greetings[baseLanguage] || greetings.en 
       });
     } catch (error) {
-      console.error("Error generating greeting:", error);
-      res.status(500).json({ 
-        greeting: "Welcome back, Commander!" 
-      });
+      logger.error("Error generating greeting:", error);
+      res.status(500).json({ greeting: "Welcome back, Commander!" });
     }
   }
 
-  /**
-   * Renders the AI Guidance view.
-   * @param {object} req Express request
-   * @param {object} res Express response
-   */
+  // ✅ Render AI Guidance view
   async renderAIGuidance(req, res) {
     try {
       const aiData = await aiGuidance.getGuidanceData();
       res.render('ai-guidance', { title: 'AI Guidance', guidance: aiData });
     } catch (error) {
-      logger.error("Error rendering AI Guidance", error);
+      logger.error("Error rendering AI Guidance:", error);
       res.status(500).send('Error rendering AI Guidance');
     }
   }
 
-  /**
-   * Launches an AI-guided training session.
-   * @param {object} req Express request
-   * @param {object} res Express response
-   */
+  // ✅ Launch AI-guided training session
   async launchAIGuidedTraining(req, res) {
     try {
       const result = await aiServices.startTraining(req.body);
       res.json({ success: true, result });
     } catch (error) {
-      logger.error("Error launching AI guided training", error);
+      logger.error("Error launching AI-guided training:", error);
       res.status(500).json({ error: 'Failed to launch AI training' });
     }
   }
 
-  /**
-   * Generates training content for a given module and user level.
-   * Caches the result for 1 hour.
-   * @param {object} req Express request
-   * @param {object} res Express response
-   */
+  // ✅ Generate training content (with caching)
   async generateTrainingContent(req, res) {
     const { module } = req.params;
     const userLevel = req.user?.trainingLevel || 'beginner';
     const cacheKey = `training:${module}:${userLevel}`;
 
     try {
-      // Check cache first
       const cachedContent = await this.cache.get(cacheKey);
-      if (cachedContent) {
-        return res.json(cachedContent);
-      }
+      if (cachedContent) return res.json(cachedContent);
 
       let trainingContent = await this.assistant.generateTrainingContent(module, userLevel);
 
-      // Validate content and use fallback with retry if needed
       if (!this.validateContent(trainingContent)) {
         trainingContent = await this.getFallbackWithRetry(module);
       }
 
-      // Cache valid content (1 hour)
-      await this.cache.set(cacheKey, trainingContent, 3600);
+      await this.cache.set(cacheKey, trainingContent, 3600); // cache for 1 hour
 
       res.json({
         module,
@@ -108,11 +90,7 @@ class AIController {
     }
   }
 
-  /**
-   * Generates a problem-solving scenario, including hints and a time estimate.
-   * @param {object} req Express request
-   * @param {object} res Express response
-   */
+  // ✅ Generate problem-solving scenario
   async generateScenario(req, res) {
     const { module, complexity } = req.params;
 
@@ -123,25 +101,20 @@ class AIController {
         req.user?.performanceMetrics
       );
 
-      res.json({
-        scenario,
-        hints: await this.generateHints(scenario),
-        timeEstimate: this.calculateTimeEstimate(scenario)
-      });
+      const hints = await this.generateHints(scenario);
+      const timeEstimate = this.calculateTimeEstimate(scenario);
+
+      res.json({ scenario, hints, timeEstimate });
     } catch (error) {
       logger.error('Scenario Generation Error:', error);
       res.status(500).json(this.handleError(error));
     }
   }
 
-  /**
-   * Implements a fallback mechanism with retry logic for training content generation.
-   * @param {string} module The module identifier
-   * @param {number} attempts Number of retry attempts so far
-   * @returns {string} Valid training content
-   */
+  // ✅ Fallback mechanism with retry logic
   async getFallbackWithRetry(module, attempts = 0) {
     if (attempts >= this.retryAttempts) {
+      logger.warn(`Fallback content used for module: ${module}`);
       return this.assistant.getFallbackContent(module);
     }
 
@@ -151,16 +124,12 @@ class AIController {
         ? content
         : this.getFallbackWithRetry(module, attempts + 1);
     } catch (error) {
-      logger.warn(`Retry attempt ${attempts + 1} failed:`, error);
+      logger.warn(`Retry attempt ${attempts + 1} failed for module ${module}:`, error);
       return this.getFallbackWithRetry(module, attempts + 1);
     }
   }
 
-  /**
-   * Validates generated training content.
-   * @param {string} content
-   * @returns {boolean} True if content is valid.
-   */
+  // ✅ Validate generated content
   validateContent(content) {
     return content &&
       content.length >= 100 &&
@@ -168,36 +137,24 @@ class AIController {
       !content.includes('inappropriate');
   }
 
-  /**
-   * Generates hints for a given scenario.
-   * @param {object} scenario
-   * @returns {Promise<Array>} Array of hints.
-   */
+  // ✅ Generate hints for scenarios
   async generateHints(scenario) {
     try {
       return await this.assistant.generateHints(scenario);
     } catch (error) {
       logger.error('Hint Generation Error:', error);
-      return ['Generic hint available'];
+      return ['Consider reviewing previous training materials for clues.'];
     }
   }
 
-  /**
-   * Calculates a time estimate for completing a scenario.
-   * @param {object} scenario
-   * @returns {number} Time estimate in minutes.
-   */
+  // ✅ Calculate estimated time for scenario completion
   calculateTimeEstimate(scenario) {
-    const baseTime = 15; // base time in minutes
+    const baseTime = 15; // minutes
     const complexityFactor = scenario.complexity || 1;
     return Math.round(baseTime * complexityFactor);
   }
 
-  /**
-   * Formats and returns error responses.
-   * @param {Error} error
-   * @returns {object} Formatted error response.
-   */
+  // ✅ Consistent error handler
   handleError(error) {
     return {
       error: 'AI Processing Error',
@@ -206,6 +163,6 @@ class AIController {
     };
   }
 }
-console.log("✅ AIController is loading aiServices.js");
 
+console.log("✅ AIController loaded successfully");
 module.exports = new AIController();

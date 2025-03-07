@@ -15,6 +15,86 @@
     --spacing-md: 1rem;
     --spacing-lg: 2rem;
   }
+  /* Global Styles */
+body {
+  background-color: #020617; /* near-black background from your screenshot */
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Buttons & CTA */
+button, .cta-btn, a.bg-blue-500 {
+  background-color: #2563eb; /* blue button */
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover, a.bg-blue-500:hover {
+  background-color: #3b82f6; /* lighter blue hover effect */
+}
+/* Make popups appear on top of everything */
+#assessmentPopup, #physicalAssessmentFormPopup {
+  z-index: 9999 !important;
+}
+
+/* Ensure the form elements are properly clickable */
+#physicalAssessmentForm select,
+#physicalAssessmentForm input,
+#physicalAssessmentForm button {
+  position: relative;
+  z-index: 10000;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Add some padding and improve the layout */
+#physicalAssessmentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Make sure the popup background covers everything */
+.fixed.inset-0.bg-black.bg-opacity-75 {
+  z-index: 9998;
+}
+
+/* Slow down animations */
+.transition {
+  transition-duration: 300ms !important;
+}
+/* Cards & Panels */
+.mission-card, .achievement-card, .ai-assistant-bubble {
+  background-color: #111827; /* dark gray card background */
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Progress Bar */
+.progress-bar {
+  background-color: #1f2937; /* dark gray background */
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background-color: #2563eb; /* blue progress fill */
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Expandable Missions */
+.mission-content {
+  display: none; /* Initially hidden */
+}
+
+.mission-header {
+  cursor: pointer;
+  user-select: none;
+}
+
   /* Add this to your CSS */
   :root {
     --space-black: #000000;
@@ -24,11 +104,10 @@
     --text-white: #FFFFFF;
     --text-gray: #A0A0A0;
   }
-  
   body {
-    background-color: var(--space-black);
-    color: var(--text-white);
+    font-family: 'Inter', sans-serif;
   }
+  
   /* Apply Global Styles */
   body {
     font-family: var(--font-main);

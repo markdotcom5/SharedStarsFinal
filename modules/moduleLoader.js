@@ -2,7 +2,7 @@ const physicalModule = require('./core/physical');
 const technicalModule = require('./core/technical');
 const simulationModule = require('./core/simulation');
 const evaModule = require('./core/eva'); // ✅ Automatically loads `index.js` if present
-const TrainingLearningSystem = require('./TrainingLearningSystem');
+const TrainingLearningSystem = require('../services/TrainingLearningSystem');
 const { EventEmitter } = require('events');
 
 // In-memory mock for EVA module
@@ -18,7 +18,7 @@ const checkAndInsertEVA = async () => {
 };
 
 class ModuleLoader extends EventEmitter {
-    constructor() {
+    cconstructor() {
         super();
         this.modules = {
             physical: physicalModule,
@@ -26,15 +26,15 @@ class ModuleLoader extends EventEmitter {
             simulation: simulationModule,
             eva: evaModule
         };
-
+    
         this.moduleById = {
             'core-phys-001': physicalModule,
             'core-tech-001': technicalModule,
             'core-sim-001': simulationModule,
             'core-eva-001': evaModule
         };
-
-        this.stella = new TrainingLearningSystem.STELLAIntegration || {};
+    
+        this.stella = TrainingLearningSystem.stellaAI || {};
         this.moduleCache = new Map();
         this.progressTracker = TrainingLearningSystem.ProgressTracker || {}; 
         this.aiLearningSystem = TrainingLearningSystem.AILearning || {};

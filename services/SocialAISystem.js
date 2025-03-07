@@ -1,5 +1,5 @@
 const { EventEmitter } = require('events');
-const OpenAI = require('openai');
+const openai = require('./openaiService'); // ✅ correct
 
 class SocialAISystem extends EventEmitter {
     constructor() {

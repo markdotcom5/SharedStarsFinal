@@ -4,7 +4,7 @@ const router = express.Router();
 const { authenticate } = require('../middleware/authenticate');
 const UserProgress = require('../models/UserProgress');
 const User = require('../models/User');
-const AIAssistant = require('../services/AIAssistant');
+const AIAssistant = require('../services/aiAssistant');
 
 // Logging middleware for all progress routes
 router.use((req, res, next) => {
@@ -97,6 +97,49 @@ router.post('/session', authenticate, async (req, res) => {
     } catch (error) {
         console.error('❌ Error updating training progress:', error);
         res.status(500).json({ success: false, message: "Failed to update training progress." });
+    }
+});
+// 📌 📊 POST Evaluate Training Performance
+router.post('/evaluate', authenticate, async (req, res) => {
+    try {
+        const { moduleId, performanceData } = req.body;
+        const userId = req.user._id;
+
+        // Fetch user progress data
+        const userProgress = await UserProgress.findOne({ userId });
+        if (!userProgress) {
+            return res.status(404).json({ success: false, message: "User progress not found." });
+        }
+
+        // Initialize assessment
+        const progressAssessment = new ProgressAssessment(userProgress.fsdTraining, new AIAssistant());
+
+        // Evaluate user's performance
+        const evaluationResult = await progressAssessment.evaluatePerformance(moduleId, performanceData);
+
+        // Save results (score, achievements) to user progress
+        const moduleProgress = userProgress.moduleProgress.find(mp => mp.moduleId === moduleId);
+        if (!moduleProgress) {
+            return res.status(404).json({ success: false, message: "Module progress not found." });
+        }
+
+        moduleProgress.score = evaluationResult.score;
+        moduleProgress.achievements = [
+            ...(moduleProgress.achievements || []), 
+            ...evaluationResult.achievements
+        ];
+
+        // Save to DB
+        await userProgress.save();
+
+        res.json({
+            success: true,
+            evaluation: evaluationResult
+        });
+
+    } catch (error) {
+        console.error('❌ Error during performance evaluation:', error);
+        res.status(500).json({ success: false, message: "Performance evaluation failed." });
     }
 });
 

@@ -1,0 +1,257 @@
+<!-- public/admin/stella-analytics.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STELLA AI Analytics Dashboard</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+  
+  <style>
+    body {
+      background-color: #0F172A;
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .card {
+      background-color: #1E293B;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    .nav-item {
+      @apply px-4 py-2 rounded-lg transition-colors;
+    }
+    
+    .nav-item.active {
+      @apply bg-blue-700 text-white;
+    }
+    
+    .nav-item:not(.active) {
+      @apply text-gray-300 hover:bg-gray-800;
+    }
+    
+    .metric-card {
+      background-color: #0F182B;
+      border: 1px solid rgba(59, 130, 246, 0.1);
+      border-radius: 0.75rem;
+    }
+    
+    .metric-value {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    
+    .metric-label {
+      color: #94A3B8;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="bg-gray-900 shadow-lg py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-8 mr-3">
+        <span class="text-xl font-bold">STELLA AI Analytics</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="text-gray-300">Admin Dashboard</span>
+        <button id="admin-logout" class="px-3 py-1 bg-red-800 hover:bg-red-700 text-white rounded-lg text-sm transition-colors">
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Sidebar Navigation -->
+      <aside class="lg:w-1/5">
+        <nav class="card p-4 sticky top-4">
+          <ul class="space-y-2">
+            <li>
+              <a href="#overview" class="nav-item active block" data-section="overview">Overview</a>
+            </li>
+            <li>
+              <a href="#common-questions" class="nav-item block" data-section="common-questions">Common Questions</a>
+            </li>
+            <li>
+              <a href="#feedback-analysis" class="nav-item block" data-section="feedback-analysis">Feedback Analysis</a>
+            </li>
+            <li>
+              <a href="#response-improvements" class="nav-item block" data-section="response-improvements">Response Improvements</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      
+      <!-- Main Content Area -->
+      <main class="lg:w-4/5">
+        <!-- Loading State -->
+        <div id="loading-indicator" class="text-center py-20">
+          <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500 mb-6"></div>
+          <p class="text-xl text-blue-400">Loading STELLA Analytics...</p>
+        </div>
+        
+        <!-- Overview Section -->
+        <section id="overview-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">STELLA AI Analytics Overview</h1>
+          
+          <!-- Key Metrics Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Questions Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-total-questions">0</div>
+              <div class="metric-label">Total Questions</div>
+            </div>
+            
+            <!-- Total Responses Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-total-responses">0</div>
+              <div class="metric-label">Total Responses</div>
+            </div>
+            
+            <!-- Unique Users Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-unique-users">0</div>
+              <div class="metric-label">Unique Users</div>
+            </div>
+            
+            <!-- Satisfaction Rate Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-green-400" id="metric-satisfaction">0%</div>
+              <div class="metric-label">User Satisfaction</div>
+            </div>
+          </div>
+          
+          <!-- Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Daily Trends Chart -->
+            <div class="card p-6">
+              <h2 class="text-xl font-semibold mb-4">Daily Interaction Trends</h2>
+              <div style="height: 300px;">
+                <canvas id="daily-trends-chart"></canvas>
+              </div>
+            </div>
+            
+            <!-- Question Types Chart -->
+            <div class="card p-6">
+              <h2 class="text-xl font-semibold mb-4">Question Types Distribution</h2>
+              <div style="height: 300px;">
+                <canvas id="question-types-chart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Popular Topics -->
+          <div class="card p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Popular Topics</h2>
+            <div class="flex flex-wrap gap-3" id="popular-topics">
+              <!-- Topics will be added here by JS -->
+            </div>
+          </div>
+        </section>
+        
+        <!-- Common Questions Section -->
+        <section id="common-questions-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">Most Common Questions</h1>
+          
+          <div class="card p-6 mb-8">
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b border-gray-700">
+                    <th class="text-left py-3 px-4">Question</th>
+                    <th class="text-left py-3 px-4 w-24">Frequency</th>
+                    <th class="text-left py-3 px-4 w-40">Type</th>
+                    <th class="text-left py-3 px-4 w-40">Last Asked</th>
+                    <th class="text-left py-3 px-4 w-20">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="common-questions-table">
+                  <!-- Questions will be added here by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Feedback Analysis Section -->
+        <section id="feedback-analysis-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">User Feedback Analysis</h1>
+          
+          <!-- Feedback Summary Card -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-feedback-count">0</div>
+              <div class="metric-label">Total Feedback Received</div>
+            </div>
+            
+            <div class="metric-card p-6">
+              <div class="metric-value text-green-400" id="metric-positive-feedback">0</div>
+              <div class="metric-label">Positive Feedback</div>
+            </div>
+            
+            <div class="metric-card p-6">
+              <div class="metric-value text-red-400" id="metric-negative-feedback">0</div>
+              <div class="metric-label">Negative Feedback</div>
+            </div>
+          </div>
+          
+          <!-- Feedback List -->
+          <div class="card p-6">
+            <h2 class="text-xl font-semibold mb-4">Recent Feedback</h2>
+            <div id="feedback-entries" class="space-y-4">
+              <!-- Feedback entries will be added here by JS -->
+            </div>
+          </div>
+        </section>
+        
+        <!-- Response Improvements Section -->
+        <section id="response-improvements-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">Response Improvements</h1>
+          
+          <div class="card p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Add Improved Response</h2>
+            
+            <div class="mb-4">
+              <label class="block text-gray-300 mb-2">Select a Question:</label>
+              <select id="question-selector" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2">
+                <option value="">Select a question...</option>
+                <!-- Questions will be added here by JS -->
+              </select>
+            </div>
+            
+            <div class="mb-4">
+              <label class="block text-gray-300 mb-2">Current Response:</label>
+              <div id="current-response" class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-gray-400 italic">
+                Select a question to see its current response
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="block text-gray-300 mb-2">Improved Response:</label>
+              <textarea id="improved-response" rows="5" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"></textarea>
+            </div>
+            
+            <button id="submit-improvement" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+              Save Improved Response
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  
+  <script src="/admin/js/stella-dashboard.js"></script>
+</body>
+</html>

@@ -2134,28 +2134,48 @@ p {
   margin: 4rem 0;
 }
 
+/* Add to your CSS file or style tag */
 .benefit-card {
-  background: var(--card-background);
-  border-radius: 16px;
-  padding: 2rem;
-  text-align: center;
-  border: 1px solid var(--border-light);
-  transition: var(--hover-transition);
+  background: rgba(17, 24, 39, 0.7);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
 }
 
 .benefit-card:hover {
   transform: translateY(-5px);
-  border-color: var(--primary);
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.4);
 }
 
-.benefit-card.featured {
-  background: rgba(0, 30, 60, 0.6);
-  border: 2px solid var(--primary);
+.step-container {
+  position: relative;
 }
 
-.benefit-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3B82F6;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.step-content {
+  background: rgba(17, 24, 39, 0.7);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  padding-top: 2rem;
+  height: 100%;
 }
 
 .benefit-features {

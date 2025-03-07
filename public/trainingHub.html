@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharedStars Training Hub</title>
+
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'; 
+    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data:;
+    connect-src 'self' https://api.sharedstars.com;
+  ">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/ai-assistant.css">
+  <link rel="stylesheet" href="/css/countdown.css">
+
+  <style>
+    /* Custom styles to match Figma design */
+    body {
+      background-color: #000;
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .hero-section {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .hero-text {
+      font-size: 3.5rem;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+    
+    .header-badge {
+      display: inline-block;
+      background-color: rgba(25, 100, 224, 0.2);
+      border-radius: 9999px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #3B82F6;
+      margin-bottom: 1rem;
+    }
+    
+    .step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      background-color: #1E40AF;
+      color: white;
+      border-radius: 9999px;
+      font-weight: 600;
+      margin-right: 1rem;
+    }
+    
+    .module-card {
+      background-color: rgba(31, 41, 55, 0.7);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .module-card:hover {
+      transform: translateY(-0.25rem);
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+    }
+    
+    .progress-bar {
+      height: 0.5rem;
+      background-color: rgba(75, 85, 99, 0.5);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background-color: #3B82F6;
+      border-radius: 9999px;
+    }
+    
+    .briefing-card {
+      background: linear-gradient(135deg, rgba(17, 24, 39, 0.7) 0%, rgba(31, 41, 55, 0.9) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 0.75rem;
+    }
+    
+    .countdown-box {
+      background-color: rgba(17, 24, 39, 0.7);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    .countdown-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .countdown-label {
+      font-size: 0.875rem;
+      color: #9CA3AF;
+    }
+    
+    .stella-bubble {
+      background-color: rgba(30, 64, 175, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      position: relative;
+    }
+    
+    .stella-bubble:before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 20px;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 10px solid rgba(59, 130, 246, 0.3);
+    }
+    
+    .stars-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('/images/stars-bg.png');
+      background-size: cover;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body class="text-white">
+  <!-- Add after the opening <body> tag -->
+<!-- STELLA AI Integration Setup -->
+<div data-stella-auto-init="true" data-stella-debug="true" data-stella-user-id="anonymous"></div>
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full bg-black bg-opacity-80 backdrop-blur-md z-50 shadow-lg">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <a href="/" class="flex items-center">
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-10">
+        </a>
+        
+        <nav class="hidden md:flex space-x-8">
+          <a href="/" class="text-gray-300 hover:text-white transition-colors">Home</a>
+          <a href="/academy.html" class="text-gray-300 hover:text-white transition-colors">Academy</a>
+          <a href="/about.html" class="text-gray-300 hover:text-white transition-colors">About</a>
+          <a href="/leaderboard.html" class="text-gray-300 hover:text-white transition-colors">Leaderboard</a>
+          <a href="/subscribe.html" class="text-gray-300 hover:text-white transition-colors">Subscribe</a>
+        </nav>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <button id="language-selector" class="flex items-center text-sm text-gray-300 hover:text-white">
+              <span class="mr-1">🇺🇸</span>
+              <span class="hidden md:inline-block">English</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <!-- Language dropdown goes here -->
+          </div>
+          
+          <a href="/get-started" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors">
+            Get Started
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="stars-overlay"></div>
+    
+    <!-- Background Video -->
+    <video class="absolute inset-0 w-full h-full object-cover opacity-70" autoplay muted loop playsinline>
+      <source src="/videos/training1.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    
+    <div class="relative z-10 container mx-auto px-4 text-center">
+      <div class="header-badge">Training Hub</div>
+      <h1 class="hero-text mb-6">Welcome to SharedStars<br>Training Hub!</h1>
+      <p class="text-xl max-w-3xl mx-auto mb-8">
+        AI-driven learning, mission-based readiness, and real-time progress tracking.
+        Your personalized journey to space begins here.
+      </p>
+      
+      <div class="flex flex-wrap justify-center gap-4 mb-12">
+        <a href="/physical-training" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Start My Training
+        </a>
+        <a href="/physicalTraining.html" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+          Resume Training
+        </a>
+        <a href="/my-progress" class="bg-transparent border border-blue-500 text-blue-400 hover:bg-blue-900 hover:bg-opacity-20 px-6 py-3 rounded-lg font-medium transition-colors">
+          View My Progress
+        </a>
+      </div>
+      
+      <!-- Quick Stats -->
+      <div class="flex flex-wrap justify-center gap-8">
+        <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 backdrop-blur-sm">
+          <div class="text-blue-400 mb-1">Active Trainees</div>
+          <div class="text-3xl font-bold">25.6K</div>
+        </div>
+        
+        <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 backdrop-blur-sm">
+          <div class="text-blue-400 mb-1">Training Hours</div>
+          <div class="text-3xl font-bold">1.2M</div>
+        </div>
+        
+        <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 backdrop-blur-sm">
+          <div class="text-blue-400 mb-1">Certifications</div>
+          <div class="text-3xl font-bold">12.8K</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- STELLA & Training Progress Section -->
+<section class="py-16 bg-gradient-to-b from-gray-900 to-black">
+  <div class="container mx-auto px-4">
+    <div class="grid md:grid-cols-2 gap-8">
+<!-- STELLA AI Assistant section -->
+<div class="briefing-card p-6 rounded-lg border border-blue-800/30 backdrop-blur-sm">
+  <div class="flex items-center mb-6">
+    <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    </div>
+    <h2 class="text-2xl font-bold">STELLA AI Assistant</h2>
+  </div>
+  
+  <div id="stella-message" class="stella-bubble mb-6">
+    <p>Welcome to your Training Hub! I'm STELLA, your AI training companion. I'm here to guide you through your space training journey. Let's start with the Core & Balance mission - it's the perfect foundation for your training program!</p>
+    <p class="text-sm text-blue-300 mt-4">Ask me about training modules, your progress, or for personalized advice.</p>
+  </div>
+  
+  <div class="flex">
+    <input 
+      id="stella-question" 
+      type="text" 
+      placeholder="Ask STELLA a question..." 
+      class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 flex-grow mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <button 
+      id="send-to-stella" 
+      class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition-colors">
+      Ask
+    </button>
+  </div>
+  
+  <!-- Conversation container for STELLA's responses -->
+  <div class="stella-conversation mt-4 max-h-60 overflow-y-auto px-1"></div>
+</div>
+
+      <!-- Training Progress Tracker -->
+      <div class="briefing-card p-6 rounded-lg border border-blue-800/30 backdrop-blur-sm">
+        <div class="flex items-center mb-6">
+          <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold">Your Training Progress</h2>
+        </div>
+  <!-- How Training Works Section -->
+  <section class="py-16 bg-gradient-to-b from-black to-gray-900">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-2">How SharedStars Training Works</h2>
+      <p class="text-center text-gray-400 max-w-3xl mx-auto mb-12">Your personalized journey to space readiness in five simple steps</p>
+      
+      <div class="space-y-8 max-w-3xl mx-auto">
+        <!-- Step 1 -->
+        <div class="flex">
+          <div class="step-number">1</div>
+          <div>
+            <h3 class="text-xl font-semibold mb-1">AI assessess your background & skills before assigning a module.</h3>
+            <p class="text-gray-400">AI evaluates your background, skills, and experience to assign the most suitable training module.</p>
+          </div>
+        </div>
+        
+        <!-- Step 2 -->
+        <div class="flex">
+          <div class="step-number">2</div>
+          <div>
+            <h3 class="text-xl font-semibold mb-1">Choose from available modules (or follow AI's suggested path).</h3>
+            <p class="text-gray-400">Trainees can choose from available modules or follow AI's recommended learning path.</p>
+          </div>
+        </div>
+        
+        <!-- Step 3 -->
+        <div class="flex">
+          <div class="step-number">3</div>
+          <div>
+            <h3 class="text-xl font-semibold mb-1">Complete pre-training assessment (AI adapts learning difficulty based on results).</h3>
+            <p class="text-gray-400">A preliminary test helps AI adjust the difficulty level based on your existing knowledge.</p>
+          </div>
+        </div>
+        
+        <!-- Step 4 -->
+        <div class="flex">
+          <div class="step-number">4</div>
+          <div>
+            <h3 class="text-xl font-semibold mb-1">Begin mission-based training with live AI coaching.</h3>
+            <p class="text-gray-400">Engage in hands-on training with real-time AI coaching to simulate space mission tasks.</p>
+          </div>
+        </div>
+        
+        <!-- Step 5 -->
+        <div class="flex">
+          <div class="step-number">5</div>
+          <div>
+            <h3 class="text-xl font-semibold mb-1">Track your leaderboard status, earn certifications, and progress to space readiness.</h3>
+            <p class="text-gray-400">Monitor leaderboard ranking, earn certifications, and advance toward space readiness.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Available Training Modules -->
+  <section class="py-16 bg-gradient-to-b from-gray-900 to-black">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-2">Available Training Modules</h2>
+      <p class="text-center text-gray-400 max-w-3xl mx-auto mb-12">Complete all modules to maximize your space readiness</p>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <!-- Physical Training Card -->
+        <div class="module-card overflow-hidden">
+          <div class="relative">
+            <img src="/images/modules/physical-training.jpg" alt="Physical Training" class="w-full h-48 object-cover">
+            <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-semibold px-2 py-1 m-2 rounded">MOST POPULAR</div>
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-xl font-semibold">Physical Training</h3>
+              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">4 Missions</span>
+            </div>
+            
+            <p class="text-gray-400 mb-4">Master strength, endurance, balance and flexibility essential for zero-gravity environments.</p>
+            
+            <!-- For Physical Training module -->
+            <div class="mb-4">
+             <div class="progress-bar" data-module-id="physical">
+                 <div class="progress-fill" style="width: 0%"></div>
+               </div>
+                <div class="flex justify-between text-xs mt-1">
+               <span class="module-completion">0% Complete</span>
+                 <span class="module-certifications">0 Certifications</span>
+               </div>
+              </div>
+            
+            <!-- Around line 459-460, find the Begin Training or Continue Training button -->
+              <a href="/physicalTraining.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
+                     Continue Training
+                  </a>
+          </div>
+        </div>
+        
+        <!-- Mental Fitness Card -->
+        <div class="module-card overflow-hidden">
+          <div class="relative">
+            <img src="/images/modules/mental-fitness.jpg" alt="Mental Fitness" class="w-full h-48 object-cover">
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-xl font-semibold">Mental Fitness</h3>
+              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">5 Missions</span>
+            </div>
+            
+            <p class="text-gray-400 mb-4">Develop cognitive resilience and stress management techniques for space adaptation.</p>
+            
+            <div class="mb-4">
+              <div class="progress-bar" data-module-id="mental">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-xs mt-1">
+                <span class="module-completion">0% Complete</span>
+                <span class="module-certifications">0 Certifications</span>
+              </div>
+            </div>
+            
+            <!-- Around line 491-492, find the Begin Training or Continue Training button -->
+<a href="/training-modules/mental/index.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
+  Continue Training
+</a>
+          </div>
+        </div>
+        
+        <!-- Leadership Card -->
+        <div class="module-card overflow-hidden">
+          <div class="relative">
+            <img src="/images/modules/leadership.jpg" alt="Leadership" class="w-full h-48 object-cover">
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-xl font-semibold">Leadership Training</h3>
+              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">4 Missions</span>
+            </div>
+            
+            <p class="text-gray-400 mb-4">Master crisis management, team coordination, and deep space communication.</p>
+            
+            <div class="mb-4">
+              <div class="progress-bar" data-module-id="leadership">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-xs mt-1">
+                <span class="module-completion">0% Complete</span>
+                <span class="module-certifications">0 Certifications</span>
+              </div>
+            </div>
+            
+            <!-- Around line 522-523, find the Begin Training or Continue Training button -->
+<a href="/training-modules/leadership.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
+  Continue Training
+</a>
+          </div>
+        </div>
+        
+        <!-- Technical Skills Card -->
+        <div class="module-card overflow-hidden">
+          <div class="relative">
+            <img src="/images/modules/technical-skills.jpg" alt="Technical Skills" class="w-full h-48 object-cover">
+            <div class="absolute top-0 right-0 bg-purple-600 text-white text-xs font-semibold px-2 py-1 m-2 rounded">PREMIUM</div>
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-xl font-semibold">Technical Training</h3>
+              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">6 Missions</span>
+            </div>
+            
+            <p class="text-gray-400 mb-4">Master spacecraft systems, emergency procedures, and technical operations.</p>
+            
+            <div class="mb-4">
+              <div class="progress-bar" data-module-id="technical">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-xs mt-1">
+                <span class="module-completion">0% Complete</span>
+                <span class="module-certifications">0 Certifications</span>
+              </div>
+            </div>
+            
+            <!-- Around line 554-555, find the Begin Training or Continue Training button -->
+<a href="/training-modules/technical/index.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
+  Continue Training
+</a>
+          </div>
+        </div>
+        
+        <!-- EVA Training Card -->
+        <div class="module-card overflow-hidden">
+          <div class="relative">
+            <img src="/images/modules/eva-training.jpg" alt="EVA Training" class="w-full h-48 object-cover">
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-xl font-semibold">EVA Training</h3>
+              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">3 Missions</span>
+            </div>
+            
+            <p class="text-gray-400 mb-4">Learn extravehicular activity procedures and safety protocols for spacewalks.</p>
+            
+            <div class="mb-4">
+              <div class="progress-bar" data-module-id="eva">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-xs mt-1">
+                <span class="module-completion">0% Complete</span>
+                <span class="module-certifications">0 Certifications</span>
+              </div>
+            </div>
+            
+            <!-- Around line 585-586, find the Begin Training or Continue Training button -->
+<a href="/training-modules/eva/index.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
+  Start Training
+</a>
+          </div>
+        </div>
+        
+        <!-- Assessment Card -->
+        <div class="module-card overflow-hidden">
+          <div class="relative">
+            <img src="/images/modules/assessment.jpg" alt="Assessment Skills" class="w-full h-48 object-cover">
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-xl font-semibold">Assessment</h3>
+              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">Required</span>
+            </div>
+            
+            <p class="text-gray-400 mb-4">Complete your initial assessment to create your personalized training path.</p>
+            
+            <div class="mb-4">
+              <div class="bg-indigo-900 bg-opacity-30 rounded-lg p-3 border border-indigo-500 border-opacity-20 text-sm">
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span class="text-indigo-300">Required before starting any training modules</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Around line 616-617, find the Begin Assessment button -->
+<a href="/physicalTraining.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
+  Start Assessment
+</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Your Countdown to Space -->
+  <section class="py-16 bg-gradient-to-b from-black to-gray-900 relative">
+    <div class="stars-overlay"></div>
+    <div class="container mx-auto px-4 relative z-10">
+      <h2 class="text-3xl font-bold text-center mb-2">Your Countdown to Space</h2>
+      <p class="text-center text-gray-400 max-w-3xl mx-auto mb-12">Track your progress toward space readiness</p>
+      
+      <!-- Global Space Travel Timeline -->
+      <div class="max-w-4xl mx-auto mb-12 bg-gray-800 bg-opacity-30 rounded-xl p-6 border border-blue-500 border-opacity-20">
+        <h3 class="text-xl font-semibold text-center mb-2">Mass Space Travel Timeline</h3>
+        <p class="text-center text-gray-400 mb-6">Estimated time until commercial space travel becomes widely accessible</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+          <div class="countdown-box">
+            <div class="countdown-value">13</div>
+            <div class="countdown-label">Years</div>
+          </div>
+          <div class="countdown-box">
+            <div class="countdown-value">00</div>
+            <div class="countdown-label">Months</div>
+          </div>
+          <div class="countdown-box">
+            <div class="countdown-value">00</div>
+            <div class="countdown-label">Days</div>
+          </div>
+          <div class="countdown-box">
+            <div class="countdown-value">00</div>
+            <div class="countdown-label">Hours</div>
+          </div>
+          <div class="countdown-box">
+            <div class="countdown-value">00</div>
+            <div class="countdown-label">Minutes</div>
+          </div>
+          <div class="countdown-box">
+            <div class="countdown-value">00</div>
+            <div class="countdown-label">Seconds</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Your Personal Timeline -->
+      <div class="max-w-4xl mx-auto bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-xl p-6 border border-blue-500 border-opacity-20 relative">
+        <div class="absolute top-0 right-0 m-4 bg-green-500 bg-opacity-20 border border-green-500 border-opacity-30 text-green-400 text-xs font-semibold rounded-full px-3 py-1 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span>5 YEARS SAVED</span>
+        </div>
+        
+        <h3 class="text-xl font-semibold text-center mb-2">Your Personal Space Timeline</h3>
+        <p class="text-center text-blue-400 mb-6">Based on your training progress and subscription level</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+            <div class="countdown-value">8</div>
+            <div class="countdown-label">Years</div>
+          </div>
+          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+            <div class="countdown-value">3</div>
+            <div class="countdown-label">Months</div>
+          </div>
+          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+            <div class="countdown-value">15</div>
+            <div class="countdown-label">Days</div>
+          </div>
+          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+            <div class="countdown-value">6</div>
+            <div class="countdown-label">Hours</div>
+          </div>
+          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+            <div class="countdown-value">22</div>
+            <div class="countdown-label">Minutes</div>
+          </div>
+          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+            <div class="countdown-value">37</div>
+            <div class="countdown-label">Seconds</div>
+          </div>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row justify-center mt-8 gap-4">
+          <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Accelerate Your Timeline
+          </button>
+          <button class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Timeline Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-16 bg-gradient-to-b from-gray-900 to-black relative">
+    <div class="stars-overlay"></div>
+    <div class="container mx-auto px-4 relative z-10 text-center">
+      <h2 class="text-3xl font-bold mb-4">Ready to Begin Your Space Journey?</h2>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-8">Your path to space begins with a single step. Start your training today and accelerate your journey to the stars.</p>
+      
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#" id="start-assessment-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+          Start Initial Assessment
+        </a>
+        <a href="/physicalTraining.html" class="bg-gray-700 hover:bg-gray-600 text-white px-8 py-4 rounded-lg font-medium transition-colors text-lg">
+          Resume Training
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black py-12">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between mb-8">
+        <!-- Logo & Description -->
+        <div class="mb-8 md:mb-0">
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-10 mb-4">
+          <p class="text-gray-400 max-w-xs">Preparing humanity for the stars, one person at a time.</p>
+        </div>
+        
+        <!-- Footer Links -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-lg font-semibold text-blue-400 mb-4">About</h3>
+            <ul class="space-y-2">
+              <li><a href="/about.html" class="text-gray-400 hover:text-white transition-colors">Our Story</a></li>
+              <li><a href="/about.html#mission" class="text-gray-400 hover:text-white transition-colors">Mission</a></li>
+              <li><a href="/about.html#team" class="text-gray-400 hover:text-white transition-colors">Team</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold text-blue-400 mb-4">Training</h3>
+            <ul class="space-y-2">
+              <li><a href="/physicalTraining.html" class="text-gray-400 hover:text-white transition-colors">Physical</a></li>
+              <li><a href="/training-modules/mental-fitness.html" class="text-gray-400 hover:text-white transition-colors">Mental</a></li>
+              <li><a href="/training-modules/technical.html" class="text-gray-400 hover:text-white transition-colors">Technical</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold text-blue-400 mb-4">Resources</h3>
+            <ul class="space-y-2">
+              <li><a href="/faq.html" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+              <li><a href="/support.html" class="text-gray-400 hover:text-white transition-colors">Support</a></li>
+              <li><a href="/blog.html" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold text-blue-400 mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li><a href="/terms.html" class="text-gray-400 hover:text-white transition-colors">Terms</a></li>
+              <li><a href="/privacy.html" class="text-gray-400 hover:text-white transition-colors">Privacy</a></li>
+              <li><a href="/cookies.html" class="text-gray-400 hover:text-white transition-colors">Cookies</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Bottom Footer -->
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 mb-4 md:mb-0">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+        
+        <!-- Social Media Links -->
+        <div class="flex space-x-4">
+          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z" />
+            </svg>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.035 10.035 0 01-3.127 1.195 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+            </svg>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z" />
+            </svg>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+<!-- JavaScript -->
+<script src="/js/stella-core.js"></script>
+<script src="/js/stella-integration.js"></script>
+<script src="/js/countdown.js"></script>
+<script src="/js/languageSelection.js"></script>
+<!-- Add these before your closing body tag if not already present -->
+<script src="/js/progressAssessment.js"></script>
+<script src="/js/progressChart.js"></script>
+<script src="/js/visualizations/ProgressTracker.js"></script>  
+
+<script>
+  // Debug STELLA Connection
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Checking STELLA elements:');
+    console.log('Input element:', document.getElementById('stella-question'));
+    console.log('Button element:', document.getElementById('send-to-stella'));
+    console.log('Conversation element:', document.querySelector('.stella-conversation'));
+    
+    // Test direct API call
+    fetch('/api/stella/status')
+      .then(response => response.json())
+      .then(data => {
+        console.log('STELLA API Status:', data);
+      })
+      .catch(error => {
+        console.error('STELLA API Error:', error);
+      });
+  });
+  </script>
+<!-- STELLA AI Integration for Mission Control -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get STELLA elements
+console.log('🔍 Setting up STELLA AI in Mission Control...');
+
+// Get STELLA elements
+const stellaInput = document.getElementById('stella-question');
+const stellaButton = document.getElementById('send-to-stella');
+const stellaConversation = document.querySelector('.stella-conversation');
+  
+  // Verify elements exist
+  if (!stellaInput || !stellaButton) {
+    console.error('❌ STELLA input or button not found!');
+    return;
+  }
+  
+  if (!stellaConversation) {
+    console.error('❌ STELLA conversation container not found!');
+    return;
+  }
+  
+  // Remove any existing event listeners
+  stellaButton.replaceWith(stellaButton.cloneNode(true));
+  stellaInput.replaceWith(stellaInput.cloneNode(true));
+  
+  // Get fresh references after replacement
+  const newStellaButton = document.getElementById('send-to-stella');
+  const newStellaInput = document.getElementById('stella-question');
+  
+  // Add event listeners
+  newStellaButton.addEventListener('click', handleStellaMessage);
+  newStellaInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      handleStellaMessage();
+    }
+  });
+  
+  console.log('✅ STELLA event listeners attached successfully');
+  
+  // Main STELLA handler function
+  async function handleStellaMessage() {
+    const question = newStellaInput.value.trim();
+    if (!question) return;
+    
+    console.log('🤖 STELLA processing question:', question);
+    
+    // Make sure conversation container is visible
+    stellaConversation.classList.remove('hidden');
+    
+    // Display user message
+    stellaConversation.innerHTML += `
+      <div class="mb-2 text-right">
+        <div class="inline-block bg-blue-600 ml-auto px-3 py-2 rounded-lg max-w-xs">
+          ${question}
+        </div>
+      </div>
+    `;
+    
+    // Clear input
+    newStellaInput.value = '';
+    
+    // Add loading indicator
+    stellaConversation.innerHTML += `
+      <div class="mb-2" id="stella-loading">
+        <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
+          <div class="flex space-x-2">
+            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce"></div>
+            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-75"></div>
+            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-150"></div>
+          </div>
+        </div>
+      </div>
+    `;
+// Test direct API call with enhanced prompt
+fetch('/api/stella/test-guidance', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    userId: 'test-user',
+    question: "What's my first step?",
+    testMode: true
+  })
+})
+.then(response => response.json())
+.then(data => console.log('STELLA test response:', data));
+    // Scroll to bottom of conversation
+    stellaConversation.scrollTop = stellaConversation.scrollHeight;
+    
+    // Extract recent conversation messages to provide context
+    const conversationHistory = [];
+    const messageElements = stellaConversation.querySelectorAll('.mb-2, .mb-4');
+    
+    // Process messages (skip the loading indicator)
+    let count = 0;
+    for (let i = messageElements.length-1; i >= 0 && count < 5; i--) {
+      const element = messageElements[i];
+      if (element.id === 'stella-loading') continue;
+      
+      const messageDiv = element.querySelector('div.inline-block');
+      if (!messageDiv) continue;
+      
+      const messageText = messageDiv.textContent.trim();
+      if (!messageText) continue;
+      
+      const isUser = element.classList.contains('text-right');
+      
+      conversationHistory.unshift({
+        fromUser: isUser,
+        content: messageText,
+        timestamp: new Date().toISOString()
+      });
+      
+      count++;
+    }
+    
+    try {
+      // Get user ID from localStorage or use a default
+      const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous';
+      const exerciseId = 'mission-control';
+      
+      let response;
+      
+      // Try to use StellaIntegration if available
+      if (window.StellaIntegration && window.StellaIntegration.isInitialized) {
+        console.log('🔍 Using StellaIntegration...');
+        
+        // Connect if not already connected
+        if (!window.StellaIntegration.isConnected) {
+          await window.StellaIntegration.connect(userId);
+        }
+        
+        // Ask STELLA through integration
+        response = await window.StellaIntegration.askQuestion(question, {
+          userId: userId,
+          exerciseId: exerciseId,
+          conversationHistory: conversationHistory
+        });
+      } else {
+        // Direct API call if integration not available
+        console.log('🔍 StellaIntegration not available, using direct API call...');
+        
+        const apiResponse = await fetch('/api/stella/guidance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: userId,
+            question: question,
+            exerciseId: exerciseId,
+            conversationHistory: conversationHistory
+          })
+        });
+        
+        if (!apiResponse.ok) {
+          throw new Error(`Failed to get STELLA response: ${apiResponse.status}`);
+        }
+        
+        response = await apiResponse.json();
+      }
+      
+      // Handle response
+      console.log('✅ STELLA response:', response);
+      
+      // Remove loading indicator
+      document.getElementById('stella-loading')?.remove();
+      
+      if (response.success && response.guidance) {
+        // Parse guidance from the response
+        const message = response.guidance.message || "I'm processing your request.";
+        let responseHTML = `
+          <div class="mb-4">
+            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+              <p>${message}</p>
+        `;
+        
+        // Add action items if available
+        if (response.guidance.actionItems && response.guidance.actionItems.length > 0) {
+          responseHTML += `<ul class="mt-3 space-y-2">`;
+          response.guidance.actionItems.forEach(item => {
+            responseHTML += `<li class="text-blue-300">• ${item}</li>`;
+          });
+          responseHTML += `</ul>`;
+        }
+        
+        // Close containers
+        responseHTML += `
+            </div>
+          </div>
+        `;
+        
+        // Add to conversation
+        stellaConversation.innerHTML += responseHTML;
+      } else {
+        // Fallback response
+        stellaConversation.innerHTML += `
+          <div class="mb-4">
+            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+              <p>I'm having trouble processing your request. Could you please try again?</p>
+            </div>
+          </div>
+        `;
+      }
+    } catch (error) {
+      console.error('❌ STELLA error:', error);
+      
+      // Remove loading indicator
+      document.getElementById('stella-loading')?.remove();
+      
+      // Fall back to local responses if API fails
+      const localResponse = getLocalStellaResponse(question);
+      
+      stellaConversation.innerHTML += `
+        <div class="mb-4">
+          <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+            <p>${localResponse}</p>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Scroll to bottom regardless of outcome
+    stellaConversation.scrollTop = stellaConversation.scrollHeight;
+  }
+  
+  // Backup static responses if API fails
+  function getLocalStellaResponse(question) {
+    // Convert question to lowercase for easier matching
+    const lowerQuestion = question.toLowerCase();
+    
+    // Check for common question patterns
+    if (lowerQuestion.includes('hello') || lowerQuestion.includes('hi')) {
+      return "Hello! I'm STELLA, your AI assistant for Mission Control. How can I help you today?";
+    }
+    
+    if (lowerQuestion.includes('assessment') || lowerQuestion.includes('test')) {
+      return "Our assessments help tailor your space training program. The initial assessment is required before starting specialized training modules. Would you like to begin?";
+    }
+    
+    if (lowerQuestion.includes('physical') || lowerQuestion.includes('train')) {
+      return "Physical training is essential for space missions. It includes exercises for core strength, balance, endurance, and flexibility - all critical for zero gravity environments.";
+    }
+    
+    if (lowerQuestion.includes('start') || lowerQuestion.includes('begin')) {
+      return "Yes, you're ready to begin your training! Click one of these options to get started: Start Assessment - Begin with a personalized evaluation (recommended for new trainees), Physical Training - Jump straight into physical conditioning exercises, or Technical Skills - Start with technical knowledge modules.";
+    }
+    
+    if (lowerQuestion.includes('mission') || lowerQuestion.includes('module')) {
+      return "Mission Control tracks your progress through training modules. You'll need to complete your initial assessment to unlock mission-specific training paths.";
+    }
+    
+    if (lowerQuestion.includes('countdown') || lowerQuestion.includes('timeline')) {
+      return "Your space readiness countdown shows your estimated timeline to space. Complete assessments and training modules to accelerate your timeline.";
+    }
+    
+    // Default response if no patterns match
+    return "I'm here to help you navigate Mission Control. You can ask me about assessments, your space readiness timeline, or any aspect of your training program.";
+  }
+  
+  // Set up quick action buttons
+  document.querySelectorAll('.mission-control-card button').forEach(button => {
+    if (button.id !== 'send-to-stella') {
+      button.addEventListener('click', function() {
+        const action = this.textContent.trim();
+        newStellaInput.value = `Tell me about ${action}`;
+        handleStellaMessage();
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>

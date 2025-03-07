@@ -1,9 +1,11 @@
-/**
+Copy/**
  * STELLA Core - Space Training Enhancement and Learning Logic Assistant
  * Core AI functionality for the SharedStars training platform
  */
 
-class StellaCore {
+// Only define the class if it doesn't already exist
+if (!window.StellaCore) {
+  window.StellaCore = class StellaCore {
     /**
      * Initialize STELLA AI core functionality
      * @param {Object} options - Configuration options
@@ -856,127 +858,144 @@ class StellaCore {
         return defaultResponse;
       }
       
-      /**
-       * Track user questions to improve STELLA's responses
-       * @param {String} question - User's question
-       * @private
-       */
-      _trackUserQuestion(question) {
-        // In a real implementation, this would send the question to a learning system
-        // For now, just store locally if localStorage is available
-        if (window.localStorage) {
-          try {
-            // Get existing questions
-            const existingQuestions = JSON.parse(localStorage.getItem('stella_user_questions') || '[]');
-            
-            // Add new question with timestamp
-            existingQuestions.push({
-              question,
-              timestamp: new Date().toISOString()
-            });
-            
-            // Keep only last 50 questions
-            const recentQuestions = existingQuestions.slice(-50);
-            
-            // Save back to localStorage
-            localStorage.setItem('stella_user_questions', JSON.stringify(recentQuestions));
-          } catch (error) {
-            console.warn('Error storing user question:', error);
-          }
-        }
-      }
+     /**
+ * Track user questions to improve STELLA's responses
+ * @param {String} question - User's question
+ * @private
+ */
+_trackUserQuestion(question) {
+  // In a real implementation, this would send the question to a learning system
+  // For now, just store locally if localStorage is available
+  if (window.localStorage) {
+    try {
+      // Get existing questions
+      const existingQuestions = JSON.parse(localStorage.getItem('stella_user_questions') || '[]');
       
-      /**
-       * Get personalized recommendations based on user data
-       * @param {Object} userData - User profile and training data
-       * @returns {Object} Personalized recommendations
-       */
-      getPersonalizedRecommendations(userData = {}) {
-        // In a real implementation, this would analyze user data and generate recommendations
-        // For now, return mock recommendations
-        return {
-          focusAreas: [
-            'Vestibular adaptation training',
-            'Upper body strength for EVA readiness',
-            'Core stability for microgravity adaptation'
-          ],
-          nextModules: [
-            {
-              id: 'vestibular-04',
-              name: 'Advanced Vestibular Training',
-              priority: 'high'
-            },
-            {
-              id: 'strength-07',
-              name: 'EVA-Specific Strength Development',
-              priority: 'medium'
-            },
-            {
-              id: 'core-05',
-              name: 'Microgravity Core Stabilization',
-              priority: 'medium'
-            }
-          ],
-          nutritionTips: [
-            'Increase calcium intake to support bone density',
-            'Optimize protein timing around resistance training',
-            'Ensure adequate hydration for vestibular training sessions'
-          ],
-          recoveryStrategies: [
-            'Implement contrast therapy after high-intensity sessions',
-            'Practice vestibular reset exercises before sleep',
-            'Schedule full recovery day after completing Module 3.2'
-          ]
-        };
-      }
+      // Add new question with timestamp
+      existingQuestions.push({
+        question,
+        timestamp: new Date().toISOString()
+      });
       
-      /**
-       * Analyze training session data and provide insights
-       * @param {Object} sessionData - Training session data
-       * @returns {Object} Session analysis and insights
-       */
-      analyzeTrainingSession(sessionData = {}) {
-        // Mock analysis for now
-        const strengthScore = (sessionData.formQuality || 70) * 0.4 + (sessionData.intensity || 65) * 0.6;
-        const enduranceScore = (sessionData.heartRateControl || 75) * 0.5 + (sessionData.durationPercentage || 80) * 0.5;
-        const balanceScore = (sessionData.stabilityMetrics || 65) * 0.7 + (sessionData.adaptationRate || 60) * 0.3;
-        
-        return {
-          overallScore: Math.round((strengthScore + enduranceScore + balanceScore) / 3),
-          strengths: [
-            strengthScore > 75 ? 'Excellent form maintenance' : null,
-            enduranceScore > 75 ? 'Strong cardiovascular performance' : null,
-            balanceScore > 75 ? 'Superior vestibular adaptation' : null
-          ].filter(Boolean),
-          improvementAreas: [
-            strengthScore < 70 ? 'Focus on consistent form during fatigue' : null,
-            enduranceScore < 70 ? 'Work on heart rate recovery between intervals' : null,
-            balanceScore < 70 ? 'Increase duration of vestibular challenges' : null
-          ].filter(Boolean),
-          recommendations: [
-            'Increase hydration during similar future sessions',
-            'Consider adding 5 minutes to your cool-down protocol',
-            strengthScore < enduranceScore ? 'Prioritize resistance training in next session' : 'Maintain current training balance'
-          ]
-        };
-      }
+      // Keep only last 50 questions
+      const recentQuestions = existingQuestions.slice(-50);
+      
+      // Save back to localStorage
+      localStorage.setItem('stella_user_questions', JSON.stringify(recentQuestions));
+    } catch (error) {
+      console.warn('Error storing user question:', error);
     }
-    
-    // Initialize STELLA when document is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      // Only initialize if the necessary elements exist
-      if (document.querySelector('#stella-status') || 
-          document.querySelector('#stella-guidance') ||
-          document.querySelector('#stella-interface')) {
-        window.stellaCore = new StellaCore();
-        
-        console.log('STELLA Core initialized');
-        
-        // Dispatch initialization event
-        document.dispatchEvent(new CustomEvent('stella:initialized', {
-          detail: {
-            timestamp: new Date().toISOString()
-          }
-        }));
+  }
+}
+
+/**
+ * Get personalized recommendations based on user data
+ * @param {Object} userData - User profile and training data
+ * @returns {Object} Personalized recommendations
+ */
+getPersonalizedRecommendations(userData = {}) {
+  // In a real implementation, this would analyze user data and generate recommendations
+  // For now, return mock recommendations
+  return {
+    focusAreas: [
+      'Vestibular adaptation training',
+      'Upper body strength for EVA readiness',
+      'Core stability for microgravity adaptation'
+    ],
+    nextModules: [
+      {
+        id: 'vestibular-04',
+        name: 'Advanced Vestibular Training',
+        priority: 'high'
+      },
+      {
+        id: 'strength-07',
+        name: 'EVA-Specific Strength Development',
+        priority: 'medium'
+      },
+      {
+        id: 'core-05',
+        name: 'Microgravity Core Stabilization',
+        priority: 'medium'
       }
+    ],
+    nutritionTips: [
+      'Increase calcium intake to support bone density',
+      'Optimize protein timing around resistance training',
+      'Ensure adequate hydration for vestibular training sessions'
+    ],
+    recoveryStrategies: [
+      'Implement contrast therapy after high-intensity sessions',
+      'Practice vestibular reset exercises before sleep',
+      'Schedule full recovery day after completing Module 3.2'
+    ]
+  };
+}
+
+/**
+ * Analyze training session data and provide insights
+ * @param {Object} sessionData - Training session data
+ * @returns {Object} Session analysis and insights
+ */
+analyzeTrainingSession(sessionData = {}) {
+  // Mock analysis for now
+  const strengthScore = (sessionData.formQuality || 70) * 0.4 + (sessionData.intensity || 65) * 0.6;
+  const enduranceScore = (sessionData.heartRateControl || 75) * 0.5 + (sessionData.durationPercentage || 80) * 0.5;
+  const balanceScore = (sessionData.stabilityMetrics || 65) * 0.7 + (sessionData.adaptationRate || 60) * 0.3;
+  
+  return {
+    overallScore: Math.round((strengthScore + enduranceScore + balanceScore) / 3),
+    strengths: [
+      strengthScore > 75 ? 'Excellent form maintenance' : null,
+      enduranceScore > 75 ? 'Strong cardiovascular performance' : null,
+      balanceScore > 75 ? 'Superior vestibular adaptation' : null
+    ].filter(Boolean),
+    improvementAreas: [
+      strengthScore < 70 ? 'Focus on consistent form during fatigue' : null,
+      enduranceScore < 70 ? 'Work on heart rate recovery between intervals' : null,
+      balanceScore < 70 ? 'Increase duration of vestibular challenges' : null
+    ].filter(Boolean),
+    recommendations: [
+      'Increase hydration during similar future sessions',
+      'Consider adding 5 minutes to your cool-down protocol',
+      strengthScore < enduranceScore ? 'Prioritize resistance training in next session' : 'Maintain current training balance'
+    ]
+  };
+}
+} // <-- Added this closing brace for the StellaCore class
+
+document.addEventListener('DOMContentLoaded', () => {
+  const stellaElements = ['stella-status', 'stella-guidance', 'stella-interface'];
+  const stellaExists = stellaElements.some(id => document.getElementById(id));
+  
+  if (stellaExists) {
+    window.stellaCore = new StellaCore();
+    window.stellaCore.initialize().then(() => {
+      console.log('🚀 STELLA Core fully initialized');
+      document.dispatchEvent(new CustomEvent('stella:initialized', {
+        detail: {
+          status: 'ready',
+          initializedAt: new Date().toISOString()
+        }
+      }));
+      
+      // Example: If you have a status bar or guidance element, you could initialize here:
+      const statusEl = document.getElementById('stella-status');
+      if (statusEl) {
+        statusEl.textContent = 'STELLA is active and ready to assist you.';
+      }
+      
+      const guidanceEl = document.getElementById('stella-guidance');
+      if (guidanceEl) {
+        window.stellaCore.provideInitialGuidance().then(guidance => {
+          guidance && (guidanceEl.innerHTML = guidance);
+        });
+      }
+      
+      // Log for confirmation
+      console.log('STELLA successfully loaded all interfaces.');
     });
+  } else {
+    console.warn('STELLA elements not found. Initialization skipped.');
+  }
+});

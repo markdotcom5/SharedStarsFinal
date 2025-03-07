@@ -177,4 +177,4 @@ class ProgressAssessment {
     }
 }
 
-export default ProgressAssessment;
+window.ProgressAssessment = ProgressAssessment;

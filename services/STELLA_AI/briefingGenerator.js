@@ -1,7 +1,5 @@
 // services/STELLA_AI/briefingGenerator.js
-const { OpenAI } = require('openai');
-const User = require('../../models/User');
-const { DailyBriefing } = require('../../models/DailyBriefing');
+const { openai, OpenAI } = require('../openaiService'); // ✅ Correct!
 const config = require('../../config');
 const logger = require('../../utils/logger');
 const physicalMissions = require('../../public/js/training/physical/mission-data.json').physicalMissions;

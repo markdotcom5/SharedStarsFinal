@@ -1,8 +1,49 @@
+// Console output optimizations
+const consoleLogOriginal = console.log;
+console.log = function() {
+  // Completely block large data arrays and objects
+  if (arguments.length > 0) {
+    // Block arrays
+    if (Array.isArray(arguments[0]) && arguments[0].length > 3) {
+      return consoleLogOriginal(`[Array with ${arguments[0].length} items - hidden]`);
+    }
+    
+    // Block large objects
+    if (typeof arguments[0] === 'object' && !Array.isArray(arguments[0]) && arguments[0] !== null) {
+      return consoleLogOriginal(`[Object with ${Object.keys(arguments[0]).length} keys - hidden]`);
+    }
+    
+    // Block long strings
+    if (typeof arguments[0] === 'string' && arguments[0].length > 300) {
+      return consoleLogOriginal(`${arguments[0].substring(0, 50)}... [truncated]`);
+    }
+  }
+  
+  // Only allow through specific patterns
+  if (arguments.length > 0 && typeof arguments[0] === 'string') {
+    const message = arguments[0];
+    if (message.startsWith('✅') || 
+        message.startsWith('🔄') || 
+        message.startsWith('🚀') || 
+        message.startsWith('⚠️') || 
+        message.startsWith('❌') ||
+        message.includes('Connected') ||
+        message.includes('initialized') ||
+        message.includes('Server running')) {
+      return consoleLogOriginal.apply(this, arguments);
+    }
+  }
+  
+  // Uncomment for debugging
+  // return consoleLogOriginal.apply(this, arguments);
+};
+
+// Core dependencies
 const dotenv = require('dotenv');
 dotenv.config();
-
 const http = require("http");
 const path = require("path");
+const fs = require('fs');
 const WebSocket = require("ws");
 const net = require("net");
 const bodyParser = require("body-parser");
@@ -18,237 +59,14 @@ const session = require("express-session");
 const EventEmitter = require('events');
 const User = require('./models/User');
 const UserProgress = require("./models/UserProgress");
-const trainingPhysicalApiRoutes = require('./routes/api/training-physical');
-const trainingPhysicalRoutes = require('./routes/training/physical');
 const cron = require('node-cron');
 const dailyBriefingService = require('./services/dailyBriefingService');
-
-
-// Define ObjectId class for mock mongoose
-class ObjectId {
-  constructor(id) {
-    this.id = id || crypto.randomUUID().replace(/-/g, '');
-  }
-  
-  toString() {
-    return this.id;
-  }
-  
-  equals(other) {
-    return other && this.id === other.id;
-  }
-}
+const schedule = require('node-schedule');
+const { getPhysicalTrainingProgress } = require('./services/progressServices');
 
 // ============================
-// 0. MOCK MONGOOSE SETUP - HAS TO BE FIRST
+// 0. SESSION STORE SETUP
 // ============================
-// Create mock MongoDB compatibility layer
-const mongoose = require("mongoose");
-
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("✅ MongoDB Connected"))
-    .catch(err => console.error("❌ MongoDB Connection Error:", err));
-
-
-
-const mockMongoose = {
-  connect: () => {
-    console.log('✅ Mock mongoose connect called (no actual connection)');
-    return Promise.resolve();
-  },
-  disconnect: () => {
-    console.log('✅ Mock mongoose disconnect called');
-    return Promise.resolve();
-  },
-  connection: {
-    on: (event, callback) => {
-      console.log(`✅ Mock MongoDB ${event} event registered`);
-      if (event === 'connected') {
-        // Call the connected callback immediately
-        setTimeout(callback, 10);
-      }
-    },
-    once: (event, callback) => {
-      console.log(`✅ Mock MongoDB ${event} event registered (once)`);
-      if (event === 'connected') {
-        // Call the connected callback immediately
-        setTimeout(callback, 10);
-      }
-    },
-    close: (force, callback) => {
-      console.log(`✅ Mock MongoDB connection closed`);
-      if (callback) callback();
-      return Promise.resolve();
-    }
-  },
-  // Add Types directly on mongoose
-  Types: {
-    ObjectId: ObjectId,
-    String: String,
-    Number: Number,
-    Boolean: Boolean,
-    Date: Date,
-    Mixed: Object,
-    Array: Array,
-    Buffer: Buffer
-  },
-  Schema: function(definition, options) {
-    const mockSchema = {
-      ...definition,
-      set: () => mockSchema,
-      pre: (hook, fn) => {
-        // Store the pre-save hook
-        if (!mockSchema._hooks) mockSchema._hooks = {};
-        if (!mockSchema._hooks[hook]) mockSchema._hooks[hook] = [];
-        mockSchema._hooks[hook].push(fn);
-        return {
-          post: () => mockSchema
-        };
-      },
-      methods: {},
-      statics: {},
-      virtual: (field) => {
-        return {
-          get: (fn) => mockSchema
-        };
-      },
-      path: () => ({
-        validate: () => mockSchema
-      }),
-      index: () => mockSchema
-    };
-    
-    // Add Types to Schema
-    mockSchema.Types = {
-      ObjectId: ObjectId,
-      String: String,
-      Number: Number,
-      Boolean: Boolean,
-      Date: Date,
-      Mixed: Object,
-      Array: Array,
-      Buffer: Buffer
-    };
-    
-    return mockSchema;
-  }
-};
-
-// Add Schema.Types property to Schema constructor
-mockMongoose.Schema.Types = {
-  ObjectId: ObjectId,
-  String: String,
-  Number: Number,
-  Boolean: Boolean,
-  Date: Date, 
-  Mixed: Object,
-  Array: Array,
-  Buffer: Buffer
-};
-
-// ============================
-// 0. IMPORTANT: MONGOOSE COMPLETE CUTOFF
-// ============================
-// This needs to be at the very top, before any other modules are loaded
-// It will prevent any real mongoose connections
-const fs = require('fs');
-const Module = require('module');
-const originalRequire = Module.prototype.require;
-
-// Mock mongoose completely - all modules that try to use mongoose will get this mock
-Module.prototype.require = function(id) {
-  if (id === 'mongoose') {
-    return mockMongoose;
-  }
-  
-  // Special case for moduleLoader
-  if (id === './modules/moduleLoader' || id === '../modules/moduleLoader') {
-    return {
-      init: function() {
-        console.log('✅ Mock module loader initialized (no database)');
-        return Promise.resolve();
-      },
-      loadModules: function() {
-        console.log('✅ Mock modules loaded (no database)');
-        return Promise.resolve([
-          { 
-            moduleId: 'eva-basic',
-            name: 'EVA Basics',
-            description: 'Introduction to Extravehicular Activity',
-            category: 'EVA',
-            level: 'Basic',
-            points: 100
-          },
-          {
-            moduleId: 'emergency-procedures',
-            name: 'Emergency Procedures',
-            description: 'How to handle emergency situations in space',
-            category: 'Safety',
-            level: 'Advanced',
-            points: 250
-          },
-          {
-            moduleId: 'navigation',
-            name: 'Space Navigation',
-            description: 'Fundamentals of navigation in space',
-            category: 'Navigation',
-            level: 'Intermediate',
-            points: 150
-          }
-        ]);
-      },
-      getModuleById: function(moduleId) {
-        const modules = [
-          { 
-            moduleId: 'eva-basic',
-            name: 'EVA Basics',
-            description: 'Introduction to Extravehicular Activity',
-            category: 'EVA',
-            level: 'Basic',
-            points: 100
-          },
-          {
-            moduleId: 'emergency-procedures',
-            name: 'Emergency Procedures',
-            description: 'How to handle emergency situations in space',
-            category: 'Safety',
-            level: 'Advanced',
-            points: 250
-          },
-          {
-            moduleId: 'navigation',
-            name: 'Space Navigation',
-            description: 'Fundamentals of navigation in space',
-            category: 'Navigation',
-            level: 'Intermediate',
-            points: 150
-          }
-        ];
-        
-        return Promise.resolve(modules.find(m => m.moduleId === moduleId) || null);
-      }
-    };
-  }
-  
-  return originalRequire.call(this, id);
-};
-
-const app = express();
-const server = http.createServer(app);
-
-// Simple in-memory database replacement
-const inMemoryDB = {
-  users: [],
-  sessions: [],
-  modules: [],
-  progress: [],
-  leaderboard: []
-};
-
-// ============================
-// 1. PROPER MEMORY STORE
-// ============================
-// Create a proper memory store that extends EventEmitter 
 class MemoryStore extends EventEmitter {
   constructor() {
     super();
@@ -296,346 +114,391 @@ class MemoryStore extends EventEmitter {
 }
 
 // ============================
-// 2. MIDDLEWARE SETUP
+// 1. MONGOOSE SETUP
+// ============================
+const mongoose = require("mongoose");
+
+// Disable Mongoose debug mode to reduce console spam
+mongoose.set('debug', false);
+
+// Connect to MongoDB with reduced logging
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("✅ MongoDB Connected"))
+    .catch(err => console.error("❌ MongoDB Connection Error:", err.message));
+
+// Add Schema.Types property to Schema constructor
+mongoose.Schema.Types = mongoose.Schema.Types || {
+  ObjectId: mongoose.Types.ObjectId,
+  String: String,
+  Number: Number,
+  Boolean: Boolean,
+  Date: Date,
+  Mixed: mongoose.Schema.Types.Mixed || Object,
+  Array: Array,
+  Buffer: Buffer
+};
+
+// ============================
+// 2. EXPRESS APP SETUP
+// ============================
+const app = express();
+const server = http.createServer(app);
+
+// ============================
+// 3. MIDDLEWARE SETUP
 // ============================
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      scriptSrc: ["'self'", "'unsafe-inline'"]
+    }
+  }
+}));
 app.use(compression());
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Ensure JavaScript files are served with the correct MIME type
+// MIME type handling
 app.use((req, res, next) => {
   if (req.path.endsWith('.js')) {
     res.type('application/javascript');
+  } else if (req.path.endsWith('.css')) {
+    res.type('text/css');
   }
   next();
 });
-// Add Content Security Policy middleware
-app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "script-src 'self' 'unsafe-inline'"
-  );
-  next();
-});
-// ✅ Rate Limiting - Prevent API abuse
+
+// Rate limiting
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100,
     message: { error: "Too many requests, please try again later." }
 });
 app.use("/api/", apiLimiter);
-app.use((req, res, next) => {
-  if (req.path.endsWith('.css')) {
-    res.type('text/css');
-  }
-  next();
-});
-// Create instance of memory store
-const sessionStore = new MemoryStore();
 
-// Session middleware using memory store instead of MongoDB
+// Session setup
+const sessionStore = new MemoryStore();
 app.use(session({
     secret: process.env.SESSION_SECRET || "default_secret_key",
     resave: false,
     saveUninitialized: false,
     store: sessionStore,
-    cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 }
+    cookie: { 
+      secure: process.env.NODE_ENV === "production", 
+      httpOnly: true, 
+      maxAge: 1000 * 60 * 60 * 24 * 7 
+    }
 }));
 
-// Enhance the mockMongoose with the model function
-mockMongoose.model = function(name, schema) {
-  // Initialize collection if it doesn't exist
-  if (!inMemoryDB[name.toLowerCase()]) {
-    inMemoryDB[name.toLowerCase()] = [];
-  }
-  
-  // Create a mock model with basic CRUD operations
-  const collection = inMemoryDB[name.toLowerCase()];
-  
-  // Check if this model has already been created
-  if (mockMongoose.models && mockMongoose.models[name]) {
-    return mockMongoose.models[name];
-  }
-  
-  const mockModel = {
-    find: (criteria) => {
-      const results = collection.filter(item => {
-        if (!criteria) return true;
-        return Object.keys(criteria).every(key => {
-          if (criteria[key] instanceof ObjectId) {
-            return item[key] && item[key].toString() === criteria[key].toString();
-          }
-          return item[key] === criteria[key];
-        });
-      });
-      
-      return {
-        sort: () => ({ 
-          exec: (cb) => cb ? cb(null, results) : Promise.resolve(results),
-          limit: () => ({ exec: (cb) => cb ? cb(null, results.slice(0, 10)) : Promise.resolve(results.slice(0, 10)) })
-        }),
-        limit: () => ({ 
-          exec: (cb) => cb ? cb(null, results.slice(0, 10)) : Promise.resolve(results.slice(0, 10)),
-          sort: () => ({ exec: (cb) => cb ? cb(null, results) : Promise.resolve(results) })
-        }),
-        exec: (cb) => cb ? cb(null, results) : Promise.resolve(results),
-        populate: () => ({
-          exec: (cb) => cb ? cb(null, results) : Promise.resolve(results),
-          sort: () => ({ exec: (cb) => cb ? cb(null, results) : Promise.resolve(results) })
-        })
-      };
-    },
-    findOne: (criteria) => {
-      const result = collection.find(item => {
-        if (!criteria) return true;
-        return Object.keys(criteria).every(key => {
-          if (criteria[key] instanceof ObjectId) {
-            return item[key] && item[key].toString() === criteria[key].toString();
-          }
-          return item[key] === criteria[key];
-        });
-      });
-      
-      return {
-        exec: (cb) => cb ? cb(null, result) : Promise.resolve(result),
-        populate: () => ({
-          exec: (cb) => cb ? cb(null, result) : Promise.resolve(result)
-        })
-      };
-    },
-    findById: (id) => {
-      const idStr = id instanceof ObjectId ? id.toString() : id;
-      const result = collection.find(item => {
-        const itemId = item._id instanceof ObjectId ? item._id.toString() : item._id;
-        return itemId === idStr;
-      });
-      
-      return {
-        exec: (cb) => cb ? cb(null, result) : Promise.resolve(result),
-        populate: () => ({
-          exec: (cb) => cb ? cb(null, result) : Promise.resolve(result)
-        })
-      };
-    },
-    create: function(data) {
-      const processData = (item) => {
-        // Create a new object from the data
-        const newItem = { ...item };
-        
-        // Generate an _id if one doesn't exist
-        if (!newItem._id) {
-          newItem._id = new ObjectId();
-        }
-        
-        // Apply any pre-save hooks if they exist
-        if (schema && schema._hooks && schema._hooks.save) {
-          schema._hooks.save.forEach(hook => {
-            // Mock the next function
-            const next = (err) => {
-              if (err) throw err;
-            };
-            
-            // Set 'this' context to the new item
-            const context = {
-              ...newItem,
-              isModified: (field) => true, // Always return true for simplicity
-            };
-            
-            // Execute the hook
-            hook.call(context, next);
-          });
-        }
-        
-        return newItem;
-      };
-      
-      if (Array.isArray(data)) {
-        const newItems = data.map(processData);
-        collection.push(...newItems);
-        return Promise.resolve(newItems);
-      } else {
-        const newItem = processData(data);
-        collection.push(newItem);
-        return Promise.resolve(newItem);
-      }
-    },
-    updateOne: (criteria, update) => {
-      const index = collection.findIndex(item => {
-        return Object.keys(criteria).every(key => {
-          if (criteria[key] instanceof ObjectId) {
-            return item[key] && item[key].toString() === criteria[key].toString();
-          }
-          return item[key] === criteria[key];
-        });
-      });
-      
-      if (index !== -1) {
-        if (update.$set) {
-          collection[index] = { ...collection[index], ...update.$set };
-        }
-        if (update.$inc) {
-          Object.entries(update.$inc).forEach(([key, value]) => {
-            collection[index][key] = (collection[index][key] || 0) + value;
-          });
-        }
-        return Promise.resolve({ nModified: 1, modifiedCount: 1 });
-      }
-      
-      return Promise.resolve({ nModified: 0, modifiedCount: 0 });
-    },
-    findByIdAndUpdate: (id, update, options) => {
-      const idStr = id instanceof ObjectId ? id.toString() : id;
-      const index = collection.findIndex(item => {
-        const itemId = item._id instanceof ObjectId ? item._id.toString() : item._id;
-        return itemId === idStr;
-      });
-      
-      if (index !== -1) {
-        if (update.$set) {
-          collection[index] = { ...collection[index], ...update.$set };
-        } else {
-          collection[index] = { ...collection[index], ...update };
-        }
-        
-        return options && options.new 
-          ? Promise.resolve(collection[index])
-          : Promise.resolve({ nModified: 1, modifiedCount: 1 });
-      }
-      
-      return Promise.resolve(null);
-    },
-    deleteOne: (criteria) => {
-      const initialLength = collection.length;
-      const newCollection = collection.filter(item => {
-        return !Object.keys(criteria).every(key => {
-          if (criteria[key] instanceof ObjectId) {
-            return item[key] && item[key].toString() === criteria[key].toString();
-          }
-          return item[key] === criteria[key];
-        });
-      });
-      
-      inMemoryDB[name.toLowerCase()] = newCollection;
-      
-      return Promise.resolve({ deletedCount: initialLength - newCollection.length });
-    },
-    countDocuments: (criteria) => {
-      const count = collection.filter(item => {
-        if (!criteria) return true;
-        return Object.keys(criteria).every(key => {
-          if (criteria[key] instanceof ObjectId) {
-            return item[key] && item[key].toString() === criteria[key].toString();
-          }
-          return item[key] === criteria[key];
-        });
-      }).length;
-      
-      return Promise.resolve(count);
-    }
-  };
-  
-  // Store the model
-  if (!mockMongoose.models) {
-    mockMongoose.models = {};
-  }
-  mockMongoose.models[name] = mockModel;
-  
-  return mockModel;
-};
-// Schedule daily briefing generation at 5 AM
+// ============================
+// 4. SCHEDULED TASKS
+// ============================
 cron.schedule('0 5 * * *', async () => {
   console.log('Running scheduled daily briefing generation');
   try {
     const result = await dailyBriefingService.scheduleDailyBriefing();
-    console.log('Completed daily briefing generation:', result);
+    console.log('Completed daily briefing generation');
   } catch (error) {
-    console.error('Error in scheduled briefing generation:', error);
+    console.error('Error in scheduled briefing generation:', error.message);
   }
 });
 
-// You can add other scheduled tasks here as needed
 // ============================
-// 4. ROUTE IMPORTS & SETUP
+// 5. ROUTE IMPORTS & SETUP
 // ============================
-try {
-  // Import all routes
-  const userRoutes = require("./routes/userRoutes");   
-  const authRoutes = require("./routes/auth");   
-  const creditRoutes = require("./routes/credits");   
-  const paymentRoutes = require("./routes/payment");   
-  const trainingRoutes = require('./routes/training');   
-  const leaderboardRoutes = require("./routes/leaderboard");   
-  const countdownRoutes = require("./routes/countdown");   
-  const progressRoutes = require("./routes/progress");   
-  const academyRoutes = require("./routes/academy");   
-  const socialPlatformRoutes = require("./routes/socialPlatform");   
-  const chatRoutes = require("./routes/chat");   
-  const stripeRoutes = require("./routes/stripe/index");   
-  const stripeWebhookRoutes = require("./webhooks/stripe");   
-  const subscriptionRoutes = require("./routes/subscription");   
-  const aiRoutes = require("./routes/aiRoutes");   
-  const aiSocialRoutes = require("./routes/aiSocial");   
-  const physicalTrainingRoutes = require("./routes/training/physical");   
-  const briefingRoutes = require('./routes/api/briefings');   
-  const userRoutesAlt = require('./routes/user'); // This one stays
+console.log("🔄 Starting route setup...");
 
-// Import routes
-  console.log("✅ Routes imported successfully");
+// Define empty objects for all routes
+let authRoutes, userRoutes, creditRoutes, paymentRoutes, trainingRoutes, 
+    leaderboardRoutes, countdownRoutes, progressRoutes, academyRoutes,
+    socialPlatformRoutes, chatRoutes, stripeRoutes, stripeWebhookRoutes,
+    subscriptionRoutes, aiRoutes, aiSocialRoutes, briefingRoutes,
+    userRoutesAlt, assessmentRoutes, balanceRoutes, enduranceRoutes,
+    flexibilityRoutes, stellaRoutes, strengthRoutes;
 
-  // Set up routes
-  app.use("/api/auth", authRoutes);
-  app.use("/api/credits", creditRoutes);
-  app.use("/api/users", userRoutes);
-  app.use("/api/payment", paymentRoutes);
-  app.use("/api/training", trainingRoutes);
-  app.use("/api/leaderboard", leaderboardRoutes);
-  app.use("/api/countdown", countdownRoutes);
-  app.use("/api/progress", progressRoutes);
-  app.use("/api/academy", academyRoutes);
-  app.use("/api/social", socialPlatformRoutes);
-  app.use("/api/chat", chatRoutes);
-  app.use("/api/stripe", stripeRoutes);
-  app.use("/webhook/stripe", stripeWebhookRoutes);
-  app.use("/api/subscription", subscriptionRoutes);
-  app.use("/api/ai", aiRoutes);
-  app.use("/api/social/auth", aiSocialRoutes);
-  app.use("/api/training/physical", physicalTrainingRoutes);
-  app.use('/api/training/physical', require('./routes/api/training-physical'));
-  app.use('/api/training/physical', trainingPhysicalApiRoutes);
-  app.use('/training/physical', trainingPhysicalRoutes);
-  app.use('/api/users', userRoutes);
-  app.use('/api/users', userRoutesAlt);
+// Import routes with individual try-catch blocks
+try { userRoutes = require("./routes/userRoutes"); } catch (e) { console.error("❌ userRoutes:", e.message); }
+try { authRoutes = require("./routes/auth"); } catch (e) { console.error("❌ authRoutes:", e.message); }
+try { creditRoutes = require("./routes/credits"); } catch (e) { console.error("❌ creditRoutes:", e.message); }
+try { paymentRoutes = require("./routes/payment"); } catch (e) { console.error("❌ paymentRoutes:", e.message); }
+try { trainingRoutes = require('./routes/training'); } catch (e) { console.error("❌ trainingRoutes:", e.message); }
+try { leaderboardRoutes = require("./routes/leaderboard"); } catch (e) { console.error("❌ leaderboardRoutes:", e.message); }
+try { countdownRoutes = require("./routes/countdown"); } catch (e) { console.error("❌ countdownRoutes:", e.message); }
+try { progressRoutes = require("./routes/progress"); } catch (e) { console.error("❌ progressRoutes:", e.message); }
+try { academyRoutes = require("./routes/academy"); } catch (e) { console.error("❌ academyRoutes:", e.message); }
+try { socialPlatformRoutes = require("./routes/socialPlatform"); } catch (e) { console.error("❌ socialPlatformRoutes:", e.message); }
+try { chatRoutes = require("./routes/chat"); } catch (e) { console.error("❌ chatRoutes:", e.message); }
+try { stripeRoutes = require("./routes/stripe/index"); } catch (e) { console.error("❌ stripeRoutes:", e.message); }
+try { stripeWebhookRoutes = require("./webhooks/stripe"); } catch (e) { console.error("❌ stripeWebhookRoutes:", e.message); }
+try { subscriptionRoutes = require("./routes/subscription"); } catch (e) { console.error("❌ subscriptionRoutes:", e.message); }
+try { aiRoutes = require("./routes/aiRoutes"); } catch (e) { console.error("❌ aiRoutes:", e.message); }
+try { aiSocialRoutes = require("./routes/aiSocial"); } catch (e) { console.error("❌ aiSocialRoutes:", e.message); }
+try { briefingRoutes = require('./routes/api/briefings'); } catch (e) { console.error("❌ briefingRoutes:", e.message); }
+try { userRoutesAlt = require('./routes/user'); } catch (e) { console.error("❌ userRoutesAlt:", e.message); }
+try { assessmentRoutes = require('./routes/assessments'); } catch (e) { console.error("❌ assessmentRoutes:", e.message); }
+try { balanceRoutes = require('./routes/training/missions/balance.js'); } catch (e) { console.error("❌ balanceRoutes:", e.message); }
+try { enduranceRoutes = require('./routes/training/missions/endurance.js'); } catch (e) { console.error("❌ enduranceRoutes:", e.message); }
+try { flexibilityRoutes = require('./routes/training/missions/flexibility.js'); } catch (e) { console.error("❌ flexibilityRoutes:", e.message); }
+try { strengthRoutes = require('./routes/training/missions/strength.js'); } catch (e) { console.error("❌ strengthRoutes:", e.message); }
+try { stellaRoutes = require("./routes/api/stella-minimal"); } catch (e) { console.error("❌ stellaRoutes:", e.message); }
+// ============================
+// 6. DIRECT STELLA ROUTER SETUP
+// ============================
+// Create a direct stella router since the imported one isn't working
+const stellaDirectRouter = express.Router();
 
-// Setup briefing routes
-app.use('/api/briefings', briefingRoutes);
-} catch (error) {
-  console.error('❌ Error importing routes:', error);
-  
-  // Set up basic routes for testing if the main routes fail
-  app.get('/api/training/physical', async (req, res) => {
-    const progress = await getPhysicalTrainingProgress(req.session.user.id);
-    res.json(progress);
+// Simple STELLA endpoints
+stellaDirectRouter.get('/test', (req, res) => {
+  res.json({ message: "STELLA API is working" });
 });
 
-  
-  app.get('/api/auth/test', (req, res) => {
-    res.json({ message: 'Auth routes are available' });
+stellaDirectRouter.post('/initialize', (req, res) => {
+  res.json({
+    success: true,
+    message: "STELLA initialized successfully",
+    version: "1.0"
   });
-}
-// Add this middleware after your Content Security Policy middleware
-app.use((req, res, next) => {
-  if (req.path.endsWith('.css')) {
-    res.type('text/css');
-  }
-  next();
 });
+
+stellaDirectRouter.post('/connect', (req, res) => {
+  const { userId } = req.body;
+  res.json({
+    success: true,
+    sessionId: `stella_${Date.now()}`,
+    message: "Connected to STELLA"
+  });
+});
+if (stellaRoutes) {
+  app.use("/api/stella", stellaRoutes);
+  console.log("✅ STELLA routes mounted at /api/stella");
+} else {
+  // Only use direct router if import fails
+  app.use('/api/stella', stellaDirectRouter);
+  console.log("⚠️ Using fallback direct STELLA routes at /api/stella");
+}
+// Enhanced STELLA guidance endpoint with OpenAI integration
+stellaDirectRouter.post('/guidance', async (req, res) => {
+  try {
+    const { userId, question } = req.body;
+    
+    if (!question) {
+      return res.json({
+        success: true,
+        guidance: {
+          message: "What would you like to know about your space training?",
+          actionItems: ["Ask about modules", "Check your progress", "Get exercise guidance"]
+        }
+      });
+    }
+    
+    // If OpenAI is configured, use it
+    if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== "MISSING_KEY") {
+      try {
+        const { OpenAI } = require("openai");
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        
+        // Call OpenAI
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [
+            { 
+              role: "system", 
+              content: "You are STELLA, an AI assistant for space training on SharedStars. You help users prepare for space missions through guided training programs. Your name stands for Space Training Enhancement and Learning Logic Assistant. Respond in a helpful, encouraging tone. Format your response with a main message followed by 2-3 actionable suggestions."
+            },
+            { role: "user", content: question }
+          ],
+          max_tokens: 500,
+          temperature: 0.7
+        });
+        
+        // Extract the assistant's response
+        const assistantResponse = response.choices[0].message.content;
+        
+        // Split into message and action items
+        let message = assistantResponse;
+        let actionItems = [];
+        
+        // Try to extract action items from bullet points
+        const paragraphs = assistantResponse.split('\n\n');
+        if (paragraphs.length > 1) {
+          message = paragraphs[0];
+          
+          // Look for bullet points in remaining paragraphs
+          for (let i = 1; i < paragraphs.length; i++) {
+            const bulletPoints = paragraphs[i].split('\n').filter(line => 
+              line.trim().startsWith('- ') || 
+              line.trim().startsWith('* ')
+            );
+            
+            if (bulletPoints.length > 0) {
+              actionItems = bulletPoints.map(bp => 
+                bp.trim().replace(/^[\-\*]\s+/, '')
+              );
+              break;
+            }
+          }
+        }
+        
+        // If no action items found, use default
+        if (actionItems.length === 0) {
+          actionItems = [
+            "Ask about specific training modules",
+            "Check your progress dashboard",
+            "Request personalized guidance"
+          ];
+        }
+        
+        return res.json({
+          success: true,
+          guidance: {
+            message: message,
+            actionItems: actionItems.slice(0, 3)
+          }
+        });
+      } catch (openaiError) {
+        console.error('Error with OpenAI API:', openaiError);
+      }
+    }
+    
+    // Fallback response if OpenAI fails or isn't configured
+    return res.json({
+      success: true,
+      guidance: {
+        message: `I'll help you with your space training. You asked: "${question}"`,
+        actionItems: [
+          "Check your current training modules",
+          "Review your progress in the dashboard",
+          "Complete your assessment to unlock personalized guidance"
+        ]
+      }
+    });
+  } catch (error) {
+    console.error('Error handling guidance request:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to get guidance',
+      guidance: {
+        message: "I'm having trouble with my systems right now. Please try again in a moment.",
+        actionItems: ["Try refreshing the page", "Check your internet connection"]
+      }
+    });
+  }
+});
+
 // ============================
-// 5. STATIC FILES
+// 7. TEST ROUTES
+// ============================
+// Simple test routes
+app.get('/api/test-direct', (req, res) => {
+  res.json({ message: 'Direct test route is working' });
+});
+
+const testRouter = express.Router();
+testRouter.get('/test', (req, res) => {
+  res.json({ message: 'Test router is working' });
+});
+app.use('/api/test-router', testRouter);
+
+// ============================
+// 8. ROUTES MOUNTING
+// ============================
+// Mount all imported routes
+if (authRoutes) app.use("/api/auth", authRoutes);
+if (creditRoutes) app.use("/api/credits", creditRoutes);
+if (userRoutes) app.use("/api/users", userRoutes);
+if (paymentRoutes) app.use("/api/payment", paymentRoutes);
+if (trainingRoutes) app.use("/api/training", trainingRoutes);
+if (leaderboardRoutes) app.use("/api/leaderboard", leaderboardRoutes);
+if (countdownRoutes) app.use("/api/countdown", countdownRoutes);
+if (progressRoutes) app.use("/api/progress", progressRoutes);
+if (academyRoutes) app.use("/api/academy", academyRoutes);
+if (socialPlatformRoutes) app.use("/api/social", socialPlatformRoutes);
+if (chatRoutes) app.use("/api/chat", chatRoutes);
+if (stripeRoutes) app.use("/api/stripe", stripeRoutes);
+if (stripeWebhookRoutes) app.use("/webhook/stripe", stripeWebhookRoutes);
+if (subscriptionRoutes) app.use("/api/subscription", subscriptionRoutes);
+if (aiRoutes) app.use("/api/ai", aiRoutes);
+if (aiSocialRoutes) app.use("/api/social/auth", aiSocialRoutes);
+if (assessmentRoutes) app.use('/api/assessments', assessmentRoutes);
+if (briefingRoutes) app.use('/api/briefings', briefingRoutes);
+if (balanceRoutes) app.use('/training/physical/mission/balance', balanceRoutes);
+if (enduranceRoutes) app.use('/training/physical/mission/endurance', enduranceRoutes);
+if (flexibilityRoutes) app.use('/training/physical/mission/flexibility', flexibilityRoutes);
+if (strengthRoutes) app.use('/training/physical/mission/strength', strengthRoutes);
+
+// Mount direct STELLA router - this one always works
+app.use('/api/stella', stellaDirectRouter);
+console.log("✅ Direct STELLA routes mounted at /api/stella");
+
+// ============================
+// 9. ADDITIONAL API ENDPOINTS
+// ============================
+app.get('/api/training/physical', async (req, res) => {
+  try {
+    const progress = await getPhysicalTrainingProgress(req.session.user?.id || 'anonymous');
+    res.json(progress);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get physical training progress" });
+  }
+});
+
+app.get('/api/auth/status', (req, res) => {
+  res.json({ status: req.session.user ? 'authenticated' : 'unauthenticated' });
+});
+
+app.get('/api/auth/test', (req, res) => {
+  res.json({ message: 'Auth routes are available' });
+});
+
+// ============================
+// 10. WEBSOCKET SETUP
+// ============================
+// Set up WebSocket server
+const wsServer = new WebSocket.Server({ noServer: true });
+const clients = new Map();
+
+wsServer.on('connection', (ws, req) => {
+  const userId = req.userId || 'anonymous';
+  clients.set(userId, ws);
+  
+  ws.send(JSON.stringify({
+    type: 'CONNECTION_ESTABLISHED',
+    timestamp: new Date().toISOString()
+  }));
+  
+  ws.on('message', (message) => {
+    try {
+      const data = JSON.parse(message);
+      // Handle websocket messages here
+      ws.send(JSON.stringify({
+        type: 'RECEIVED',
+        data: data
+      }));
+    } catch (error) {
+      console.error('WebSocket message error:', error);
+    }
+  });
+  
+  ws.on('close', () => {
+    clients.delete(userId);
+  });
+});
+
+// Handle WebSocket upgrade
+server.on('upgrade', (request, socket, head) => {
+  // Simple middleware to authenticate WebSocket connections
+  const userId = 'anonymous'; // In a real app, extract from request
+  
+  wsServer.handleUpgrade(request, socket, head, (ws) => {
+    request.userId = userId;
+    wsServer.emit('connection', ws, request);
+  });
+});
+
+// ============================
+// 11. STATIC FILES
 // ============================
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -647,85 +510,46 @@ const staticPages = [
     { route: "/login", file: "login.html" },
     { route: "/signup", file: "signup.html" },
     { route: "/subscribe", file: "subscribe.html" },
-    { route: "/training", file: "training.html" }
+    { route: "/training", file: "training.html" },
+    { route: "/physicalTraining", file: "physicalTraining.html" },
+    { route: "/trainingHub", file: "trainingHub.html" },
+    { route: "/mission-control", file: "mission-control.html" }
 ];
+
 staticPages.forEach(({ route, file }) => {
-    app.get(route, (req, res) => res.sendFile(path.join(__dirname, "public", file)));
+    app.get(route, (req, res) => {
+      res.sendFile(path.join(__dirname, "public", file), err => {
+        if (err) {
+          console.error(`Error sending file ${file}:`, err.message);
+          res.status(404).send('File not found');
+        }
+      });
+    });
 });
-app.use(express.static('public'));
 
 // ============================
-// 6. ERROR HANDLING
+// 12. ERROR HANDLING
 // ============================
 app.use((req, res, next) => {
-    console.log(`⚠️ 404 Not Found: ${req.originalUrl}`);
-    res.status(404).json({ error: "Not Found", path: req.originalUrl });
+  console.log(`⚠️ 404 Not Found: ${req.originalUrl}`);
+  res.status(404).json({ error: "Not Found", path: req.originalUrl });
 });
 
 app.use((err, req, res, next) => {
-    console.error("❌ Server Error:", err);
-    res.status(500).json({ error: "Internal Server Error", message: err.message });
+  console.error("❌ Server Error:", err.message);
+  res.status(500).json({ error: "Internal Server Error", message: err.message });
 });
 
 // ============================
-// 7. SHUTDOWN HANDLING
-// ============================
-process.on('SIGINT', () => {
-    console.log('🛑 Gracefully shutting down');
-    server.close(() => {
-        console.log('✅ HTTP server closed');
-        process.exit(0);
-    });
-    
-    // Force close if it takes too long
-    setTimeout(() => {
-        console.error('⚠️ Could not close connections in time, forcefully shutting down');
-        process.exit(1);
-    }, 5000);
-});
-
-// Handle nodemon restarts
-process.once('SIGUSR2', () => {
-    console.log('🔄 Nodemon restart received');
-    server.close(() => {
-        console.log('✅ Server closed for nodemon restart');
-        process.kill(process.pid, 'SIGUSR2');
-    });
-    
-    // Force close if it takes too long
-    setTimeout(() => {
-        console.error('⚠️ Could not close server for nodemon restart, forcing');
-        process.kill(process.pid, 'SIGUSR2');
-    }, 2000);
-});
-
-// ============================
-// 8. START SERVER
+// 13. SERVER STARTUP
 // ============================
 const PORT = process.env.PORT || 3000;
 
-function startServer(port) {
-    if (port > 65535) {
-        console.error("❌ No available ports. Exiting.");
-        process.exit(1);
-    }
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`✅ STELLA AI integrated with OpenAI GPT-4o`);
+});
 
-    server.listen(port, () => {
-        console.log(`🚀 Server running on port ${port}`);
-    }).on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-            console.error(`❌ Port ${port} is in use. Trying next available port...`);
-            startServer(port + 1); // ✅ Fix: Add 1 instead of appending digits
-        } else {
-            console.error("❌ Server error:", err);
-            process.exit(1);
-        }
-    });
-}
-
-// Start server
-startServer(PORT);
-
-
-// Export for testing
+// Export app and server for testing
 module.exports = { app, server };
