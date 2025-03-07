@@ -513,8 +513,11 @@ const staticPages = [
     { route: "/training", file: "training.html" },
     { route: "/physicalTraining", file: "physicalTraining.html" },
     { route: "/trainingHub", file: "trainingHub.html" },
-    { route: "/mission-control", file: "mission-control.html" }
-];
+    { route: "/mission-control", file: "mission-control.html" },
+    { route: "/reset-password", file: "reset-password.html" },
+    { route: "/change-password", file: "change-password.html" },
+    { route: "/congratulations", file: "congratulations.html" }
+  ];
 
 staticPages.forEach(({ route, file }) => {
     app.get(route, (req, res) => {

@@ -106,31 +106,25 @@
             <image src="/icons/Logo (1).png" class="w-16 h-16"></image>
           </div>
           <div class="flex flex-col items-center justify-between">
-            <p class="text-heading5 text-white my-8">Welcome back</p>
+            <p class="text-heading5 text-white my-8">Create your account</p>
             
-            <form id="login-form" class="space-y-6 text-white">
+            <form id="signup-form" class="space-y-6 text-white">
+              <div class="flex items-center justify-between ">
+                <input type="text" name="firstname" id="firstname" placeholder="First Name" class="form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
+                <input type="text" name="lastname" id="lastname" placeholder="Last Name" class="form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
+              </div>
               <div class="w-[432px]">
                 <input type="email" name="email" id="email" placeholder="Email address" class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
               </div>
               <div class="w-[432px]">
                 <input type="password" name="password" id="password" placeholder="Password" class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
               </div>
-              <div class="flex items-center justify-between w-[432px]">
-                <div class="flex items-center space-x-2">
-                  <label class="flex items-center space-x-2 cursor-pointer">
-                    <input type="checkbox" class="hidden peer">
-                    <div class="w-6 h-6 border-2 border-blue-500 rounded-md flex items-center justify-center">
-                        <image src="/icons/checker.png" alt="Checked" class="hidden peer-checked:visible"></image>
-                    </div>
-                    <span class="text-white text-body-small-medium transition-all duration-300">Remember me</span>
-                  </label>
-                </div>
-                <p class="text-white text-body-small-medium">Forgot Password?</p>
-              </div>
-              <button type="submit" class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full ">Login</button>
-          </form>
+              <button type="submit" id="signup-btn" class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full ">Sign Up</button>
+              <p id="signup-error" class="text-red-500 text-sm text-center hidden"></p>
+            </form>
+
           <div class="flex flex-col items-center justify-between">
-            <p class="text-white text-body-small-medium my-8">Don't have an account? <a href="/register" class="text-blue-500">Sign up</a></p>
+            <p class="text-white text-body-small-medium my-8">Already have an account? <a href="/login" class="text-blue-500">Sign In</a></p>
             <div class="flex items-center justify-between gap-3 w-[432px] mb-10">
               <button type="submit" class="w-full flex items-center justify-center form-control text-body-xsmall-semibold gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
                 <img src="/icons/Google.png" alt="Google Logo" class="w-5 h-5"> 
@@ -203,6 +197,56 @@
         });
       });
     </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+      const signupForm = document.getElementById("signup-form");
+      const signupBtn = document.getElementById("signup-btn");
+      const signupError = document.getElementById("signup-error");
+
+      signupForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          signupError.classList.add("hidden");
+          signupBtn.textContent = "Signing up...";
+          signupBtn.disabled = true;
+
+          const firstname = document.getElementById("firstname").value;
+          const lastname = document.getElementById("lastname").value;
+          const name = `${firstname} ${lastname}`.trim(); // Combines first and last name
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          if (password.length < 6) {
+              signupError.textContent = "Password must be at least 6 characters.";
+              signupError.classList.remove("hidden");
+              signupBtn.textContent = "Sign Up";
+              signupBtn.disabled = false;
+              return;
+          }
+
+          try {
+              const response = await fetch("/api/auth/register", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ name, email, password })
+              });
+
+              const result = await response.json();
+
+              if (!response.ok) {
+                  throw new Error(result.error || "Registration failed. Try again.");
+              }
+
+              window.location.href = "/welcome.html";
+          } catch (error) {
+              signupError.textContent = error.message;
+              signupError.classList.remove("hidden");
+              signupBtn.textContent = "Sign Up";
+              signupBtn.disabled = false;
+          }
+      });
+  });
+</script>
     
     <!-- Language Selection & Navigation -->
     <script src="/js/languageSelection.js"></script>
@@ -227,135 +271,6 @@
           });
         });
       });
-      
-      function applyTranslations(lang) {
-        const translations = {
-          en: {
-            nav: {
-              home: "Home",
-              why: "Why SharedStars",
-              about: "About",
-              leaderboard: "Leaderboard",
-              login: "Login",
-              "mission-control": "Mission Control",
-              profile: "Profile",
-              signup: "Sign Up",
-              academy: "StelTrek Academy",
-              welcome: "Welcome",
-              subscribe: "Subscribe"
-            },
-            welcome: {
-              videoTagline: "Enough dreaming, let’s take a walk to show how we can get you up to space.",
-              ctaMessage: "Are you ready to begin your space journey?",
-              joinButton: "Join Now",
-              proceedButton: "Proceed",
-              aiStatus: "Initializing AI Coach..."
-            },
-            subscribe: {
-              pageTitle: "Subscribe - SharedStars",
-              heroTitle: "Chart Your Course to Space",
-              seatsWarning: "Space Seats are Filling Up Fast!",
-              currentPriceTitle: "Current Price",
-              currentPriceValue: "$450k",
-              currentPriceDesc: "Per space seat",
-              targetPriceTitle: "Target Price",
-              targetPriceValue: "$5k",
-              targetPriceDesc: "By 2039",
-              pathTitle: "Your Path to Space",
-              pathDesc: "*Based on market projections and your subscription plan",
-              baselineGraphTitle: "Baseline Ticket Price Projection",
-              baselineGraphDesc: "2022: $750K, 2025: $500K, 2029: $125K, 2034: $60K, 2039: $5K.",
-              personalGraphTitle: "Personalized Credits Projection",
-              personalGraphDesc: "This graph updates dynamically as you complete training modules and earn credits.",
-              yearsLabel: "Years",
-              monthsLabel: "Months",
-              weeksLabel: "Weeks",
-              daysLabel: "Days",
-              hoursLabel: "Hours",
-              minutesLabel: "Minutes",
-              personalTimelineTitle: "Your Accelerated Timeline",
-              creditsDisplay: "Your SharedStars Credits: 0",
-              paymentTitle: "Secure Your Journey",
-              plan: {
-                individual: {
-                  badge: "15-year track",
-                  title: "Individual Explorer",
-                  price: "$49.99",
-                  feature1: "Personal AI Coach",
-                  feature2: "10hrs Monthly VR",
-                  feature3: "100 Space Credits",
-                  cta: "Begin Journey"
-                },
-                family: {
-                  badge: "10-year track",
-                  title: "Family Pioneer",
-                  price: "$89.99",
-                  feature1: "4 Member Access",
-                  feature2: "Unlimited VR",
-                  feature3: "250 Space Credits",
-                  cta: "Secure Family Access"
-                },
-                elite: {
-                  badge: "1-year track",
-                  title: "Galactic Elite",
-                  price: "$2,048",
-                  feature1: "Priority Access",
-                  feature2: "Private Facility",
-                  feature3: "1000 Space Credits",
-                  cta: "Launch Next Year"
-                },
-                custom: {
-                  badge: "Flexible track",
-                  title: "Custom Contributor",
-                  feature1: "Flexible Contribution",
-                  feature2: "Credits Based on Contribution",
-                  cta: "Start Contributing"
-                }
-              }
-            },
-            footer: {
-              about: {
-                title: "About",
-                ourStory: "Our Story",
-                academy: "Space Academy"
-              },
-              community: {
-                title: "Community",
-                events: "Events",
-                forums: "Forums"
-              },
-              resources: {
-                title: "Resources",
-                faq: "FAQ",
-                support: "Support"
-              },
-              legal: {
-                title: "Legal",
-                terms: "Terms",
-                privacy: "Privacy"
-              },
-              followUs: "Follow Us",
-              copyright: "© 2025 Celestial Technologies, LLC. All Rights Reserved."
-            }
-          },
-          zh: {
-            // Chinese translations...
-          }
-          // Additional translations for ko and es as needed...
-        };
-
-        document.querySelectorAll("[data-i18n]").forEach((element) => {
-          const key = element.dataset.i18n;
-          const keys = key.split(".");
-          let translation = translations[lang];
-          keys.forEach((k) => {
-            translation = translation ? translation[k] : null;
-          });
-          if (translation) {
-            element.textContent = translation;
-          }
-        });
-      }
     </script>
     
     <!-- ES Module Imports for Custom JS -->
