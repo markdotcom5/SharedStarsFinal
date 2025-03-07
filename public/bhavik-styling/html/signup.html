@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="StelTrek Academy - Begin Your Journey to Space" />
+    <title data-i18n="subscribe.pageTitle">Subscribe - SharedStars Academy</title>
+
+    <!-- Custom CSS -->
+    <link href="/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/ai-assistant.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+
+     <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
+    <script src="/js/languageManager.js" defer></script>
+    <script type="module" src="/public/js/CountdownTimer.js"></script>
+    <script type="module" src="/js/HomepageHandler.js"></script>  
+
+    <!-- Inline styles for Stripe elements -->
+    <style>
+      .StripeElement {
+        background-color: #2A303C;
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid #374151;
+      }
+      .StripeElement--focus {
+        border-color: #60A5FA;
+      }
+      
+      /* DaisyUI modal override (if needed) */
+      .modal { display: none; }
+      .modal.modal-open { display: flex; }
+      
+      /* Additional custom styles */
+      body {
+        font-family: 'Inter', sans-serif;
+        scroll-behavior: smooth;
+      }
+    </style>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      // Replace with your actual publishable key
+      const stripe = Stripe('your_publishable_key'); 
+    </script>
+    
+    <!-- Language Selection Script -->
+    <script src="/js/languageSelection.js" defer></script>
+  </head>
+  <body class="min-h-screen bg-base-200 flex flex-col">
+    <!-- NAVBAR -->
+    <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg py-4">
+      <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
+        <!-- Logo -->
+        <div class="flex items-center mb-2 md:mb-0">
+          <a href="/index.html" aria-label="SharedStars Homepage" class="group">
+            <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+          </a>
+        </div>
+        <!-- Navigation Links -->
+        <ul class="flex flex-wrap gap-4">
+          <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
+          <li><a href="/academy.html" data-i18n="nav.academy">Academy</a></li>
+          <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+          <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+          <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+  
+          <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
+          <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
+          <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
+          <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
+          <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
+          <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
+        </ul>
+  
+        <div class="relative">
+          <button id="langDropdownBtn" class="flex items-center gap-2 text-white bg-gray-700 px-4 py-2 rounded-lg">
+            <span id="selectedLangIcon">🇺🇸</span>
+            <span id="selectedLangText">English</span>
+            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <ul id="langDropdownMenu" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 py-2 w-40">
+            <li><button class="dropdown-item" data-lang="en" data-flag="🇺🇸" aria-label="Switch to English">🇺🇸 English</button></li>
+            <li><button class="dropdown-item" data-lang="zh" data-flag="🇨🇳" aria-label="Switch to Chinese">🇨🇳 Chinese</button></li>
+            <li><button class="dropdown-item" data-lang="ko" data-flag="🇰🇷" aria-label="Switch to Korean">🇰🇷 Korean</button></li>
+            <li><button class="dropdown-item" data-lang="es" data-flag="🇪🇸" aria-label="Switch to Spanish">🇪🇸 Spanish</button></li>
+          </ul>
+        </div>
+        <button data-i18n="nav.getStarted" class="bg-gradient-to-r from-purple-500 to-blue-500 text-black px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">
+        </button>
+      </nav>      
+    </header>
+
+    <section class="h-[1024px]">
+      <div class="flex flex-col items-center justify-between">
+        <div class="w-[496px] mt-52 rounded-3xl bg-black border-white-100 border-2 items-center justify-between">
+          <div class="flex flex-col items-center justify-between">
+            <img src="/icons/Vector.png" class="w-[248px] h-[139px]" ></img>
+            <image src="/icons/Logo (1).png" class="w-16 h-16"></image>
+          </div>
+          <div class="flex flex-col items-center justify-between">
+            <p class="text-heading5 text-white my-8">Welcome back</p>
+            
+            <form id="login-form" class="space-y-6 text-white">
+              <div class="w-[432px]">
+                <input type="email" name="email" id="email" placeholder="Email address" class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
+              </div>
+              <div class="w-[432px]">
+                <input type="password" name="password" id="password" placeholder="Password" class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
+              </div>
+              <div class="flex items-center justify-between w-[432px]">
+                <div class="flex items-center space-x-2">
+                  <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" class="hidden peer">
+                    <div class="w-6 h-6 border-2 border-blue-500 rounded-md flex items-center justify-center">
+                        <image src="/icons/checker.png" alt="Checked" class="hidden peer-checked:visible"></image>
+                    </div>
+                    <span class="text-white text-body-small-medium transition-all duration-300">Remember me</span>
+                  </label>
+                </div>
+                <p class="text-white text-body-small-medium">Forgot Password?</p>
+              </div>
+              <button type="submit" class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full ">Login</button>
+          </form>
+          <div class="flex flex-col items-center justify-between">
+            <p class="text-white text-body-small-medium my-8">Don't have an account? <a href="/register" class="text-blue-500">Sign up</a></p>
+            <div class="flex items-center justify-between gap-3 w-[432px] mb-10">
+              <button type="submit" class="w-full flex items-center justify-center form-control text-body-xsmall-semibold gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
+                <img src="/icons/Google.png" alt="Google Logo" class="w-5 h-5"> 
+                <span>Continue with Google</span>
+              </button>
+              <button type="submit" class="w-full flex items-center justify-center form-control text-body-xsmall-semibold gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
+                <img src="/icons/Apple.png" alt="Google Logo" class="w-5 h-5"> 
+                <span>Continue with Google</span>
+              </button>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-white py-12 mt-auto" data-i18n>
+      <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
+        <!-- About -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+            <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">Space Academy</a></li>
+          </ul>
+        </div>
+        <!-- Community -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+            <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+          </ul>
+        </div>
+        <!-- Resources -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+            <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+          </ul>
+        </div>
+        <!-- Legal -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+            <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 text-center">
+        <p class="text-gray-400 text-sm" data-i18n="footer.copyright">
+          © 2024 SharedStars Academy. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- CORE DEPENDENCIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <!-- Initialize AOS -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        AOS.init({
+          duration: 1000,
+          easing: 'ease',
+          once: true,
+        });
+      });
+    </script>
+    
+    <!-- Language Selection & Navigation -->
+    <script src="/js/languageSelection.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        console.log("✅ Language & Navigation Script Loaded");
+        const savedLang = localStorage.getItem("preferredLanguage") || "en";
+        document.documentElement.lang = savedLang;
+        applyTranslations(savedLang);
+        document.querySelectorAll(".language-flag").forEach((flag) => {
+          flag.addEventListener("click", () => {
+            const selectedLang = flag.dataset.lang || "en";
+            localStorage.setItem("preferredLanguage", selectedLang);
+            applyTranslations(selectedLang);
+          });
+        });
+        document.querySelectorAll("nav a").forEach((button) => {
+          button.addEventListener("click", function (event) {
+            event.preventDefault();
+            console.log(`✅ Navigating to: ${this.href}`);
+            window.location.href = this.href;
+          });
+        });
+      });
+      
+      function applyTranslations(lang) {
+        const translations = {
+          en: {
+            nav: {
+              home: "Home",
+              why: "Why SharedStars",
+              about: "About",
+              leaderboard: "Leaderboard",
+              login: "Login",
+              "mission-control": "Mission Control",
+              profile: "Profile",
+              signup: "Sign Up",
+              academy: "StelTrek Academy",
+              welcome: "Welcome",
+              subscribe: "Subscribe"
+            },
+            welcome: {
+              videoTagline: "Enough dreaming, let’s take a walk to show how we can get you up to space.",
+              ctaMessage: "Are you ready to begin your space journey?",
+              joinButton: "Join Now",
+              proceedButton: "Proceed",
+              aiStatus: "Initializing AI Coach..."
+            },
+            subscribe: {
+              pageTitle: "Subscribe - SharedStars",
+              heroTitle: "Chart Your Course to Space",
+              seatsWarning: "Space Seats are Filling Up Fast!",
+              currentPriceTitle: "Current Price",
+              currentPriceValue: "$450k",
+              currentPriceDesc: "Per space seat",
+              targetPriceTitle: "Target Price",
+              targetPriceValue: "$5k",
+              targetPriceDesc: "By 2039",
+              pathTitle: "Your Path to Space",
+              pathDesc: "*Based on market projections and your subscription plan",
+              baselineGraphTitle: "Baseline Ticket Price Projection",
+              baselineGraphDesc: "2022: $750K, 2025: $500K, 2029: $125K, 2034: $60K, 2039: $5K.",
+              personalGraphTitle: "Personalized Credits Projection",
+              personalGraphDesc: "This graph updates dynamically as you complete training modules and earn credits.",
+              yearsLabel: "Years",
+              monthsLabel: "Months",
+              weeksLabel: "Weeks",
+              daysLabel: "Days",
+              hoursLabel: "Hours",
+              minutesLabel: "Minutes",
+              personalTimelineTitle: "Your Accelerated Timeline",
+              creditsDisplay: "Your SharedStars Credits: 0",
+              paymentTitle: "Secure Your Journey",
+              plan: {
+                individual: {
+                  badge: "15-year track",
+                  title: "Individual Explorer",
+                  price: "$49.99",
+                  feature1: "Personal AI Coach",
+                  feature2: "10hrs Monthly VR",
+                  feature3: "100 Space Credits",
+                  cta: "Begin Journey"
+                },
+                family: {
+                  badge: "10-year track",
+                  title: "Family Pioneer",
+                  price: "$89.99",
+                  feature1: "4 Member Access",
+                  feature2: "Unlimited VR",
+                  feature3: "250 Space Credits",
+                  cta: "Secure Family Access"
+                },
+                elite: {
+                  badge: "1-year track",
+                  title: "Galactic Elite",
+                  price: "$2,048",
+                  feature1: "Priority Access",
+                  feature2: "Private Facility",
+                  feature3: "1000 Space Credits",
+                  cta: "Launch Next Year"
+                },
+                custom: {
+                  badge: "Flexible track",
+                  title: "Custom Contributor",
+                  feature1: "Flexible Contribution",
+                  feature2: "Credits Based on Contribution",
+                  cta: "Start Contributing"
+                }
+              }
+            },
+            footer: {
+              about: {
+                title: "About",
+                ourStory: "Our Story",
+                academy: "Space Academy"
+              },
+              community: {
+                title: "Community",
+                events: "Events",
+                forums: "Forums"
+              },
+              resources: {
+                title: "Resources",
+                faq: "FAQ",
+                support: "Support"
+              },
+              legal: {
+                title: "Legal",
+                terms: "Terms",
+                privacy: "Privacy"
+              },
+              followUs: "Follow Us",
+              copyright: "© 2025 Celestial Technologies, LLC. All Rights Reserved."
+            }
+          },
+          zh: {
+            // Chinese translations...
+          }
+          // Additional translations for ko and es as needed...
+        };
+
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const key = element.dataset.i18n;
+          const keys = key.split(".");
+          let translation = translations[lang];
+          keys.forEach((k) => {
+            translation = translation ? translation[k] : null;
+          });
+          if (translation) {
+            element.textContent = translation;
+          }
+        });
+      }
+    </script>
+    
+    <!-- ES Module Imports for Custom JS -->
+    <script src="/js/modules/core/index.js"></script>
+<script src="/js/modules/ui/index.js"></script>
+<script src="/js/modules/training/index.js"></script>
+<script src="/js/modules/auth/index.js"></script>
+
+    
+    <!-- Legacy Scripts (Deferred) -->
+    <script src="/js/animations.js" defer></script>
+    <script src="/js/trialFlow.js" defer></script>
+    <script src="/js/leaderboard.js" defer></script>
+    <script src="/js/visualizations/ModuleHighlight.js" defer></script>
+    
+    <!-- Highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    
+    <!-- Main Initialization Script -->
+    <script src="/js/main.js"></script>
+  </body>
+</html>
+

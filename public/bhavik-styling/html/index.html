@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Train for space with AI-powered modules at SharedStars Academy." />
+  
+    <!-- ✅ Content Security Policy (Enhanced for Security) -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self'; 
+      script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+      style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: https://www.sora.com;
+      frame-src 'self' https://www.sora.com;
+      child-src 'self' https://www.sora.com;
+      connect-src 'self' https://api.openai.com https://api.sharedstars.com;
+    ">
+  
+    <!-- ✅ Stylesheets -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" /> -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+    <link href="/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/ai-assistant.css" />
+    
+    <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
+    <!-- <script src="/js/languageSelection.js" defer></script> -->
+    <script src="/js/languageManager.js" defer></script>
+    <script type="module" src="/public/js/CountdownTimer.js"></script>
+    <script type="module" src="/js/HomepageHandler.js"></script>  
+
+</head>
+
+<body class="bg-slate-900 text-white min-h-screen">
+  <!-- HEADER -->
+  <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg py-4">
+    <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
+      <!-- Logo -->
+      <div class="flex items-center mb-2 md:mb-0">
+        <a href="/index.html" aria-label="SharedStars Homepage" class="group">
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+        </a>
+      </div>
+      <!-- Navigation Links -->
+      <ul class="flex flex-wrap gap-4">
+        <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="/academy.html" data-i18n="nav.academy">Academy</a></li>
+        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+
+        <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
+        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
+        <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
+        <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
+        <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
+        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
+      </ul>
+
+      <div class="relative">
+        <button id="langDropdownBtn" class="flex items-center gap-2 text-white bg-gray-700 px-4 py-2 rounded-lg">
+          <span id="selectedLangIcon">🇺🇸</span>
+          <span id="selectedLangText">English</span>
+          <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <ul id="langDropdownMenu" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 py-2 w-40">
+          <li><button class="dropdown-item" data-lang="en" data-flag="🇺🇸" aria-label="Switch to English">🇺🇸 English</button></li>
+          <li><button class="dropdown-item" data-lang="zh" data-flag="🇨🇳" aria-label="Switch to Chinese">🇨🇳 Chinese</button></li>
+          <li><button class="dropdown-item" data-lang="ko" data-flag="🇰🇷" aria-label="Switch to Korean">🇰🇷 Korean</button></li>
+          <li><button class="dropdown-item" data-lang="es" data-flag="🇪🇸" aria-label="Switch to Spanish">🇪🇸 Spanish</button></li>
+        </ul>
+      </div>
+      <button data-i18n="nav.getStarted" class="bg-gradient-to-r from-purple-500 to-blue-500 text-black px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">
+      </button>
+    </nav>      
+  </header>
+  
+  <!-- HERO SECTION -->
+  <section id="hero" class="relative min-h-screen flex items-center justify-center text-center pt-20">
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+      <source src="/videos/academy10.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+    <div class="relative z-10 px-4">
+      <h1 data-i18n="hero.title" class="hero-text text-white mb-4"></h1>
+      <p data-i18n="hero.subtitle" class="text-xl text-white mb-4"></p>
+      <a data-i18n="hero.startTraining" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+      <a data-i18n="hero.seeCountdown" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+      <a data-i18n="hero.exploreMembership" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+    </div>
+  </section>
+
+  <!-- Include any additional page scripts -->
+  <script src="/js/modules/main.js" type="module"></script>
+  <script src="/js/ai-companion.js" defer></script>
+
+  <!-- COUNTDOWN & PRICE EVOLUTION SECTION -->
+  <section id="countdown-price" class="relative min-h-screen py-16 text-white text-center">
+  <!-- Background gradient overlay -->
+  <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/90"></div>
+
+  <!-- Main Content Container -->
+  <div class="relative z-10 container mx-auto px-4">
+    
+    <!-- Problem Statement -->
+    <div class="mb-12">
+      <h2 data-i18n="countdown.problemStatement.title" class="text-4xl font-bold mb-6">
+        Current Space Travel Reality
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+          <h3 data-i18n="countdown.problemStatement.limitedAccess.title" class="text-xl font-bold mb-3">
+            Limited Access
+          </h3>
+          <p data-i18n="countdown.problemStatement.limitedAccess.description">
+            Currently restricted to ultra-wealthy individuals and elite astronauts
+          </p>
+        </div>
+        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+          <h3 data-i18n="countdown.problemStatement.highBarriers.title" class="text-xl font-bold mb-3">
+            High Barriers
+          </h3>
+          <p data-i18n="countdown.problemStatement.highBarriers.description">
+            Prohibitively expensive with limited pathways for public participation
+          </p>
+        </div>
+        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+          <h3 data-i18n="countdown.problemStatement.growingDemand.title" class="text-xl font-bold mb-3">
+            Growing Demand
+          </h3>
+          <p data-i18n="countdown.problemStatement.growingDemand.description">
+            Increasing interest but insufficient options for space enthusiasts
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stakes Section -->
+    <div class="mb-16">
+      <h2 data-i18n="countdown.stakes.title" class="text-5xl font-bold mb-6">
+        What's at Stake?
+      </h2>
+      <p data-i18n="countdown.stakes.subtitle" class="text-2xl mb-8">
+        Your Future. Your Family's Future. Humanity's Future.
+      </p>
+    </div>
+
+    <!-- Countdowns Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+      <!-- Global Countdown Timer -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+          <h3 class="text-2xl font-bold mb-4">Global Space Travel Timeline</h3>
+          <div id="globalCountdown" class="text-4xl font-bold text-white">Loading...</div>
+      </div>
+      
+      <!-- Personalized Countdown Timer -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+          <h3 class="text-2xl font-bold mb-4">Your Accelerated Timeline</h3>
+          <div id="personalCountdown" class="text-4xl font-bold text-green-400">Loading...</div>
+          <p class="mt-4 text-green-400">Your SharedStars Credits: 500</p>
+      </div>
+  </div>  
+      
+      <!-- Personal Timeline -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="countdown.personalTimeline.title" class="text-2xl font-bold mb-4">
+          Your Accelerated Timeline
+        </h3>
+        <div id="personalCountdown" class="flex flex-wrap justify-center gap-4">
+          <div class="countdown-box bg-gray-800/50 p-4 rounded-lg">
+            <div class="value text-3xl font-bold" id="personalized-years">13</div>
+            <div class="label text-sm" data-i18n="countdown.years">Years</div>
+          </div>
+          <div class="countdown-box bg-gray-800/50 p-4 rounded-lg">
+            <div class="value text-3xl font-bold" id="personalized-months">6</div>
+            <div class="label text-sm" data-i18n="countdown.months">Months</div>
+          </div>
+          <div class="countdown-box bg-gray-800/50 p-4 rounded-lg">
+            <div class="value text-3xl font-bold" id="personalized-days">15</div>
+            <div class="label text-sm" data-i18n="countdown.days">Days</div>
+          </div>
+        </div>
+        <p class="mt-4 text-green-400" data-i18n="countdown.personalCredits">
+          Your SharedStars Credits: 500
+        </p>
+      </div>
+    </div>
+
+    <!-- Price Evolution Chart -->
+    <div class="bg-black/50 backdrop-blur-md p-8 rounded-lg">
+      <h3 data-i18n="countdown.priceEvolution.title" class="text-3xl font-bold mb-6">
+        Price Evolution Timeline
+      </h3>
+      <div class="w-full max-w-4xl mx-auto h-96">
+        <canvas id="priceChart"></canvas>
+      </div>
+    </div>
+    
+  </div>
+  </section>
+
+<!-- MISSION CONTROL SECTION -->
+<section id="mission-control" class="relative min-h-screen py-16 text-white">
+  <!-- Video Background (optional) -->
+  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+    <source src="/videos/space-progress.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/90"></div>
+
+  <!-- Main Mission Control Content -->
+  <div class="relative z-10 container mx-auto px-4">
+    <!-- Credit Display Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <!-- Total Credits Card -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="missionControl.totalCreditsTitle" class="text-2xl font-bold text-green-400 mb-2">
+          Total Credits
+        </h3>
+        <div class="text-4xl font-bold" id="total-credits">0</div>
+        <div class="text-sm text-gray-400 mt-2">
+          <span data-i18n="missionControl.nextMilestone">Next milestone:</span>
+          <span id="next-milestone">1000</span>
+        </div>
+      </div>
+
+      <!-- Launch Timeline Card -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="missionControl.launchTimelineTitle" class="text-2xl font-bold text-blue-400 mb-2">
+          Launch Timeline
+        </h3>
+        <div class="text-4xl font-bold" id="years-to-launch">15</div>
+        <div id="timeline-acceleration" data-i18n="missionControl.launchTimelineSubtitle" class="text-sm text-gray-400 mt-2">
+          Years to launch
+        </div>
+      </div>
+
+      <!-- Achievements Card -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="missionControl.achievementsTitle" class="text-2xl font-bold text-purple-400 mb-2">
+          Achievements
+        </h3>
+        <div class="text-4xl font-bold" id="achievement-count">0</div>
+        <div data-i18n="missionControl.achievementsSubtitle" class="text-sm text-gray-400 mt-2">
+          Unlocked
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Mission Control Progress -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Credit Breakdown -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="missionControl.creditBreakdownTitle" class="text-xl font-bold mb-4">
+          Credit Breakdown
+        </h3>
+        <div id="credit-breakdown" class="space-y-4">
+          <!-- Module Credits -->
+          <div class="flex justify-between items-center">
+            <span data-i18n="missionControl.moduleCreditsLabel" class="text-gray-400">
+              Module Credits
+            </span>
+            <span class="text-green-400" id="module-credits">0</span>
+          </div>
+          <!-- Achievement Bonus -->
+          <div class="flex justify-between items-center">
+            <span data-i18n="missionControl.achievementBonusLabel" class="text-gray-400">
+              Achievement Bonus
+            </span>
+            <span class="text-green-400" id="achievement-credits">0</span>
+          </div>
+          <!-- Streak Bonus -->
+          <div class="flex justify-between items-center">
+            <span data-i18n="missionControl.streakBonusLabel" class="text-gray-400">
+              Streak Bonus
+            </span>
+            <span class="text-green-400" id="streak-bonus">0%</span>
+          </div>
+          <!-- Subscription Bonus -->
+          <div class="flex justify-between items-center">
+            <span data-i18n="missionControl.subscriptionBonusLabel" class="text-gray-400">
+              Subscription Bonus
+            </span>
+            <span class="text-green-400" id="subscription-bonus">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Journey Timeline Graph -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="missionControl.yourJourneyTimelineTitle" class="text-xl font-bold mb-4">
+          Your Journey Timeline
+        </h3>
+        <div class="h-64">
+          <canvas id="timeline-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Achievements -->
+    <div class="mt-8">
+      <h3 data-i18n="missionControl.recentAchievementsTitle" class="text-2xl font-bold mb-4">
+        Recent Achievements
+      </h3>
+      <div id="recent-achievements" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Achievement cards will be dynamically inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Achievement Notification Toast (Hidden by default) -->
+  <div id="achievement-toast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform -translate-y-full transition-transform duration-300 hidden">
+    <div class="flex items-center space-x-3">
+      <div id="achievement-icon" class="text-2xl"></div>
+      <div>
+        <div id="achievement-title" class="font-bold"></div>
+        <div id="achievement-credits-toast" class="text-sm"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINING MODULE PREVIEW SECTION (Existing) -->
+<section id="training-preview" class="py-16 bg-gray-900 text-white text-center">
+  <div class="container mx-auto px-4">
+    <header class="mb-12" data-aos="fade-up">
+      <h2 class="text-4xl font-bold mb-4" data-i18n="index.trainingPreviewTitle">Discover Your Training Journey</h2>
+      <p class="text-lg text-gray-300 max-w-2xl mx-auto" data-i18n="index.trainingPreviewSubtitle">
+        Get a glimpse of our space training modules designed to prepare you for the challenges of space exploration.
+      </p>
+    </header>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Physical Training Module Card -->
+      <div class="card glass hover:-translate-y-2 transition-all duration-300">
+        <div class="card-body">
+          <div class="absolute top-4 right-4">
+            <div class="badge badge-primary">6-8 Months</div>
+          </div>
+          <h3 class="card-title text-2xl text-blue-400 mb-4">Physical Training</h3>
+          <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
+            <span class="text-2xl text-white">0%</span>
+          </div>
+          <div class="certification-badge mb-4">
+            <span class="text-xs text-blue-300">ISO-31000-ZG Certification</span>
+          </div>
+          <p class="text-blue-100">Master zero-gravity movement, biometric adaptation, and emergency procedures</p>
+          <div class="requirements text-xs text-gray-400 mt-2">
+            <p>Required: Medical Clearance, Basic Physics</p>
+          </div>
+          <div class="card-actions justify-between items-center mt-4">
+            <span class="text-sm text-blue-300">300 Training Hours Required</span>
+            <button class="btn btn-primary" data-module="physical">Begin Assessment</button>
+          </div>
+        </div>
+      </div>
+      <!-- Technical Systems Module Card -->
+      <div class="card glass hover:-translate-y-2 transition-all duration-300">
+        <div class="card-body">
+          <div class="absolute top-4 right-4">
+            <div class="badge badge-secondary">4-6 Months</div>
+          </div>
+          <h3 class="card-title text-2xl text-purple-400 mb-4">Technical Systems</h3>
+          <div class="radial-progress text-purple-500 mx-auto my-6" style="--value:0; --size:8rem;">
+            <span class="text-2xl text-white">0%</span>
+          </div>
+          <div class="certification-badge mb-4">
+            <span class="text-xs text-purple-300">OSHA-ST-102 Certification</span>
+          </div>
+          <p class="text-blue-100">Master spacecraft systems, maintenance, and emergency protocols</p>
+          <div class="requirements text-xs text-gray-400 mt-2">
+            <p>Required: Physical Training Completion</p>
+          </div>
+          <div class="card-actions justify-between items-center mt-4">
+            <span class="text-sm text-blue-300">200 Simulation Hours Required</span>
+            <button class="btn btn-primary" data-module="technical">Begin Assessment</button>
+          </div>
+        </div>
+      </div>
+      <!-- Mission Simulation Module Card -->
+      <div class="card glass hover:-translate-y-2 transition-all duration-300">
+        <div class="card-body">
+          <div class="absolute top-4 right-4">
+            <div class="badge badge-accent">3-4 Months</div>
+          </div>
+          <h3 class="card-title text-2xl text-blue-400 mb-4">Mission Simulation</h3>
+          <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
+            <span class="text-2xl text-white">0%</span>
+          </div>
+          <div class="certification-badge mb-4">
+            <span class="text-xs text-blue-300">ISO-31010-MO Certification</span>
+          </div>
+          <p class="text-blue-100">Complete mission scenarios and team coordination exercises</p>
+          <div class="requirements text-xs text-gray-400 mt-2">
+            <p>Required: Technical Systems Completion</p>
+          </div>
+          <div class="card-actions justify-between items-center mt-4">
+            <span class="text-sm text-blue-300">100 Mission Hours Required</span>
+            <button class="btn btn-primary" data-module="simulation">Begin Assessment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- NEW: Detailed Training Module Overview Section -->
+    <section id="detailed-training-overview" class="py-16 bg-gray-900 text-white">
+      <div class="container mx-auto px-4">
+        <header class="mb-12 text-center" data-aos="fade-up">
+          <h2 class="text-4xl font-bold" data-i18n="detailedOverview.title">Detailed Training Module Overview</h2>
+          <p class="text-lg text-gray-300" data-i18n="detailedOverview.subtitle">
+            Dive deeper into your chosen training module.
+          </p>
+        </header>
+        <div id="detailed-module-content" class="bg-black/50 backdrop-blur-md p-8 rounded-xl" data-aos="fade-up">
+          <!-- Dynamic module details will be injected here -->
+        </div>
+      </div>
+    </section>
+    
+    <!-- Call-to-Action for Training Preview -->
+    <div class="mt-12" data-aos="fade-up">
+      <a href="/training.html" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full transition" data-i18n="index.exploreTrainingCTA">
+        Explore Training Modules
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ACADEMY PREVIEW SECTION -->
+<section id="academy-preview" class="relative">
+  <!-- Video Background -->
+  <div class="absolute inset-0">
+    <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+      <source src="/videos/academy10.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-black opacity-30"></div>
+  </div>
+  <!-- Content Overlay -->
+  <div class="relative z-10 container mx-auto px-4 py-16 text-center text-white">
+    <span data-i18n="academyPreview.tagline" class="text-blue-400 uppercase font-semibold tracking-wide">
+      SharedStars Academy
+    </span>
+    <h2 data-i18n="academyPreview.headline" class="text-4xl font-extrabold mt-4">
+      Your Gateway to Space Exploration
+    </h2>
+    <p data-i18n="academyPreview.description" class="text-gray-300 mt-4 max-w-3xl mx-auto">
+      Experience interactive AR/VR training, real-world simulations, and AI-guided certifications that prepare you for the next frontier: space.
+    </p>
+    <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+      <a href="/academy" class="btn-primary px-6 py-3" data-i18n="academyPreview.ctaExplore">
+        Explore the Academy
+      </a>
+      <a href="/academy/tour" class="btn-secondary px-6 py-3" data-i18n="academyPreview.ctaTour">
+        Take a Virtual Tour
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERBOARD PREVIEW SECTION -->
+<section id="leaderboard-preview" class="relative py-16 bg-black text-white">
+  <div class="absolute inset-0">
+    <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+      <source src="/videos/leaderboard1.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+  </div>
+  <div class="relative z-10 container mx-auto px-4 text-center">
+    <span data-i18n="leaderboardPreview.tagline" class="text-purple-400 uppercase font-semibold tracking-wide">
+      Global Rankings
+    </span>
+    <h2 data-i18n="leaderboardPreview.headline" class="text-4xl font-extrabold mt-4">
+      Top Space Pioneers
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
+      <!-- Ranking Card 1 -->
+      <div class="bg-black bg-opacity-50 p-6 rounded-lg">
+        <div class="text-5xl">🥈</div>
+        <h3 class="text-xl font-bold mt-4" data-i18n="leaderboardPreview.card1.name">
+          David Kim
+        </h3>
+        <p class="text-gray-300" data-i18n="leaderboardPreview.card1.status">
+          97.2% - Final Phase
+        </p>
+      </div>
+      <!-- Ranking Card 2 -->
+      <div class="bg-yellow-500 bg-opacity-20 p-6 rounded-lg">
+        <div class="text-5xl">🥇</div>
+        <h3 class="text-xl font-bold mt-4 text-yellow-300" data-i18n="leaderboardPreview.card2.name">
+          Sarah Chen
+        </h3>
+        <p class="text-gray-300 mt-2" data-i18n="leaderboardPreview.card2.status">
+          98.5% - Mars Ready
+        </p>
+        <div class="mt-4 flex flex-wrap justify-center gap-2">
+          <span class="bg-blue-200 text-blue-700 px-2 py-1 rounded" data-i18n="leaderboardPreview.card2.badge1">
+            🏆 Physical Elite
+          </span>
+          <span class="bg-green-200 text-green-700 px-2 py-1 rounded" data-i18n="leaderboardPreview.card2.badge2">
+            ⭐ Tech Master
+          </span>
+        </div>
+      </div>
+      <!-- Ranking Card 3 -->
+      <div class="bg-black bg-opacity-50 p-6 rounded-lg">
+        <div class="text-5xl">🥉</div>
+        <h3 class="text-xl font-bold mt-4" data-i18n="leaderboardPreview.card3.name">
+          James Wilson
+        </h3>
+        <p class="text-gray-300" data-i18n="leaderboardPreview.card3.status">
+          96.8% - Advanced
+        </p>
+      </div>
+    </div>
+    <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+      <a href="/leaderboard" class="btn-primary px-6 py-3" data-i18n="leaderboardPreview.ctaFullRankings">
+        View Full Rankings
+      </a>
+      <a href="/profile/stats" class="btn-secondary px-6 py-3" data-i18n="leaderboardPreview.ctaCheckRank">
+        Check Your Rank
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ORIGIN STORY PREVIEW SECTION -->
+<section id="origin-preview" class="py-16 bg-gray-900 text-white text-center">
+  <div class="container mx-auto px-4">
+    <!-- Tagline / Subheader -->
+    <span data-i18n="origin.tagline" class="text-blue-400 uppercase font-semibold tracking-wide">
+      OUR STORY
+    </span>
+    <!-- Headline -->
+    <h2 data-i18n="origin.headline" class="text-4xl font-extrabold mt-4">
+      How SharedStars Began
+    </h2>
+    <!-- Founder Quote / Story -->
+    <div class="founder-quote bg-gray-800 bg-opacity-50 rounded-xl p-8 mt-6 shadow-lg inline-block">
+      <blockquote data-i18n="origin.quote" class="italic text-gray-300">
+        "Space travel shouldn't be reserved for the wealthy few. It should be accessible to everyone willing to dream, learn, and prepare."
+      </blockquote>
+      <div class="mt-4 text-blue-200 flex items-center justify-center gap-2">
+        <span class="text-xl">📚</span>
+        <span data-i18n="origin.quoteSource">
+          Inspired by "The Three-Body Problem" trilogy
+        </span>
+      </div>
+    </div>
+    <!-- Mission Card -->
+    <div class="mission-card bg-gray-800 bg-opacity-50 rounded-xl p-8 mt-8 shadow-lg inline-block">
+      <h3 data-i18n="origin.missionTitle" class="text-2xl font-bold text-blue-400 mb-4">
+        Our Mission
+      </h3>
+      <p data-i18n="origin.missionDescription" class="text-gray-300">
+        Democratizing space travel through accessible training, community support, and innovative technology.
+      </p>
+      <div class="mission-stats mt-4 flex justify-center gap-8">
+        <div class="stat">
+          <span data-i18n="origin.activeTrainees" class="text-3xl font-bold text-blue-300">2,500+</span>
+          <span class="block text-blue-200">Active Trainees</span>
+        </div>
+        <div class="stat">
+          <span data-i18n="origin.startingRate" class="text-3xl font-bold text-blue-300">$49.99</span>
+          <span class="block text-blue-200">Starting Monthly</span>
+        </div>
+      </div>
+    </div>
+    <!-- Call-to-Action Buttons -->
+    <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+      <a href="/about" class="primary-btn px-6 py-3" data-i18n="origin.ctaReadStory">
+        Read Our Full Story
+      </a>
+      <a href="/founder" class="secondary-btn px-6 py-3" data-i18n="origin.ctaMeetFounder">
+        Meet the Founder
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- BOARD PREVIEW SECTION (Advisory Board) -->
+<section id="board-preview" class="relative min-h-screen bg-black text-white">
+  <div class="absolute inset-0">
+    <video autoplay muted loop playsinline class="w-full h-full object-cover">
+      <source src="/videos/BOA1.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+  </div>
+  <div class="relative z-10 container mx-auto px-4 py-16 text-center">
+    <h2 data-i18n="boa.headline" class="text-4xl md:text-5xl font-extrabold text-blue-400 mb-12">
+      Meet Our Advisors
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Advisor Card 1 -->
+      <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+        <img src="/images/drmark.png" alt="Dr. Mark" class="mx-auto rounded-full mb-4 w-24 h-24">
+        <p data-i18n="boa.card1.role" class="text-center text-gray-300">
+          Chief Medical Officer & Pilot
+        </p>
+        <p data-i18n="boa.card1.details" class="text-sm text-center text-gray-300">
+          NASA Medicine & Flight Safety
+        </p>
+      </div>
+      <!-- Advisor Card 2 -->
+      <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+        <img src="/images/travis.png" alt="Travis Talbot" class="mx-auto rounded-full mb-4 w-24 h-24">
+        <h3 data-i18n="boa.card2.name" class="text-2xl font-bold text-purple-400 text-center">
+          Travis Talbot
+        </h3>
+        <p data-i18n="boa.card2.role" class="text-center text-gray-300">
+          Senior Manufacturing Engineer
+        </p>
+        <p data-i18n="boa.card2.details" class="text-sm text-center text-gray-300">
+          Built the Raptor Rocket
+        </p>
+      </div>
+      <!-- Advisor Card 3 -->
+      <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+        <img src="/images/laura.png" alt="Laura Anne Edwards" class="mx-auto rounded-full mb-4 w-24 h-24">
+        <h3 data-i18n="boa.card3.name" class="text-2xl font-bold text-green-400 text-center">
+          Laura Anne Edwards
+        </h3>
+        <p data-i18n="boa.card3.role" class="text-center text-gray-300">
+          Global Innovation Leader
+        </p>
+        <p data-i18n="boa.card3.details" class="text-sm text-center text-gray-300">
+          NASA Datanaut & NSA Innovator
+        </p>
+      </div>
+      <!-- Advisor Card 4 -->
+      <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+        <img src="/images/edward.png" alt="Edward Moleam" class="mx-auto rounded-full mb-4 w-24 h-24">
+        <h3 data-i18n="boa.card4.name" class="text-2xl font-bold text-red-400 text-center">
+          Edward Moleam
+        </h3>
+        <p data-i18n="boa.card4.role" class="text-center text-gray-300">
+          Founder & CEO
+        </p>
+        <p data-i18n="boa.card4.details" class="text-sm text-center text-gray-300">
+          Aerospace Engineer & Space Systems Expert
+        </p>
+      </div>
+      <!-- Advisor Card 5 -->
+      <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transition-transform">
+        <img src="/images/erich.png" alt="Erich Spangenberg" class="mx-auto rounded-full mb-4 w-24 h-24">
+        <h3 data-i18n="boa.card5.name" class="text-2xl font-bold text-yellow-400 text-center">
+          Erich Spangenberg
+        </h3>
+        <p data-i18n="boa.card5.role" class="text-center text-gray-300">
+          Chief Innovation Officer
+        </p>
+        <p data-i18n="boa.card5.details" class="text-sm text-center text-gray-300">
+          Pioneer in Rocket Propulsion Technologies
+        </p>
+      </div>
+    </div>
+    <div class="mt-12 text-center">
+      <a href="/join-boa" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600 transition" data-i18n="boa.ctaButton">
+        Ask to Join the BOA
+      </a>
+    </div>
+  </div>
+</section>
+
+  <!-- CREDENTIALS SUMMARY -->
+  <section class="credentials-bar bg-gray-800 py-4">
+    <div class="container mx-auto flex justify-around text-white">
+      <div class="text-center">
+        <span class="text-2xl font-bold">50+</span>
+        <p class="text-sm">Years Combined Experience</p>
+      </div>
+      <div class="text-center">
+        <span class="text-2xl font-bold">3</span>
+        <p class="text-sm">Space Organizations</p>
+      </div>
+      <div class="text-center">
+        <span class="text-2xl font-bold">12</span>
+        <p class="text-sm">Industry Patents</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA SECTION -->
+<section id="final-cta" class="py-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center relative">
+  <div class="relative z-10 container mx-auto px-4">
+    <span data-i18n="finalCTA.offer" class="uppercase tracking-wide text-sm text-blue-200">
+      Limited Time Offer
+    </span>
+    <h2 data-i18n="finalCTA.headline" class="text-4xl md:text-5xl font-extrabold mt-2">
+      Secure Your Place in Space History
+    </h2>
+    <p data-i18n="finalCTA.subtitle" class="mt-4 text-lg text-blue-200">
+      Join the Pioneer Program Today
+    </p>
+    <div class="mt-8 flex flex-col md:flex-row items-center justify-center gap-4">
+      <button data-i18n="finalCTA.reserveButton" class="primary-btn pulse bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-lg shadow-lg">
+        Reserve Your Spot Now
+        <span data-i18n="finalCTA.reserveRate" class="block text-sm mt-1">
+          Early Access Rate • $49.99/mo
+        </span>
+      </button>
+      <button data-i18n="finalCTA.demoButton" class="secondary-btn bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 px-8 rounded-lg shadow-lg">
+        Schedule Free Demo
+      </button>
+    </div>
+    <div class="mt-6 flex flex-col md:flex-row items-center justify-center gap-6 text-blue-200">
+      <div class="flex items-center gap-2">
+        <span class="check">✓</span>
+        <span data-i18n="finalCTA.guarantee">
+          30-Day Money-Back Guarantee
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="check">✓</span>
+        <span data-i18n="finalCTA.foundingRate">
+          Lock In Founding Member Rate
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="check">✓</span>
+        <span data-i18n="finalCTA.priorityAccess">
+          Priority Space Training Access
+        </span>
+      </div>
+    </div>
+    <div class="mt-6 flex justify-center gap-8 text-blue-200">
+      <div class="flex items-center gap-2">
+        <span class="lock-icon">🔒</span>
+        <span data-i18n="finalCTA.securePayment">
+          Secure Payment
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="support-icon">💬</span>
+        <span data-i18n="finalCTA.support">
+          24/7 Support
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="shield-icon">🛡️</span>
+        <span data-i18n="finalCTA.dataProtection">
+          Data Protection
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+ <!-- FOOTER -->
+ <footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
+  <!-- Animated Floating Particles -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+    <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+    <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
+  </div>
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
+      <!-- About -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+          <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">StelTrek Academy</a></li>
+        </ul>
+      </div>
+      <!-- Community -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+          <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+        </ul>
+      </div>
+      <!-- Resources -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+          <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+        </ul>
+      </div>
+      <!-- Legal -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+          <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 text-center">
+      <h4 class="text-lg font-bold text-blue-400" data-i18n="footer.followUs">Follow Us</h4>
+      <div class="flex justify-center gap-6 mt-4">
+        <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
+          </svg>
+        </a>
+        <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
+          </svg>
+        </a>
+        <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M22 11.077v.82c0 4.842-3.705 10.423-10.423 10.423A10.386 10.386 0 010 18.9c.13.01.261.014.393.014 2.717 0 5.213-.913 7.204-2.449a3.677 3.677 0 01-3.434-2.553c.558.083 1.136.077 1.688-.027A3.675 3.675 0 012.68 9.9v-.047c.492.274 1.048.438 1.643.457a3.674 3.674 0 01-1.633-3.056c0-.014 0-.027.001-.041a3.65 3.65 0 001.667.46 3.671 3.671 0 01-1.144-4.901 10.428 10.428 0 007.571 3.841A3.675 3.675 0 0118.633 5.9a7.353 7.353 0 002.333-.894 3.673 3.673 0 01-1.612 2.025 7.308 7.308 0 002.102-.575"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <script>
+      // Update current year dynamically if needed
+      document.getElementById("current-year") &&
+        (document.getElementById("current-year").textContent = new Date().getFullYear());
+    </script>
+  </div>
+</div>
+</footer>
+
+  <!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<!-- <script src="/public/js/language-switcher.js"></script> -->
+<!-- <script>
+  // Basic language initialization
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+    document.documentElement.lang = savedLang;
+    applyTranslations(savedLang);
+
+    document.querySelectorAll('.language-flag').forEach(flag => {
+      flag.addEventListener('click', () => {
+        const selectedLang = flag.dataset.lang || 'en';
+        localStorage.setItem('preferredLanguage', selectedLang);
+        applyTranslations(selectedLang);
+      });
+    });
+  });
+
+  function applyTranslations(lang) {
+    const translations = {
+      en: {
+        news: {
+          headline: "Latest News & Insights",
+          subtitle: "Stay updated with the latest op-eds, articles, and insights in space exploration.",
+          oped: {
+            title: "It's Time to Make Space Exploration a Shared Frontier for All",
+            published: "Published in",
+            excerpt: "Discover how space exploration can be democratized and made accessible for everyone willing to reach for the stars.",
+            cta: "Read Full Article"
+          }
+        },
+        footer: {
+          copyright: "© 2024 SharedStars Academy. All rights reserved."
+        }
+        // Add additional keys for other sections as needed...
+      },
+      zh: {
+        // Chinese translations
+      },
+      ko: {
+        // Korean translations
+      },
+      es: {
+        // Spanish translations
+      }
+    };
+
+    document.querySelectorAll("[data-i18n]").forEach(element => {
+      const key = element.dataset.i18n;
+      const keys = key.split(".");
+      let translation = translations[lang];
+      keys.forEach(k => {
+        translation = translation ? translation[k] : null;
+      });
+      if (translation) {
+        element.textContent = translation;
+      }
+    });
+  }
+</script> -->
+
+<!-- Module Scripts -->
+</script>
+<script src="/public/js/modules/training/fsdTraining.js"></script>
+<script src="/public/js/modules/training/AIHandler.js"></script>
+<script src="/public/js/modules/training/aiGuidanceSystem.js"></script>
+<script src="/public/js/modules/training/progressAssessment.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      // Initialize core modules
+      await initModules();
+      const wsConnection = await setupWebSocket();
+
+      // Initialize AI systems
+      const aiGuidance = new AIGuidanceSystem(SpaceTrainingFSD);
+      const progressAssessment = new ProgressAssessment(SpaceTrainingFSD, aiGuidance);
+
+      // Setup WebSocket event listeners
+      wsConnection.addEventListener('message', (event) => {
+        const data = JSON.parse(event.data);
+        handleWebSocketMessages(data, {
+          updateGuidance: updateGuidanceDisplay,
+          showAchievement: showAchievementToast,
+          updateProgress: updateProgressDisplay
+        });
+      });
+
+      // Update AI status to active
+      document.getElementById('ai-status').innerHTML = `
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-green-500"></span>
+          <span>AI Coach Active</span>
+        </div>
+      `;
+
+      // Initialize AOS animations
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out',
+        once: true
+      });
+
+      // Load initial module content
+      loadInitialModule();
+    } catch (error) {
+      console.error('Initialization error:', error);
+    }
+  });
+
+  function updateGuidanceDisplay(guidance) {
+    const guidanceContent = document.getElementById('guidance-content');
+    guidanceContent.innerHTML = `
+      <p class="text-gray-300">${guidance.message}</p>
+      ${guidance.nextSteps.map(step => `
+        <div class="flex items-center space-x-2 text-sm">
+          <span class="text-blue-400">•</span>
+          <span>${step.action}</span>
+        </div>
+      `).join('')}
+    `;
+  }
+
+  function showAchievementToast(achievement) {
+    const toast = document.getElementById('achievement-toast');
+    document.getElementById('achievement-title').textContent = achievement.title;
+    document.getElementById('achievement-description').textContent = achievement.description;
+    toast.classList.remove('translate-y-full', 'opacity-0');
+    setTimeout(() => {
+      toast.classList.add('translate-y-full', 'opacity-0');
+    }, 5000);
+  }
+
+  function updateProgressDisplay(progress) {
+    document.getElementById('progress-percentage').textContent = `${progress.overall}%`;
+    document.getElementById('focus-score').textContent = progress.focusScore;
+    // Update progress chart if implemented
+    updateProgressChart(progress.details);
+  }
+
+  async function loadInitialModule() {
+    const moduleContent = document.getElementById('module-content');
+    moduleContent.innerHTML = `
+      <div class="space-y-6">
+        <h2 class="text-2xl font-bold" data-i18n="training.gettingStartedTitle">Getting Started</h2>
+        <p data-i18n="training.gettingStartedSubtitle">
+          Welcome to your personalized space training program. Your AI coach will guide you through each step of your journey.
+        </p>
+        <button class="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-lg" onclick="startTraining()" data-i18n="training.beginTrainingButton">
+          Begin Training
+        </button>
+      </div>
+    `;
+  }
+</script>
+
+<!-- Custom Styles -->
+<style>
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #10B981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+  }
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.5);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.5);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.7);
+  }
+</style>

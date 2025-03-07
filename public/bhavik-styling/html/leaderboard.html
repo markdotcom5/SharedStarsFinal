@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SharedStars Leaderboard</title>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <!-- DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/ai-assistant.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    .space-gradient {
+      background: linear-gradient(to bottom, #0f172a, #1e293b);
+    }
+    .hero-text {
+      font-size: clamp(4rem, 15vw, 12rem);
+      line-height: 1;
+    }
+    .cosmic-hover {
+      transition: all 0.3s ease;
+    }
+    .cosmic-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+    }
+  </style>
+  <script src="/js/leaderboard.js"></script>
+</head>
+<body class="bg-black min-h-screen">
+  <!-- Navbar -->
+  <header class="fixed w-full bg-gradient-to-b from-blue-900/90 to-blue-950/90 backdrop-blur-lg z-50 border-b border-blue-500/20">
+    <div class="container mx-auto px-4">
+      <nav class="flex items-center justify-between h-24">
+        <div class="flex items-center space-x-8">
+          <a href="/" class="flex items-center space-x-3 group">
+            <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)] transition-all duration-300" />
+            <span class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200 group-hover:from-blue-300 group-hover:to-white transition-colors duration-300">SharedStars</span>
+          </a>
+          <nav class="desktop-menu hidden md:flex space-x-6">
+            <a href="/index" class="text-gray-300 hover:text-white">Home</a>
+            <a href="/academy" class="text-gray-300 hover:text-white">Academy</a>
+            <a href="/about" class="text-gray-300 hover:text-white">About</a>
+            <a href="/mission-control" class="text-gray-300 hover:text-white">Mission-Control</a>
+            <a href="/subscribe" class="text-gray-300 hover:text-white">Subscribe</a>
+        </nav>
+        </div>
+        <div class="flex items-center space-x-6">
+          <a href="/subscribe" class="group">
+            <div class="relative overflow-hidden px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
+              <div class="relative z-10 flex flex-col items-center">
+                <span class="text-lg font-bold text-white">Start Training Free</span>
+                <span class="text-xs text-blue-200">30-Day Pro Access</span>
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+          </a>
+          <button id="menuBtn" class="md:hidden text-gray-300 hover:text-white btn btn-ghost btn-circle">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- AI Assistant Widget (Optional: can be included on this page as well) -->
+  <section id="ai-assistant" class="mt-8 container mx-auto px-4">
+    <div class="neural-network-grid p-6 rounded-lg shadow-lg mb-8">
+      <div class="ai-message-bubble bg-blue-900/30 p-4 rounded-lg mb-4">
+        <p id="aiGreeting">Loading personalized AI insights...</p>
+      </div>
+      <div id="chatLog" class="h-32 overflow-y-auto mb-4 bg-gray-800/50 p-4 rounded-lg">
+        <!-- Chat messages will appear here dynamically -->
+      </div>
+      <div class="flex space-x-2">
+        <input id="chatInput" type="text" placeholder="Ask your AI assistant..." class="flex-1 p-2 rounded bg-gray-700 text-white" />
+        <button id="sendChat" class="btn btn-primary">Send</button>
+      </div>
+      <div class="typing-indicator mt-4">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="relative min-h-screen bg-gradient-to-b from-blue-950 to-black pt-32">
+    <!-- Hero Section with Video Background -->
+    <section id="hero" class="min-h-screen relative">
+      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-60">
+        <source src="./videos/academy10.mp4" type="video/mp4" />
+      </video>
+      <div class="absolute inset-0 bg-transparent"></div>
+      <div class="relative z-10 text-center text-white px-4 space-y-8 max-w-5xl mx-auto">
+        <h1 class="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-blue-500 animate-pulse-slow">Stellar Rankings</h1>
+        <p class="text-xl md:text-2xl text-blue-200 animate-fade-in">Your Gateway to Space Leadership</p>
+      </div>
+    </section>
+
+    <!-- Stats Dashboard -->
+    <section class="stats shadow-xl bg-blue-950/30 backdrop-blur-md border border-blue-500/20 hover:border-blue-400/40 transition-all duration-500 container mx-auto px-4 my-12">
+      <div class="stat px-8 hover:bg-blue-900/20 transition-all duration-300">
+        <div class="stat-title text-blue-400 font-bold">Elite Cadets</div>
+        <div id="eliteCadets" class="stat-value text-white text-3xl font-bold">2.6K</div>
+        <div class="stat-desc text-blue-300">↗︎ 300 new this week</div>
+      </div>
+      <div class="stat px-8 hover:bg-blue-900/20 transition-all duration-300">
+        <div class="stat-title text-green-400 font-bold">Total Credits</div>
+        <div id="totalCredits" class="stat-value text-white text-3xl font-bold">892M</div>
+        <div class="stat-desc text-green-400">All time high</div>
+      </div>
+      <div class="stat px-8 hover:bg-blue-900/20 transition-all duration-300">
+        <div class="stat-title text-purple-400 font-bold">Active Missions</div>
+        <div id="activeMissions" class="stat-value text-white text-3xl font-bold">147</div>
+        <div class="stat-desc text-purple-400">24 premium missions</div>
+      </div>
+      <div class="stat px-8 hover:bg-blue-900/20 transition-all duration-300">
+        <div class="stat-title text-yellow-400 font-bold">Success Rate</div>
+        <div id="successRate" class="stat-value text-white text-3xl font-bold">94%</div>
+        <div class="stat-desc text-yellow-400">Mission completion</div>
+      </div>
+    </section>
+
+    <!-- Leaderboard Competition Section with Video Background -->
+    <section id="leaderboard-competition" class="relative my-12">
+      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+        <source src="/videos/leaderboard5.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="absolute inset-0 bg-gradient-to-b from-blue-950/90 via-blue-900/80 to-blue-950/90"></div>
+      <div class="relative z-10 container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Galactic Leaderboard</h2>
+          <p class="text-xl text-blue-200 max-w-2xl mx-auto">Compete with elite space cadets and get noticed by industry leaders</p>
+        </div>
+        <!-- Leaderboard Table -->
+        <div class="overflow-x-auto">
+          <table class="table w-full text-gray-300 bg-blue-950/20 rounded-xl">
+            <thead>
+              <tr class="border-b border-blue-500/20 bg-blue-900/20">
+                <th class="p-4 text-blue-400 font-bold">RANK</th>
+                <th class="p-4 text-blue-400 font-bold">CADET</th>
+                <th class="p-4 text-blue-400 font-bold">DIVISION</th>
+                <th class="p-4 text-blue-400 font-bold">STAR CREDITS</th>
+                <th class="p-4 text-blue-400 font-bold">LEVEL</th>
+                <th class="p-4 text-blue-400 font-bold">STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardBody" class="divide-y divide-blue-500/10">
+              <!-- Example row -->
+              <tr class="hover:bg-blue-900/20 transition-all duration-300 cursor-pointer group">
+                <td class="p-4">
+                  <div class="flex items-center space-x-3">
+                    <span class="text-2xl font-bold text-yellow-400">#1</span>
+                    <div class="avatar-group -space-x-2">
+                      <div class="avatar">
+                        <div class="w-6">
+                          <img src="/badges/elite.svg" alt="Elite Badge" class="tooltip" data-tip="Elite Status" />
+                        </div>
+                      </div>
+                      <div class="avatar">
+                        <div class="w-6">
+                          <img src="/badges/certified.svg" alt="Certified Badge" class="tooltip" data-tip="NASA Certified" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="avatar">
+                      <div class="mask mask-hexagon w-12 h-12 bg-blue-500/20 ring ring-blue-400/50">
+                        <img src="/images/default-avatar.png" alt="Avatar" />
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-bold text-white group-hover:text-blue-400 transition-colors">Commander Alex</div>
+                      <div class="text-sm text-blue-300">Mission Specialist</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <span class="badge badge-primary badge-outline gap-2">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                    Alpha Division
+                  </span>
+                </td>
+                <td class="p-4">
+                  <div class="font-mono text-white text-lg">248,920</div>
+                  <div class="text-sm text-green-400 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                    </svg>
+                    +1,240 today
+                  </div>
+                </td>
+                <td class="p-4">
+                  <div class="flex flex-col gap-2">
+                    <span class="text-white font-bold">Level 42</span>
+                    <div class="w-full h-2 bg-blue-900/40 rounded-full">
+                      <div class="h-full bg-blue-500 rounded-full animate-pulse" style="width: 75%"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <span class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-green-400">Online</span>
+                  </span>
+                </td>
+              </tr>
+              <!-- More rows can be added dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination and Stats -->
+        <div class="mt-8 bg-blue-900/30 rounded-xl border border-blue-500/20 backdrop-blur-lg p-6">
+          <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-sm text-blue-300">
+              Showing <span class="font-medium text-white">1</span> - <span class="font-medium text-white">10</span> of <span class="font-medium text-white">100</span> cadets
+            </div>
+            <div class="join">
+              <button class="join-item btn btn-sm">«</button>
+              <button class="join-item btn btn-sm btn-active">1</button>
+              <button class="join-item btn btn-sm">2</button>
+              <button class="join-item btn btn-sm">3</button>
+              <button class="join-item btn btn-sm">...</button>
+              <button class="join-item btn btn-sm">10</button>
+              <button class="join-item btn btn-sm">»</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Competitive Edge Banner -->
+        <div class="mt-16 p-8 bg-gradient-to-r from-blue-900/40 to-purple-900/40 rounded-xl border border-blue-500/20">
+          <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 class="text-2xl font-bold text-white mb-2">Ready to Rise Through the Ranks?</h3>
+              <p class="text-blue-200">Premium members get 2x credit multiplier and exclusive mission access!</p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex items-center gap-2 text-blue-300">
+                  <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                  </svg>
+                  Priority Mission Selection
+                </li>
+                <li class="flex items-center gap-2 text-blue-300">
+                  <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                  </svg>
+                  Enhanced Credit Earnings
+                </li>
+              </ul>
+            </div>
+            <div class="flex flex-col gap-4">
+              <button class="btn btn-primary btn-lg gap-2">
+                Upgrade to Premium
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+              </button>
+              <span class="text-sm text-blue-300 text-center">30-day money-back guarantee</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Training Modules Section with Video Background -->
+    <section id="training-modules" class="relative min-h-screen py-20">
+      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-60">
+        <source src="./videos/trainingmods1.mp4" type="video/mp4" />
+      </video>
+      <div class="absolute inset-0 bg-gradient-to-b from-blue-950/90 via-blue-900/80 to-blue-950/90"></div>
+      <div class="relative z-10 text-center mb-16">
+        <h1 style="color: blue;">Elite Training Modules</h1>
+        <p style="color: blue;">Master real space mission skills with industry-certified training</p>
+      </div>
+      <div class="relative z-10 container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Physical Training Module -->
+          <div class="card glass hover:-translate-y-2 transition-all duration-300">
+              <div class="card-body">
+                  <div class="absolute top-4 right-4">
+                      <div class="badge badge-primary">6-8 Months</div>
+                  </div>
+                  <h3 class="card-title text-2xl text-blue-400 mb-4">Physical Training</h3>
+                  <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
+                      <span class="text-2xl text-white">0%</span>
+                  </div>
+                  <div class="certification-badge mb-4">
+                      <span class="text-xs text-blue-300">ISO-31000-ZG Certification</span>
+                  </div>
+                  <p class="text-blue-100">Master zero-gravity movement, biometric adaptation, and emergency procedures</p>
+                  <div class="requirements text-xs text-gray-400 mt-2">
+                      <p>Required: Medical Clearance, Basic Physics</p>
+                  </div>
+                  <div class="card-actions justify-between items-center mt-4">
+                      <span class="text-sm text-blue-300">300 Training Hours Required</span>
+                      <button class="btn btn-primary" data-module="physical">Begin Assessment</button>
+                  </div>
+              </div>
+          </div>
+       
+          <!-- Technical Systems Module -->
+          <div class="card glass hover:-translate-y-2 transition-all duration-300">
+              <div class="card-body">
+                  <div class="absolute top-4 right-4">
+                      <div class="badge badge-secondary">4-6 Months</div>
+                  </div>
+                  <h3 class="card-title text-2xl text-purple-400 mb-4">Technical Systems</h3>
+                  <div class="radial-progress text-purple-500 mx-auto my-6" style="--value:0; --size:8rem;">
+                      <span class="text-2xl text-white">0%</span>
+                  </div>
+                  <div class="certification-badge mb-4">
+                      <span class="text-xs text-purple-300">OSHA-ST-102 Certification</span>
+                  </div>
+                  <p class="text-blue-100">Master spacecraft systems, maintenance, and emergency protocols</p>
+                  <div class="requirements text-xs text-gray-400 mt-2">
+                      <p>Required: Physical Training Completion</p>
+                  </div>
+                  <div class="card-actions justify-between items-center mt-4">
+                      <span class="text-sm text-blue-300">200 Simulation Hours Required</span>
+                      <button class="btn btn-primary" data-module="technical">Begin Assessment</button>
+                  </div>
+              </div>
+          </div>
+       
+          <!-- Mission Simulation Module -->
+          <div class="card glass hover:-translate-y-2 transition-all duration-300">
+              <div class="card-body">
+                  <div class="absolute top-4 right-4">
+                      <div class="badge badge-accent">3-4 Months</div>
+                  </div>
+                  <h3 class="card-title text-2xl text-blue-400 mb-4">Mission Simulation</h3>
+                  <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
+                      <span class="text-2xl text-white">0%</span>
+                  </div>
+                  <div class="certification-badge mb-4">
+                      <span class="text-xs text-blue-300">ISO-31010-MO Certification</span>
+                  </div>
+                  <p class="text-blue-100">Complete mission scenarios and team coordination exercises</p>
+                  <div class="requirements text-xs text-gray-400 mt-2">
+                      <p>Required: Technical Systems Completion</p>
+                  </div>
+                  <div class="card-actions justify-between items-center mt-4">
+                      <span class="text-sm text-blue-300">100 Mission Hours Required</span>
+                      <button class="btn btn-primary" data-module="simulation">Begin Assessment</button>
+                  </div>
+              </div>
+          </div>
+       </div>
+    </section>
+
+    <!-- Achievement Showcase Section -->
+    <section class="relative py-16 bg-blue-950/30">
+      <div class="absolute inset-0 bg-[url('/images/particles.svg')] opacity-10 animate-pulse-slow"></div>
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Elite Achievements</h2>
+          <p class="text-xl text-blue-200 max-w-2xl mx-auto">Unlock prestigious badges and certifications</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          <!-- NASA Certification Card -->
+          <div class="cosmic-card p-6 text-center bg-blue-900/30 rounded-xl border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 hover:-translate-y-1">
+            <div class="w-16 h-16 mx-auto mb-4 relative">
+              <div class="absolute inset-0 bg-blue-500/20 rounded-full animate-ping"></div>
+              <img src="/badges/nasa-cert.svg" alt="NASA Certification" class="relative z-10" />
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">NASA Certified</h3>
+            <p class="text-sm text-blue-300">Complete advanced training modules</p>
+          </div>
+          <!-- Mission Specialist Card -->
+          <div class="cosmic-card p-6 text-center bg-blue-900/30 rounded-xl border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:-translate-y-1">
+            <div class="w-16 h-16 mx-auto mb-4">
+              <img src="/badges/mission-specialist.svg" alt="Mission Specialist" />
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Mission Specialist</h3>
+            <p class="text-sm text-blue-300">Lead 50+ successful missions</p>
+          </div>
+          <!-- Elite Commander Card -->
+          <div class="cosmic-card p-6 text-center bg-blue-900/30 rounded-xl border border-yellow-500/20 hover:border-yellow-400/40 transition-all duration-300 hover:-translate-y-1">
+            <div class="w-16 h-16 mx-auto mb-4">
+              <img src="/badges/elite-commander.svg" alt="Elite Commander" />
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Elite Commander</h3>
+            <p class="text-sm text-blue-300">Reach top 100 global ranking</p>
+          </div>
+          <!-- Innovation Pioneer Card -->
+          <div class="cosmic-card p-6 text-center bg-blue-900/30 rounded-xl border border-green-500/20 hover:border-green-400/40 transition-all duration-300 hover:-translate-y-1">
+            <div class="w-16 h-16 mx-auto mb-4">
+              <img src="/badges/innovation.svg" alt="Innovation Pioneer" />
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Innovation Pioneer</h3>
+            <p class="text-sm text-blue-300">Contribute to space research</p>
+          </div>
+        </div>
+
+        <!-- Next Achievement Tracker -->
+        <div class="max-w-3xl mx-auto bg-blue-900/30 rounded-xl p-8 border border-blue-500/20">
+          <h3 class="text-2xl font-bold text-white mb-4">Your Next Achievement</h3>
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12">
+              <img src="/badges/next-achievement.svg" alt="Next Achievement" />
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-blue-200">Space Navigation Expert</span>
+                <span class="text-blue-300">75/100</span>
+              </div>
+              <div class="w-full h-2 bg-blue-900/40 rounded-full">
+                <div class="h-full w-3/4 bg-blue-500 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary w-full">Continue Training</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission Control Center Section (Static Background) -->
+    <section id="mission-control-center" class="relative py-16">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Mission Control Center</h2>
+        <p class="text-xl text-blue-200 mb-8">Real-time mission updates and opportunities</p>
+        <!-- Mission Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Active Mission Card -->
+          <div class="card glass hover:-translate-y-2 transition-all duration-300">
+            <div class="card-body">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="card-title text-blue-400">Mars Landing Simulation</h3>
+                <span class="badge badge-primary">Live</span>
+              </div>
+              <p class="text-blue-100 mb-4">Practice landing procedures under various atmospheric conditions</p>
+              <div class="space-y-2">
+                <div class="flex justify-between text-sm">
+                  <span class="text-blue-300">Participants</span>
+                  <span class="text-white">24/30</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-blue-300">Difficulty</span>
+                  <span class="text-yellow-400">Advanced</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-blue-300">Credits</span>
+                  <span class="text-green-400">5,000</span>
+                </div>
+              </div>
+              <div class="card-actions justify-end mt-4">
+                <button class="btn btn-primary">Join Mission</button>
+              </div>
+            </div>
+          </div>
+          <!-- You can add additional mission cards here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Stats Section -->
+    <section class="relative bg-blue-950/50 py-16">
+      <div class="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10"></div>
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Active Cadets -->
+          <div class="cosmic-card p-6 bg-blue-900/30 rounded-xl border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 hover:-translate-y-1">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-lg font-semibold text-blue-400">Active Cadets</h3>
+                <p id="activeCadets" class="text-3xl font-bold text-white mt-2">2,647</p>
+                <p class="text-sm text-blue-300/60 mt-2">↗︎ 12% increase</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <!-- Total Credits -->
+          <div class="cosmic-card p-6 bg-blue-900/30 rounded-xl border border-green-500/20 hover:border-green-400/40 transition-all duration-300 hover:-translate-y-1">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-lg font-semibold text-green-400">Total Credits</h3>
+                <p id="totalCredits" class="text-3xl font-bold text-white mt-2">892M</p>
+                <p class="text-sm text-green-300">All time high</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <!-- Active Missions -->
+          <div class="cosmic-card p-6 bg-blue-900/30 rounded-xl border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:-translate-y-1">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-lg font-semibold text-purple-400">Active Missions</h3>
+                <p id="activeMissions" class="text-3xl font-bold text-white mt-2">147</p>
+                <p class="text-sm text-purple-300">24 premium missions</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <!-- Success Rate -->
+          <div class="cosmic-card p-6 bg-blue-900/30 rounded-xl border border-yellow-500/20 hover:border-yellow-400/40 transition-all duration-300 hover:-translate-y-1">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-lg font-semibold text-yellow-400">Success Rate</h3>
+                <p id="successRate" class="text-3xl font-bold text-white mt-2">94%</p>
+                <p class="text-sm text-yellow-300">Mission completion</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA / Premium Access Section -->
+    <section class="container mx-auto px-4 my-12">
+      <div class="mt-16 p-8 bg-gradient-to-r from-blue-900/40 to-purple-900/40 rounded-xl border border-blue-500/20">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h3 class="text-2xl font-bold text-white mb-2">Ready to Rise Through the Ranks?</h3>
+            <p class="text-blue-200">Premium members get 2x credit multiplier and exclusive mission access!</p>
+            <ul class="mt-4 space-y-2">
+              <li class="flex items-center gap-2 text-blue-300">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+                Priority Mission Selection
+              </li>
+              <li class="flex items-center gap-2 text-blue-300">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+                Enhanced Credit Earnings
+              </li>
+            </ul>
+          </div>
+          <div class="flex flex-col gap-4">
+            <button class="btn btn-primary btn-lg gap-2">
+              Upgrade to Premium
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+              </svg>
+            </button>
+            <span class="text-sm text-blue-300 text-center">30-day money-back guarantee</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter & Footer Section -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="container mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <!-- About -->
+          <div>
+            <h3 class="font-bold text-lg text-blue-400">About</h3>
+            <ul class="space-y-2 mt-4">
+              <li><a href="/about" class="hover:text-blue-400 transition-colors">Our Story</a></li>
+              <li><a href="/academy" class="hover:text-blue-400 transition-colors">Space Academy</a></li>
+            </ul>
+          </div>
+          <!-- Community -->
+          <div>
+            <h3 class="font-bold text-lg text-blue-400">Community</h3>
+            <ul class="space-y-2 mt-4">
+              <li><a href="/events" class="hover:text-blue-400 transition-colors">Events</a></li>
+              <li><a href="/forums" class="hover:text-blue-400 transition-colors">Forums</a></li>
+            </ul>
+          </div>
+          <!-- Resources -->
+          <div>
+            <h3 class="font-bold text-lg text-blue-400">Resources</h3>
+            <ul class="space-y-2 mt-4">
+              <li><a href="/faq" class="hover:text-blue-400 transition-colors">FAQ</a></li>
+              <li><a href="/support" class="hover:text-blue-400 transition-colors">Support</a></li>
+            </ul>
+          </div>
+          <!-- Legal -->
+          <div>
+            <h3 class="font-bold text-lg text-blue-400">Legal</h3>
+            <ul class="space-y-2 mt-4">
+              <li><a href="/terms" class="hover:text-blue-400 transition-colors">Terms</a></li>
+              <li><a href="/privacy" class="hover:text-blue-400 transition-colors">Privacy</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-12 text-center">
+          <h4 class="text-lg font-bold text-blue-400">Follow Us</h4>
+          <div class="flex justify-center gap-6 mt-4">
+            <a href="https://x.com/SharedStars" class="hover:text-blue-400" aria-label="Twitter">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">...</svg>
+            </a>
+            <a href="https://www.facebook.com/SharedStars" class="hover:text-blue-400" aria-label="Facebook">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">...</svg>
+            </a>
+            <a href="https://www.instagram.com/sharedstarsacademy/" class="hover:text-blue-400" aria-label="Instagram">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">...</svg>
+            </a>
+            <a href="https://www.linkedin.com/company/106241890" class="hover:text-blue-400" aria-label="LinkedIn">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">...</svg>
+            </a>
+            <a href="https://t.me/SharedStars" class="hover:text-blue-400" aria-label="Telegram">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">...</svg>
+            </a>
+            <a href="https://www.tiktok.com/@sharedstarsacademy" class="hover:text-blue-400" aria-label="TikTok">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">...</svg>
+            </a>
+            <a href="https://www.youtube.com/@SharedStarsAcademy" class="hover:text-blue-400" aria-label="YouTube">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">...</svg>
+            </a>
+          </div>
+        </div>
+    
+        <div class="mt-12 pt-8 border-t border-blue-500/20 text-center">
+          <p class="text-gray-400 text-sm">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- JavaScript for AI Assistant Integration -->
+  <script>
+    // Load AI greeting from API
+    async function loadGreeting() {
+      try {
+        const response = await fetch('/api/ai/greeting');
+        const data = await response.json();
+        document.getElementById('aiGreeting').textContent = data.greeting;
+      } catch (error) {
+        console.error('Error loading AI greeting:', error);
+        document.getElementById('aiGreeting').textContent = "Welcome back, Commander. Let's resume our Mission!";
+      }
+    }
+    window.addEventListener('DOMContentLoaded', loadGreeting);
+
+    // Simple chat functionality for AI Assistant
+    document.getElementById('sendChat').addEventListener('click', () => {
+      const input = document.getElementById('chatInput');
+      const chatLog = document.getElementById('chatLog');
+      const message = input.value.trim();
+      if (message !== '') {
+        const userMsg = document.createElement('div');
+        userMsg.textContent = `You: ${message}`;
+        userMsg.classList.add('mb-2', 'text-white');
+        chatLog.appendChild(userMsg);
+        input.value = '';
+        setTimeout(() => {
+          const aiMsg = document.createElement('div');
+          aiMsg.textContent = `AI: Received your query "${message}"`;
+          aiMsg.classList.add('mb-2', 'ai-message-bubble', 'text-blue-200');
+          chatLog.appendChild(aiMsg);
+        }, 1000);
+      }
+    });
+  </script>
+      <script src="/js/languageSelection.js"></script>
+</body>
+</html>
