@@ -1,7 +1,7 @@
 /**
  * CoreAIServices.js
  * 
- * Consolidated AI core services that provide foundational AI functionality
+ * Consolidated AI core services providing foundational AI functionality
  * for the space training platform. This module integrates functionality from:
  * - AICore.js
  * - AIService.js 
@@ -11,7 +11,7 @@
 
 const { EventEmitter } = require('events');
 const mongoose = require('mongoose');
-const { OpenAI } = require('openai');
+const openai = require('./openaiService');  // ✅ Correct unified import
 
 // Import required models
 const User = require('../models/User');
@@ -20,18 +20,21 @@ const TrainingSession = require('../models/TrainingSession');
 const Module = require('../models/Module');
 const Subscription = require('../models/Subscription');
 
-/**
- * Core AI Service that provides foundational AI capabilities for the platform
- * and orchestrates various AI subsystems.
- */
 class CoreAIServices extends EventEmitter {
   constructor() {
     super();
-    
-    // Initialize OpenAI
+
+    // Initialize OpenAI correctly
     this.openai = this.initializeOpenAI();
-    
-    // AI configuration
+
+    if (!this.openai) {
+      console.error("❌ OpenAI client failed to initialize.");
+      throw new Error("OpenAI initialization failed");
+    } else {
+      console.log("✅ OpenAI client initialized successfully");
+    }
+
+    // AI config (existing code)
     this.config = {
       model: process.env.OPENAI_MODEL || "gpt-4-turbo",
       temperature: 0.7,
@@ -44,21 +47,21 @@ class CoreAIServices extends EventEmitter {
         custom: (amount) => (amount >= 100 ? 1.5 : 1)
       }
     };
-    
-    // AI subsystems registration
+
+    // AI subsystems registration (existing code)
     this.subsystems = new Map();
-    
-    // Integrated subsystems (will be initialized later)
+
+    // Integrated subsystems
     this.learningSystem = null;
     this.guidanceSystem = null;
     this.spaceCoach = null;
     this.webController = null;
     this.socialIntegrator = null;
-    
-    // Queue for processing AI requests
+
+    // Queue for AI requests
     this.requestQueue = [];
     this.isProcessing = false;
-    
+
     // Performance tracking
     this.metrics = {
       totalRequests: 0,
@@ -68,60 +71,47 @@ class CoreAIServices extends EventEmitter {
       lastResponseTime: 0,
       requestHistory: []
     };
-    
-    // Initialize AI service
-    this.initialize();
-    
-    console.log('✅ Core AI Services initialized');
+
+    // Initialize the service
+    this.initialize();  // ✅ Ensure this call remains here
   }
-  
+
   /**
    * Initialize OpenAI API client
-   * @returns {OpenAI} Configured OpenAI client
    */
   initializeOpenAI() {
     try {
       const apiKey = process.env.OPENAI_API_KEY;
-      
       if (!apiKey) {
         console.error('❌ OpenAI API key not found in environment variables');
         throw new Error('Missing OpenAI API Key');
       }
-      
-      const openai = new OpenAI({
-        apiKey: apiKey
-      });
-      
-      console.log('✅ OpenAI client initialized successfully');
       return openai;
     } catch (error) {
       console.error('❌ Failed to initialize OpenAI client:', error);
-      throw error;
+      return null;
     }
   }
-  
-  /**
-   * Initialize the AI service and set up event listeners
-   */
-  initialize() {
-    // Set up event listeners
-    this.on('ai-request', this.handleAIRequest.bind(this));
-    this.on('ai-response', this.trackPerformance.bind(this));
-    this.on('ai-error', this.handleError.bind(this));
-    
-    // Initialize systems monitoring
-    this.startMonitoring();
-    
-    // Register built-in subsystems
-    this.registerCoreSubsystems();
-    
-    // Initialize integration with other AI services
-    this.initializeServiceIntegration();
-  }
-  
-  /**
-   * Initialize integration with other AI services
-   */
+
+ /**
+ * Initialize the AI service and set up event listeners
+ */
+initialize() {
+  // Set up event listeners
+  this.on('ai-request', this.handleAIRequest.bind(this));
+  this.on('ai-response', this.trackPerformance.bind(this));
+  this.on('ai-error', this.handleError.bind(this));
+
+  // Initialize systems monitoring
+  this.startMonitoring();
+
+  // Register built-in subsystems
+  this.registerCoreSubsystems();
+
+  // Initialize integration with other AI services
+  this.initializeServiceIntegration();
+}
+
   async initializeServiceIntegration() {
     try {
       // We'll dynamically import these to avoid circular dependencies

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const physicalTrainingSchema = new mongoose.Schema({
-    moduleId: { type: String, required: true }, // ❌ Removed `unique: true`
+    moduleId: { type: String, required: true },
     moduleName: { type: String, required: true },
     description: { type: String },
     difficulty: { type: String, enum: ["easy", "medium", "hard"], default: "medium" },
@@ -15,7 +15,7 @@ const physicalTrainingSchema = new mongoose.Schema({
     metrics: {
         caloriesBurned: { type: Number, default: 0 },
         averageHeartRate: { type: Number, default: 0 },
-        effortScore: { type: Number, min: 0, max: 100, default: 50 }, // AI-driven effort estimation
+        effortScore: { type: Number, min: 0, max: 100, default: 50 },
         completionRate: { type: Number, min: 0, max: 100, default: 0 }
     },
     progressTracking: {
@@ -30,7 +30,6 @@ const physicalTrainingSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-// Pre-save middleware to update AI guidance timestamp
 physicalTrainingSchema.pre("save", function(next) {
     this.aiGuidance.lastUpdated = new Date();
     next();

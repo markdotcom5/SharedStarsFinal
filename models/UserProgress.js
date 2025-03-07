@@ -158,6 +158,51 @@ UserProgressSchema.methods.addTrainingLog = async function(moduleId, logData) {
    module.completedSessions += 1;
    return this.save();
 };
+// models/UserProgress.js
+
+UserProgressSchema.methods.calculateScore = function(performanceData) {
+    const { completionTime, accuracy, interactions, challengesCompleted } = performanceData;
+
+    const weights = {
+        completionTime: 0.2,
+        accuracy: 0.4,
+        interactions: 0.2,
+        challengesCompleted: 0.2
+    };
+
+    const normalizedTime = Math.min(1, 600 / Math.max(completionTime, 300));
+
+    const score = 
+        (normalizedTime * weights.completionTime) +
+        (accuracy * weights.accuracy) +
+        (Math.min(1, interactions / 10) * weights.interactions) +
+        (Math.min(1, challengesCompleted / 5) * weights.challengesCompleted);
+
+    return Math.round(score * 100) / 100;
+};
+
+UserProgressSchema.methods.checkAchievements = function(moduleId, score) {
+    const newAchievements = [];
+
+    if (score >= 0.9) {
+        newAchievements.push({
+            name: 'Excellence in Space Training',
+            dateEarned: new Date(),
+            description: 'Achieved 90% or higher in a training module'
+        });
+    }
+
+    if (this.moduleProgress.filter(m => m.completedSessions > 0).length >= 5) {
+        newAchievements.push({
+            name: 'Dedicated Space Cadet',
+            dateEarned: new Date(),
+            description: 'Completed 5 training modules'
+        });
+    }
+
+    this.achievements.push(...newAchievements);
+    return newAchievements;
+};
 
 // ✅ New Method for SPA Mission Tracking
 UserProgressSchema.methods.updateMissionProgress = async function(missionId, progress) {

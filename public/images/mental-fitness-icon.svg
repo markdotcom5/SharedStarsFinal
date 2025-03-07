@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="95" fill="#0F172A" />
+  <circle cx="100" cy="100" r="85" fill="#1E293B" />
+  
+  <!-- Brain outline with neural connections -->
+  <g transform="translate(50, 40) scale(0.9)">
+    <!-- Brain lobes -->
+    <path d="M50,30 C65,20 75,25 85,30 C95,15 110,20 105,35 C120,40 120,55 110,65 C120,75 115,85 105,90 C110,100 100,110 90,105 C80,115 65,115 60,105 C45,110 35,100 40,90 C25,80 30,65 40,60 C30,50 35,35 50,30 Z" 
+          fill="#7E22CE" fill-opacity="0.7" stroke="#A855F7" stroke-width="1.5" />
+    
+    <!-- Neural connections -->
+    <circle cx="50" cy="40" r="5" fill="#D8B4FE" />
+    <circle cx="65" cy="35" r="4" fill="#D8B4FE" />
+    <circle cx="80" cy="38" r="5" fill="#D8B4FE" />
+    <circle cx="95" cy="45" r="4" fill="#D8B4FE" />
+    <circle cx="100" cy="65" r="5" fill="#D8B4FE" />
+    <circle cx="95" cy="85" r="4" fill="#D8B4FE" />
+    <circle cx="75" cy="95" r="5" fill="#D8B4FE" />
+    <circle cx="55" cy="90" r="4" fill="#D8B4FE" />
+    <circle cx="45" cy="75" r="5" fill="#D8B4FE" />
+    <circle cx="45" cy="55" r="4" fill="#D8B4FE" />
+    <circle cx="70" cy="65" r="6" fill="#D8B4FE" />
+    
+    <!-- Connection lines -->
+    <line x1="50" y1="40" x2="65" y2="35" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="65" y1="35" x2="80" y2="38" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="80" y1="38" x2="95" y2="45" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="95" y1="45" x2="100" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="100" y1="65" x2="95" y2="85" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="95" y1="85" x2="75" y2="95" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="75" y1="95" x2="55" y2="90" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="55" y1="90" x2="45" y2="75" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="45" y1="75" x2="45" y2="55" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="45" y1="55" x2="50" y2="40" stroke="#D8B4FE" stroke-width="0.8" />
+    
+    <line x1="50" y1="40" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="65" y1="35" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="80" y1="38" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="95" y1="45" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="100" y1="65" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="95" y1="85" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="75" y1="95" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="55" y1="90" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="45" y1="75" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    <line x1="45" y1="55" x2="70" y2="65" stroke="#D8B4FE" stroke-width="0.8" />
+    
+    <!-- Neural activity animation -->
+    <circle cx="70" cy="65" r="8" fill="none" stroke="#F0ABFC" stroke-width="1.5">
+      <animate attributeName="r" values="6;10;6" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite" />
+    </circle>
+  </g>
+  
+  <!-- Astronaut helmet -->
+  <g transform="translate(100, 130) scale(0.4)">
+    <!-- Helmet outline -->
+    <circle cx="0" cy="0" r="40" fill="#334155" stroke="#94A3B8" stroke-width="4" />
+    <!-- Visor -->
+    <ellipse cx="0" cy="-5" rx="25" ry="20" fill="#38BDF8" stroke="#0369A1" stroke-width="2" />
+    <!-- Reflection on visor -->
+    <ellipse cx="-10" cy="-10" rx="5" ry="3" fill="white" fill-opacity="0.7" transform="rotate(-20 -10 -10)" />
+    <!-- Life support pack -->
+    <rect x="-20" y="30" width="40" height="20" rx="5" fill="#475569" stroke="#94A3B8" stroke-width="2" />
+  </g>
+  
+  <!-- Thought bubbles connecting brain to helmet -->
+  <circle cx="90" cy="106" r="2" fill="#D8B4FE" />
+  <circle cx="85" cy="113" r="2.5" fill="#D8B4FE" />
+  <circle cx="80" cy="120" r="3" fill="#D8B4FE" />
+  
+  <!-- Constellation pattern (represents mental mapping) -->
+  <g transform="translate(140, 50)">
+    <circle cx="0" cy="0" r="1.5" fill="white" />
+    <circle cx="15" cy="10" r="1" fill="white" />
+    <circle cx="5" cy="20" r="1" fill="white" />
+    <circle cx="25" cy="25" r="1" fill="white" />
+    <circle cx="20" cy="5" r="1" fill="white" />
+    
+    <line x1="0" y1="0" x2="15" y2="10" stroke="white" stroke-width="0.5" stroke-opacity="0.3" />
+    <line x1="15" y1="10" x2="5" y2="20" stroke="white" stroke-width="0.5" stroke-opacity="0.3" />
+    <line x1="5" y1="20" x2="25" y2="25" stroke="white" stroke-width="0.5" stroke-opacity="0.3" />
+    <line x1="15" y1="10" x2="20" y2="5" stroke="white" stroke-width="0.5" stroke-opacity="0.3" />
+    <line x1="20" y1="5" x2="0" y2="0" stroke="white" stroke-width="0.5" stroke-opacity="0.3" />
+  </g>
+  
+  <!-- Stars -->
+  <circle cx="25" cy="25" r="1" fill="white" />
+  <circle cx="40" cy="60" r="1" fill="white" />
+  <circle cx="160" cy="40" r="1" fill="white" />
+  <circle cx="180" cy="170" r="1" fill="white" />
+  <circle cx="70" cy="180" r="1" fill="white" />
+  <circle cx="130" cy="25" r="1" fill="white" />
+  <circle cx="170" cy="100" r="1.5" fill="white" />
+  <circle cx="30" cy="140" r="1.5" fill="white" />
+  
+  <!-- Title text -->
+  <text x="100" y="170" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" font-weight="bold">MENTAL FITNESS</text>
+</svg>

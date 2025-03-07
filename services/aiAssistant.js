@@ -4,10 +4,7 @@ const UserProgress = require("../models/UserProgress.js");
 
 require('dotenv').config(); // ✅ Ensure env is loaded
 
-const OpenAI = require("openai");
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY || "MISSING_KEY"
-});
+const { openai, OpenAI } = require('./openaiService'); // ✅ correct
 
 if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "MISSING_KEY") {
     console.error("❌ ERROR: Missing OpenAI API Key!");
@@ -37,12 +34,7 @@ class BayesianKnowledgeTracker {
 
 class AIAssistant {
     constructor() {
-        this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY
-        });
-        this.defaultModel = "gpt-4-turbo-preview";
-        this.reinforcementModel = new ReinforcementLearning();
-        this.bayesianTracker = new BayesianKnowledgeTracker();
+        this.openai = openai; // ✅ Clearly correct usage
     }
 
     /**

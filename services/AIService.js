@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { EventEmitter } = require("events");
-const { OpenAI } = require("openai");
 
 const User = require("../models/User");
 const UserProgress = require("../models/UserProgress");
@@ -9,9 +8,7 @@ const Achievement = require("../models/Achievement");
 const Session = require("../models/Session");
 
 // ✅ Initialize OpenAI API
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "MISSING_KEY",
-});
+const openai = require('./openaiService');  // ✅ Keep this clearly
 
 if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "MISSING_KEY") {
   console.error("❌ ERROR: Missing OpenAI API Key!");

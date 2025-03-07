@@ -13,10 +13,10 @@
  * - TrainingModuleIntegrator.js
  */
 
-const EventEmitter = require('events');
 const mongoose = require('mongoose');
-const { OpenAI } = require('openai');
-const STELLA_AI = require('./STELLA_AI');
+const { openai, OpenAI } = require('./openaiService'); // ✅ OpenAI import fixed with destructuring
+const STELLA_AI = require('./STELLA_AI');   // ✅ STELLA_AI import fixed
+const { EventEmitter } = require('events');
 
 // Import required models
 const User = require('../models/User');
@@ -24,7 +24,7 @@ const UserProgress = require('../models/UserProgress');
 const TrainingSession = require('../models/TrainingSession');
 const Module = require('../models/Module');
 const Achievement = require('../models/Achievement');
-
+const { safeGetUserProgress, isValidObjectId } = require('../utils/progressUtils');
 /**
  * Training and Learning System that provides comprehensive training functionality 
  * including module management, progress tracking, and AI-enhanced learning
@@ -442,23 +442,44 @@ class TrainingLearningSystem extends EventEmitter {
       console.log('🔄 Loading training modules');
       
       // Fetch all modules from the database
-      const modules = await Module.find().lean();
+      console.log('✅ DEBUGGING MODEL IMPORT:');
+      console.log('Type of Module:', typeof Module);
+      console.log('Module:', Module);
+      console.log('Has find method?', typeof Module.find === 'function');
+      
+      // Safely handle whatever Module.find returns
+      let modulesResult;
+      try {
+        modulesResult = await Module.find({});
+        console.log('modulesResult type:', typeof modulesResult);
+        console.log('modulesResult is array?', Array.isArray(modulesResult));
+        console.log('modulesResult sample:', modulesResult);
+      } catch (findError) {
+        console.error('Error finding modules:', findError);
+        modulesResult = [];
+      }
+      
+      // Convert result to array safely
+      const modules = Array.isArray(modulesResult) ? modulesResult : 
+                     (modulesResult && typeof modulesResult === 'object') ? [modulesResult] : [];
       
       // Process and cache modules
       modules.forEach(module => {
-        this.modules.cache.set(module.moduleId, module);
-        
-        // Track categories
-        if (module.category) {
-          this.modules.categories.add(module.category);
-        }
-        
-        // Track prerequisites
-        if (module.requirements?.prerequisites?.length > 0) {
-          this.modules.prerequisites.set(
-            module.moduleId, 
-            module.requirements.prerequisites.map(p => p.moduleId)
-          );
+        if (module && module.moduleId) {
+          this.modules.cache.set(module.moduleId, module);
+          
+          // Track categories
+          if (module.category) {
+            this.modules.categories.add(module.category);
+          }
+          
+          // Track prerequisites
+          if (module.requirements?.prerequisites?.length > 0) {
+            this.modules.prerequisites.set(
+              module.moduleId, 
+              module.requirements.prerequisites.map(p => p.moduleId)
+            );
+          }
         }
       });
       
@@ -474,7 +495,6 @@ class TrainingLearningSystem extends EventEmitter {
       throw error;
     }
   }
-  
   /**
    * Get all training modules
    * @param {Object} filters - Optional filters for the modules
@@ -677,6 +697,11 @@ class TrainingLearningSystem extends EventEmitter {
         return this.progressTracking.userProgress.get(userId);
       }
       
+      // Handle anonymous users or invalid IDs
+      if (userId === 'anonymous' || !mongoose.Types.ObjectId.isValid(userId)) {
+        return null;
+      }
+      
       // Fetch from database
       const progress = await UserProgress.findOne({ userId }).lean();
       
@@ -688,7 +713,8 @@ class TrainingLearningSystem extends EventEmitter {
       return progress;
     } catch (error) {
       console.error(`❌ Error getting progress for user ${userId}:`, error);
-      throw error;
+      // Return null instead of throwing to prevent cascading errors
+      return null;
     }
   }
   

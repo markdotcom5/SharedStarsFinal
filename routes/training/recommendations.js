@@ -2,11 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../../middleware/authenticate');
-const { CoreAIServices } = require('../../services/CoreAIServices'); // STELLA integration
 
 // Fix the imports to use consistent paths
 const { generateAIRecommendations } = require('../../services/AISystem');
 const aiCoach = require('../../services/AISpaceCoach');
+const { PhysicalTrainingService } = require('../../../services/physicalTrainingService');
 
 // Phase-specific challenges
 const phaseBasedChallenges = {
@@ -47,22 +47,22 @@ const milestoneTypes = {
     ]
 };
 /**
- * POST /api/training/recommendations
- * Get personalized AI recommendations across all training modules
+ * POST /api/training/physical/recommendations
+ * Get physical training specific recommendations
  */
 router.post('/', authenticate, async (req, res) => {
     try {
-      const { trainingType, metrics } = req.body;
+      const { metrics, exerciseType } = req.body;
       const userId = req.user._id || req.session.user.id;
       
-      // Get recommendations from STELLA
-      const recommendations = await CoreAIServices.generateRecommendations(
-        userId, trainingType, metrics
+      // Get specific recommendations for physical training
+      const recommendations = await PhysicalTrainingService.getSTELLARecommendations(
+        userId, exerciseType, metrics
       );
       
       res.json({ success: true, recommendations });
     } catch (error) {
-      console.error('Error generating recommendations:', error);
+      console.error('Error generating physical training recommendations:', error);
       res.status(500).json({ success: false, error: 'Internal server error' });
     }
   });

@@ -1,10 +1,6 @@
 require('dotenv').config(); // Load environment variables
-const OpenAI = require('openai'); // ✅ Ensure CommonJS format
+const openai = require('./openaiService'); // Adjust path accordingly
 
-
-// Initialize OpenAI client
-const openai = new OpenAI({
-});
 
 (async () => {
     try {

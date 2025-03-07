@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission 2: Endurance Boost | SharedStars</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .pulse-dot {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+      
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+      
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+
+    .metric-box {
+      @apply bg-gray-700/50 p-2 rounded-lg text-center;
+    }
+
+    .zone-card {
+      @apply bg-gray-700/50 p-4 rounded-lg hover:bg-gray-600/50 transition-all cursor-pointer;
+    }
+
+    .bg-glass {
+      @apply bg-blue-900/20 backdrop-blur-lg border border-blue-500/20;
+    }
+    
+    .stella-avatar {
+      @apply bg-green-500/20 rounded-full p-3;
+    }
+
+    .active-zone {
+      @apply ring-2 ring-green-500;
+    }
+
+    .graph-placeholder {
+      @apply bg-gray-700/50 rounded-lg p-4;
+      height: 200px;
+    }
+    
+    .badge {
+      @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+    
+    .badge-blue {
+      @apply bg-blue-100 text-blue-800;
+    }
+    
+    .badge-green {
+      @apply bg-green-100 text-green-800;
+    }
+    
+    .badge-purple {
+      @apply bg-purple-100 text-purple-800;
+    }
+    
+    .badge-red {
+      @apply bg-red-100 text-red-800;
+    }
+    
+    .subscription-tag {
+      @apply text-xs font-semibold uppercase tracking-wide;
+    }
+    
+    .premium-feature {
+      @apply relative overflow-hidden;
+    }
+    
+    .premium-overlay {
+      @apply absolute inset-0 bg-gray-900/60 flex items-center justify-center backdrop-blur-sm z-10;
+    }
+    
+    .credit-counter {
+      @apply flex items-center space-x-2 text-yellow-400 font-bold;
+    }
+    
+    /* Video background container */
+    .video-bg {
+      @apply absolute inset-0 z-0 overflow-hidden;
+    }
+    
+    .video-bg video {
+      @apply w-full h-full object-cover opacity-25;
+    }
+    
+    /* OSHA/ISO compliance badge */
+    .compliance-badge {
+      @apply bg-green-900/40 text-green-400 text-xs font-bold px-2 py-1 rounded-full border border-green-500/30;
+    }
+    
+    /* Presidential briefing badge */
+    .presidential-badge {
+      @apply bg-purple-900/40 text-purple-300 text-xs font-bold px-2 py-1 rounded-full border border-purple-500/30 flex items-center space-x-1;
+    }
+    
+    /* Animation for credit earning */
+    @keyframes credit-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .credit-earned {
+      animation: credit-pulse 0.5s ease-in-out;
+    }
+
+    /* Social sharing styles */
+    .social-share-panel {
+      @apply fixed right-4 top-1/2 -translate-y-1/2 bg-gray-800/80 rounded-xl p-3 flex flex-col space-y-3 border border-blue-500/20 z-40 backdrop-blur-sm;
+    }
+
+    .social-btn {
+      @apply w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110;
+    }
+
+    .social-twitter {
+      @apply bg-blue-500 text-white;
+    }
+
+    .social-facebook {
+      @apply bg-blue-700 text-white;
+    }
+
+    .social-linkedin {
+      @apply bg-blue-900 text-white;
+    }
+
+    /* Mission importance callout */
+    .mission-importance {
+      @apply bg-blue-900/30 border border-blue-500/30 rounded-xl p-4 mb-6;
+    }
+
+    /* Requirements section */
+    .requirements-section {
+      @apply bg-gray-800/80 rounded-xl p-4 mb-6 border border-gray-700;
+    }
+
+    .requirement-item {
+      @apply flex items-center space-x-2 mb-2;
+    }
+
+    .requirement-check {
+      @apply w-5 h-5 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0;
+    }
+
+    /* Certification badge */
+    .certification-badge {
+      @apply bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-xl p-4 border border-blue-500/30 shadow-lg mb-6;
+    }
+
+    /* Timeline indicator */
+    .timeline-indicator {
+      @apply flex items-center justify-between mb-6 bg-gray-800/80 rounded-xl p-4 border border-blue-500/20;
+    }
+
+    /* Progress tracking */
+    .progress-tracking {
+      @apply bg-gray-800/70 rounded-xl p-4 mb-6 border border-gray-700/50;
+    }
+
+    /* Toast notifications */
+    .toast-notification {
+      @apply fixed top-24 right-4 bg-green-900/80 text-green-300 px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-500 opacity-0 translate-x-full;
+    }
+
+    .toast-notification.show {
+      @apply opacity-100 translate-x-0;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen" data-module="endurance">
+  <!-- STELLA AI Status Bar -->
+  <div class="fixed top-0 w-full bg-gray-800/95 border-b border-blue-500/20 z-50">
+    <div class="container mx-auto px-4 py-2 flex items-center justify-between">
+      <div id="ai-status" class="flex items-center space-x-3">
+        <div class="pulse-dot w-3 h-3 bg-green-500 rounded-full"></div>
+        <span id="stella-status-message">STELLA: <span class="text-green-400">Monitoring cardiovascular metrics...</span></span>
+      </div>
+      <div class="stella-guidance-box">
+        <div class="stella-icon">AI</div>
+        <div class="stella-message">
+          <p><strong>STELLA AI Guidance:</strong> I've analyzed your progress and created a personalized training schedule optimized for your physiology. Remember, space training is a marathon, not a sprint. Your body is making adaptations you can't always see. Stay consistent and trust the process - I'll be here to guide you through each phase of your multi-year journey to space readiness.</p>
+        </div>
+      </div>
+      <div class="training-philosophy bg-gray-800/70 rounded-xl p-6 mb-8">
+        <h2 class="text-xl font-bold mb-4">SharedStars Training Philosophy</h2>
+        <div class="flex flex-col md:flex-row">
+          <div class="md:w-2/3 pr-6">
+            <p class="text-gray-300 mb-3">
+              We believe in authentic space preparation that mirrors the real training astronauts undergo. This means:
+            </p>
+            <ul class="list-disc pl-5 space-y-2 text-gray-300">
+              <li>Training progressions measured in months and years, not days or weeks</li>
+              <li>Focusing on consistent effort rather than quick results</li>
+              <li>Building a complete foundation before advancing to more complex skills</li>
+              <li>Using science-based approaches adapted for your unique body</li>
+            </ul>
+            <p class="text-blue-300 mt-3">
+              Your space journey is personal and unique. Some skills may come naturally, while others take more time. This is normal and expected - STELLA will adjust your training plan accordingly.
+            </p>
+          </div>
+          <div class="md:w-1/3 mt-4 md:mt-0">
+            <div class="bg-blue-900/20 rounded-lg p-4 border border-blue-500/30">
+              <h3 class="text-lg font-semibold text-blue-300 mb-2">Did You Know?</h3>
+              <p class="text-gray-300 text-sm">
+                NASA astronauts typically train for 2-3 years for a specific mission, after years of general preparation. Your dedication to this process puts you on a similar path!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center space-x-6">
+        <div id="session-metrics" class="flex items-center space-x-6">
+          <div class="flex items-center space-x-2">
+            <span class="text-green-400">Heart Rate:</span>
+            <span id="current-hr">72 bpm</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-green-400">O₂ Sat:</span>
+            <span id="current-o2">98%</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-purple-400">Session:</span>
+            <span id="session-timer">00:00:00</span>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center space-x-2">
+          <div class="credit-counter px-2 py-1 bg-yellow-900/30 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span id="credits-earned">145</span>
+          </div>
+          <button id="ai-help-button" class="px-3 py-1 bg-green-600 text-sm rounded-full hover:bg-green-500 transition-colors">
+            Ask STELLA
+          </button>
+          <button id="pause-session" class="px-3 py-1 bg-gray-700 text-sm rounded-full hover:bg-gray-600 transition-colors">
+            Pause
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/js/training/physical/mission-tracker.js"></script>
+  <script src="/js/training/physical/flexibilityTraining.js"></script>
+  <!-- Subscription Status Bar -->
+  <div class="fixed top-12 w-full bg-gradient-to-r from-indigo-900/80 to-purple-900/80 border-b border-purple-500/30 z-40">
+    <div class="container mx-auto px-4 py-1 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <span class="subscription-tag text-purple-300">Pioneer Tier</span>
+        <div class="presidential-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <span>Presidential Briefing Access</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <span class="text-xs text-purple-300">Unlock Elite features:</span>
+        <button class="bg-purple-600 hover:bg-purple-500 text-white text-xs px-2 py-1 rounded-full transition-colors">
+          Upgrade
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline Indicator -->
+  <div class="timeline-indicator fixed top-24 w-full z-30">
+    <div class="container mx-auto">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-blue-400">
+          <span class="font-bold">Your Timeline: </span>
+          <span>8 years, 3 months until space travel readiness</span>
+        </div>
+        <div class="text-sm text-green-400">
+          <span class="font-bold">Training Level: </span>
+          <span>Cardiovascular Endurance 2/10</span>
+        </div>
+        <div class="text-sm text-purple-400">
+          <span class="font-bold">Global Position: </span>
+          <span>#137 of 2,456 candidates</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Social Sharing Panel -->
+  <div class="social-share-panel">
+    <button class="social-btn social-twitter" id="share-twitter" title="Share on Twitter">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+      </svg>
+    </button>
+    <button class="social-btn social-facebook" id="share-facebook" title="Share on Facebook">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+      </svg>
+    </button>
+    <button class="social-btn social-linkedin" id="share-linkedin" title="Share on LinkedIn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Toast Notification (Initially hidden) -->
+  <div class="toast-notification" id="toast-message">
+    <div class="flex items-center space-x-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span id="toast-text">Progress saved! Leaderboard updated.</span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 pt-32 pb-32">
+    <div class="mb-8 relative">
+      <!-- Video background -->
+      <div class="video-bg rounded-xl overflow-hidden">
+        <video autoplay muted loop playsinline>
+          <source src="/videos/endurance-training.mp4" type="video/mp4">
+        </video>
+      </div>
+      
+      <div class="relative z-10">
+        <div class="flex items-center mb-4">
+          <a href="/training-modules/physical/index.html" class="text-green-400 hover:text-green-300 mr-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </a>
+          <h1 class="text-3xl font-bold">Mission 2: Endurance Boost</h1>
+          
+          <!-- NASA compliance badge -->
+          <span class="ml-3 compliance-badge">
+            NASA-STD-3001 Compliant
+          </span>
+        </div>
+        <p class="text-gray-400">Build cardiovascular strength and endurance for the rigors of extended space missions</p>
+        
+        <!-- Credit earning indicator -->
+        <div class="flex items-center mt-2 space-x-3">
+          <div class="credit-counter">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>+30 credits per zone</span>
+          </div>
+          
+          <!-- Certification progress -->
+          <div class="flex items-center text-xs text-green-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
+            <span>Cardiovascular Endurance Certification: 15% Complete</span>
+          </div>
+        </div>
+        
+        <!-- Mission Importance Section -->
+        <div class="mission-importance mt-6">
+          <h2 class="text-lg font-bold text-blue-300 mb-2">Why This Mission Is Critical</h2>
+          <p class="text-gray-300 mb-3">Cardiovascular endurance is one of the most critical components of astronaut physical readiness. In space, your heart and lungs must adapt to a microgravity environment where:</p>
+          <ul class="list-disc pl-6 text-gray-300 mb-3 space-y-1">
+            <li>Your cardiovascular system faces fluid redistribution challenges</li>
+            <li>Extended missions require sustained physical performance for up to 3 years</li>
+            <li>Emergency scenarios demand peak cardiovascular fitness under stress</li>
+            <li>Post-mission recovery depends heavily on pre-mission cardiovascular conditioning</li>
+          </ul>
+          <p class="text-blue-300 text-sm">The NASA Johnson Space Center reports that astronauts with superior cardiovascular fitness demonstrate 42% faster adaptation to microgravity and 37% better recovery metrics post-mission.</p>
+        </div>
+        <div class="training-timeline mt-4 border-t border-blue-500/20 pt-4">
+          <h3 class="text-lg font-semibold text-blue-300 mb-2">Training Timeline Expectations</h3>
+          <p class="text-gray-300 mb-3">
+            Building the cardiovascular endurance needed for space missions is a gradual process that takes consistent effort over time:
+          </p>
+          <ul class="space-y-2 text-gray-300">
+            <li class="flex items-start">
+              <span class="bg-blue-500/20 text-blue-300 rounded-full px-2 py-0.5 text-xs mr-2 mt-0.5">Months 1-3</span>
+              <span>Establishing your baseline endurance and heart efficiency</span>
+            </li>
+            <li class="flex items-start">
+              <span class="bg-blue-500/20 text-blue-300 rounded-full px-2 py-0.5 text-xs mr-2 mt-0.5">Months 4-12</span>
+              <span>Building cardiovascular capacity and recovery speed</span>
+            </li>
+            <li class="flex items-start">
+              <span class="bg-blue-500/20 text-blue-300 rounded-full px-2 py-0.5 text-xs mr-2 mt-0.5">Year 2</span>
+              <span>Achieving sustained performance under various stress conditions</span>
+            </li>
+          </ul>
+          <p class="text-sm text-blue-300 mt-3">
+            Your body will adapt at its own pace - consistency matters more than intensity. STELLA will help you stay on the optimal path for your personal physiology.
+          </p>
+        </div>
+        <!-- Requirements Section -->
+        <div class="requirements-section mt-6">
+          <h2 class="text-lg font-bold text-green-300 mb-3">Mission Requirements</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 class="text-sm font-semibold text-white mb-2">Equipment Needed:</h3>
+              <div class="space-y-2">
+                <div class="requirement-item">
+                  <div class="requirement-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span class="text-gray-300 text-sm">Heart rate monitor (optional but recommended)</span>
+                </div>
+                <div class="requirement-item">
+                  <div class="requirement-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span class="text-gray-300 text-sm">Comfortable, moisture-wicking workout clothes</span>
+                </div>
+                <div class="requirement-item">
+                  <div class="requirement-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span class="text-gray-300 text-sm">Water bottle for hydration</span>
+                </div>
+                <div class="requirement-item">
+                  <div class="requirement-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span class="text-gray-300 text-sm">Timer or stopwatch</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-white mb-2">Prerequisites:</h3>
+              <div class="space-y-2">
+                <div class="requirement-item">
+                  <div class="requirement-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span class="text-gray-300 text-sm">Medical clearance for cardiovascular exercise</span>
+                </div>
+                <div class="requirement-item">
+                  <div class="requirement-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span class="text-gray-300 text-sm">Completion of Core & Balance mission (recommended)</span>
+                </div>
+                <div class="requirement-item">
+                  <div class="requirement-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span class="text-gray-300 text-sm">Basic understanding of heart rate zones</span>
+                </div>
+                <div class="requirement-item">
+                  <div class="requirement-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span class="text-gray-300 text-sm">STELLA AI integration (automatic)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Certification Badge -->
+        <div class="certification-badge mt-6">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-blue-300 mb-2">Certification Path</h2>
+              <p class="text-gray-300 mb-3">Complete this mission to progress toward your NASA-compliant Cardiovascular Fitness certification:</p>
+              <ul class="list-disc pl-6 text-gray-300 space-y-1">
+                <li>Level 1: Basic Cardiovascular Fitness (Current)</li>
+                <li>Level 2: Advanced Endurance Training (Next)</li>
+                <li>Level 3: Space-Ready Cardiovascular Certification</li>
+              </ul>
+              <p class="text-blue-300 text-sm mt-3">Upon completion, your certification will be updated on your profile and shared with the SharedStars community.</p>
+            </div>
+            <div class="flex-shrink-0 hidden md:block">
+              <img src="/images/badges/cardio-level1.png" alt="Cardiovascular Level 1 Badge" class="w-24 h-24 opacity-40" />
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mission Progress -->
+        <div class="progress-tracking mt-6">
+          <div class="flex justify-between mb-2">
+            <span class="text-gray-400">Mission Progress</span>
+            <span class="text-green-400" id="progress-percentage-display">0%</span>
+          </div>
+          <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+            <div class="h-full bg-green-500 rounded-full" id="progress-bar" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between mt-2 text-xs text-gray-400">
+            <span>Start</span>
+            <span>Zone 1</span>
+            <span>Zone 2</span>
+            <span>Zone 3</span>
+            <span>Complete</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Training Zones Selection -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
+      <div class="zone-card" data-zone="recovery">
+        <h3 class="text-lg font-semibold mb-2 text-blue-300">Recovery Zone</h3>
+        <div class="flex justify-between mb-1">
+          <span class="text-sm text-gray-400">Intensity:</span>
+          <span class="text-sm text-blue-300">50-60% MHR</span>
+        </div>
+        <div class="flex justify-between mb-3">
+          <span class="text-sm text-gray-400">Focus:</span>
+          <span class="text-sm">Active Recovery</span>
+        </div>
+        <button class="w-full mt-2 py-2 bg-blue-700/40 hover:bg-blue-600/40 text-sm rounded-lg transition-colors">
+          Begin Zone
+        </button>
+      </div>
+
+      <div class="zone-card" data-zone="endurance">
+        <h3 class="text-lg font-semibold mb-2 text-green-300">Endurance Zone</h3>
+        <div class="flex justify-between mb-1">
+          <span class="text-sm text-gray-400">Intensity:</span>
+          <span class="text-sm text-green-300">60-70% MHR</span>
+        </div>
+        <div class="flex justify-between mb-3">
+          <span class="text-sm text-gray-400">Focus:</span>
+          <span class="text-sm">Aerobic Efficiency</span>
+        </div>
+        <button class="w-full mt-2 py-2 bg-green-700/40 hover:bg-green-600/40 text-sm rounded-lg transition-colors">
+          Begin Zone
+        </button>
+      </div>
+
+      <div class="zone-card" data-zone="threshold">
+        <h3 class="text-lg font-semibold mb-2 text-yellow-300">Threshold Zone</h3>
+        <div class="flex justify-between mb-1">
+          <span class="text-sm text-gray-400">Intensity:</span>
+          <span class="text-sm text-yellow-300">70-80% MHR</span>
+        </div>
+        <div class="flex justify-between mb-3">
+          <span class="text-sm text-gray-400">Focus:</span>
+          <span class="text-sm">Lactate Threshold</span>
+        </div>
+        <button class="w-full mt-2 py-2 bg-yellow-700/40 hover:bg-yellow-600/40 text-sm rounded-lg transition-colors">
+          Begin Zone
+        </button>
+      </div>
+
+      <div class="zone-card" data-zone="hiit">
+        <h3 class="text-lg font-semibold mb-2 text-orange-300">HIIT Zone</h3>
+        <div class="flex justify-between mb-1">
+          <span class="text-sm text-gray-400">Intensity:</span>
+          <span class="text-sm text-orange-300">80-90% MHR</span>
+        </div>
+        <div class="flex justify-between mb-3">
+          <span class="text-sm text-gray-400">Focus:</span>
+          <span class="text-sm">VO2 Max Training</span>
+        </div>
+        <button class="w-full mt-2 py-2 bg-orange-700/40 hover:bg-orange-600/40 text-sm rounded-lg transition-colors">
+          Begin Zone
+        </button>
+      </div>
+
+      <div class="zone-card premium-feature">
+        <div class="premium-overlay">
+          <button class="bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded-lg text-sm font-medium">
+            Unlock Elite Feature
+          </button>
+        </div>
+        <h3 class="text-lg font-semibold mb-2 text-red-300">Peak Zone</h3>
+        <div class="flex justify-between mb-1">
+          <span class="text-sm text-gray-400">Intensity:</span>
+          <span class="text-sm text-red-300">90-100% MHR</span>
+        </div>
+        <div class="flex justify-between mb-3">
+          <span class="text-sm text-gray-400">Focus:</span>
+          <span class="text-sm">Anaerobic Capacity</span>
+        </div>
+        <button class="w-full mt-2 py-2 bg-red-700/40 text-sm rounded-lg transition-colors opacity-50">
+          Begin Zone
+        </button>
+      </div>
+    </div>
+
+    <!-- Training Dashboard Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+      <!-- Current Metrics -->
+      <div class="bg-glass rounded-xl p-6">
+        <h3 class="text-xl font-semibold mb-4">Current Metrics</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="metric-box">
+            <div class="text-sm text-gray-400 mb-1">Heart Rate</div>
+            <div class="text-xl font-semibold text-blue-300" id="heart-rate-display">72 bpm</div>
+          </div>
+          <div class="metric-box">
+            <div class="text-sm text-gray-400 mb-1">Zone Time</div>
+            <div class="text-xl font-semibold text-green-300" id="zone-time-display">00:00</div>
+          </div>
+          <div class="metric-box">
+            <div class="text-sm text-gray-400 mb-1">Calories</div>
+            <div class="text-xl font-semibold text-yellow-300" id="calories-display">0 kcal</div>
+          </div>
+          <div class="metric-box">
+            <div class="text-sm text-gray-400 mb-1">Current Zone</div>
+            <div class="text-xl font-semibold text-blue-300" id="current-zone-display">None</div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <div class="flex justify-between mb-1">
+            <span class="text-sm text-gray-400">Target Heart Rate:</span>
+            <span class="text-sm text-blue-300" id="target-hr-display">--</span>
+          </div>
+          <div class="flex justify-between mb-1">
+            <span class="text-sm text-gray-400">Session Duration:</span>
+            <span class="text-sm text-green-300" id="session-duration-display">00:00:00</span>
+          </div>
+          <div class="flex justify-between mb-1">
+            <span class="text-sm text-gray-400">Credits Earned:</span>
+            <span class="text-sm text-yellow-300" id="session-credits-display">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Heart Rate Graph -->
+      <div class="bg-glass rounded-xl p-6 col-span-2">
+        <h3 class="text-xl font-semibold mb-4">Heart Rate & Zone Tracking</h3>
+        <div class="graph-placeholder" id="heart-rate-graph">
+          <div class="h-full flex items-center justify-center">
+            <div class="text-center text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <p>Begin a training zone to see your heart rate data</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 text-sm text-gray-400">
+          <div class="flex justify-between mb-2">
+            <span>Recovery (50-60%)</span>
+            <span>Endurance (60-70%)</span>
+            <span>Threshold (70-80%)</span>
+            <span>HIIT (80-90%)</span>
+            <span>Peak (90-100%)</span>
+          </div>
+          <div class="h-2 bg-gradient-to-r from-blue-500 via-green-500 to-red-500 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STELLA Guidance Box -->
+    <div class="bg-glass rounded-xl p-6 mb-10">
+      <div class="flex items-start">
+        <div class="stella-avatar flex-shrink-0 mr-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-xl font-semibold mb-2 text-green-300">STELLA Guidance</h3>
+          <div id="stella-guidance" class="text-gray-300">
+            <p>Welcome to Endurance Boost training! This mission focuses on building your cardiovascular capacity for the rigors of extended space missions.</p>
+            <p class="mt-2">Select a training zone to begin. For best results, I recommend starting with the Endurance Zone (60-70% MHR) for 20-30 minutes.</p>
+            <ul class="mt-3 space-y-1 pl-5 list-disc text-blue-300 text-sm">
+              <li>Keep your heart rate in the selected zone for maximum benefit</li>
+              <li>Stay well hydrated throughout your training session</li>
+              <li>Monitor how you feel and adjust intensity as needed</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workout Instructions Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+      <!-- Exercise Instructions -->
+      <div class="bg-glass rounded-xl p-6">
+        <h3 class="text-xl font-semibold mb-4">Workout Instructions</h3>
+        
+        <div class="mb-4">
+          <h4 class="font-semibold text-blue-300 mb-2">Getting Started</h4>
+          <ol class="list-decimal pl-5 space-y-2 text-gray-300">
+            <li>Select your training zone based on your fitness level</li>
+            <li>Complete a 5-minute warm-up at a light intensity</li>
+            <li>Gradually increase your heart rate to enter your selected zone</li>
+            <li>Maintain your heart rate within the target range</li>
+            <li>Complete a 5-minute cool-down at the end of your session</li>
+          </ol>
+        </div>
+        
+        <div class="mb-4">
+          <h4 class="font-semibold text-blue-300 mb-2">Exercise Options</h4>
+          <ul class="list-disc pl-5 space-y-2 text-gray-300">
+            <li>Running or jogging</li>
+            <li>Cycling (indoor or outdoor)</li>
+            <li>Swimming</li>
+            <li>Rowing</li>
+            <li>Elliptical training</li>
+            <li>Stair climbing</li>
+            <li>Jump rope</li>
+            <li>High-intensity interval training (HIIT)</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold text-blue-300 mb-2">Training Tips</h4>
+          <ul class="list-disc pl-5 space-y-2 text-gray-300">
+            <li>Train at different heart rate zones to develop a well-rounded cardiovascular system</li>
+            <li>Consistency is more important than intensity for building endurance</li>
+            <li>Recovery is essential - allow 48 hours between intense sessions</li>
+            <li>Pay attention to form to prevent injury</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Heart Rate Zone Guide -->
+      <div class="bg-glass rounded-xl p-6">
+        <h3 class="text-xl font-semibold mb-4">Heart Rate Zone Guide</h3>
+        
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-semibold text-blue-300 mb-2">Recovery Zone (50-60% MHR)</h4>
+            <p class="text-gray-300">This zone improves basic endurance and fat burning. Perfect for active recovery days, warm-ups, and cool-downs. Training in this zone builds your aerobic base and improves capillary density.</p>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold text-green-300 mb-2">Endurance Zone (60-70% MHR)</h4>
+            <p class="text-gray-300">The aerobic zone improves overall cardiovascular fitness and efficiency. Great for longer training sessions to build stamina required for extended missions. Most of your training should be in this zone.</p>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold text-yellow-300 mb-2">Threshold Zone (70-80% MHR)</h4>
+            <p class="text-gray-300">This zone improves your ability to sustain higher intensities for longer periods. Training in this zone increases your lactate threshold and teaches your body to clear lactic acid more efficiently.</p>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold text-orange-300 mb-2">HIIT Zone (80-90% MHR)</h4>
+            <p class="text-gray-300">High-intensity training that develops VO2 max and anaerobic capacity. This zone should be used sparingly in interval training to simulate emergency situations in space.</p>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold text-red-300 mb-2">Peak Zone (90-100% MHR) <span class="text-xs text-purple-300 ml-2">Elite Access</span></h4>
+            <p class="text-gray-300">Maximum effort that can only be sustained for short periods. This zone is used for specialized training to prepare for the most demanding aspects of space missions.</p>
+          </div>
+        </div>
+        
+        <div class="mt-6 p-3 bg-blue-900/30 rounded-lg border border-blue-500/30">
+          <div class="flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mr-2 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-sm text-blue-300">
+              <strong>Calculate your Maximum Heart Rate (MHR):</strong> The standard formula is 220 minus your age, but for more accurate results, use the Astronaut Physical Readiness Test in your assessment module.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Action Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-gray-900/90 border-t border-blue-500/20 py-3 z-40 backdrop-blur-md">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <button id="end-session-btn" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg transition-colors">
+              End Session
+            </button>
+            <button id="pause-session-btn" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg transition-colors">
+              Pause Session
+            </button>
+          </div>
+          
+          <div class="flex items-center space-x-6">
+            <div class="hidden md:block space-x-8">
+              <span class="text-green-400">Duration: <span id="footer-duration">00:00:00</span></span>
+              <span class="text-blue-400">Heart Rate: <span id="footer-hr">-- bpm</span></span>
+              <span class="text-yellow-400">Credits: <span id="footer-credits">0</span></span>
+            </div>
+            
+            <button id="save-progress-btn" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg transition-colors">
+              Save Progress
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- STELLA AI Helper Modal (initially hidden) -->
+  <div id="stella-help-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center backdrop-blur-md">
+    <div class="bg-glass rounded-xl w-full max-w-2xl p-6 relative">
+      <button id="close-stella-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      
+      <div class="flex items-start mb-6">
+        <div class="stella-avatar flex-shrink-0 mr-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-2xl font-semibold mb-2 text-green-300">STELLA AI Assistant</h3>
+          <p class="text-gray-300">Ask me anything about your endurance training or space cardiovascular fitness.</p>
+        </div>
+      </div>
+      
+      <div id="stella-conversation" class="h-60 overflow-y-auto mb-4 space-y-4 bg-gray-800/50 rounded-lg p-4">
+        <div class="stella-message">
+          <div class="bg-green-900/30 rounded-lg p-3 border border-green-500/30 inline-block max-w-lg">
+            <p>I'm here to help with your endurance training. What would you like to know?</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex">
+        <input type="text" id="stella-question" placeholder="Ask about endurance training..." class="bg-gray-800 border border-gray-700 rounded-l-lg px-4 py-2 flex-grow focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button id="send-to-stella" class="bg-green-600 hover:bg-green-500 px-4 py-2 rounded-r-lg font-medium transition-colors">
+          Ask
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/stella-core.js"></script>
+  <script src="/js/stella-integration.js"></script>
+  <script src="/js/training/endurance-tracker.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize STELLA AI
+      window.stellaCore = new StellaCore({
+        statusSelector: '#stella-status',
+        messageSelector: '#stella-status-message',
+        guidanceSelector: '#stella-guidance'
+      });
+      
+      // Initialize the endurance training tracking
+      if (window.EnduranceTracker) {
+        window.enduranceTracker = new EnduranceTracker({
+          heartRateDisplay: '#heart-rate-display',
+          zoneTimeDisplay: '#zone-time-display',
+          caloriesDisplay: '#calories-display',
+          currentZoneDisplay: '#current-zone-display',
+          targetHRDisplay: '#target-hr-display',
+          sessionDurationDisplay: '#session-duration-display',
+          sessionCreditsDisplay: '#session-credits-display',
+          heartRateGraph: '#heart-rate-graph',
+          footerDuration: '#footer-duration',
+          footerHR: '#footer-hr',
+          footerCredits: '#footer-credits',
+          progressBar: '#progress-bar',
+          progressPercentage: '#progress-percentage-display'
+        });
+      }
+      
+      // Zone selection
+      document.querySelectorAll('.zone-card').forEach(card => {
+        if (!card.querySelector('.premium-overlay')) {
+          card.addEventListener('click', function() {
+            const zoneId = this.dataset.zone;
+            
+            // Remove active class from all zones
+            document.querySelectorAll('.zone-card').forEach(c => {
+              c.classList.remove('active-zone');
+            });
+            
+            // Add active class to selected zone
+            this.classList.add('active-zone');
+            
+            // Start tracking for this zone
+            if (window.enduranceTracker) {
+              window.enduranceTracker.startZone(zoneId);
+              
+              // Show toast notification
+              showToast(`${zoneId.charAt(0).toUpperCase() + zoneId.slice(1)} zone activated!`);
+            }
+          });
+        }
+      });
+      
+      // Modal handling
+      const stellaModal = document.getElementById('stella-help-modal');
+      const aiHelpButton = document.getElementById('ai-help-button');
+      const closeModalButton = document.getElementById('close-stella-modal');
+      
+      if (aiHelpButton && stellaModal) {
+        aiHelpButton.addEventListener('click', () => {
+          stellaModal.classList.remove('hidden');
+        });
+      }
+      
+      if (closeModalButton && stellaModal) {
+        closeModalButton.addEventListener('click', () => {
+          stellaModal.classList.add('hidden');
+        });
+      }
+      
+      // STELLA chat functionality
+      const stellaQuestion = document.getElementById('stella-question');
+      const sendToStella = document.getElementById('send-to-stella');
+      const stellaConversation = document.getElementById('stella-conversation');
+      
+      if (sendToStella && stellaQuestion && stellaConversation) {
+        sendToStella.addEventListener('click', askStella);
+        stellaQuestion.addEventListener('keydown', e => {
+          if (e.key === 'Enter') askStella();
+        });
+      }
+      
+      function askStella() {
+        const question = stellaQuestion.value.trim();
+        if (!question) return;
+        
+        // Add user message to conversation
+        stellaConversation.innerHTML += `
+          <div class="user-message text-right">
+            <div class="bg-blue-900/30 rounded-lg p-3 border border-blue-500/30 inline-block max-w-lg">
+              <p>${question}</p>
+            </div>
+          </div>
+        `;
+        
+        // Clear input
+        stellaQuestion.value = '';
+        
+        // Scroll to bottom
+        stellaConversation.scrollTop = stellaConversation.scrollHeight;
+        
+        // Get AI response (using the actual STELLA integration)
+        if (window.stellaCore) {
+          window.stellaCore.askQuestion(question);
+        }
+      }
+      
+      // Toast notification function
+      window.showToast = function(message) {
+        const toast = document.getElementById('toast-message');
+        const toastText = document.getElementById('toast-text');
+        
+        if (toast && toastText) {
+          toastText.textContent = message;
+          toast.classList.add('show');
+          
+          setTimeout(() => {
+            toast.classList.remove('show');
+          }, 3000);
+        }
+      };
+      
+      // Social sharing
+      document.getElementById('share-twitter').addEventListener('click', function() {
+        const text = encodeURIComponent('I just completed an Endurance Boost training session on SharedStars! #SpaceTraining #SharedStars');
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+      });
+      
+      document.getElementById('share-facebook').addEventListener('click', function() {
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+      });
+      
+      document.getElementById('share-linkedin').addEventListener('click', function() {
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent('Endurance Boost Training - SharedStars');
+        window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`, '_blank');
+      });
+      
+      // Session control buttons
+      document.getElementById('end-session-btn').addEventListener('click', function() {
+        if (window.enduranceTracker) {
+          window.enduranceTracker.endSession();
+          showToast('Session ended. Progress saved!');
+        }
+      });
+      
+      document.getElementById('pause-session-btn').addEventListener('click', function() {
+        if (window.enduranceTracker) {
+          window.enduranceTracker.togglePause();
+          
+          if (window.enduranceTracker.isPaused) {
+            this.textContent = 'Resume Session';
+            showToast('Session paused');
+          } else {
+            this.textContent = 'Pause Session';
+            showToast('Session resumed');
+          }
+        }
+      });
+      
+      document.getElementById('save-progress-btn').addEventListener('click', function() {
+        if (window.enduranceTracker) {
+          window.enduranceTracker.saveProgress();
+          showToast('Progress saved successfully!');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

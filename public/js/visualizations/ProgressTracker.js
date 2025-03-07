@@ -2,9 +2,33 @@
 class ProgressTracker {
     constructor() {
         this.container = this.createContainer();
-        this.initializeWebSocket();
+        // Remove the initializeWebSocket call from constructor, we'll call it in initialize()
     }
-
+    
+    initialize() {
+        console.log("✅ Progress Tracker initialized");
+        // Set up initial data
+        this.updateProgress({
+            overall: 0,
+            skills: {
+                "Core Stability": 0,
+                "Endurance": 0,
+                "Strength": 0,
+                "Flexibility": 0
+            },
+            metrics: {
+                "Modules Completed": "0/10",
+                "Mission Status": "Not Started"
+            }
+        });
+        
+        // Initialize WebSocket after container is created
+        this.initializeWebSocket();
+        
+        // Return this for method chaining
+        return this;
+    }
+  
     createContainer() {
         const container = document.createElement('div');
         container.className = 'fixed left-4 bottom-4 w-80 bg-black/80 rounded-xl p-4';
@@ -63,12 +87,55 @@ class ProgressTracker {
     }
 
     initializeWebSocket() {
-        const ws = new WebSocket(`wss://${window.location.host}/ws`);
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'progress_update') {
-                this.updateProgress(data.progress);
-            }
-        };
+        try {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws`;
+            console.log("Connecting to WebSocket:", wsUrl);
+            
+            const ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                console.log("✅ WebSocket connection established");
+            };
+            
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'progress_update') {
+                        this.updateProgress(data.progress);
+                    }
+                } catch (error) {
+                    console.error("Error processing WebSocket message:", error);
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error("WebSocket error:", error);
+                // Continue without WebSocket
+            };
+            
+            ws.onclose = () => {
+                console.log("WebSocket connection closed");
+            };
+        } catch (error) {
+            console.error("Error initializing WebSocket:", error);
+            // Provide fallback data
+            this.updateProgress({
+                overall: 5,
+                skills: {
+                    "Core Stability": 10,
+                    "Endurance": 5,
+                    "Strength": 8,
+                    "Flexibility": 3
+                },
+                metrics: {
+                    "Modules Completed": "1/10",
+                    "Mission Status": "Core Training"
+                }
+            });
+        }
     }
 }
+
+// Create a global instance
+window.progressTracker = new ProgressTracker();

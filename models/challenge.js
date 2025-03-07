@@ -1,13 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const { OpenAI } = require("openai");
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
-
-
+const openai = require('./openaiService');  // ✅ Keep this clearly
 
 // OpenAI Configuration
 let openai;

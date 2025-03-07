@@ -10,7 +10,10 @@ router.get('/', (req, res) => {
         // Add any other data you want to pass to the template
     });
 });
-
+// Add this to your main server file or routes/index.js
+app.get('/test', (req, res) => {
+    res.json({ message: 'Test endpoint working!' });
+  });
 // Handle language selection
 router.post('/set-language', (req, res) => {
     const { language } = req.body;

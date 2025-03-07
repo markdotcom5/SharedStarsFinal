@@ -6,7 +6,15 @@ const WebSocket = require("ws");
 const mongoose = require("mongoose");
 
 const SECRET_KEY = process.env.JWT_SECRET; // Ensure this is set in .env
-
+const verifySubscription = (req, res, next) => {
+    const { subscription } = req.user;
+  
+    if (!subscription || !subscription.active) {
+      return res.redirect('/subscribe');
+    }
+  
+    next();
+  };
 // Middleware: Authenticate HTTP Requests
 const authenticate = async (req, res, next) => {
     try {
@@ -202,7 +210,7 @@ moduleSchema.methods.getSummary = function () {
 
 moduleSchema.methods.generateAIContent = async function (prompt) {
     try {
-        const openai = require("openai");
+        const openai = require('../services/openaiService'); // ✅ adjust path accordingly
         const openaiClient = new openai.OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
         const response = await openaiClient.chat.completions.create({

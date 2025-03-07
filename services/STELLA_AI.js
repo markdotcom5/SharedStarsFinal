@@ -1,8 +1,7 @@
 // STELLA AI Service - Space Training Enhancement and Learning Logic Assistant
 const EventEmitter = require('events');
 const mongoose = require('mongoose');
-const { OpenAI } = require('openai');
-
+const { openai, OpenAI } = require('./openaiService'); // ✅ Correct!
 /**
  * STELLA AI Service: A comprehensive space training AI system for performance analysis,
  * personalized coaching, and mission readiness assessment.
@@ -19,32 +18,35 @@ class STELLA_AI extends EventEmitter {
     super();
     
     // Initialize OpenAI
-    try {
-      this.openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY || "MISSING_KEY"
-      });
-      
-      if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "MISSING_KEY") {
-        console.error("❌ ERROR: Missing OpenAI API Key!");
-      } else {
-        console.log("✅ OpenAI API initialized successfully");
-      }
-    } catch (error) {
-      console.error('❌ OpenAI Initialization Error:', error.message);
-    }
+        // Initialize OpenAI
+        try {
+          this.openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY || "MISSING_KEY"
+          });
     
-    // Default AI Model and parameters
-    this.config = {
-      model: "gpt-4-turbo",
-      languages: ['en'],
-      subscriptionMultipliers: {
-        premium: 1.5,
-        individual: 1,
-        family: 1,
-        galactic: 1.5,
-        custom: (amount) => (amount >= 100 ? 1.5 : 1)
-      }
-    };
+          if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "MISSING_KEY") {
+            console.error("❌ ERROR: Missing OpenAI API Key!");
+          } else {
+            console.log("✅ OpenAI API initialized successfully");
+          }
+    
+          // Default AI Model and parameters
+          this.config = {
+            model: "gpt-4-turbo",
+            languages: ['en'],
+            subscriptionMultipliers: {
+              premium: 1.5,
+              individual: 1,
+              family: 1,
+              galactic: 1.5,
+              custom: (amount) => (amount >= 100 ? 1.5 : 1)
+            }
+          };
+    
+        } catch (error) {
+          console.error('❌ OpenAI Initialization Error:', error.message);
+        }
+    
     
     // AI Personality Traits
     this.aiPersonality = {
@@ -659,306 +661,391 @@ class STELLA_AI extends EventEmitter {
   }
   
   // =============================================
-  // MISSION READINESS ASSESSMENT FUNCTIONS
-  // =============================================
-  /**
-   * Generate daily presidential space briefing
-   * @param {Object} options - Generation options
-   * @returns {Promise<Object>} Generated briefing content
-   */
-  async generateDailyBriefing(options = {}) {
-    try {
-      const { alertStatus = this.determineAlertStatus() } = options;
+// MISSION READINESS ASSESSMENT FUNCTIONS
+// =============================================
+/**
+ * Generate daily presidential space briefing
+ * @param {Object} options - Generation options
+ * @returns {Promise<Object>} Generated briefing content
+ */
+async generateDailyBriefing(options = {}) {
+  try {
+    // Default alert status if method is missing
+    let alertStatus = 'AMBER'; // Default to AMBER
+    
+    // Try to use determineAlertStatus if it exists
+    if (typeof this.determineAlertStatus === 'function') {
+      alertStatus = this.determineAlertStatus();
+    } else if (options.alertStatus) {
+      // Use provided alertStatus from options if available
+      alertStatus = options.alertStatus;
+    }
+    
+    console.log(`🔄 Generating Daily Presidential Space Briefing with alert status: ${alertStatus}`);
+    
+    // Generate sections
+    const sections = [];
+    // Make sure briefingConfig exists
+    const sectionTypes = this.briefingConfig?.sectionTypes || ['STRATEGIC', 'ASTRONOMICAL', 'TECHNOLOGICAL'];
+    
+    for (const sectionType of sectionTypes) {
+      if (sectionType === 'TRAINING') continue; // Handle training directive separately
       
-      console.log(`🔄 Generating Daily Presidential Space Briefing with alert status: ${alertStatus}`);
-      
-      // Generate sections
-      const sections = [];
-      for (const sectionType of this.briefingConfig.sectionTypes) {
-        if (sectionType === 'TRAINING') continue; // Handle training directive separately
-        
+      try {
         const section = await this.generateBriefingSection(sectionType, alertStatus);
         sections.push(section);
-      }
-      
-      // Generate training directive
-      const trainingDirective = await this.generateTrainingDirective();
-      
-      // Count total words for metadata
-      const wordCount = this.countBriefingWords(sections, trainingDirective);
-      
-      // Extract topic tags
-      const topicTags = this.extractTopicTags(sections);
-      
-      // Assemble final briefing
-      const briefing = {
-        title: 'DAILY PRESIDENTIAL SPACE BRIEFING',
-        alertStatus,
-        sections,
-        trainingDirective,
-        wordCount,
-        topicTags
-      };
-      
-      console.log(`✅ Generated briefing content with ${sections.length} sections and ${wordCount} words`);
-      
-      return briefing;
-    } catch (error) {
-      console.error('❌ Error generating daily briefing:', error);
-      throw new Error('Failed to generate briefing content: ' + error.message);
-    }
-  }
-  
-  /**
-   * Determine daily alert status based on various factors
-   * @returns {string} Alert status (GREEN, AMBER, RED)
-   */
-  determineAlertStatus() {
-    // Generate a random number to determine status based on probabilities
-    const randomValue = Math.random();
-    let cumulativeProbability = 0;
-    
-    for (const [status, probability] of Object.entries(this.briefingConfig.alertProbabilities)) {
-      cumulativeProbability += probability;
-      if (randomValue <= cumulativeProbability) {
-        return status;
+      } catch (sectionError) {
+        console.error(`❌ Error generating section: ${sectionError}`);
+        // Add a fallback section instead of failing completely
+        sections.push({
+          sectionType,
+          title: this.getFallbackTitle ? this.getFallbackTitle(sectionType) : `${sectionType} Report`,
+          content: this.getFallbackContent ? this.getFallbackContent(sectionType, alertStatus) : 
+                  `Standard ${alertStatus.toLowerCase()} protocols in effect for all space operations.`,
+          classification: 'CONFIDENTIAL'
+        });
       }
     }
     
-    // Default to GREEN if something goes wrong
-    return 'GREEN';
-  }
-  
-  /**
-   * Generate a briefing section
-   * @param {string} sectionType - Type of section to generate
-   * @param {string} alertStatus - Current alert status
-   * @returns {Promise<Object>} Generated section
-   */
-  async generateBriefingSection(sectionType, alertStatus) {
+    // Generate training directive
+    let trainingDirective;
     try {
-      // Get random keywords to guide generation
-      const keywords = this.getRandomBriefingKeywords(sectionType);
-      
-      // Prepare prompt based on section type
-      const prompt = this.buildSectionPrompt(sectionType, alertStatus, keywords);
-      
-      // Generate content using OpenAI
-      const completion = await this.openai.chat.completions.create({
-        model: this.config.model,
-        messages: [
-          {
-            role: "system",
-            content: `You are STELLA AI, generating classified space intelligence for the Daily Presidential Space Briefing. 
-                      Your writing should be authoritative, precise, and have a tone of urgency appropriate for ${alertStatus} alert status.
-                      Use realistic-sounding terminology, space jargon, and reference plausible agencies, projects and missions.
-                      Include specific details, measurements, coordinates or percentages to enhance authenticity.
-                      Write in the style of an official intelligence briefing: concise, factual, and impactful.
-                      Make the content compelling and slightly ominous, as if revealing information that only top officials would know.`
-          },
-          {
-            role: "user",
-            content: prompt
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 500
-      });
-      
-      // Extract generated content
-      const content = completion.choices[0].message.content.trim();
-      
-      // Generate a title by prompting again or extracting from content
-      const title = await this.generateSectionTitle(sectionType, content);
-      
-      return {
-        sectionType,
-        title,
-        content,
-        classification: this.getSectionClassification(sectionType, alertStatus)
-      };
-    } catch (error) {
-      console.error('❌ Error generating section:', error);
-      
-      // Fallback content
-      return {
-        sectionType,
-        title: this.getFallbackTitle(sectionType),
-        content: this.getFallbackContent(sectionType, alertStatus),
-        classification: 'CONFIDENTIAL'
-      };
-    }
-  }
-  
-  /**
-   * Generate a personalized training directive
-   * @param {string} userId - Optional user ID for personalization
-   * @returns {Promise<Object>} Generated training directive
-   */
-  async generateTrainingDirective(userId = null) {
-    try {
-      // If userId is provided, generate personalized directive
-      if (userId) {
-        return await this.generatePersonalizedDirective(userId);
-      }
-      
-      // Otherwise generate a generic directive
-      const physicalMissions = await this.getPhysicalMissions();
-      
-      // Select a random mission to feature
-      const randomMissionIndex = Math.floor(Math.random() * physicalMissions.length);
-      const mission = physicalMissions[randomMissionIndex];
-      
-      // Select random exercises from the mission
-      const exercises = mission.exercises || [];
-      const selectedExercises = [];
-      
-      if (exercises.length > 0) {
-        // Pick 1-2 random exercises
-        const numExercises = Math.min(exercises.length, Math.floor(Math.random() * 2) + 1);
-        const shuffled = [...exercises].sort(() => 0.5 - Math.random());
-        selectedExercises.push(...shuffled.slice(0, numExercises));
-      }
-      
-      // Generate directive content using OpenAI
-      const completion = await this.openai.chat.completions.create({
-        model: this.config.model,
-        messages: [
-          {
-            role: "system",
-            content: `You are STELLA AI, generating a training directive for space mission readiness.
-                      Your directive should be motivational, urgent, and specific to the mission type.
-                      Write in a commanding tone as if this is an official directive from mission control.
-                      Reference specific exercises and tie them to space mission capabilities.
-                      Keep it concise but impactful - this will inspire trainees to focus on key skills.`
-          },
-          {
-            role: "user",
-            content: `Generate a training directive focusing on "${mission.name}" (${mission.type}).
-                      Mission description: ${mission.description}
-                      ${selectedExercises.length > 0 ? `Key exercises: ${selectedExercises.map(e => e.name).join(', ')}` : ''}
-                      
-                      Make this directive sound like it's preparing trainees for critical space operations. 
-                      Explain why these skills are essential for mission success and safety.
-                      Maximum 3-4 sentences.`
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 200
-      });
-      
-      // Extract generated content
-      const content = completion.choices[0].message.content.trim();
-      
-      return {
-        content,
-        relatedMissionId: mission.id,
-        exerciseIds: selectedExercises.map(ex => ex.id)
-      };
-    } catch (error) {
-      console.error('❌ Error generating training directive:', error);
-      
+      trainingDirective = await this.generateTrainingDirective();
+    } catch (directiveError) {
+      console.error(`❌ Error generating training directive: ${directiveError}`);
       // Fallback directive
-      return {
+      trainingDirective = {
         content: "Focus on core stability and balance training this week. These foundational skills are critical for all space operations and will prepare you for the microgravity challenges ahead.",
         relatedMissionId: "mission1",
         exerciseIds: ["planks", "stability-ball"]
       };
     }
+    
+    // Count total words for metadata
+    const wordCount = this.countBriefingWords ? 
+                      this.countBriefingWords(sections, trainingDirective) : 
+                      sections.reduce((count, section) => count + (section.content?.split(/\s+/).length || 0), 0) + 
+                      (trainingDirective?.content?.split(/\s+/).length || 0);
+    
+    // Extract topic tags
+    const topicTags = this.extractTopicTags ? 
+                      this.extractTopicTags(sections) : 
+                      ['strategic', 'astronomical', 'technological', 'space weather'];
+    
+    // Assemble final briefing
+    const briefing = {
+      title: 'DAILY PRESIDENTIAL SPACE BRIEFING',
+      alertStatus,
+      sections,
+      trainingDirective,
+      wordCount,
+      topicTags
+    };
+    
+    console.log(`✅ Generated briefing content with ${sections.length} sections and ${wordCount} words`);
+    
+    return briefing;
+  } catch (error) {
+    console.error('❌ Error generating daily briefing:', error);
+    throw new Error('Failed to generate briefing content: ' + error.message);
   }
-  
-  /**
-   * Generate a personalized training directive for a specific user
-   * @param {string} userId - User ID for personalization
-   * @returns {Promise<Object>} Personalized directive
-   */
-  async generatePersonalizedDirective(userId) {
-    try {
-      // Get user's training progress
-      const userProgress = await this.getUserTrainingProgress(userId);
-      
-      if (!userProgress || !userProgress.missions || userProgress.missions.length === 0) {
-        throw new Error('No training progress data available');
-      }
-      
-      // Find mission with lowest progress that's not complete
-      const incompleteMissions = userProgress.missions
-        .filter(mission => mission.progress < 100)
-        .sort((a, b) => a.progress - b.progress);
-      
-      if (incompleteMissions.length === 0) {
-        // All missions completed, recommend advanced training
-        return {
-          content: "Congratulations on your comprehensive training progress. Focus on maintaining all skill domains with particular emphasis on microgravity adaptation techniques. Your readiness metrics are exceptional - continue pushing boundaries.",
-          relatedMissionId: null,
-          exerciseIds: []
-        };
-      }
-      
-      // Get the mission with lowest progress
-      const targetMission = incompleteMissions[0];
-      
-      // Get mission details
-      const physicalMissions = await this.getPhysicalMissions();
-      const missionDetails = physicalMissions.find(m => m.id === targetMission.id);
-      
-      if (!missionDetails) {
-        throw new Error('Mission details not found');
-      }
-      
-      // Get interesting exercises
-      const exercises = missionDetails.exercises || [];
-      const selectedExercises = [];
-      
-      if (exercises.length > 0) {
-        // Pick 1-2 random exercises
-        const numExercises = Math.min(exercises.length, 2);
-        const shuffled = [...exercises].sort(() => 0.5 - Math.random());
-        selectedExercises.push(...shuffled.slice(0, numExercises));
-      }
-      
-      // Generate personalized directive using OpenAI
-      const completion = await this.openai.chat.completions.create({
-        model: this.config.model,
-        messages: [
-          {
-            role: "system",
-            content: `You are STELLA AI, generating a personalized training directive for space mission readiness.
-                      Your directive should feel personalized to the user's training needs.
-                      Write in a commanding but supportive tone that addresses their specific situation.
-                      Reference specific exercises and tie them to space mission capabilities.`
-          },
-          {
-            role: "user",
-            content: `Generate a personalized training directive for a trainee focusing on "${missionDetails.name}" (${missionDetails.type}).
-                      Mission description: ${missionDetails.description}
-                      Current progress: ${targetMission.progress}%
-                      ${selectedExercises.length > 0 ? `Focus exercises: ${selectedExercises.map(e => e.name).join(', ')}` : ''}
-                      
-                      Make this directive sound personal but urgent, as if the trainee's readiness is critical for an upcoming mission.
-                      Maximum 3-4 sentences.`
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 200
-      });
-      
-      // Extract generated content
-      const content = completion.choices[0].message.content.trim();
-      
+}
+/**
+ * Generate a briefing section
+ * @param {string} sectionType - Type of section to generate
+ * @param {string} alertStatus - Current alert status
+ * @returns {Promise<Object>} Generated section
+ */
+async generateBriefingSection(sectionType, alertStatus) {
+  try {
+    // Get random keywords to guide generation
+    const keywords = this.getRandomBriefingKeywords(sectionType);
+    
+    // Prepare prompt based on section type
+    const prompt = this.buildSectionPrompt(sectionType, alertStatus, keywords);
+    
+    // Check if OpenAI client is properly initialized
+    if (!this.openai) {
+      throw new Error("OpenAI client not initialized");
+    }
+    
+    // Safely access the chat completions API
+    const openaiChat = this.openai.chat || this.openai.completions || this.openai;
+    const completionMethod = openaiChat.completions || openaiChat.create || openaiChat;
+    
+    if (typeof completionMethod.create !== 'function') {
+      throw new Error("OpenAI API structure has changed - completions method not available");
+    }
+    
+    // Generate content using OpenAI
+    const completion = await completionMethod.create({
+      model: this.config?.model || "gpt-3.5-turbo", // Provide a fallback model
+      messages: [
+        {
+          role: "system",
+          content: `You are STELLA AI, generating classified space intelligence for the Daily Presidential Space Briefing. 
+                    Your writing should be authoritative, precise, and have a tone of urgency appropriate for ${alertStatus} alert status.
+                    Use realistic-sounding terminology, space jargon, and reference plausible agencies, projects and missions.
+                    Include specific details, measurements, coordinates or percentages to enhance authenticity.
+                    Write in the style of an official intelligence briefing: concise, factual, and impactful.
+                    Make the content compelling and slightly ominous, as if revealing information that only top officials would know.`
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 500
+    });
+    
+    // Safely extract generated content
+    const content = completion?.choices?.[0]?.message?.content?.trim() || 
+                    "Section content unavailable due to technical limitations.";
+    
+    // Generate a title by prompting again or extracting from content
+    const title = await this.generateSectionTitle(sectionType, content);
+    
+    return {
+      sectionType,
+      title,
+      content,
+      classification: this.getSectionClassification(sectionType, alertStatus)
+    };
+  } catch (error) {
+    console.error('❌ Error generating section:', error);
+    
+    // Fallback content
+    return {
+      sectionType,
+      title: this.getFallbackTitle(sectionType),
+      content: this.getFallbackContent(sectionType, alertStatus),
+      classification: 'CONFIDENTIAL'
+    };
+  }
+}
+
+/**
+ * Generate a personalized training directive
+ * @param {string} userId - Optional user ID for personalization
+ * @returns {Promise<Object>} Generated training directive
+ */
+async generateTrainingDirective(userId = null) {
+  try {
+    // If userId is provided, generate personalized directive
+    if (userId) {
+      return await this.generatePersonalizedDirective(userId);
+    }
+    
+    // Otherwise generate a generic directive
+    const physicalMissions = await this.getPhysicalMissions();
+    
+    // Select a random mission to feature (with safety check)
+    const missionCount = Array.isArray(physicalMissions) ? physicalMissions.length : 0;
+    const randomMissionIndex = missionCount > 0 ? Math.floor(Math.random() * missionCount) : -1;
+    
+    // Default mission if none available
+    const defaultMission = {
+      id: "mission1",
+      name: "Core & Balance Foundation",
+      type: "physical",
+      description: "Develop core strength and balance for microgravity operations",
+      exercises: [
+        { id: "planks", name: "AI-Monitored Planks" },
+        { id: "stability-ball", name: "Stability Ball Workouts" }
+      ]
+    };
+    
+    // Use selected mission or default
+    const mission = (randomMissionIndex >= 0) ? physicalMissions[randomMissionIndex] : defaultMission;
+    
+    // Select random exercises from the mission
+    const exercises = Array.isArray(mission.exercises) ? mission.exercises : [];
+    const selectedExercises = [];
+    
+    if (exercises.length > 0) {
+      // Pick 1-2 random exercises
+      const numExercises = Math.min(exercises.length, Math.floor(Math.random() * 2) + 1);
+      const shuffled = [...exercises].sort(() => 0.5 - Math.random());
+      selectedExercises.push(...shuffled.slice(0, numExercises));
+    }
+    
+    // Check if OpenAI client is properly initialized
+    if (!this.openai) {
+      throw new Error("OpenAI client not initialized");
+    }
+    
+    // Safely access the chat completions API
+    const openaiChat = this.openai.chat || this.openai.completions || this.openai;
+    const completionMethod = openaiChat.completions || openaiChat.create || openaiChat;
+    
+    if (typeof completionMethod.create !== 'function') {
+      throw new Error("OpenAI API structure has changed - completions method not available");
+    }
+    
+    // Generate directive content using OpenAI
+    const completion = await completionMethod.create({
+      model: this.config?.model || "gpt-3.5-turbo", // Provide a fallback model
+      messages: [
+        {
+          role: "system",
+          content: `You are STELLA AI, generating a training directive for space mission readiness.
+                    Your directive should be motivational, urgent, and specific to the mission type.
+                    Write in a commanding tone as if this is an official directive from mission control.
+                    Reference specific exercises and tie them to space mission capabilities.
+                    Keep it concise but impactful - this will inspire trainees to focus on key skills.`
+        },
+        {
+          role: "user",
+          content: `Generate a training directive focusing on "${mission.name}" (${mission.type || 'physical'}).
+                    Mission description: ${mission.description || 'Space training mission'}
+                    ${selectedExercises.length > 0 ? `Key exercises: ${selectedExercises.map(e => e.name || 'Exercise').join(', ')}` : ''}
+                    
+                    Make this directive sound like it's preparing trainees for critical space operations. 
+                    Explain why these skills are essential for mission success and safety.
+                    Maximum 3-4 sentences.`
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 200
+    });
+    
+    // Safely extract generated content
+    const content = completion?.choices?.[0]?.message?.content?.trim() || 
+                    "Focus on core stability and balance training this week. These foundational skills are critical for all space operations.";
+    
+    return {
+      content,
+      relatedMissionId: mission.id || "mission1",
+      exerciseIds: selectedExercises.map(ex => ex.id || "default-exercise")
+    };
+  } catch (error) {
+    console.error('❌ Error generating training directive:', error);
+    
+    // Fallback directive
+    return {
+      content: "Focus on core stability and balance training this week. These foundational skills are critical for all space operations and will prepare you for the microgravity challenges ahead.",
+      relatedMissionId: "mission1",
+      exerciseIds: ["planks", "stability-ball"]
+    };
+  }
+}
+
+/**
+ * Generate a personalized training directive for a specific user
+ * @param {string} userId - User ID for personalization
+ * @returns {Promise<Object>} Personalized directive
+ */
+async generatePersonalizedDirective(userId) {
+  try {
+    // Get user's training progress
+    const userProgress = await this.getUserTrainingProgress(userId);
+    
+    if (!userProgress || !Array.isArray(userProgress.missions) || userProgress.missions.length === 0) {
+      throw new Error('No training progress data available');
+    }
+    
+    // Find mission with lowest progress that's not complete
+    const incompleteMissions = userProgress.missions
+      .filter(mission => mission.progress < 100)
+      .sort((a, b) => a.progress - b.progress);
+    
+    if (incompleteMissions.length === 0) {
+      // All missions completed, recommend advanced training
       return {
-        content,
-        relatedMissionId: targetMission.id,
-        exerciseIds: selectedExercises.map(ex => ex.id)
+        content: "Congratulations on your comprehensive training progress. Focus on maintaining all skill domains with particular emphasis on microgravity adaptation techniques. Your readiness metrics are exceptional - continue pushing boundaries.",
+        relatedMissionId: null,
+        exerciseIds: []
       };
-    } catch (error) {
-      console.error('❌ Error generating personalized directive:', error);
-      
-      // Fallback to generic directive
-      return this.generateTrainingDirective();
+    }
+    
+    // Get the mission with lowest progress
+    const targetMission = incompleteMissions[0];
+    
+    // Get mission details
+    const physicalMissions = await this.getPhysicalMissions();
+    const missionDetails = Array.isArray(physicalMissions) ? 
+                          physicalMissions.find(m => m.id === targetMission.id) : null;
+    
+    if (!missionDetails) {
+      throw new Error('Mission details not found');
+    }
+    
+    // Get interesting exercises
+    const exercises = Array.isArray(missionDetails.exercises) ? missionDetails.exercises : [];
+    const selectedExercises = [];
+    
+    if (exercises.length > 0) {
+      // Pick 1-2 random exercises
+      const numExercises = Math.min(exercises.length, 2);
+      const shuffled = [...exercises].sort(() => 0.5 - Math.random());
+      selectedExercises.push(...shuffled.slice(0, numExercises));
+    }
+    
+    // Check if OpenAI client is properly initialized
+    if (!this.openai) {
+      throw new Error("OpenAI client not initialized");
+    }
+    
+    // Safely access the chat completions API
+    const openaiChat = this.openai.chat || this.openai.completions || this.openai;
+    const completionMethod = openaiChat.completions || openaiChat.create || openaiChat;
+    
+    if (typeof completionMethod.create !== 'function') {
+      throw new Error("OpenAI API structure has changed - completions method not available");
+    }
+    
+    // Generate personalized directive using OpenAI
+    const completion = await completionMethod.create({
+      model: this.config?.model || "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: `You are STELLA AI, generating a personalized training directive for space mission readiness.
+                    Your directive should feel personalized to the user's training needs.
+                    Write in a commanding but supportive tone that addresses their specific situation.
+                    Reference specific exercises and tie them to space mission capabilities.`
+        },
+        {
+          role: "user",
+          content: `Generate a personalized training directive for a trainee focusing on "${missionDetails.name}" (${missionDetails.type || 'physical'}).
+                    Mission description: ${missionDetails.description || 'Space training mission'}
+                    Current progress: ${targetMission.progress}%
+                    ${selectedExercises.length > 0 ? `Focus exercises: ${selectedExercises.map(e => e.name || 'Exercise').join(', ')}` : ''}
+                    
+                    Make this directive sound personal but urgent, as if the trainee's readiness is critical for an upcoming mission.
+                    Maximum 3-4 sentences.`
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 200
+    });
+    
+    // Safely extract generated content
+    const content = completion?.choices?.[0]?.message?.content?.trim() || 
+                    "Continue focusing on your training program. Your progress is on track, but more practice is needed to reach mission readiness.";
+    
+    return {
+      content,
+      relatedMissionId: targetMission.id,
+      exerciseIds: selectedExercises.map(ex => ex.id || "exercise")
+    };
+  } catch (error) {
+    console.error('❌ Error generating personalized directive:', error);
+    
+    // Fallback to generic directive
+    try {
+      return await this.generateTrainingDirective();
+    } catch (fallbackError) {
+      // Ultimate fallback if even generic directive fails
+      return {
+        content: "Focus on core stability and balance training this week. These foundational skills are critical for all space operations.",
+        relatedMissionId: "mission1",
+        exerciseIds: ["planks", "stability-ball"]
+      };
     }
   }
-  
+}
   /**
    * Build a prompt for generating a section
    * @param {string} sectionType - Type of section

@@ -1,4 +1,4 @@
-const OpenAI = require("openai");
+const openai = require('./openaiService');
 const User = require("../models/User.js");
 const TrainingSession = require("../models/TrainingSession.js");
 const Intervention = require("../models/Intervention.js");
@@ -7,8 +7,7 @@ const Achievement = require("../models/Achievement.js");
 
 class AIGuidanceSystem {
     constructor() {
-        // ✅ Initialize OpenAI Client
-        this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        this.openai = openai;
 
         // ✅ Default AI Model
         this.defaultModel = "gpt-4-turbo";
