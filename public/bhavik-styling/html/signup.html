@@ -7,9 +7,10 @@
     <title data-i18n="subscribe.pageTitle">Subscribe - SharedStars Academy</title>
 
     <!-- Custom CSS -->
-    <link href="/css/tailwind.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/ai-assistant.css" />
-    <link rel="stylesheet" href="/css/main.css" />
+    <link href="/bhavik-styling/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="/bhavik-styling/css/ai-assistant.css" />
+    <link rel="stylesheet" href="/bhavik-styling/css/main.css" />
+    
 
      <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
     <script src="/js/languageManager.js" defer></script>
@@ -37,7 +38,84 @@
         font-family: 'Inter', sans-serif;
         scroll-behavior: smooth;
       }
-    </style>
+      /* Add this to the head section */
+<style>
+    /* Footer styling fixes */
+    footer {
+        margin-top: 6rem;
+        padding: 2rem 0;
+        background-color: #111827;
+        width: 100%;
+    }
+    
+    .footer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    .footer-links {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+    
+    .footer-section {
+        margin: 0 1rem;
+    }
+    
+    .footer-section h3 {
+        color: #60A5FA;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .footer-section ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-section ul li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .footer-section ul li a {
+        color: #9CA3AF;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    
+    .footer-section ul li a:hover {
+        color: #F9FAFB;
+    }
+    
+    .footer-social {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .footer-social a {
+        color: #9CA3AF;
+        transition: color 0.2s;
+    }
+    
+    .footer-social a:hover {
+        color: #F9FAFB;
+    }
+    
+    .footer-copyright {
+        color: #6B7280;
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.875rem;
+    }
+</style>
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -130,7 +208,7 @@
               <button type="submit" class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full ">Login</button>
           </form>
           <div class="flex flex-col items-center justify-between">
-            <p class="text-white text-body-small-medium my-8">Don't have an account? <a href="/register" class="text-blue-500">Sign up</a></p>
+            <p class="text-white text-body-small-medium my-8">Don't have an account? <a href="/signup.html" class="text-blue-500">Sign up</a></p>
             <div class="flex items-center justify-between gap-3 w-[432px] mb-10">
               <button type="submit" class="w-full flex items-center justify-center form-control text-body-xsmall-semibold gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
                 <img src="/icons/Google.png" alt="Google Logo" class="w-5 h-5"> 
