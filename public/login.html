@@ -5,71 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Log in to StelTrek Academy">
     <title>Login - StelTrek Academy</title>
+    <link href="/css/tailwind.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/ai-assistant.css">
+    <!-- <link rel="stylesheet" href="/css/ai-assistant.css"> -->
+
+    <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
+    <script src="/js/languageManager.js" defer></script>
 </head>
 <body>
-    <!-- Fixed Header -->
-    <header class="site-header">
-        <nav aria-label="Main Navigation">
-            <!-- Language Selector -->
-            <div class="language-selector">
-                <a href="#" class="language-flag" data-lang="en">🇺🇸</a>
-                <a href="#" class="language-flag" data-lang="zh">🇨🇳</a>
-                <a href="#" class="language-flag" data-lang="ko">🇰🇷</a>
-                <a href="#" class="language-flag" data-lang="es">🇪🇸</a>
-            </div>
+    <!-- HEADER -->
+  <header class="bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg py-4">
+    <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
+      <!-- Logo -->
+      <div class="flex items-center mb-2 md:mb-0">
+        <a href="/index.html" aria-label="SharedStars Homepage" class="group">
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+        </a>
+      </div>
+      <!-- Navigation Links -->
+      <ul class="flex flex-wrap gap-4">
+        <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="/academy.html" data-i18n="nav.academy">Academy</a></li>
+        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
 
-            <!-- 3-Line Menu -->
-            <div class="menu-icon" aria-label="Toggle Navigation">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
+        <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
+        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
+        <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
+        <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
+        <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
+        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
+      </ul>
 
-            <!-- Dropdown Navigation -->
-            <ul>
-                <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
-                <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
-                <li><a href="/about.html" data-i18n="nav.about" aria-current="page">About</a></li>
-                <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
-                <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
-                <li><a href="/merchandise.html" data-i18n="nav.merchandise">Retail Store</a></li>
-                <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
-                <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-                <li><a href="/academy.html" data-i18n="nav.academy">StelTrek Academy</a></li>
-                <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li>
-                <li><a href="/mission-control.html" data-i18n="nav.subscribe">Mission-Control</a></li>
-                <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
-            </ul>
-        </nav>
-    </header>
+      <div class="relative">
+        <button id="langDropdownBtn" class="flex items-center gap-2 text-white bg-gray-700 px-4 py-2 rounded-lg">
+          <span id="selectedLangIcon">🇺🇸</span>
+          <span id="selectedLangText">English</span>
+          <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <ul id="langDropdownMenu" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 py-2 w-40">
+          <li><button class="dropdown-item" data-lang="en" data-flag="🇺🇸" aria-label="Switch to English">🇺🇸 English</button></li>
+          <li><button class="dropdown-item" data-lang="zh" data-flag="🇨🇳" aria-label="Switch to Chinese">🇨🇳 Chinese</button></li>
+          <li><button class="dropdown-item" data-lang="ko" data-flag="🇰🇷" aria-label="Switch to Korean">🇰🇷 Korean</button></li>
+          <li><button class="dropdown-item" data-lang="es" data-flag="🇪🇸" aria-label="Switch to Spanish">🇪🇸 Spanish</button></li>
+        </ul>
+      </div>
+      <button data-i18n="nav.getStarted" class="bg-gradient-to-r from-purple-500 to-blue-500 text-black px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">
+      </button>
+    </nav>      
+  </header>
 
     <!-- Main Content -->
-    <main>
-        <section class="login-section">
-            <h1 data-i18n="login.title">Log In</h1>
-            <p data-i18n="login.instructions">Please enter your email and password to access your account.</p>
-
-            <form id="login-form" class="login-form">
-                <div class="form-group">
-                    <label for="email" data-i18n="login.emailLabel">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password" data-i18n="login.passwordLabel">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit" class="cta-button" data-i18n="login.loginButton">Log In</button>
-                <p id="login-error" class="message error" role="alert"></p>
-            </form>
-
-            <div class="form-links">
-                <a href="/reset-password.html" data-i18n="login.forgotPassword">Forgot your password?</a>
-                <a href="/signup.html" data-i18n="login.noAccount">Don’t have an account? Sign Up</a>
+    <section class="h-[1024px]">
+        <div class="flex flex-col items-center justify-between">
+          <div class="w-[496px] mt-52 rounded-3xl bg-black border-white-100 border-2 items-center justify-between">
+            <div class="flex flex-col items-center justify-between">
+              <img src="/icons/Vector.png" class="w-[248px] h-[139px]" ></img>
+              <image src="/icons/Logo (1).png" class="w-16 h-16"></image>
             </div>
-        </section>
-    </main>
+            <div class="flex flex-col items-center justify-between">
+              <p class="text-heading5 text-white my-8">Welcome back</p>
+              
+              <form id="login-form" class="space-y-6 text-white">
+                <div class="w-[432px]">
+                  <input type="email" name="email" id="email" placeholder="Email address" class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
+                </div>
+                <div class="w-[432px]">
+                  <input type="password" name="password" id="password" placeholder="Password" class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
+                </div>
+                <div class="flex items-center justify-between w-[432px]">
+                  <div class="flex items-center space-x-2">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                      <input type="checkbox" class="hidden peer">
+                      <div class="w-6 h-6 border-2 border-blue-500 rounded-md flex items-center justify-center">
+                          <image src="/icons/checker.png" alt="Checked" class="hidden peer-checked:visible"></image>
+                      </div>
+                      <span class="text-white text-body-small-medium transition-all duration-300">Remember me</span>
+                    </label>
+                  </div>
+                  <p class="text-white text-body-small-medium">Forgot Password?</p>
+                </div>
+                <button type="submit" class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full ">Login</button>
+            </form>
+            <div class="flex flex-col items-center justify-between">
+              <p class="text-white text-body-small-medium my-8">Don't have an account? <a href="/register" class="text-blue-500">Sign up</a></p>
+              <div class="flex items-center justify-between gap-3 w-[432px] mb-10">
+                <button type="submit" class="w-full flex items-center justify-center form-control text-body-xsmall-semibold gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
+                  <img src="/icons/Google.png" alt="Google Logo" class="w-5 h-5"> 
+                  <span>Continue with Google</span>
+                </button>
+                <button type="submit" class="w-full flex items-center justify-center form-control text-body-xsmall-semibold gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
+                  <img src="/icons/Apple.png" alt="Google Logo" class="w-5 h-5"> 
+                  <span>Continue with Google</span>
+                </button>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
     <!-- Footer -->
     <footer>
@@ -77,7 +114,6 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="/js/language-switcher.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const menuIcon = document.querySelector('.menu-icon');
@@ -92,9 +128,11 @@
 
             // Handle login form submission
             loginForm.addEventListener('submit', async (e) => {
+              console.log("first");
                 e.preventDefault();
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
+
 
                 try {
                     const response = await fetch('/api/auth/login', {
@@ -116,7 +154,7 @@
             });
         });
     </script>
-          <script type="module" src="/js/languages.js"></script>
-          <script type="module" src="/js/academy.js"></script>
+          <!-- <script type="module" src="/js/languages.js"></script>
+          <script type="module" src="/js/academy.js"></script> -->
 </body>
 </html>

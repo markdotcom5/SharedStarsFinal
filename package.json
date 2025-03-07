@@ -8,7 +8,9 @@
     "lint": "eslint . --fix",
     "format": "prettier --write .",
     "test": "jest",
-    "clean-restart": "./server-fix.sh"
+    "clean-restart": "./server-fix.sh",
+    "build-css": "postcss public/css/styles.css -o public/css/tailwind.css",
+    "watch-css": "postcss public/css/styles.css -o public/css/tailwind.css --watch"
   },
   "dependencies": {
     "abbrev": "^3.0.0",
@@ -89,6 +91,7 @@
     "kill-port": "^2.0.1",
     "nodemon": "^3.1.9",
     "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.0",
     "prettier": "^3.4.2",
     "sass": "^1.83.1",
     "sass-loader": "^16.0.4",
