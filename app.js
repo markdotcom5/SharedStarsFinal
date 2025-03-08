@@ -502,6 +502,9 @@ server.on('upgrade', (request, socket, head) => {
 // ============================
 app.use(express.static(path.join(__dirname, "public")));
 
+// Serve the "bhavik-designing" folder inside public
+app.use("/bhavik-styling", express.static(path.join(__dirname, "public", "bhavik-styling")));
+
 const staticPages = [
     { route: "/", file: "index.html" },
     { route: "/about", file: "about.html" },
@@ -528,6 +531,17 @@ staticPages.forEach(({ route, file }) => {
         }
       });
     });
+});
+
+// ✅ New: Serve pages inside "bhavik-designing/html"
+app.get("/bhavik-styling/:page", (req, res) => {
+  const file = req.params.page;
+  res.sendFile(path.join(__dirname, "public", "bhavik-styling", "html", file), (err) => {
+      if (err) {
+          console.error(`Error sending file ${file}:`, err.message);
+          res.status(404).send("File not found");
+      }
+  });
 });
 
 // ============================

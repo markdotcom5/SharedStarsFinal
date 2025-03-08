@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Log in to StelTrek Academy">
     <title>Login - StelTrek Academy</title>
-    <link href="/bhavik-styling/css/tailwind.css" rel="stylesheet">
+    <link href="/css/tailwind.css" rel="stylesheet">
     <link rel="stylesheet" href="/bhavik-styling/css/main.css">
     <!-- <link rel="stylesheet" href="/bhavik-styling/css/ai-assistant.css"> -->
     
@@ -89,8 +89,10 @@
                   </div>
                   <p class="text-white text-body-small-medium">Forgot Password?</p>
                 </div>
-                <button type="submit" class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full ">Login</button>
-            </form>
+                <button type="submit" id="login-btn" class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full ">Login</button>
+                <p id="login-error" class="text-red-500 text-sm text-center hidden"></p>
+
+              </form>
             <div class="flex flex-col items-center justify-between">
               <p class="text-white text-body-small-medium my-8">Don't have an account? <a href="/signup.html" class="text-blue-500">Sign up</a></p>
               <div class="flex items-center justify-between gap-3 w-[432px] mb-10">
@@ -116,45 +118,41 @@
 
     <!-- JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const menuIcon = document.querySelector('.menu-icon');
-            const dropdownMenu = document.querySelector('.dropdown-menu');
-            const loginForm = document.getElementById('login-form');
-            const loginError = document.getElementById('login-error');
+      document.addEventListener("DOMContentLoaded", () => {
+          const loginForm = document.getElementById("login-form");
+          const loginBtn = document.getElementById("login-btn");
+          const loginError = document.getElementById("login-error");
 
-            // Toggle dropdown menu
-            menuIcon.addEventListener('click', () => {
-                dropdownMenu.classList.toggle('show');
-            });
+          loginForm.addEventListener("submit", async (e) => {
+              e.preventDefault();
+              loginError.classList.add("hidden");
+              loginBtn.textContent = "Logging in...";
+              loginBtn.disabled = true;
 
-            // Handle login form submission
-            loginForm.addEventListener('submit', async (e) => {
-              console.log("first");
-                e.preventDefault();
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
+              const email = document.getElementById("email").value;
+              const password = document.getElementById("password").value;
 
+              try {
+                  const response = await fetch("http://localhost:3000/bhavik-styling/api/auth/login", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ email, password })
+                  });
 
-                try {
-                    const response = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, password })
-                    });
+                  if (!response.ok) {
+                      throw new Error("Invalid credentials");
+                  }
 
-                    if (response.ok) {
-                        window.location.href = '/mission-control.html';
-                    } else {
-                        const errorData = await response.json();
-                        loginError.textContent = errorData.error || "Failed to log in. Please try again.";
-                    }
-                } catch (error) {
-                    loginError.textContent = "An unexpected error occurred. Please try again.";
-                    console.error('Login Error:', error);
-                }
-            });
-        });
-    </script>
+                  window.location.href = "/mission-control.html";
+              } catch (error) {
+                  loginError.textContent = error.message || "An error occurred. Please try again.";
+                  loginError.classList.remove("hidden");
+                  loginBtn.textContent = "Login";
+                  loginBtn.disabled = false;
+              }
+          });
+      });
+  </script>
           <!-- <script type="module" src="/js/languages.js"></script>
           <script type="module" src="/js/academy.js"></script> -->
 </body>

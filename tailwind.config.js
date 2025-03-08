@@ -3,8 +3,8 @@
 module.exports = {
   content: [
       './public/**/*.html',
-      './src/**/*.{html,js,ejs}', // Include EJS and JS files from your `src` folder
-      // './views/**/*.ejs', // Include EJS files from your `views` folder
+      './src/**/*.{html,js,ejs}',
+      './public/bhavik-styling/html/**/*.html',
   ],
   theme: {
       extend: {
