@@ -1,4 +1,3 @@
-// countdown.js
 class SpaceCountdown {
     constructor() {
         this.basePrice = 250000; // Base space ticket price
@@ -6,6 +5,7 @@ class SpaceCountdown {
         this.countdown = {
             years: 0,
             months: 0,
+            weeks: 0,
             days: 0,
             hours: 0,
             minutes: 0,
@@ -73,28 +73,45 @@ class SpaceCountdown {
         const minute = second * 60;
         const hour = minute * 60;
         const day = hour * 24;
+        const week = day * 7;
         const year = day * 365;
         const month = day * 30;
 
-        this.countdown = {
-            years: Math.floor(timeLeft / year),
-            months: Math.floor((timeLeft % year) / month),
-            days: Math.floor((timeLeft % month) / day),
-            hours: Math.floor((timeLeft % day) / hour),
-            minutes: Math.floor((timeLeft % hour) / minute),
-            seconds: Math.floor((timeLeft % minute) / second)
-        };
+        const years = Math.floor(timeLeft / year);
+    timeLeft %= year;
 
-        this.updateDisplay();
+    const months = Math.floor(timeLeft / month);
+    timeLeft %= month;
+
+    const weeks = Math.floor(timeLeft / week);
+    timeLeft %= week;
+
+    const days = Math.floor(timeLeft / day);
+    timeLeft %= day;
+
+    const hours = Math.floor(timeLeft / hour);
+    timeLeft %= hour;
+
+    const minutes = Math.floor(timeLeft / minute);
+    timeLeft %= minute;
+
+    const seconds = Math.floor(timeLeft / second);
+
+    this.countdown = { years, months, weeks, days, hours, minutes, seconds };
+
+    this.updateDisplay();
     }
 
     updateDisplay() {
         // Update each countdown box
         Object.entries(this.countdown).forEach(([unit, value]) => {
-            const element = document.querySelector(`[data-countdown="${unit}"]`);
-            if (element) {
+            const elements = document.querySelectorAll(`[data-countdown="${unit}"]`);
+            elements.forEach(element => {
                 element.textContent = String(value).padStart(2, '0');
-            }
+            });
+            // if (element) {
+            //     element.textContent = String(value).padStart(2, '0');
+            // }
         });
     }
 
