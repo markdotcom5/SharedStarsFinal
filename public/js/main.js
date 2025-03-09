@@ -819,8 +819,8 @@ const SharedStars = {
       console.warn('Training module not available');
       
       // Try to load it
-      import('./training-module.js')
-        .then(module => {
+      import('./TrainingModule.js')
+      .then(module => {
           const { TrainingModule, PhysicalTrainingModule } = module;
           
           let trainingInstance;
