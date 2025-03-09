@@ -778,17 +778,18 @@
         console.error('STELLA API Error:', error);
       });
   });
-  </script>
+</script>
+
 <!-- STELLA AI Integration for Mission Control -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Get STELLA elements
-console.log('🔍 Setting up STELLA AI in Mission Control...');
+  console.log('🔍 Setting up STELLA AI in Mission Control...');
 
-// Get STELLA elements
-const stellaInput = document.getElementById('stella-question');
-const stellaButton = document.getElementById('send-to-stella');
-const stellaConversation = document.querySelector('.stella-conversation');
+  // Get STELLA elements
+  const stellaInput = document.getElementById('stella-question');
+  const stellaButton = document.getElementById('send-to-stella');
+  const stellaConversation = document.querySelector('.stella-conversation');
   
   // Verify elements exist
   if (!stellaInput || !stellaButton) {
@@ -853,18 +854,7 @@ const stellaConversation = document.querySelector('.stella-conversation');
         </div>
       </div>
     `;
-// Test direct API call with enhanced prompt
-fetch('/api/stella/test-guidance', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    userId: 'test-user',
-    question: "What's my first step?",
-    testMode: true
-  })
-})
-.then(response => response.json())
-.then(data => console.log('STELLA test response:', data));
+    
     // Scroll to bottom of conversation
     stellaConversation.scrollTop = stellaConversation.scrollHeight;
     
@@ -930,7 +920,12 @@ fetch('/api/stella/test-guidance', {
             userId: userId,
             question: question,
             exerciseId: exerciseId,
-            conversationHistory: conversationHistory
+            conversationHistory: conversationHistory,
+            // Add this to help with matching similar questions
+            context: {
+              currentPage: 'trainingHub',
+              moduleContext: document.querySelector('.module-card:hover')?.querySelector('h3')?.textContent || null
+            }
           })
         });
         
@@ -950,8 +945,10 @@ fetch('/api/stella/test-guidance', {
       if (response.success && response.guidance) {
         // Parse guidance from the response
         const message = response.guidance.message || "I'm processing your request.";
+        const messageId = response.messageId || 'latest';
+        
         let responseHTML = `
-          <div class="mb-4">
+          <div class="mb-4" data-message-id="${messageId}" data-session-id="${response.sessionId || ''}">
             <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
               <p>${message}</p>
         `;
@@ -965,8 +962,20 @@ fetch('/api/stella/test-guidance', {
           responseHTML += `</ul>`;
         }
         
-        // Close containers
+        // Close message container
         responseHTML += `
+            </div>
+            <div class="flex justify-end mt-1 space-x-2 text-xs">
+              <button class="text-gray-500 hover:text-green-500 feedback-btn" data-value="helpful">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017a2 2 0 01-1.865-1.71l-.745-4.47a2 2 0 011.865-2.29H14z" />
+                </svg>
+              </button>
+              <button class="text-gray-500 hover:text-red-500 feedback-btn" data-value="not-helpful">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.866.1l.745 4.47a2 2 0 01-1.865 2.29H10z" />
+                </svg>
+              </button>
             </div>
           </div>
         `;
@@ -1038,6 +1047,59 @@ fetch('/api/stella/test-guidance', {
     // Default response if no patterns match
     return "I'm here to help you navigate Mission Control. You can ask me about assessments, your space readiness timeline, or any aspect of your training program.";
   }
+  
+  // Add the feedback handler function
+  function handleFeedback(messageId, isHelpful, sessionId) {
+    // Send feedback to the server to help STELLA learn
+    fetch('/api/stella/feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous',
+        messageId: messageId,
+        sessionId: sessionId,
+        helpful: isHelpful,
+        feedbackText: null,
+        rating: isHelpful ? 5 : 1
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('✅ STELLA feedback recorded:', data);
+    })
+    .catch(error => {
+      console.error('❌ Error recording STELLA feedback:', error);
+    });
+  }
+  
+  // Add event listeners for feedback buttons
+  document.addEventListener('click', function(e) {
+    const button = e.target.closest('.feedback-btn');
+    if (button) {
+      const isHelpful = button.dataset.value === 'helpful';
+      const messageContainer = button.closest('.mb-4');
+      const messageId = messageContainer.dataset.messageId || 'latest';
+      const sessionId = messageContainer.dataset.sessionId || '';
+      
+      // Visual feedback
+      button.classList.remove('text-gray-500');
+      button.classList.add(isHelpful ? 'text-green-500' : 'text-red-500');
+      
+      // Send feedback to server
+      handleFeedback(messageId, isHelpful, sessionId);
+      
+      // Disable both buttons after selection
+      const buttons = messageContainer.querySelectorAll('.feedback-btn');
+      buttons.forEach(b => {
+        b.disabled = true;
+        if (b !== button) {
+          b.classList.add('opacity-30');
+        }
+      });
+    }
+  });
   
   // Set up quick action buttons
   document.querySelectorAll('.mission-control-card button').forEach(button => {

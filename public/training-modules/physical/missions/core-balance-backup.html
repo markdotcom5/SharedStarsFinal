@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core & Balance Foundation - SharedStars</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <style>
+        body {
+            background-color: #080b14;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold">Core & Balance Foundation</h1>
+            <p class="text-gray-400">Physical Training: Mission 1 of 4</p>
+        </div>
+
+        <!-- Simple Mission Info -->
+        <div class="bg-gray-800 rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-bold mb-4">Mission Details</h2>
+            <p class="mb-4">Develop central body strength and stability essential for zero-gravity environments. This mission builds the foundation for all space activities.</p>
+            
+            <!-- Assessment Button -->
+            <div class="bg-yellow-900 bg-opacity-20 border border-yellow-500 border-opacity-20 rounded-lg p-4 mb-6" id="assessment-warning">
+                <p class="font-semibold text-yellow-400 mb-2">Assessment Required</p>
+                <p class="text-gray-300 mb-4">You need to complete your initial assessment before starting this training mission.</p>
+                <button id="emergency-assessment-btn" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-medium">
+                    Take Assessment
+                </button>
+            </div>
+            
+            <!-- Training Session -->
+            <div class="bg-gray-700 rounded-lg p-4 mb-4">
+                <h3 class="text-lg font-bold mb-2">Session 1: Core Foundation</h3>
+                <p class="text-gray-300 mb-4">Learn and practice the fundamental core exercises that build the foundation for space training.</p>
+                <button class="bg-gray-600 text-white px-4 py-2 rounded w-full" id="start-session-btn" disabled>
+                    Complete Assessment First
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Self-contained assessment modal -->
+    <div id="emergency-assessment-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden" style="background-color: rgba(0, 0, 0, 0.75);">
+        <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+            <h2 class="text-xl font-bold mb-4">Core & Balance Assessment</h2>
+            <p class="text-gray-300 mb-4">This assessment evaluates your core strength and balance capabilities.</p>
+            
+            <div class="mb-4">
+                <label class="block mb-2">How would you rate your core strength?</label>
+                <select id="core-strength" class="w-full bg-gray-700 border border-gray-600 rounded p-2">
+                    <option>Beginner</option>
+                    <option selected>Intermediate</option>
+                    <option>Advanced</option>
+                </select>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block mb-2">Can you hold a plank for more than 30 seconds?</label>
+                <div class="flex space-x-4">
+                    <label class="flex items-center">
+                        <input type="radio" name="plank" value="yes" class="mr-2" checked> Yes
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="plank" value="no" class="mr-2"> No
+                    </label>
+                </div>
+            </div>
+            
+            <div class="flex justify-between">
+                <button id="cancel-assessment" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                    Cancel
+                </button>
+                <button id="complete-assessment" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                    Complete Assessment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast-message" class="fixed bottom-4 right-4 bg-gray-800 text-white py-2 px-4 rounded-lg border-l-4 border-blue-500 shadow-lg opacity-0 transform translate-y-2 transition-all duration-300 z-50">
+        Message goes here
+    </div>
+
+    <!-- Self-contained JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("📝 Emergency page loaded");
+            
+            // Get elements
+            const assessmentBtn = document.getElementById('emergency-assessment-btn');
+            const modal = document.getElementById('emergency-assessment-modal');
+            const cancelBtn = document.getElementById('cancel-assessment');
+            const completeBtn = document.getElementById('complete-assessment');
+            const toast = document.getElementById('toast-message');
+            const startSessionBtn = document.getElementById('start-session-btn');
+            const assessmentWarning = document.getElementById('assessment-warning');
+            
+            // Add event listeners
+            assessmentBtn.addEventListener('click', function() {
+                modal.classList.remove('hidden');
+            });
+            
+            cancelBtn.addEventListener('click', function() {
+                modal.classList.add('hidden');
+            });
+            
+            completeBtn.addEventListener('click', function() {
+                // Save completion status
+                localStorage.setItem('assessment_completed', 'true');
+                localStorage.setItem('assessment_mission-core-balance', 'true');
+                
+                // Hide modal
+                modal.classList.add('hidden');
+                
+                // Hide warning
+                assessmentWarning.style.display = 'none';
+                
+                // Update session button
+                startSessionBtn.textContent = 'Start Session';
+                startSessionBtn.classList.remove('bg-gray-600');
+                startSessionBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                startSessionBtn.disabled = false;
+                
+                // Show toast
+                toast.textContent = 'Assessment completed successfully!';
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+                
+                setTimeout(function() {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(10px)';
+                }, 3000);
+            });
+            
+            // Check if assessment already completed
+            if (localStorage.getItem('assessment_completed') === 'true') {
+                assessmentWarning.style.display = 'none';
+                
+                startSessionBtn.textContent = 'Start Session';
+                startSessionBtn.classList.remove('bg-gray-600');
+                startSessionBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                startSessionBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

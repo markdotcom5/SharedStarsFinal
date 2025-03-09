@@ -372,7 +372,8 @@ const SharedStars = {
           });
       } else if (this.state.hasIndexedDB) {
         // Use IndexedDB
-        import('./indexedDatabase.js')
+        import('../../db/inMemoryDatabase.js')
+
           .then(module => {
             this.db = module.default;
             this.state.components.db = this.db;

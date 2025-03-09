@@ -1,0 +1,151 @@
+/* public/css/assessment-popup.css */
+
+/* Base popup styles */
+.assessment-popup {
+    font-family: 'Inter', sans-serif;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+  }
+  
+  .assessment-popup-content {
+    max-height: 90vh;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    animation: popup-slide-in 0.3s ease-out forwards;
+  }
+  
+  /* Assessment scale styles */
+  .scale-container input[type="range"] {
+    height: 8px;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  
+  .scale-container input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+  }
+  
+  .scale-container input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+  }
+  
+  /* Option item hover effects */
+  .option-item label:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Checkbox and radio customization */
+  .option-item input[type="checkbox"],
+  .option-item input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(59, 130, 246, 0.5);
+    border-radius: 4px;
+    background: rgba(30, 41, 59, 0.5);
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  
+  .option-item input[type="radio"] {
+    border-radius: 50%;
+  }
+  
+  .option-item input[type="checkbox"]:checked,
+  .option-item input[type="radio"]:checked {
+    background: #3b82f6;
+    border-color: #3b82f6;
+  }
+  
+  .option-item input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 7px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  .option-item input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+  }
+  
+  /* Animation for popup */
+  @keyframes popup-slide-in {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .assessment-popup-content {
+      max-width: 95%;
+      padding: 1rem;
+    }
+    
+    .scale-container {
+      padding: 0 1rem;
+    }
+  }
+  
+  /* Space themed enhancements */
+  .assessment-popup::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  
+  /* Pulse animation for submit button */
+  #submit-assessment {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+  }

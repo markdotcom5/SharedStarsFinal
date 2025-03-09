@@ -875,273 +875,368 @@
     </div>
   </div>
 </footer>
-
 <!-- JavaScript -->
 <script src="/js/stella-core.js"></script>
 <script src="/js/stella-integration.js"></script>
-<script src="/js/missionControl.js"></script>
 <script src="/js/countdown.js"></script>
-<script src="/js/visualizations/ProgressTracker.js"></script>
+<script src="/js/languageSelection.js"></script>
+<!-- Add these before your closing body tag if not already present -->
+<script src="/js/progressAssessment.js"></script>
+<script src="/js/progressChart.js"></script>
+<script src="/js/visualizations/ProgressTracker.js"></script>  
+
+<script>
+  // Debug STELLA Connection
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Checking STELLA elements:');
+    console.log('Input element:', document.getElementById('stella-question'));
+    console.log('Button element:', document.getElementById('send-to-stella'));
+    console.log('Conversation element:', document.querySelector('.stella-conversation'));
+    
+    // Test direct API call
+    fetch('/api/stella/status')
+      .then(response => response.json())
+      .then(data => {
+        console.log('STELLA API Status:', data);
+      })
+      .catch(error => {
+        console.error('STELLA API Error:', error);
+      });
+  });
+</script>
 
 <!-- STELLA AI Integration for Mission Control -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 Setting up STELLA AI in Mission Control...');
-    
-    // Get STELLA elements
-    const stellaInput = document.getElementById('stella-question');
-    const stellaButton = document.getElementById('send-to-stella');
-    const stellaConversation = document.querySelector('.stella-conversation');
-    
-    // Verify elements exist
-    if (!stellaInput || !stellaButton) {
-      console.error('❌ STELLA input or button not found!');
-      return;
+document.addEventListener('DOMContentLoaded', function() {
+  // Get STELLA elements
+  console.log('🔍 Setting up STELLA AI in Mission Control...');
+
+  // Get STELLA elements
+  const stellaInput = document.getElementById('stella-question');
+  const stellaButton = document.getElementById('send-to-stella');
+  const stellaConversation = document.querySelector('.stella-conversation');
+  
+  // Verify elements exist
+  if (!stellaInput || !stellaButton) {
+    console.error('❌ STELLA input or button not found!');
+    return;
+  }
+  
+  if (!stellaConversation) {
+    console.error('❌ STELLA conversation container not found!');
+    return;
+  }
+  
+  // Remove any existing event listeners
+  stellaButton.replaceWith(stellaButton.cloneNode(true));
+  stellaInput.replaceWith(stellaInput.cloneNode(true));
+  
+  // Get fresh references after replacement
+  const newStellaButton = document.getElementById('send-to-stella');
+  const newStellaInput = document.getElementById('stella-question');
+  
+  // Add event listeners
+  newStellaButton.addEventListener('click', handleStellaMessage);
+  newStellaInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      handleStellaMessage();
     }
+  });
+  
+  console.log('✅ STELLA event listeners attached successfully');
+  
+  // Main STELLA handler function
+  async function handleStellaMessage() {
+    const question = newStellaInput.value.trim();
+    if (!question) return;
     
-    if (!stellaConversation) {
-      console.error('❌ STELLA conversation container not found!');
-      return;
-    }
+    console.log('🤖 STELLA processing question:', question);
     
-    // Remove any existing event listeners
-    stellaButton.replaceWith(stellaButton.cloneNode(true));
-    stellaInput.replaceWith(stellaInput.cloneNode(true));
+    // Make sure conversation container is visible
+    stellaConversation.classList.remove('hidden');
     
-    // Get fresh references after replacement
-    const newStellaButton = document.getElementById('send-to-stella');
-    const newStellaInput = document.getElementById('stella-question');
+    // Display user message
+    stellaConversation.innerHTML += `
+      <div class="mb-2 text-right">
+        <div class="inline-block bg-blue-600 ml-auto px-3 py-2 rounded-lg max-w-xs">
+          ${question}
+        </div>
+      </div>
+    `;
     
-    // Add event listeners
-    newStellaButton.addEventListener('click', handleStellaMessage);
-    newStellaInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        handleStellaMessage();
-      }
-    });
+    // Clear input
+    newStellaInput.value = '';
     
-    console.log('✅ STELLA event listeners attached successfully');
-    
-    // Main STELLA handler function
-    async function handleStellaMessage() {
-      const question = newStellaInput.value.trim();
-      if (!question) return;
-      
-      console.log('🤖 STELLA processing question:', question);
-      
-      // Make sure conversation container is visible
-      stellaConversation.classList.remove('hidden');
-      
-      // Display user message
-      stellaConversation.innerHTML += `
-        <div class="mb-2 text-right">
-          <div class="inline-block bg-blue-600 ml-auto px-3 py-2 rounded-lg max-w-xs">
-            ${question}
+    // Add loading indicator
+    stellaConversation.innerHTML += `
+      <div class="mb-2" id="stella-loading">
+        <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
+          <div class="flex space-x-2">
+            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce"></div>
+            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-75"></div>
+            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-150"></div>
           </div>
         </div>
-      `;
+      </div>
+    `;
+    
+    // Scroll to bottom of conversation
+    stellaConversation.scrollTop = stellaConversation.scrollHeight;
+    
+    // Extract recent conversation messages to provide context
+    const conversationHistory = [];
+    const messageElements = stellaConversation.querySelectorAll('.mb-2, .mb-4');
+    
+    // Process messages (skip the loading indicator)
+    let count = 0;
+    for (let i = messageElements.length-1; i >= 0 && count < 5; i--) {
+      const element = messageElements[i];
+      if (element.id === 'stella-loading') continue;
       
-      // Clear input
-      newStellaInput.value = '';
+      const messageDiv = element.querySelector('div.inline-block');
+      if (!messageDiv) continue;
       
-      // Add loading indicator
-      stellaConversation.innerHTML += `
-        <div class="mb-2" id="stella-loading">
-          <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
-            <div class="flex space-x-2">
-              <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce"></div>
-              <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-75"></div>
-              <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-150"></div>
-            </div>
-          </div>
-        </div>
-      `;
+      const messageText = messageDiv.textContent.trim();
+      if (!messageText) continue;
       
-      // Scroll to bottom of conversation
-      stellaConversation.scrollTop = stellaConversation.scrollHeight;
+      const isUser = element.classList.contains('text-right');
       
-      // Extract recent conversation messages to provide context
-      const conversationHistory = [];
-      const messageElements = stellaConversation.querySelectorAll('.mb-2, .mb-4');
+      conversationHistory.unshift({
+        fromUser: isUser,
+        content: messageText,
+        timestamp: new Date().toISOString()
+      });
       
-      // Process messages (skip the loading indicator)
-      let count = 0;
-      for (let i = messageElements.length-1; i >= 0 && count < 5; i--) {
-        const element = messageElements[i];
-        if (element.id === 'stella-loading') continue;
+      count++;
+    }
+    
+    try {
+      // Get user ID from localStorage or use a default
+      const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous';
+      const exerciseId = 'mission-control';
+      
+      let response;
+      
+      // Try to use StellaIntegration if available
+      if (window.StellaIntegration && window.StellaIntegration.isInitialized) {
+        console.log('🔍 Using StellaIntegration...');
         
-        const messageDiv = element.querySelector('div.inline-block');
-        if (!messageDiv) continue;
+        // Connect if not already connected
+        if (!window.StellaIntegration.isConnected) {
+          await window.StellaIntegration.connect(userId);
+        }
         
-        const messageText = messageDiv.textContent.trim();
-        if (!messageText) continue;
+        // Ask STELLA through integration
+        response = await window.StellaIntegration.askQuestion(question, {
+          userId: userId,
+          exerciseId: exerciseId,
+          conversationHistory: conversationHistory
+        });
+      } else {
+        // Direct API call if integration not available
+        console.log('🔍 StellaIntegration not available, using direct API call...');
         
-        const isUser = element.classList.contains('text-right');
-        
-        conversationHistory.unshift({
-          fromUser: isUser,
-          content: messageText,
-          timestamp: new Date().toISOString()
+        const apiResponse = await fetch('/api/stella/guidance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: userId,
+            question: question,
+            exerciseId: exerciseId,
+            conversationHistory: conversationHistory,
+            // Add this to help with matching similar questions
+            context: {
+              currentPage: 'trainingHub',
+              moduleContext: document.querySelector('.module-card:hover')?.querySelector('h3')?.textContent || null
+            }
+          })
         });
         
-        count++;
+        if (!apiResponse.ok) {
+          throw new Error(`Failed to get STELLA response: ${apiResponse.status}`);
+        }
+        
+        response = await apiResponse.json();
       }
       
-      try {
-        // Get user ID from localStorage or use a default
-        const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous';
-        const exerciseId = 'mission-control';
+      // Handle response
+      console.log('✅ STELLA response:', response);
+      
+      // Remove loading indicator
+      document.getElementById('stella-loading')?.remove();
+      
+      if (response.success && response.guidance) {
+        // Parse guidance from the response
+        const message = response.guidance.message || "I'm processing your request.";
+        const messageId = response.messageId || 'latest';
         
-        let response;
+        let responseHTML = `
+          <div class="mb-4" data-message-id="${messageId}" data-session-id="${response.sessionId || ''}">
+            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+              <p>${message}</p>
+        `;
         
-        // Try to use StellaIntegration if available
-        if (window.StellaIntegration && window.StellaIntegration.isInitialized) {
-          console.log('🔍 Using StellaIntegration...');
-          
-          // Connect if not already connected
-          if (!window.StellaIntegration.isConnected) {
-            await window.StellaIntegration.connect(userId);
-          }
-          
-          // Ask STELLA through integration
-          response = await window.StellaIntegration.askQuestion(question, {
-            userId: userId,
-            exerciseId: exerciseId,
-            conversationHistory: conversationHistory
+        // Add action items if available
+        if (response.guidance.actionItems && response.guidance.actionItems.length > 0) {
+          responseHTML += `<ul class="mt-3 space-y-2">`;
+          response.guidance.actionItems.forEach(item => {
+            responseHTML += `<li class="text-blue-300">• ${item}</li>`;
           });
-        } else {
-          // Direct API call if integration not available
-          console.log('🔍 StellaIntegration not available, using direct API call...');
-          
-          const apiResponse = await fetch('/api/stella/guidance', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              userId: userId,
-              question: question,
-              exerciseId: exerciseId,
-              conversationHistory: conversationHistory
-            })
-          });
-          
-          if (!apiResponse.ok) {
-            throw new Error(`Failed to get STELLA response: ${apiResponse.status}`);
-          }
-          
-          response = await apiResponse.json();
+          responseHTML += `</ul>`;
         }
         
-        // Handle response
-        console.log('✅ STELLA response:', response);
-        
-        // Remove loading indicator
-        document.getElementById('stella-loading')?.remove();
-        
-        if (response.success && response.guidance) {
-          // Parse guidance from the response
-          const message = response.guidance.message || "I'm processing your request.";
-          let responseHTML = `
-            <div class="mb-4">
-              <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-                <p>${message}</p>
-          `;
-          
-          // Add action items if available
-          if (response.guidance.actionItems && response.guidance.actionItems.length > 0) {
-            responseHTML += `<ul class="mt-3 space-y-2">`;
-            response.guidance.actionItems.forEach(item => {
-              responseHTML += `<li class="text-blue-300">• ${item}</li>`;
-            });
-            responseHTML += `</ul>`;
-          }
-          
-          // Close containers
-          responseHTML += `
-              </div>
+        // Close message container
+        responseHTML += `
             </div>
-          `;
-          
-          // Add to conversation
-          stellaConversation.innerHTML += responseHTML;
-        } else {
-          // Fallback response
-          stellaConversation.innerHTML += `
-            <div class="mb-4">
-              <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-                <p>I'm having trouble processing your request. Could you please try again?</p>
-              </div>
+            <div class="flex justify-end mt-1 space-x-2 text-xs">
+              <button class="text-gray-500 hover:text-green-500 feedback-btn" data-value="helpful">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017a2 2 0 01-1.865-1.71l-.745-4.47a2 2 0 011.865-2.29H14z" />
+                </svg>
+              </button>
+              <button class="text-gray-500 hover:text-red-500 feedback-btn" data-value="not-helpful">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.866.1l.745 4.47a2 2 0 01-1.865 2.29H10z" />
+                </svg>
+              </button>
             </div>
-          `;
-        }
-      } catch (error) {
-        console.error('❌ STELLA error:', error);
+          </div>
+        `;
         
-        // Remove loading indicator
-        document.getElementById('stella-loading')?.remove();
-        
-        // Fall back to local responses if API fails
-        const localResponse = getLocalStellaResponse(question);
-        
+        // Add to conversation
+        stellaConversation.innerHTML += responseHTML;
+      } else {
+        // Fallback response
         stellaConversation.innerHTML += `
           <div class="mb-4">
             <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-              <p>${localResponse}</p>
+              <p>I'm having trouble processing your request. Could you please try again?</p>
             </div>
           </div>
         `;
       }
+    } catch (error) {
+      console.error('❌ STELLA error:', error);
       
-      // Scroll to bottom regardless of outcome
-      stellaConversation.scrollTop = stellaConversation.scrollHeight;
+      // Remove loading indicator
+      document.getElementById('stella-loading')?.remove();
+      
+      // Fall back to local responses if API fails
+      const localResponse = getLocalStellaResponse(question);
+      
+      stellaConversation.innerHTML += `
+        <div class="mb-4">
+          <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+            <p>${localResponse}</p>
+          </div>
+        </div>
+      `;
     }
     
-    // Backup static responses if API fails
-    function getLocalStellaResponse(question) {
-      // Convert question to lowercase for easier matching
-      const lowerQuestion = question.toLowerCase();
-      
-      // Check for common question patterns
-      if (lowerQuestion.includes('hello') || lowerQuestion.includes('hi')) {
-        return "Hello! I'm STELLA, your AI assistant for Mission Control. How can I help you today?";
-      }
-      
-      if (lowerQuestion.includes('assessment') || lowerQuestion.includes('test')) {
-        return "Our assessments help tailor your space training program. The initial assessment is required before starting specialized training modules. Would you like to begin?";
-      }
-      
-      if (lowerQuestion.includes('physical') || lowerQuestion.includes('train')) {
-        return "Physical training is essential for space missions. It includes exercises for core strength, balance, endurance, and flexibility - all critical for zero gravity environments.";
-      }
-      
-      if (lowerQuestion.includes('start') || lowerQuestion.includes('begin')) {
-        return "Yes, you're ready to begin your training! Click one of these options to get started: Start Assessment - Begin with a personalized evaluation (recommended for new trainees), Physical Training - Jump straight into physical conditioning exercises, or Technical Skills - Start with technical knowledge modules.";
-      }
-      
-      if (lowerQuestion.includes('mission') || lowerQuestion.includes('module')) {
-        return "Mission Control tracks your progress through training modules. You'll need to complete your initial assessment to unlock mission-specific training paths.";
-      }
-      
-      if (lowerQuestion.includes('countdown') || lowerQuestion.includes('timeline')) {
-        return "Your space readiness countdown shows your estimated timeline to space. Complete assessments and training modules to accelerate your timeline.";
-      }
-      
-      // Default response if no patterns match
-      return "I'm here to help you navigate Mission Control. You can ask me about assessments, your space readiness timeline, or any aspect of your training program.";
+    // Scroll to bottom regardless of outcome
+    stellaConversation.scrollTop = stellaConversation.scrollHeight;
+  }
+  
+  // Backup static responses if API fails
+  function getLocalStellaResponse(question) {
+    // Convert question to lowercase for easier matching
+    const lowerQuestion = question.toLowerCase();
+    
+    // Check for common question patterns
+    if (lowerQuestion.includes('hello') || lowerQuestion.includes('hi')) {
+      return "Hello! I'm STELLA, your AI assistant for Mission Control. How can I help you today?";
     }
     
-    // Set up quick action buttons
-    document.querySelectorAll('.mission-control-card button').forEach(button => {
-      if (button.id !== 'send-to-stella') {
-        button.addEventListener('click', function() {
-          const action = this.textContent.trim();
-          newStellaInput.value = `Tell me about ${action}`;
-          handleStellaMessage();
-        });
-      }
+    if (lowerQuestion.includes('assessment') || lowerQuestion.includes('test')) {
+      return "Our assessments help tailor your space training program. The initial assessment is required before starting specialized training modules. Would you like to begin?";
+    }
+    
+    if (lowerQuestion.includes('physical') || lowerQuestion.includes('train')) {
+      return "Physical training is essential for space missions. It includes exercises for core strength, balance, endurance, and flexibility - all critical for zero gravity environments.";
+    }
+    
+    if (lowerQuestion.includes('start') || lowerQuestion.includes('begin')) {
+      return "Yes, you're ready to begin your training! Click one of these options to get started: Start Assessment - Begin with a personalized evaluation (recommended for new trainees), Physical Training - Jump straight into physical conditioning exercises, or Technical Skills - Start with technical knowledge modules.";
+    }
+    
+    if (lowerQuestion.includes('mission') || lowerQuestion.includes('module')) {
+      return "Mission Control tracks your progress through training modules. You'll need to complete your initial assessment to unlock mission-specific training paths.";
+    }
+    
+    if (lowerQuestion.includes('countdown') || lowerQuestion.includes('timeline')) {
+      return "Your space readiness countdown shows your estimated timeline to space. Complete assessments and training modules to accelerate your timeline.";
+    }
+    
+    // Default response if no patterns match
+    return "I'm here to help you navigate Mission Control. You can ask me about assessments, your space readiness timeline, or any aspect of your training program.";
+  }
+  
+  // Add the feedback handler function
+  function handleFeedback(messageId, isHelpful, sessionId) {
+    // Send feedback to the server to help STELLA learn
+    fetch('/api/stella/feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous',
+        messageId: messageId,
+        sessionId: sessionId,
+        helpful: isHelpful,
+        feedbackText: null,
+        rating: isHelpful ? 5 : 1
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('✅ STELLA feedback recorded:', data);
+    })
+    .catch(error => {
+      console.error('❌ Error recording STELLA feedback:', error);
     });
+  }
+  
+  // Add event listeners for feedback buttons
+  document.addEventListener('click', function(e) {
+    const button = e.target.closest('.feedback-btn');
+    if (button) {
+      const isHelpful = button.dataset.value === 'helpful';
+      const messageContainer = button.closest('.mb-4');
+      const messageId = messageContainer.dataset.messageId || 'latest';
+      const sessionId = messageContainer.dataset.sessionId || '';
+      
+      // Visual feedback
+      button.classList.remove('text-gray-500');
+      button.classList.add(isHelpful ? 'text-green-500' : 'text-red-500');
+      
+      // Send feedback to server
+      handleFeedback(messageId, isHelpful, sessionId);
+      
+      // Disable both buttons after selection
+      const buttons = messageContainer.querySelectorAll('.feedback-btn');
+      buttons.forEach(b => {
+        b.disabled = true;
+        if (b !== button) {
+          b.classList.add('opacity-30');
+        }
+      });
+    }
   });
+  
+  // Set up quick action buttons
+  document.querySelectorAll('.mission-control-card button').forEach(button => {
+    if (button.id !== 'send-to-stella') {
+      button.addEventListener('click', function() {
+        const action = this.textContent.trim();
+        newStellaInput.value = `Tell me about ${action}`;
+        handleStellaMessage();
+      });
+    }
+  });
+});
 </script>
 </body>
 </html>

@@ -243,6 +243,7 @@ try { enduranceRoutes = require('./routes/training/missions/endurance.js'); } ca
 try { flexibilityRoutes = require('./routes/training/missions/flexibility.js'); } catch (e) { console.error("❌ flexibilityRoutes:", e.message); }
 try { strengthRoutes = require('./routes/training/missions/strength.js'); } catch (e) { console.error("❌ strengthRoutes:", e.message); }
 try { stellaRoutes = require("./routes/api/stella-minimal"); } catch (e) { console.error("❌ stellaRoutes:", e.message); }
+
 // ============================
 // 6. DIRECT STELLA ROUTER SETUP
 // ============================
@@ -270,14 +271,48 @@ stellaDirectRouter.post('/connect', (req, res) => {
     message: "Connected to STELLA"
   });
 });
+
+// New endpoint for assessment status
+stellaDirectRouter.post('/assessment/status', (req, res) => {
+  const { userId, assessmentType } = req.body;
+  
+  // Mock response - in production, you'd check a database
+  res.json({
+    success: true,
+    completed: false,
+    lastCompleted: null,
+    nextAssessment: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+  });
+});
+
+// New endpoint for assessment completion
+stellaDirectRouter.post('/assessment/complete', (req, res) => {
+  const { userId, assessmentType, results } = req.body;
+  
+  // In production, you'd save this to a database
+  console.log(`Assessment completed for user ${userId}, type: ${assessmentType}`);
+  
+  res.json({
+    success: true,
+    message: "Assessment recorded successfully",
+    recommendations: [
+      "Focus on core stability exercises",
+      "Increase vestibular training frequency",
+      "Add balance challenge progressions"
+    ]
+  });
+});
+
+// Mount the correct STELLA routes
 if (stellaRoutes) {
   app.use("/api/stella", stellaRoutes);
   console.log("✅ STELLA routes mounted at /api/stella");
 } else {
-  // Only use direct router if import fails
+  // Use direct router if import fails
   app.use('/api/stella', stellaDirectRouter);
-  console.log("⚠️ Using fallback direct STELLA routes at /api/stella");
+  console.log("✅ Direct STELLA routes mounted at /api/stella");
 }
+
 // Enhanced STELLA guidance endpoint with OpenAI integration
 stellaDirectRouter.post('/guidance', async (req, res) => {
   try {
@@ -428,13 +463,10 @@ if (enduranceRoutes) app.use('/training/physical/mission/endurance', enduranceRo
 if (flexibilityRoutes) app.use('/training/physical/mission/flexibility', flexibilityRoutes);
 if (strengthRoutes) app.use('/training/physical/mission/strength', strengthRoutes);
 
-// Mount direct STELLA router - this one always works
-app.use('/api/stella', stellaDirectRouter);
-console.log("✅ Direct STELLA routes mounted at /api/stella");
-
 // ============================
 // 9. ADDITIONAL API ENDPOINTS
 // ============================
+// Physical training progress endpoint
 app.get('/api/training/physical', async (req, res) => {
   try {
     const progress = await getPhysicalTrainingProgress(req.session.user?.id || 'anonymous');
@@ -442,6 +474,69 @@ app.get('/api/training/physical', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to get physical training progress" });
   }
+});
+
+// Training progress data endpoint - resolves 404 errors with progressChart.js
+app.post('/api/training/progress', (req, res) => {
+  // Get userId from session or request body
+  const userId = req.session.user?.id || req.body.userId || 'anonymous';
+  
+  // Mock data - in production, you'd get this from a database
+  res.json({
+    success: true,
+    userId: userId,
+    analysis: 'Your training is progressing well. Focus on completing the Core & Balance assessment to unlock all sessions.',
+    moduleCompletion: {
+      'Core & Balance': 40,
+      'Endurance': 0,
+      'Strength': 0,
+      'Microgravity Coordination': 0
+    },
+    recommendations: [
+      'Complete the Core & Balance assessment',
+      'Practice vestibular adaptation exercises',
+      'Focus on core stability in daily activities'
+    ]
+  });
+});
+
+// Assessment status endpoint
+app.get('/api/assessment/status/:userId', (req, res) => {
+  const { userId } = req.params;
+  
+  // Mock data - in production, you'd check this in a database
+  res.json({
+    success: true,
+    userId: userId,
+    assessments: {
+      'mission-core-balance': false,
+      'mission-endurance': false,
+      'mission-strength': false
+    },
+    nextAssessmentDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+  });
+});
+
+// Assessment completion endpoint
+app.post('/api/assessment/complete', (req, res) => {
+  const { userId, assessmentType, results } = req.body;
+  
+  // In production, you'd save this to a database
+  console.log(`Assessment completed for user ${userId}, type: ${assessmentType}`);
+  
+  res.json({
+    success: true,
+    message: 'Assessment completed successfully',
+    assessmentType: assessmentType,
+    userId: userId,
+    completionDate: new Date().toISOString(),
+    progress: 40,
+    nextSteps: [
+      'Begin with Session 1 training exercises',
+      'Review your personalized training plan',
+      'Schedule your next assessment in 2 weeks'
+    ]
+  });
 });
 
 app.get('/api/auth/status', (req, res) => {
@@ -530,16 +625,23 @@ staticPages.forEach(({ route, file }) => {
 // ============================
 // 12. ERROR HANDLING
 // ============================
+// Error logging endpoint
+app.post('/api/errors/log', (req, res) => {
+  console.error('Client-side error:', req.body);
+  res.status(200).json({ status: 'error logged' });
+});
+
+// 404 handler
 app.use((req, res, next) => {
   console.log(`⚠️ 404 Not Found: ${req.originalUrl}`);
   res.status(404).json({ error: "Not Found", path: req.originalUrl });
 });
 
+// Generic error handler
 app.use((err, req, res, next) => {
   console.error("❌ Server Error:", err.message);
   res.status(500).json({ error: "Internal Server Error", message: err.message });
 });
-
 // ============================
 // 13. SERVER STARTUP
 // ============================
