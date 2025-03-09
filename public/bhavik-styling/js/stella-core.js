@@ -1,6 +1,8 @@
-Copy/**
+/**
  * STELLA Core - Space Training Enhancement and Learning Logic Assistant
- * Core AI functionality for the SharedStars training platform
+ * Advanced AI functionality for the SharedStars training platform
+ * 
+ * Version 2.0 - Enhanced with better space training guidance and robust fallbacks
  */
 
 // Only define the class if it doesn't already exist
@@ -20,23 +22,47 @@ if (!window.StellaCore) {
         inputSelector: '#stella-question',
         sendButtonSelector: '#send-to-stella',
         expandButtonSelector: '#expand-stella',
+        missionSelector: '#mission-progress-bar',
+        countdownSelector: '#space-countdown',
+        debugMode: false,
+        mockApi: true, // Use mock responses until backend is ready
         ...options
       };
       
       this.connected = false;
-      this.currentModuleType = document.querySelector('[data-module]')?.dataset.module || 'default';
+      this.currentModuleType = document.querySelector('[data-module]')?.dataset.module || 'physical';
+      this.currentMission = document.querySelector('[data-mission]')?.dataset.mission || 'core-balance';
+      
+      // Default space metrics
       this.sessionMetrics = {
         heartRate: 0,
-        o2Saturation: 0,
-        focusScore: 0,
+        o2Saturation: 98,
+        focusScore: 75,
         progressPercentage: 0,
-        balance: 0,
-        coreStability: 0,
-        endurance: 0
+        balance: 65,
+        coreStability: 70,
+        endurance: 60,
+        formQuality: 75,
+        vestibularAdaptation: 60,
+        missionProgress: 0
       };
+      
+      // Track guidance history
+      this.guidanceHistory = [];
+      
+      // Track user questions for learning
+      this.userQuestions = [];
+      
+      // Track offline mode status
+      this.offlineMode = false;
       
       // Initialize STELLA
       this.initialize();
+      
+      // Log initialization in debug mode
+      if (this.options.debugMode) {
+        console.log('STELLA Core initialized with options:', this.options);
+      }
     }
     
     /**
@@ -52,6 +78,11 @@ if (!window.StellaCore) {
       this.inputElement = document.querySelector(this.options.inputSelector);
       this.sendButton = document.querySelector(this.options.sendButtonSelector);
       this.expandButton = document.querySelector(this.options.expandButtonSelector);
+      this.missionProgressElement = document.querySelector(this.options.missionSelector);
+      this.countdownElement = document.querySelector(this.options.countdownSelector);
+      
+      // Load user questions from localStorage
+      this._loadUserQuestions();
       
       // Set up event listeners
       this._setupEventListeners();
@@ -64,11 +95,27 @@ if (!window.StellaCore) {
         .then(() => {
           this._updateStatus('connected');
           this._fetchUserInfo();
+          
+          // Initialize with a welcome message
+          this._showWelcomeMessage();
         })
         .catch(error => {
           console.error('Failed to connect to STELLA backend:', error);
           this._updateStatus('error');
+          this.offlineMode = true;
+          
+          // Still show welcome message in offline mode
+          this._showWelcomeMessage();
         });
+        
+      // Register global STELLA instance
+      window.STELLA = this;
+      
+      // Listen for training events
+      document.addEventListener('mission-progress-update', (e) => this._handleMissionProgressUpdate(e.detail));
+      document.addEventListener('exercise-completed', (e) => this._handleExerciseCompleted(e.detail));
+      document.addEventListener('session-started', (e) => this._handleSessionStarted(e.detail));
+      document.addEventListener('session-completed', (e) => this._handleSessionCompleted(e.detail));
     }
     
     /**
@@ -79,49 +126,79 @@ if (!window.StellaCore) {
      */
     async getGuidance(activity, metrics = {}) {
       try {
+        // Log request in debug mode
+        if (this.options.debugMode) {
+          console.log(`Getting guidance for ${activity} with metrics:`, metrics);
+        }
+        
         // Merge current session metrics with provided metrics
         const combinedMetrics = {
           ...this.sessionMetrics,
           ...metrics
         };
         
-        // For MVP, we'll mock the API call
-        if (this.options.mockApi !== false) {
+        // Update stored metrics
+        this.sessionMetrics = combinedMetrics;
+        
+        // For MVP or offline mode, use mock guidance
+        if (this.options.mockApi !== false || this.offlineMode) {
           return this._getMockGuidance(activity, combinedMetrics);
         }
         
-        // Call backend API for guidance
-        const response = await fetch('/api/ai/guidance', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            activity,
-            metrics: combinedMetrics
-          })
-        });
+        // Add retry logic for API calls
+        let attempts = 0;
+        const maxAttempts = 3;
         
-        if (!response.ok) {
-          throw new Error(`Failed to get guidance: ${response.status}`);
+        while (attempts < maxAttempts) {
+          try {
+            // Call backend API for guidance
+            const response = await fetch('/api/ai/guidance', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                activity,
+                metrics: combinedMetrics,
+                module: this.currentModuleType,
+                mission: this.currentMission
+              })
+            });
+            
+            if (!response.ok) {
+              throw new Error(`Failed to get guidance: ${response.status}`);
+            }
+            
+            const guidance = await response.json();
+            
+            // Store guidance in history
+            this._addToGuidanceHistory(activity, guidance);
+            
+            // Update UI with guidance
+            this._updateGuidance(guidance);
+            
+            // Dispatch guidance event
+            this._dispatchGuidanceEvent(guidance);
+            
+            return guidance;
+          } catch (error) {
+            attempts++;
+            if (attempts >= maxAttempts) {
+              throw error;
+            }
+            // Wait before retry (exponential backoff)
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+          }
         }
-        
-        const guidance = await response.json();
-        
-        // Update UI with guidance
-        this._updateGuidance(guidance);
-        
-        // Dispatch guidance event
-        this._dispatchGuidanceEvent(guidance);
-        
-        return guidance;
       } catch (error) {
         console.error('Error getting STELLA guidance:', error);
+        this.offlineMode = true;
         
         // Fallback guidance
         const fallbackGuidance = {
-          message: 'Focus on maintaining proper form and breathing during this exercise.',
-          actionItems: ['Monitor your breathing', 'Maintain proper posture']
+          message: 'I\'m currently operating in offline mode. Focus on maintaining proper form and steady breathing during your exercises.',
+          actionItems: ['Monitor your breathing', 'Maintain proper posture', 'Stay hydrated'],
+          source: 'fallback'
         };
         
         this._updateGuidance(fallbackGuidance);
@@ -137,43 +214,80 @@ if (!window.StellaCore) {
      * @returns {Promise<String>} STELLA's response
      */
     async askQuestion(question) {
-      if (!question.trim()) {
+      if (!question || !question.trim()) {
         return null;
       }
+      
+      // Track question for analysis
+      this._trackUserQuestion(question);
       
       try {
         // Add user question to conversation UI
         this._addMessageToConversation(question, 'user');
         
-        // For MVP, use mock responses
-        if (this.options.mockApi !== false) {
-          return this._getMockResponse(question);
+        // Update status to show we're processing
+        this._updateStatus('busy');
+        
+        // For MVP or offline mode, use mock responses
+        if (this.options.mockApi !== false || this.offlineMode) {
+          // Add a small delay to simulate processing
+          await new Promise(resolve => setTimeout(resolve, 800));
+          
+          const response = this._getMockResponse(question);
+          this._updateStatus('connected');
+          return response;
         }
         
-        // Real API call
-        const response = await fetch('/api/ai/ask', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ question })
-        });
+        // Real API call with retry logic
+        let attempts = 0;
+        const maxAttempts = 3;
         
-        if (!response.ok) {
-          throw new Error(`Failed to get response: ${response.status}`);
+        while (attempts < maxAttempts) {
+          try {
+            const response = await fetch('/api/ai/ask', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 
+                question,
+                context: {
+                  module: this.currentModuleType,
+                  mission: this.currentMission,
+                  metrics: this.sessionMetrics
+                }
+              })
+            });
+            
+            if (!response.ok) {
+              throw new Error(`Failed to get response: ${response.status}`);
+            }
+            
+            const { answer } = await response.json();
+            
+            // Add STELLA's response to conversation UI
+            this._addMessageToConversation(answer, 'stella');
+            
+            // Update status back to connected
+            this._updateStatus('connected');
+            
+            return answer;
+          } catch (error) {
+            attempts++;
+            if (attempts >= maxAttempts) {
+              throw error;
+            }
+            // Wait before retry
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+          }
         }
-        
-        const { answer } = await response.json();
-        
-        // Add STELLA's response to conversation UI
-        this._addMessageToConversation(answer, 'stella');
-        
-        return answer;
       } catch (error) {
         console.error('Error asking STELLA:', error);
+        this.offlineMode = true;
+        this._updateStatus('error');
         
         // Fallback response
-        const fallbackResponse = "I apologize, but I'm having trouble processing your question right now. Let's focus on your training for now, and I'll be fully operational soon.";
+        const fallbackResponse = "I'm currently operating in offline mode, but I can still assist with your training. Let's focus on your current mission objectives while my connection is restored.";
         this._addMessageToConversation(fallbackResponse, 'stella');
         
         return fallbackResponse;
@@ -185,13 +299,63 @@ if (!window.StellaCore) {
      * @param {Object} metrics - Updated metrics
      */
     updateMetrics(metrics) {
+      if (!metrics) return;
+      
+      // Log in debug mode
+      if (this.options.debugMode) {
+        console.log('Updating STELLA metrics:', metrics);
+      }
+      
+      // Update stored metrics
       this.sessionMetrics = {
         ...this.sessionMetrics,
         ...metrics
       };
       
+      // Update mission progress if provided
+      if (metrics.missionProgress !== undefined && this.missionProgressElement) {
+        this.missionProgressElement.style.width = `${metrics.missionProgress}%`;
+      }
+      
+      // Update countdown if provided
+      if (metrics.countdown !== undefined && this.countdownElement) {
+        this.countdownElement.textContent = `${metrics.countdown} Days`;
+      }
+      
       // Dispatch metrics update event
       this._dispatchMetricsEvent(this.sessionMetrics);
+      
+      // Trigger guidance update based on new metrics if significant changes
+      if (this._shouldTriggerGuidance(metrics)) {
+        this.getGuidance('metrics-update', this.sessionMetrics);
+      }
+    }
+    
+    /**
+     * Determine if a guidance update should be triggered based on metric changes
+     * @private
+     * @param {Object} newMetrics - The updated metrics
+     * @returns {Boolean} Whether guidance should be triggered
+     */
+    _shouldTriggerGuidance(newMetrics) {
+      // Trigger on significant heart rate change
+      if (newMetrics.heartRate && Math.abs(newMetrics.heartRate - (this.sessionMetrics.heartRate || 0)) > 15) {
+        return true;
+      }
+      
+      // Trigger on significant form quality change
+      if (newMetrics.formQuality && Math.abs(newMetrics.formQuality - (this.sessionMetrics.formQuality || 0)) > 10) {
+        return true;
+      }
+      
+      // Trigger on mission progress milestones
+      if (newMetrics.missionProgress && 
+          Math.floor(newMetrics.missionProgress / 25) > 
+          Math.floor((this.sessionMetrics.missionProgress || 0) / 25)) {
+        return true;
+      }
+      
+      return false;
     }
     
     /**
@@ -213,12 +377,203 @@ if (!window.StellaCore) {
     }
     
     /**
+     * Get personalized recommendations based on user data
+     * @param {Object} userData - User data for personalization
+     * @returns {Object} Personalized recommendations
+     */
+    getPersonalizedRecommendations(userData = {}) {
+      // Combined user data with session metrics
+      const combinedData = {
+        ...this.sessionMetrics,
+        ...userData
+      };
+      
+      return {
+        focusAreas: [
+          'Vestibular adaptation training',
+          'Upper body strength for EVA readiness',
+          'Core stability for microgravity adaptation'
+        ],
+        nextModules: [
+          { id: 'vestibular-04', name: 'Advanced Vestibular Training', priority: 'high' },
+          { id: 'strength-07', name: 'EVA-Specific Strength Development', priority: 'medium' },
+          { id: 'core-05', name: 'Microgravity Core Stabilization', priority: 'medium' }
+        ],
+        nutritionTips: [
+          'Increase calcium intake to support bone density',
+          'Optimize protein timing around resistance training',
+          'Ensure adequate hydration for vestibular sessions'
+        ],
+        recoveryStrategies: [
+          'Contrast therapy post-session',
+          'Vestibular reset exercises before sleep',
+          'Full recovery day post Module 3.2'
+        ]
+      };
+    }
+    
+    /**
+     * Analyze a training session
+     * @param {Object} sessionData - Training session data
+     * @returns {Object} Session analysis
+     */
+    analyzeTrainingSession(sessionData = {}) {
+      const strengthScore = (sessionData.formQuality || 70) * 0.4 + (sessionData.intensity || 65) * 0.6;
+      const enduranceScore = (sessionData.heartRateControl || 75) * 0.5 + (sessionData.durationPercentage || 80) * 0.5;
+      const balanceScore = (sessionData.stabilityMetrics || 65) * 0.7 + (sessionData.adaptationRate || 60) * 0.3;
+    
+      return {
+        overallScore: Math.round((strengthScore + enduranceScore + balanceScore) / 3),
+        strengths: [
+          strengthScore > 75 ? 'Excellent form maintenance' : null,
+          enduranceScore > 75 ? 'Strong cardiovascular performance' : null,
+          balanceScore > 75 ? 'Superior vestibular adaptation' : null
+        ].filter(Boolean),
+        improvementAreas: [
+          strengthScore < 70 ? 'Focus on consistent form during fatigue' : null,
+          enduranceScore < 70 ? 'Work on heart rate recovery between intervals' : null,
+          balanceScore < 70 ? 'Increase duration of vestibular challenges' : null
+        ].filter(Boolean),
+        recommendations: [
+          'Increase hydration during similar future sessions',
+          'Consider adding 5 minutes to your cool-down protocol',
+          strengthScore < enduranceScore ? 'Prioritize resistance training in next session' : 'Maintain training balance'
+        ]
+      };
+    }
+    
+    /**
+     * Handle mission progress updates
+     * @private
+     * @param {Object} detail - Progress update details
+     */
+    _handleMissionProgressUpdate(detail) {
+      if (!detail) return;
+      
+      // Log in debug mode
+      if (this.options.debugMode) {
+        console.log('Mission progress update:', detail);
+      }
+      
+      // Update metrics
+      this.updateMetrics({
+        missionProgress: detail.progress || 0
+      });
+      
+      // If significant progress milestone, provide guidance
+      if (detail.progress && (detail.progress === 25 || detail.progress === 50 || detail.progress === 75 || detail.progress === 100)) {
+        this.getGuidance('progress-milestone', {
+          progress: detail.progress,
+          milestone: Math.floor(detail.progress / 25)
+        });
+      }
+    }
+    
+    /**
+     * Handle exercise completed events
+     * @private
+     * @param {Object} detail - Exercise details
+     */
+    _handleExerciseCompleted(detail) {
+      if (!detail) return;
+      
+      // Log in debug mode
+      if (this.options.debugMode) {
+        console.log('Exercise completed:', detail);
+      }
+      
+      // Get exercise-specific guidance
+      this.getGuidance('exercise-completed', {
+        exerciseId: detail.id,
+        duration: detail.duration,
+        performance: detail.performance || 'good'
+      });
+    }
+    
+    /**
+     * Handle session started events
+     * @private
+     * @param {Object} detail - Session details
+     */
+    _handleSessionStarted(detail) {
+      if (!detail) return;
+      
+      // Log in debug mode
+      if (this.options.debugMode) {
+        console.log('Session started:', detail);
+      }
+      
+      // Get session start guidance
+      this.getGuidance('session-start', {
+        sessionId: detail.id,
+        sessionType: detail.type
+      });
+    }
+    
+    /**
+     * Handle session completed events
+     * @private
+     * @param {Object} detail - Session details
+     */
+    _handleSessionCompleted(detail) {
+      if (!detail) return;
+      
+      // Log in debug mode
+      if (this.options.debugMode) {
+        console.log('Session completed:', detail);
+      }
+      
+      // Get session end guidance
+      this.getGuidance('session-end', {
+        sessionId: detail.id,
+        sessionDuration: detail.duration,
+        sessionEffectiveness: detail.effectiveness || 85,
+        exercisesCompleted: detail.exercisesCompleted || []
+      });
+    }
+    
+    /**
+     * Show welcome message based on context
+     * @private
+     */
+    _showWelcomeMessage() {
+      // Determine context-appropriate welcome message
+      let welcomeMessage;
+      
+      switch (this.currentModuleType) {
+        case 'physical':
+          welcomeMessage = "Welcome to your Physical Training module. I'm STELLA, your space training AI assistant. I'll guide you through exercises that prepare your body for the unique challenges of microgravity environments.";
+          break;
+        case 'technical':
+          welcomeMessage = "Welcome to Technical Training. I'll assist you in mastering the critical technical skills required for spacecraft operations and emergency procedures.";
+          break;
+        case 'mental':
+          welcomeMessage = "Welcome to Mental Fitness training. I'll guide you through cognitive exercises designed to enhance your decision-making, stress management, and mental resilience in space.";
+          break;
+        default:
+          welcomeMessage = "Welcome to SharedStars Academy. I'm STELLA, your AI training assistant. I'll guide your preparation for space through personalized training and real-time feedback.";
+      }
+      
+      // Only show if guidance element exists
+      if (this.guidanceElement) {
+        this._updateGuidance({
+          message: welcomeMessage,
+          actionItems: [
+            "Complete your initial assessment",
+            "Follow the training sequence for optimal results",
+            "Ask me questions anytime during your training"
+          ]
+        });
+      }
+    }
+    
+    /**
      * PRIVATE: Set up event listeners
      * @private
      */
     _setupEventListeners() {
       // Send button click
-      if (this.sendButton) {
+      if (this.sendButton && this.inputElement) {
         this.sendButton.addEventListener('click', () => {
           const question = this.inputElement.value.trim();
           if (question) {
@@ -271,6 +626,16 @@ if (!window.StellaCore) {
           }
         });
       }
+      
+      // Quick guidance buttons
+      document.querySelectorAll('[data-stella-guidance]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const guidanceType = btn.dataset.stellaGuidance;
+          if (guidanceType) {
+            this.getGuidance(guidanceType);
+          }
+        });
+      });
     }
     
     /**
@@ -365,10 +730,17 @@ if (!window.StellaCore) {
           }
           break;
         case 'error':
-        default:
           this.statusElement.classList.add('bg-red-500');
           if (this.messageElement) {
-            this.messageElement.innerHTML = 'STELLA: <span class="text-red-400">Connection error</span>';
+            this.messageElement.innerHTML = this.offlineMode 
+              ? 'STELLA: <span class="text-red-400">Offline mode</span>'
+              : 'STELLA: <span class="text-red-400">Connection error</span>';
+          }
+          break;
+        default:
+          this.statusElement.classList.add('bg-blue-500');
+          if (this.messageElement) {
+            this.messageElement.innerHTML = 'STELLA: <span class="text-blue-400">Standing by</span>';
           }
           break;
       }
@@ -431,6 +803,41 @@ if (!window.StellaCore) {
     }
     
     /**
+     * PRIVATE: Add guidance to history
+     * @private
+     */
+    _addToGuidanceHistory(activity, guidance) {
+      this.guidanceHistory.push({
+        timestamp: new Date().toISOString(),
+        activity,
+        guidance
+      });
+      
+      // Keep history limited to most recent 50 items
+      if (this.guidanceHistory.length > 50) {
+        this.guidanceHistory = this.guidanceHistory.slice(-50);
+      }
+    }
+    
+    /**
+     * PRIVATE: Load user questions from localStorage
+     * @private
+     */
+    _loadUserQuestions() {
+      if (window.localStorage) {
+        try {
+          const storedQuestions = localStorage.getItem('stella_user_questions');
+          if (storedQuestions) {
+            this.userQuestions = JSON.parse(storedQuestions);
+          }
+        } catch (error) {
+          console.warn('Error loading user questions:', error);
+          this.userQuestions = [];
+        }
+      }
+    }
+    
+    /**
      * PRIVATE: Dispatch a guidance event
      * @private
      */
@@ -453,6 +860,49 @@ if (!window.StellaCore) {
     }
     
     /**
+     * PRIVATE: Track user questions to improve STELLA's responses
+     * @param {String} question - User's question
+     * @private
+     */
+    _trackUserQuestion(question) {
+      // Store in memory
+      this.userQuestions.push({
+        question,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Keep only last 50 questions in memory
+      if (this.userQuestions.length > 50) {
+        this.userQuestions = this.userQuestions.slice(-50);
+      }
+      
+      // Store in localStorage if available
+      if (window.localStorage) {
+        try {
+          localStorage.setItem('stella_user_questions', JSON.stringify(this.userQuestions));
+        } catch (error) {
+          console.warn('Error storing user question:', error);
+        }
+      }
+      
+      // In a real implementation, would also send to backend for learning
+      if (!this.offlineMode && !this.options.mockApi) {
+        // Attempt to send to backend but don't await response
+        fetch('/api/ai/track-question', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ question })
+        }).catch(err => {
+          // Silently fail - this is non-critical
+          if (this.options.debugMode) {
+            console.warn('Failed to send question to learning system:', err);
+          }
+        });
+      }
+    }
+    /**
      * PRIVATE: Get mock guidance based on activity type
      * @private
      * @param {String} activity - Type of activity
@@ -460,542 +910,365 @@ if (!window.StellaCore) {
      * @returns {Object} Guidance object with message and actionItems
      */
     _getMockGuidance(activity, metrics = {}) {
-        // First check if the user has specific needs based on their metrics
-        if (metrics.heartRate && metrics.heartRate > 160) {
+      // First check if the user has specific needs based on their metrics
+      if (metrics.heartRate && metrics.heartRate > 160) {
+        return {
+          message: 'Your heart rate is elevated. Consider taking a short recovery break to bring it down to a more sustainable level.',
+          actionItems: [
+            'Focus on deep, controlled breathing',
+            'Hydrate adequately',
+            'Reduce intensity until heart rate stabilizes'
+          ],
+          priority: 'high'
+        };
+      }
+      
+      if (metrics.formQuality && metrics.formQuality < 70) {
+        return {
+          message: 'I\'ve detected some form inconsistencies. Let\'s focus on technique before increasing intensity.',
+          actionItems: [
+            'Slow down your movements for better control',
+            'Focus on proper alignment in each position',
+            'Consider reducing resistance/weight to master form first'
+          ],
+          priority: 'medium'
+        };
+      }
+
+      // Activity-specific guidance
+      switch (activity) {
+        case 'balance':
           return {
-            message: 'Your heart rate is elevated. Consider taking a short recovery break to bring it down to a more sustainable level.',
+            message: 'I\'m monitoring your balance training. Focus on engaging your core muscles and maintaining stability throughout each exercise.',
             actionItems: [
-              'Focus on deep, controlled breathing',
-              'Hydrate adequately',
-              'Reduce intensity until heart rate stabilizes'
+              'Keep your spine neutral during planks',
+              'Breathe steadily and deeply',
+              'Engage your core throughout all exercises'
             ],
-            priority: 'high'
+            priority: 'normal'
           };
-        }
-        
-        if (metrics.formQuality && metrics.formQuality < 70) {
+          
+        case 'endurance':
+          // Personalize based on user's current endurance metrics
+          const enduranceLevel = metrics.endurance || 50;
+          const heartRateStatus = metrics.heartRate ? (metrics.heartRate < 140 ? 'below target' : metrics.heartRate > 150 ? 'above target' : 'on target') : 'unknown';
+          
           return {
-            message: 'I\'ve detected some form inconsistencies. Let\'s focus on technique before increasing intensity.',
+            message: `I'm monitoring your cardiovascular metrics. Your endurance level is ${enduranceLevel}% and heart rate is ${heartRateStatus}. ${heartRateStatus === 'on target' ? 'Maintain this pace for optimal training.' : 'Adjust your intensity to reach your target zone.'}`,
             actionItems: [
-              'Slow down your movements for better control',
-              'Focus on proper alignment in each position',
-              'Consider reducing resistance/weight to master form first'
+              'Maintain a steady breathing pattern',
+              'Stay hydrated throughout your session',
+              'Monitor your heart rate recovery between intervals'
             ],
-            priority: 'medium'
+            priority: heartRateStatus === 'above target' ? 'medium' : 'normal'
           };
-        }
-  
-        // Activity-specific guidance
-        switch (activity) {
-          case 'balance':
-            return {
-              message: 'I\'m monitoring your balance training. Focus on engaging your core muscles and maintaining stability throughout each exercise.',
-              actionItems: [
-                'Keep your spine neutral during planks',
-                'Breathe steadily and deeply',
-                'Engage your core throughout all exercises'
-              ],
-              priority: 'normal'
-            };
-            
-          case 'endurance':
-            // Personalize based on user's current endurance metrics
-            const enduranceLevel = metrics.endurance || 50;
-            const heartRateStatus = metrics.heartRate ? (metrics.heartRate < 140 ? 'below target' : metrics.heartRate > 150 ? 'above target' : 'on target') : 'unknown';
-            
-            return {
-              message: `I'm monitoring your cardiovascular metrics. Your endurance level is ${enduranceLevel}% and heart rate is ${heartRateStatus}. ${heartRateStatus === 'on target' ? 'Maintain this pace for optimal training.' : 'Adjust your intensity to reach your target zone.'}`,
-              actionItems: [
-                'Maintain a steady breathing pattern',
-                'Stay hydrated throughout your session',
-                'Monitor your heart rate recovery between intervals'
-              ],
-              priority: heartRateStatus === 'above target' ? 'medium' : 'normal'
-            };
-            
-          case 'exercise':
-            const exerciseId = metrics.exerciseId || '';
-            switch (exerciseId) {
-              case 'planks':
-                return {
-                  message: 'For plank exercises, focus on maintaining a straight line from head to heels. Don\'t let your hips sag.',
-                  actionItems: [
-                    'Engage your core by pulling your belly button toward your spine',
-                    'Keep your neck in a neutral position',
-                    'Distribute your weight evenly'
-                  ],
-                  priority: 'normal',
-                  relatedExercises: ['side-planks', 'dynamic-planks']
-                };
-                
-              case 'stability-ball':
-                return {
-                  message: 'Stability ball exercises improve core engagement and proprioception. Focus on controlled movements.',
-                  actionItems: [
-                    'Move slowly and deliberately',
-                    'Keep your core engaged throughout the exercise',
-                    'Focus on balance rather than speed'
-                  ],
-                  priority: 'normal',
-                  relatedExercises: ['bosu-balance', 'swiss-ball-pikes']
-                };
-                
-              case 'single-leg':
-                return {
-                  message: 'Single-leg exercises are excellent for improving balance and stability. Focus on a fixed point to maintain balance.',
-                  actionItems: [
-                    'Engage your core for better stability',
-                    'Keep your standing knee slightly bent',
-                    'Focus your gaze on a fixed point'
-                  ],
-                  priority: 'normal',
-                  relatedExercises: ['single-leg-deadlift', 'pistol-squats']
-                };
-                
-              case 'zero-g-adaptation':
-                return {
-                  message: 'Zero-G adaptation exercises help prepare your vestibular system for microgravity conditions. These are critical for preventing space sickness.',
-                  actionItems: [
-                    'Complete the full range of head movements slowly',
-                    'If dizziness occurs, pause briefly then continue',
-                    'Gradually increase duration with each session'
-                  ],
-                  priority: 'high',
-                  relatedExercises: ['vestibular-habituation', 'rotation-training']
-                };
-                
-              case 'resistance-training':
-                return {
-                  message: 'Resistance training is vital for maintaining muscle mass during space missions. Focus on compound movements that engage multiple muscle groups.',
-                  actionItems: [
-                    'Maintain controlled eccentric (lowering) phases',
-                    'Focus on time under tension rather than repetitions',
-                    'Ensure balanced development of antagonist muscle groups'
-                  ],
-                  priority: 'normal',
-                  relatedExercises: ['squats', 'pull-ups', 'bench-press']
-                };
-                
-              default:
-                return {
-                  message: 'I\'m monitoring your form and performance. Focus on maintaining proper technique throughout this exercise.',
-                  actionItems: [
-                    'Maintain proper breathing',
-                    'Focus on quality over quantity',
-                    'Pay attention to form'
-                  ],
-                  priority: 'normal'
-                };
+          
+        case 'exercise':
+          const exerciseId = metrics.exerciseId || '';
+          switch (exerciseId) {
+            case 'planks':
+              return {
+                message: 'For plank exercises, focus on maintaining a straight line from head to heels. This position is crucial for EVA operations when you need to maintain position against reaction forces.',
+                actionItems: [
+                  'Engage your core by pulling your belly button toward your spine',
+                  'Keep your neck in a neutral position - imagine your space helmet position',
+                  'Distribute your weight evenly as you would in a balanced EVA position'
+                ],
+                priority: 'normal',
+                relatedExercises: ['side-planks', 'dynamic-planks']
+              };
+              
+            case 'stability-ball':
+              return {
+                message: 'Stability ball exercises mimic the constant adjustments needed in microgravity. Focus on controlled movements and core engagement.',
+                actionItems: [
+                  'Move slowly and deliberately as you would during in-space operations',
+                  'Maintain awareness of your entire body position',
+                  'Practice small corrections - essential for station keeping in EVA'
+                ],
+                priority: 'normal',
+                relatedExercises: ['bosu-balance', 'swiss-ball-pikes']
+              };
+              
+            case 'single-leg':
+              return {
+                message: 'Single-leg exercises train your vestibular system to maintain orientation without normal gravity cues - critical for spacewalks.',
+                actionItems: [
+                  'Focus on a fixed point like you would on a spacecraft reference point',
+                  'Practice smooth transitions between positions',
+                  'Maintain awareness of your center of gravity'
+                ],
+                priority: 'normal',
+                relatedExercises: ['single-leg-deadlift', 'pistol-squats']
+              };
+              
+            case 'hollow-hold':
+              return {
+                message: 'The hollow hold position trains the same core muscles used to maintain body position during launch and reentry. Note how this engages your entire anterior chain.',
+                actionItems: [
+                  'Press your lower back into the floor throughout the exercise',
+                  'Keep your shoulders slightly lifted but relaxed',
+                  'Maintain consistent breathing pattern - essential during high-G phases'
+                ],
+                priority: 'high',
+                relatedExercises: ['v-ups', 'tuck-holds']
+              };
+              
+            case 'rotation-training':
+              return {
+                message: 'Rotational exercises prepare your vestibular system for the disorientation many astronauts experience in microgravity. The space station has no fixed "up" or "down".',
+                actionItems: [
+                  'Move through each rotation slowly at first, then increase speed',
+                  'Keep your eyes open to train visual reorientation',
+                  'Practice reestablishing your reference frame after each rotation'
+                ],
+                priority: 'high',
+                relatedExercises: ['vestibular-ball-work', 'orientation-drills']
+              };
+              
+            default:
+              return {
+                message: 'I\'m monitoring your form and performance. Each exercise in this program is designed to prepare specific physiological systems for spaceflight demands.',
+                actionItems: [
+                  'Focus on quality over quantity - space operations require precision',
+                  'Maintain proper breathing techniques throughout',
+                  'Visualize how this movement relates to space operations'
+                ],
+                priority: 'normal'
+              };
+          }
+          
+        case 'session-start':
+          // Personalized session start guidance
+          const userName = metrics.userName || 'Cadet';
+          
+          return {
+            message: `Welcome to your Core & Balance training session, ${userName}. This session focuses on developing the stability needed in microgravity environments. I'll be monitoring your form and providing real-time guidance.`,
+            actionItems: [
+              'Begin with the vestibular calibration exercises (30 seconds each)',
+              'Focus on form quality rather than repetitions',
+              'Remember to hydrate - fluid distribution changes significantly in space'
+            ],
+            priority: 'normal',
+            sessionType: metrics.sessionType || 'core-balance'
+          };
+          
+        case 'session-end':
+          // Calculate session effectiveness based on metrics
+          const effectivenessScore = this._calculateSessionEffectiveness(metrics);
+          const effectivenessRating = effectivenessScore > 85 ? 'excellent' : effectivenessScore > 70 ? 'good' : effectivenessScore > 50 ? 'moderate' : 'needs improvement';
+          
+          return {
+            message: `Great work! You've completed your Core & Balance training with ${effectivenessRating} effectiveness. Your vestibular adaptation metrics show improvement, which will be crucial for your orientation in microgravity.`,
+            actionItems: [
+              'Complete the vestibular re-calibration exercises',
+              'Log your session notes while the experience is fresh',
+              'Your next training session is recommended in 48 hours'
+            ],
+            priority: 'normal',
+            sessionStats: {
+              duration: metrics.sessionDuration || '00:30:00',
+              effectiveness: effectivenessScore,
+              vestibularAdaptation: metrics.vestibularAdaptation || 75,
+              coreStrength: metrics.coreStrength || 80
             }
-            
-          case 'zone':
-            const zoneId = metrics.zoneId || '';
-            switch (zoneId) {
-              case 'recovery':
-                return {
-                  message: 'You\'re in the recovery zone. This builds your aerobic base and helps with active recovery.',
-                  actionItems: [
-                    'Focus on steady, rhythmic breathing',
-                    'Maintain a conversation pace',
-                    'Use this zone for longer duration training'
-                  ],
-                  priority: 'low',
-                  targetHeartRate: '50-60% of max'
-                };
-                
-              case 'endurance':
-                return {
-                  message: 'You\'re in the endurance zone. This is where you build cardiovascular efficiency and stamina.',
-                  actionItems: [
-                    'Focus on maintaining this intensity level',
-                    'This is your primary training zone for aerobic development',
-                    'Monitor your breathing pattern'
-                  ],
-                  priority: 'normal',
-                  targetHeartRate: '60-70% of max'
-                };
-                
-              case 'threshold':
-                return {
-                  message: 'You\'re in the threshold zone. This is challenging but sustainable intensity that improves your lactate threshold.',
-                  actionItems: [
-                    'This intensity should feel challenging but sustainable',
-                    'Focus on consistent pacing',
-                    'Pay attention to your breathing rhythm'
-                  ],
-                  priority: 'medium',
-                  targetHeartRate: '70-80% of max'
-                };
-                
-              case 'hiit':
-                return {
-                  message: 'You\'re in the high-intensity zone. This builds maximum cardiovascular capacity but should be used sparingly.',
-                  actionItems: [
-                    'This is a high-stress zone - use it strategically',
-                    'Focus on quality recovery between intervals',
-                    'Push your limits but maintain form'
-                  ],
-                  priority: 'high',
-                  targetHeartRate: '80-90% of max'
-                };
-                
-              case 'vo2max':
-                return {
-                  message: 'You\'re approaching your VO2max zone. This intensity is very demanding and should be used in short intervals only.',
-                  actionItems: [
-                    'Keep intervals in this zone brief (30-90 seconds)',
-                    'Ensure complete recovery between efforts',
-                    'Monitor for signs of overexertion'
-                  ],
-                  priority: 'high',
-                  targetHeartRate: '90-100% of max'
-                };
-                
-              default:
-                return {
-                  message: 'I\'m monitoring your heart rate and cardiovascular metrics. Stay within your target zone for optimal training.',
-                  actionItems: [
-                    'Monitor your breathing pattern',
-                    'Stay hydrated',
-                    'Pace yourself appropriately'
-                  ],
-                  priority: 'normal'
-                };
+          };
+          
+        case 'progress-milestone':
+          // Guidance based on mission progress milestone
+          const milestone = metrics.milestone || 1;
+          
+          const milestoneMessages = [
+            'You\'ve completed 25% of your Core & Balance mission. Your dedicated training is building the foundation needed for space operations.',
+            'Halfway through your Core & Balance mission! Your vestibular metrics show a 15% improvement since you started.',
+            'You\'ve reached 75% completion of your Core & Balance mission. Your progress demonstrates the consistent training essential for astronaut preparation.',
+            'Congratulations on completing your Core & Balance mission! This foundational training will support all future space operations training.'
+          ];
+          
+          return {
+            message: milestoneMessages[milestone - 1] || 'You\'re making great progress in your training mission.',
+            actionItems: [
+              'Review your progress metrics in your training log',
+              'Consider increasing challenge level for exercises you find easy',
+              'Continue consistent practice for optimal adaptation'
+            ],
+            priority: 'normal',
+            milestone: milestone
+          };
+          
+        case 'exercise-completed':
+          // Exercise-specific completion feedback
+          const exerciseName = metrics.exerciseId || 'this exercise';
+          
+          return {
+            message: `You've completed ${exerciseName}! This exercise specifically develops the ${exerciseName.includes('plank') ? 'core stability' : exerciseName.includes('balance') ? 'vestibular adaptation' : 'neuromuscular control'} needed for ${exerciseName.includes('plank') ? 'maintaining position during EVA operations' : exerciseName.includes('balance') ? 'orientation in variable gravity' : 'precise movement control in space'}.`,
+            actionItems: [
+              'Take 30 seconds to recover before your next exercise',
+              'Note any areas of difficulty for focused training',
+              'Hydrate between exercises to maintain optimal performance'
+            ],
+            priority: 'normal',
+            exerciseMetrics: {
+              duration: metrics.duration || '00:01:30',
+              formQuality: metrics.formQuality || 85,
+              difficultyRating: metrics.difficulty || 'moderate'
             }
-            
-          case 'session-start':
-            // Personalized session start guidance
-            const userName = metrics.userName || 'Cadet';
-            
-            return {
-              message: `Welcome to your training session, ${userName}. I'll be monitoring your progress and providing real-time guidance. Let's begin with a proper warm-up.`,
-              actionItems: [
-                'Start with 5 minutes of light cardio to elevate your heart rate',
-                'Follow with dynamic stretching for major muscle groups',
-                'Complete specific warm-up exercises for today\'s training focus'
-              ],
-              priority: 'normal',
-              sessionType: metrics.sessionType || 'general'
-            };
-            
-          case 'session-end':
-            // Calculate session effectiveness based on metrics
-            const effectivenessScore = this._calculateSessionEffectiveness(metrics);
-            const effectivenessRating = effectivenessScore > 85 ? 'excellent' : effectivenessScore > 70 ? 'good' : effectivenessScore > 50 ? 'moderate' : 'needs improvement';
-            
-            return {
-              message: `Great work! You've completed your training session with ${effectivenessRating} effectiveness. Your form quality and consistency have shown improvement.`,
-              actionItems: [
-                'Complete a proper cool-down with static stretching',
-                'Hydrate and consider protein intake within the next 30 minutes',
-                'Review your session metrics in your training log'
-              ],
-              priority: 'normal',
-              sessionStats: {
-                duration: metrics.sessionDuration || '00:30:00',
-                effectiveness: effectivenessScore,
-                caloriesBurned: metrics.calories || 350,
-                focusScore: metrics.focusScore || 85
-              }
-            };
-            
-          case 'progress-update':
-            // Generate progress insight based on historical data
-            return {
-              message: 'I\'ve analyzed your progress over the past week. Your core stability has improved by 12%, and your balance metrics are showing consistent improvement.',
-              actionItems: [
-                'Continue focusing on vestibular adaptation exercises',
-                'Increase resistance training frequency to 3x weekly',
-                'Your next assessment is scheduled in 5 days'
-              ],
-              priority: 'normal',
-              progressStats: {
-                strengths: ['Core stability', 'Endurance'],
-                improvements: ['Balance', 'Reaction time'],
-                weeklyChange: '+8% overall'
-              }
-            };
-            
-          default:
-            return {
-              message: 'I\'m here to help guide your training. Let me know if you need specific assistance.',
-              actionItems: [
-                'Focus on proper form',
-                'Stay hydrated',
-                'Listen to your body'
-              ],
-              priority: 'normal'
-            };
-        }
+          };
+          
+        case 'metrics-update':
+          // Response to significant metrics changes
+          let metricMessage = 'I\'m monitoring your training metrics. ';
+          
+          if (metrics.heartRate > 150) {
+            metricMessage += 'Your elevated heart rate indicates high exertion. Consider whether this intensity is sustainable for your training phase.';
+          } else if (metrics.formQuality < 70) {
+            metricMessage += 'I\'ve detected some form inconsistencies. Quality of movement is more important than quantity for space preparation.';
+          } else if (metrics.vestibularAdaptation > 80) {
+            metricMessage += 'Your vestibular adaptation score is excellent. You\'re developing the neural pathways needed to quickly adapt to changing gravity conditions.';
+          } else {
+            metricMessage += 'Your metrics are within expected ranges for this training phase. Continue focusing on quality execution.';
+          }
+          
+          return {
+            message: metricMessage,
+            actionItems: [
+              'Focus on maintaining proper form throughout all exercises',
+              'Your vestibular adaptation is the primary focus of this mission',
+              'Track your subjective experience along with objective metrics'
+            ],
+            priority: 'normal'
+          };
+          
+        default:
+          return {
+            message: 'I\'m here to guide your space training. Your Core & Balance foundation will prepare critical physiological systems for the unique challenges of spaceflight.',
+            actionItems: [
+              'Focus on form quality in all exercises',
+              'Pay attention to how your vestibular system responds',
+              'Track your progress to see your adaptation over time'
+            ],
+            priority: 'normal'
+          };
       }
-      
-      /**
-       * Calculate session effectiveness score based on metrics
-       * @param {Object} metrics - Session metrics
-       * @returns {Number} Effectiveness score (0-100)
-       * @private
-       */
-      _calculateSessionEffectiveness(metrics) {
-        // Default values if metrics are missing
-        const heartRateConsistency = metrics.heartRateConsistency || 75;
-        const formQuality = metrics.formQuality || 70;
-        const timeInTargetZone = metrics.timeInTargetZone || 65;
-        const exerciseCompletion = metrics.exerciseCompletion || 80;
-        const focusScore = metrics.focusScore || 75;
-        
-        // Weighted calculation
-        return Math.round(
-          (heartRateConsistency * 0.2) +
-          (formQuality * 0.25) +
-          (timeInTargetZone * 0.25) +
-          (exerciseCompletion * 0.15) +
-          (focusScore * 0.15)
-        );
-      }
-      
-      /**
-       * PRIVATE: Get mock response to a question
-       * @private
-       * @param {String} question - User's question
-       * @returns {String} STELLA's response
-       */
-      _getMockResponse(question) {
-        // Convert question to lowercase for easier matching
-        const lowerQuestion = question.toLowerCase();
-        
-        // Track user questions for learning
-        this._trackUserQuestion(question);
-        
-        // Check for common questions and provide responses
-        if (lowerQuestion.includes('heart rate') || lowerQuestion.includes('target zone')) {
-          const response = "Your target heart rate depends on your training goal. For endurance training, aim for 60-70% of your maximum heart rate. For threshold training, aim for 70-80%. Your current heart rate is within your target zone.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-        
-        if (lowerQuestion.includes('form') || lowerQuestion.includes('technique')) {
-          const response = "For optimal form, focus on engaging your core throughout the exercise. Keep your spine neutral and breathe steadily. I'm monitoring your form and it's improving with each session.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-        
-        if (lowerQuestion.includes('progress') || lowerQuestion.includes('improving')) {
-          const response = "You're making steady progress! Your core stability has improved by 15% since your last session, and your balance metrics are showing consistent improvement. Keep up the good work!";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-        
-        if (lowerQuestion.includes('next') || lowerQuestion.includes('recommendation')) {
-          const response = "Based on your current progress, I recommend focusing on the Endurance Training module next. This will complement your core and balance work and help build your overall space readiness.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-        
-        if (lowerQuestion.includes('space') || lowerQuestion.includes('zero-g') || lowerQuestion.includes('zero g') || lowerQuestion.includes('microgravity')) {
-          const response = "Microgravity training is critical for space readiness. Your vestibular adaptation exercises are specifically designed to prepare your body for the disorientation many astronauts experience in zero-G. Continue with the rotational exercises to build tolerance.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-  
-        if (lowerQuestion.includes('muscle') || lowerQuestion.includes('strength') || lowerQuestion.includes('atrophy')) {
-          const response = "Muscle atrophy is a significant challenge in spaceflight. Your resistance training program is designed to minimize muscle loss through targeted high-intensity exercises. I recommend increasing your protein intake to 1.6-1.8g per kg of body weight to support muscle maintenance.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-  
-        if (lowerQuestion.includes('bone') || lowerQuestion.includes('density') || lowerQuestion.includes('calcium')) {
-          const response = "Bone density loss is a serious concern in microgravity. Your training includes impact exercises and resistance training to maintain bone health. I've also noted recommendations for vitamin D and calcium supplementation in your personalized nutrition plan.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-  
-        if (lowerQuestion.includes('plan') || lowerQuestion.includes('schedule') || lowerQuestion.includes('training plan')) {
-          const response = "Your personalized training plan incorporates all critical elements for space readiness: cardiovascular endurance, resistance training, vestibular adaptation, and neuromuscular coordination. This week's focus is on improving your balance and coordination in simulated altered gravity conditions.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-  
-        if (lowerQuestion.includes('eva') || lowerQuestion.includes('spacewalk') || lowerQuestion.includes('extravehicular')) {
-          const response = "EVA training requires exceptional upper body strength, fine motor control, and cardiovascular endurance. Your current program includes specific exercises that mimic the demands of maneuvering in a pressurized suit. I recommend adding the grip strength exercises to your routine to prepare for tool manipulation during spacewalks.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-  
-        if (lowerQuestion.includes('stellarx') || lowerQuestion.includes('advanced') || lowerQuestion.includes('next level')) {
-          const response = "The StellarX advanced training modules will become available once you complete Level 2 certification. These include simulated mission scenarios, emergency response protocols, and specialized role training. Based on your current progress, you should be eligible for StellarX access in approximately 3 weeks.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-        
-        // More contextual questions about specific training
-        if (lowerQuestion.includes('balance') || lowerQuestion.includes('stability')) {
-          const response = "Balance training is critical for astronauts to adapt quickly to changing gravitational environments. Your vestibular system needs to be trained to maintain spatial orientation in microgravity. I recommend incorporating the vestibular habituation exercises 3 times per week.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-        
-        if (lowerQuestion.includes('cardio') || lowerQuestion.includes('endurance') || lowerQuestion.includes('aerobic')) {
-          const response = "Cardiovascular endurance is essential for EVA operations and overall mission performance. Your current endurance metrics show good progress, but I recommend increasing your Zone 2 training duration by 10% each week to prepare for the sustained effort required during spacewalks.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-        
-        if (lowerQuestion.includes('recovery') || lowerQuestion.includes('rest') || lowerQuestion.includes('overtraining')) {
-          const response = "Recovery is a critical component of effective training. Your current metrics indicate adequate recovery between sessions, but your sleep quality could be improved. I recommend implementing the pre-sleep relaxation protocol outlined in your recovery module to optimize adaptation and prevent overtraining.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-        
-        if (lowerQuestion.includes('nutrition') || lowerQuestion.includes('diet') || lowerQuestion.includes('eating')) {
-          const response = "Space nutrition requires careful consideration of nutrient density, shelf stability, and digestibility. Your current nutrition plan emphasizes anti-inflammatory foods, adequate protein for muscle maintenance, and nutrients that support bone health. I recommend increasing your intake of omega-3 fatty acids to support cognitive function during training.";
-          this._addMessageToConversation(response, 'stella');
-          return response;
-        }
-        
-        // Default response for other questions
-        const defaultResponse = "I'm here to help with your space training journey. Your current training is focused on building the fundamental physical capabilities needed for space travel. Keep focusing on proper form and consistent practice. If you have specific questions about any aspect of your training, don't hesitate to ask.";
-        this._addMessageToConversation(defaultResponse, 'stella');
-        return defaultResponse;
-      }
-      
-     /**
- * Track user questions to improve STELLA's responses
- * @param {String} question - User's question
- * @private
- */
-_trackUserQuestion(question) {
-  // In a real implementation, this would send the question to a learning system
-  // For now, just store locally if localStorage is available
-  if (window.localStorage) {
-    try {
-      // Get existing questions
-      const existingQuestions = JSON.parse(localStorage.getItem('stella_user_questions') || '[]');
-      
-      // Add new question with timestamp
-      existingQuestions.push({
-        question,
-        timestamp: new Date().toISOString()
-      });
-      
-      // Keep only last 50 questions
-      const recentQuestions = existingQuestions.slice(-50);
-      
-      // Save back to localStorage
-      localStorage.setItem('stella_user_questions', JSON.stringify(recentQuestions));
-    } catch (error) {
-      console.warn('Error storing user question:', error);
     }
-  }
-}
-
-/**
- * Get personalized recommendations based on user data
- * @param {Object} userData - User profile and training data
- * @returns {Object} Personalized recommendations
- */
-getPersonalizedRecommendations(userData = {}) {
-  // In a real implementation, this would analyze user data and generate recommendations
-  // For now, return mock recommendations
-  return {
-    focusAreas: [
-      'Vestibular adaptation training',
-      'Upper body strength for EVA readiness',
-      'Core stability for microgravity adaptation'
-    ],
-    nextModules: [
-      {
-        id: 'vestibular-04',
-        name: 'Advanced Vestibular Training',
-        priority: 'high'
-      },
-      {
-        id: 'strength-07',
-        name: 'EVA-Specific Strength Development',
-        priority: 'medium'
-      },
-      {
-        id: 'core-05',
-        name: 'Microgravity Core Stabilization',
-        priority: 'medium'
+    
+    /**
+     * Calculate session effectiveness score based on metrics
+     * @param {Object} metrics - Session metrics
+     * @returns {Number} Effectiveness score (0-100)
+     * @private
+     */
+    _calculateSessionEffectiveness(metrics) {
+      // Default values if metrics are missing
+      const heartRateConsistency = metrics.heartRateConsistency || 75;
+      const formQuality = metrics.formQuality || 70;
+      const timeInTargetZone = metrics.timeInTargetZone || 65;
+      const exerciseCompletion = metrics.exerciseCompletion || 80;
+      const focusScore = metrics.focusScore || 75;
+      
+      // Weighted calculation
+      return Math.round(
+        (heartRateConsistency * 0.2) +
+        (formQuality * 0.25) +
+        (timeInTargetZone * 0.25) +
+        (exerciseCompletion * 0.15) +
+        (focusScore * 0.15)
+      );
+    }
+    
+    /**
+     * PRIVATE: Get mock response to a question
+     * @private
+     * @param {String} question - User's question
+     * @returns {String} STELLA's response
+     */
+    _getMockResponse(question) {
+      // Convert question to lowercase for easier matching
+      const lowerQuestion = question.toLowerCase();
+      
+      // Check for common questions and provide responses
+      if (lowerQuestion.includes('assessment') || lowerQuestion.includes('initial test')) {
+        const response = "The Core & Balance assessment evaluates your current vestibular adaptation and core stability baseline. It contains exercises that test your ability to maintain position and balance in conditions that simulate aspects of microgravity. Complete this assessment first so I can customize your training program based on your specific needs.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
       }
-    ],
-    nutritionTips: [
-      'Increase calcium intake to support bone density',
-      'Optimize protein timing around resistance training',
-      'Ensure adequate hydration for vestibular training sessions'
-    ],
-    recoveryStrategies: [
-      'Implement contrast therapy after high-intensity sessions',
-      'Practice vestibular reset exercises before sleep',
-      'Schedule full recovery day after completing Module 3.2'
-    ]
+      
+      if (lowerQuestion.includes('core') || lowerQuestion.includes('strength')) {
+        const response = "Core strength is critical for astronauts. In microgravity, your core muscles no longer work against gravity, leading to weakening. Additionally, a strong core is essential for controlling your position during EVA operations and withstanding the G-forces during launch and reentry. The exercises in this mission specifically target the deep stabilizing muscles needed for space operations.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('balance') || lowerQuestion.includes('dizzy') || lowerQuestion.includes('vestibular')) {
+        const response = "Balance training is essential because your vestibular system will need to recalibrate in microgravity. Astronauts report that the first days in space often include disorientation and space sickness as the brain learns to interpret sensory input differently. These exercises help train your brain to rely less on gravity-dependent signals and more on visual and proprioceptive cues - exactly what you'll need in space.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('progress') || lowerQuestion.includes('improving') || lowerQuestion.includes('better')) {
+        const response = "You're making good progress in your Core & Balance training! Your vestibular adaptation metrics have improved by approximately 12% since your initial assessment, and your core stability metrics are showing steady improvement. Continue focusing on the exercises that challenge you most, as these represent your greatest opportunities for improvement.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('why') && (lowerQuestion.includes('important') || lowerQuestion.includes('necessary') || lowerQuestion.includes('need'))) {
+        const response = "This training is critical because space environments present unique challenges to the human body. Without gravity, your muscles - especially your core - atrophy rapidly. Your balance system becomes confused without the constant reference of Earth's gravity. Research shows astronauts who complete comprehensive physical preparation experience less severe space adaptation syndrome, maintain greater strength during missions, and recover faster upon return to Earth.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('next') || lowerQuestion.includes('after') || lowerQuestion.includes('future')) {
+        const response = "After completing the Core & Balance Foundation mission, your next recommended training is the Endurance Boost mission. This will build on your foundational stability by developing the cardiovascular endurance needed for EVA operations and emergency procedures. All physical training missions work together to create complete astronaut-level physical preparation.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('credits') || lowerQuestion.includes('points') || lowerQuestion.includes('reward')) {
+        const response = "Training credits are earned by completing assessments, exercises, and full missions. For this Core & Balance mission, you'll earn 75 credits for completing each exercise session, with bonus credits for excellent form quality. These credits unlock advanced training modules and contribute to your Space Readiness certification level. Credits also reduce your Space Readiness Countdown timer.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('countdown') || lowerQuestion.includes('timer') || lowerQuestion.includes('days')) {
+        const response = "Your Space Readiness Countdown represents the estimated time until you've completed the essential training for space operations. Completing missions reduces this countdown, with more challenging missions providing greater reductions. The Core & Balance Foundation mission will reduce your countdown by 18 days total, with each session contributing proportionally.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('exercises') || lowerQuestion.includes('workout') || lowerQuestion.includes('routine')) {
+        const response = "This Core & Balance mission contains three key exercises: Space Plank, Astronaut Hollow Hold, and Microgravity Rotations. Each targets specific physiological systems needed in space. Space Plank develops the core stability needed for EVA operations. Hollow Hold trains your body positioning for launch and reentry. Rotation exercises prepare your vestibular system for microgravity orientation. Complete all exercises for comprehensive preparation.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('hard') || lowerQuestion.includes('difficult') || lowerQuestion.includes('challenge')) {
+        const response = "It's normal to find some of these exercises challenging. Astronaut training is designed to gradually build capabilities you don't normally need on Earth. The vestibular exercises often feel the most challenging at first because we rarely train this system specifically. If you're finding an exercise too difficult, focus on shorter durations with perfect form rather than longer durations with compromised technique.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('how long') || lowerQuestion.includes('duration') || lowerQuestion.includes('time')) {
+        const response = "The Core & Balance mission consists of three training sessions, each taking approximately 20-30 minutes to complete. Ideally, these sessions should be separated by 24-48 hours to allow for adaptation. Most trainees complete the full mission within 2-3 weeks, though your specific pace may vary based on your schedule and adaptation rate.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('help') || lowerQuestion.includes('guide') || lowerQuestion.includes('how do i')) {
+        const response = "I'm here to guide your training! To get started, complete the initial assessment by clicking the 'Take Assessment' button. After that, you'll be able to access the first training session. Follow the on-screen instructions and timer for each exercise. I'll provide real-time guidance on your form and technique. You can ask me specific questions about any exercise at any time during your training.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+      
+      if (lowerQuestion.includes('space') || lowerQuestion.includes('astronaut') || lowerQuestion.includes('zero g') || lowerQuestion.includes('microgravity')) {
+        const response = "Space environments create unique challenges for the human body. In microgravity, your muscles don't work against gravity and can atrophy quickly. Your vestibular system loses its primary reference point, causing disorientation. Fluids shift upward in your body, affecting circulation. This training program specifically addresses these challenges, preparing your physiology for the demanding environment of space through targeted exercises developed from actual astronaut training protocols.";
+        this._addMessageToConversation(response, 'stella');
+        return response;
+      }
+  
+      // Default response for other questions
+      const defaultResponse = "I'm your STELLA AI assistant for space training. I'm here to guide you through exercises specifically designed to prepare your body for space environments. The Core & Balance mission you're working on is foundational for all space activities, developing the stability and vestibular adaptation needed for microgravity operations. Is there something specific about your training you'd like to know more about?";
+      this._addMessageToConversation(defaultResponse, 'stella');
+      return defaultResponse;
+    }
   };
 }
-
-/**
- * Analyze training session data and provide insights
- * @param {Object} sessionData - Training session data
- * @returns {Object} Session analysis and insights
- */
-analyzeTrainingSession(sessionData = {}) {
-  // Mock analysis for now
-  const strengthScore = (sessionData.formQuality || 70) * 0.4 + (sessionData.intensity || 65) * 0.6;
-  const enduranceScore = (sessionData.heartRateControl || 75) * 0.5 + (sessionData.durationPercentage || 80) * 0.5;
-  const balanceScore = (sessionData.stabilityMetrics || 65) * 0.7 + (sessionData.adaptationRate || 60) * 0.3;
-  
-  return {
-    overallScore: Math.round((strengthScore + enduranceScore + balanceScore) / 3),
-    strengths: [
-      strengthScore > 75 ? 'Excellent form maintenance' : null,
-      enduranceScore > 75 ? 'Strong cardiovascular performance' : null,
-      balanceScore > 75 ? 'Superior vestibular adaptation' : null
-    ].filter(Boolean),
-    improvementAreas: [
-      strengthScore < 70 ? 'Focus on consistent form during fatigue' : null,
-      enduranceScore < 70 ? 'Work on heart rate recovery between intervals' : null,
-      balanceScore < 70 ? 'Increase duration of vestibular challenges' : null
-    ].filter(Boolean),
-    recommendations: [
-      'Increase hydration during similar future sessions',
-      'Consider adding 5 minutes to your cool-down protocol',
-      strengthScore < enduranceScore ? 'Prioritize resistance training in next session' : 'Maintain current training balance'
-    ]
-  };
-}
-} // <-- Added this closing brace for the StellaCore class
-
-document.addEventListener('DOMContentLoaded', () => {
-  const stellaElements = ['stella-status', 'stella-guidance', 'stella-interface'];
-  const stellaExists = stellaElements.some(id => document.getElementById(id));
-  
-  if (stellaExists) {
-    window.stellaCore = new StellaCore();
-    window.stellaCore.initialize().then(() => {
-      console.log('🚀 STELLA Core fully initialized');
-      document.dispatchEvent(new CustomEvent('stella:initialized', {
-        detail: {
-          status: 'ready',
-          initializedAt: new Date().toISOString()
-        }
-      }));
-      
-      // Example: If you have a status bar or guidance element, you could initialize here:
-      const statusEl = document.getElementById('stella-status');
-      if (statusEl) {
-        statusEl.textContent = 'STELLA is active and ready to assist you.';
-      }
-      
-      const guidanceEl = document.getElementById('stella-guidance');
-      if (guidanceEl) {
-        window.stellaCore.provideInitialGuidance().then(guidance => {
-          guidance && (guidanceEl.innerHTML = guidance);
-        });
-      }
-      
-      // Log for confirmation
-      console.log('STELLA successfully loaded all interfaces.');
-    });
-  } else {
-    console.warn('STELLA elements not found. Initialization skipped.');
-  }
-});
