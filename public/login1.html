@@ -30,13 +30,6 @@
         <li><a href="/about.html" data-i18n="nav.about">About</a></li>
         <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
         <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
-
-        <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
-        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
-        <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
-        <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
-        <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
       </ul>
 
       <div class="relative">
@@ -80,14 +73,16 @@
                 <div class="flex items-center justify-between w-[432px]">
                   <div class="flex items-center space-x-2">
                     <label class="flex items-center space-x-2 cursor-pointer">
-                      <input type="checkbox" class="hidden peer">
+                      <input type="checkbox" id="rememberMe" class="hidden peer">
                       <div class="w-6 h-6 border-2 border-blue-500 rounded-md flex items-center justify-center">
                           <image src="/icons/checker.png" alt="Checked" class="hidden peer-checked:visible"></image>
                       </div>
                       <span class="text-white text-body-small-medium transition-all duration-300">Remember me</span>
                     </label>
                   </div>
-                  <p class="text-white text-body-small-medium">Forgot Password?</p>
+                  <a href="/reset-password">
+                    <p class="text-white text-body-small-medium">Forgot Password?</p>
+                  </a>
                 </div>
                 <button type="submit" id="login-btn" class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full ">Login</button>
                 <p id="login-error" class="text-red-500 text-sm text-center hidden"></p>
@@ -122,6 +117,12 @@
           const loginForm = document.getElementById("login-form");
           const loginBtn = document.getElementById("login-btn");
           const loginError = document.getElementById("login-error");
+          const rememberMeCheckbox = document.getElementById("rememberMe");
+
+          const savedToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+            if (savedToken) {
+                window.location.href = "/mission-control.html"; // Redirect to dashboard if logged in
+            }
 
           loginForm.addEventListener("submit", async (e) => {
               e.preventDefault();
@@ -133,7 +134,7 @@
               const password = document.getElementById("password").value;
 
               try {
-                  const response = await fetch("http://localhost:3000/bhavik-styling/api/auth/login", {
+                  const response = await fetch("/api/auth/login", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ email, password })
@@ -142,6 +143,16 @@
                   if (!response.ok) {
                       throw new Error("Invalid credentials");
                   }
+
+                  const data = await response.json();
+                  const token = data.token;
+
+                  // **Store token based on "Remember Me"**
+                  if (rememberMeCheckbox.checked) {
+                    localStorage.setItem("authToken", token); // Persist even after closing browser
+                    } else {
+                    sessionStorage.setItem("authToken", token); // Remove on browser close
+                    }
 
                   window.location.href = "/mission-control.html";
               } catch (error) {
@@ -152,8 +163,8 @@
               }
           });
       });
-  </script>
+    </script>
           <!-- <script type="module" src="/js/languages.js"></script>
           <script type="module" src="/js/academy.js"></script> -->
-</body>
+    </body>
 </html>

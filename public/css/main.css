@@ -621,6 +621,19 @@ section {
   color: #666;
 }
 
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  width: 100%;
+  background: white;
+  border: none;
+  cursor: pointer;
+}
+.dropdown-item:hover {
+  background: #f0f0f0;
+}
+
 /* Language selector */
 .language-selector {
   padding: 2rem;

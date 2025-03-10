@@ -58,7 +58,8 @@ class EmailService {
     }
 
     // Load template file
-    const templatePath = path.join(process.cwd(), 'templates', 'emails', `${templateName}.html`);
+    // const templatePath = path.join(process.cwd(), 'templates', 'emails', `${templateName}.html`);
+    const templatePath = path.join(__dirname, '../public/templates/emails', `${templateName}.html`);
     const templateContent = await fs.readFile(templatePath, 'utf8');
     
     // Compile template
@@ -177,6 +178,74 @@ class EmailService {
       throw error;
     }
   }
+
+  /**
+ * Send a Reset Password Email
+ * @param {string} to - Recipient email address
+ * @param {string} resetLink - Password reset link
+ * @returns {Promise<Object>} Send result
+ */
+async sendResetPasswordEmail(to, resetLink) {
+  try {
+      const data = {
+          resetLink,
+          currentYear: new Date().getFullYear()
+      };
+
+      // Load and compile the template
+      const template = await this.loadTemplate('reset-password');
+      const html = template(data);
+
+      // Send the email
+      const result = await this.transporter.sendMail({
+          from: `"SharedStars Support" <${config.email.from}>`,
+          to,
+          subject: "Reset Your Password",
+          html,
+          text: `You requested a password reset. Use this link to reset your password: ${resetLink}`
+      });
+
+      logger.info('Sent reset password email', { to, messageId: result.messageId });
+      return result;
+  } catch (error) {
+      logger.error('Error sending reset password email', { to, error: error.message });
+      throw error;
+  }
+}
+
+/**
+ * Send an OTP verification email
+ * @param {string} to - Recipient email address
+ * @param {string} otp - OTP code to send
+ * @returns {Promise<Object>} Send result
+ */
+async sendOTPEmail(to, otp) {
+  try {
+      const data = {
+          otp,
+          currentYear: new Date().getFullYear()
+      };
+
+      // Load and compile the OTP template
+      const template = await this.loadTemplate('otp-verification');
+      const html = template(data);
+
+      // Send the email
+      const result = await this.transporter.sendMail({
+          from: `"SharedStars Support" <${config.email.from}>`,
+          to,
+          subject: "Your OTP Code for Verification",
+          html,
+          text: `Your OTP code is: ${otp}. It will expire in 5 minutes.`
+      });
+
+      logger.info('Sent OTP email', { to, messageId: result.messageId });
+      return result;
+  } catch (error) {
+      logger.error('Error sending OTP email', { to, error: error.message });
+      throw error;
+  }
+}
   
   /**
    * Queue a briefing for delivery

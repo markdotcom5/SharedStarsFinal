@@ -57,6 +57,9 @@ const UserSchema = new mongoose.Schema({
     badges: [{ name: String, acquired: Date, level: { type: String, enum: ["bronze", "silver", "gold", "platinum"] } }],
     certifications: [{ name: String, issuedDate: Date, expiryDate: Date, creditsEarned: Number }],
     roles: { type: [String], default: ["trainee"] },
+    isVerified: { type: Boolean, default: false },  // ✅ Tracks verified status
+    otp: { type: String, required: false },         // Stores OTP
+    otpExpires: { type: Date, required: false },    // E
     assessmentsCompleted: {
         physical: { type: Boolean, default: false },
         technical: { type: Boolean, default: false },

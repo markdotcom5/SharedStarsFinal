@@ -597,6 +597,9 @@ server.on('upgrade', (request, socket, head) => {
 // ============================
 app.use(express.static(path.join(__dirname, "public")));
 
+// Serve the "bhavik-designing" folder inside public
+app.use("/bhavik-styling", express.static(path.join(__dirname, "public", "bhavik-styling")));
+
 const staticPages = [
     { route: "/", file: "index.html" },
     { route: "/about", file: "about.html" },
@@ -608,8 +611,11 @@ const staticPages = [
     { route: "/training", file: "training.html" },
     { route: "/physicalTraining", file: "physicalTraining.html" },
     { route: "/trainingHub", file: "trainingHub.html" },
-    { route: "/mission-control", file: "mission-control.html" }
-];
+    { route: "/mission-control", file: "mission-control.html" },
+    { route: "/reset-password", file: "reset-password.html" },
+    { route: "/change-password", file: "change-password.html" },
+    { route: "/congratulations", file: "congratulations.html" }
+  ];
 
 staticPages.forEach(({ route, file }) => {
     app.get(route, (req, res) => {
@@ -621,6 +627,17 @@ staticPages.forEach(({ route, file }) => {
       });
     });
 });
+
+// ✅ New: Serve pages inside "bhavik-designing/html"
+// app.get("/bhavik-styling/:page", (req, res) => {
+//   const file = req.params.page;
+//   res.sendFile(path.join(__dirname, "public", "bhavik-styling", "html", file), (err) => {
+//       if (err) {
+//           console.error(`Error sending file ${file}:`, err.message);
+//           res.status(404).send("File not found");
+//       }
+//   });
+// });
 
 // ============================
 // 12. ERROR HANDLING

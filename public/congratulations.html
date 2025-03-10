@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Log in to StelTrek Academy">
+    <title>Login - StelTrek Academy</title>
+    <link href="/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- <link rel="stylesheet" href="/css/ai-assistant.css"> -->
+
+    <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
+    <script src="/js/languageManager.js" defer></script>
+</head>
+<body>
+    <!-- HEADER -->
+  <header class="bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg py-4">
+    <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
+      <!-- Logo -->
+      <div class="flex items-center mb-2 md:mb-0">
+        <a href="/index.html" aria-label="SharedStars Homepage" class="group">
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+        </a>
+      </div>
+      <!-- Navigation Links -->
+      <ul class="flex flex-wrap gap-4">
+        <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="/academy.html" data-i18n="nav.academy">Academy</a></li>
+        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
+        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
+        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+      </ul>
+
+      <div class="relative">
+        <button id="langDropdownBtn" class="flex items-center gap-2 text-white bg-gray-700 px-4 py-2 rounded-lg">
+          <span id="selectedLangIcon">🇺🇸</span>
+          <span id="selectedLangText">English</span>
+          <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <ul id="langDropdownMenu" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 py-2 w-40">
+          <li><button class="dropdown-item" data-lang="en" data-flag="🇺🇸" aria-label="Switch to English">🇺🇸 English</button></li>
+          <li><button class="dropdown-item" data-lang="zh" data-flag="🇨🇳" aria-label="Switch to Chinese">🇨🇳 Chinese</button></li>
+          <li><button class="dropdown-item" data-lang="ko" data-flag="🇰🇷" aria-label="Switch to Korean">🇰🇷 Korean</button></li>
+          <li><button class="dropdown-item" data-lang="es" data-flag="🇪🇸" aria-label="Switch to Spanish">🇪🇸 Spanish</button></li>
+        </ul>
+      </div>
+      <button data-i18n="nav.getStarted" class="bg-gradient-to-r from-purple-500 to-blue-500 text-black px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">
+      </button>
+    </nav>      
+  </header>
+
+    <!-- Main Content -->
+    <section class="h-[1024px]">
+        <div class="flex flex-col items-center justify-between">
+          <div class="w-[496px] mt-52 rounded-3xl bg-black border-white-100 border-2 items-center justify-between">
+            <div class="flex flex-col items-center justify-between">
+              <img src="/icons/Vector.png" class="w-[248px] h-[139px]" ></img>
+              <image src="/icons/resetpass.png" class="w-16 h-16"></image>
+            </div>
+            <div class="flex flex-col items-center justify-between">
+              <p class="text-heading5 text-white mt-8">Congratulations, Mark.</p>
+              <p class="text-body-base text-white-800 -mt-4">You have created your account successfully.</p>
+              <button type="button" id="dashboard-btn" class="w-[432px] form-control text-body-xsmall-semibold mt-6 mb-8 px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full">Go to dashboard</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    <!-- Footer -->
+    <footer>
+        <p data-i18n="common.footer">© 2024 StelTrek Academy. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+      document.getElementById("dashboard-btn").addEventListener("click", function() {
+          window.location.href = "/welcome.html";
+      });
+  </script>
+</body>
+</html>

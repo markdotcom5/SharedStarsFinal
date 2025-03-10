@@ -7,6 +7,10 @@ const CLIENT_ID = "78o2w7lzi4ex8m";
 const CLIENT_SECRET = "WPL_AP1.d4V8I5a0ODdg8Sb7.+bUAig==";
 const REDIRECT_URI = "http://localhost:3000/api/auth/linkedin/callback";
 const axios = require("axios");
+const emailService = require("../services/emailService");
+const config = require("../config");
+
+const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 // =======================
 // Authenticate Middleware
@@ -48,20 +52,27 @@ router.post("/signup", async (req, res) => {
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 12);
+
+          // Generate OTP
+        const otp = generateOTP();
+        const otpExpires = Date.now() + 5 * 60 * 1000; // OTP expires in 5 minutes
         
         // Create new user with the correct fields
         user = new User({
             name,  // Use name directly, not username
             email: email.trim().toLowerCase(),
-            password: hashedPassword
+            password: hashedPassword,
+            isVerified: false,
+            otp,
+            otpExpires
         });
 
         await user.save();
 
-        // In auth.js and signup.js, standardize all token generations to:
-          const token = jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        // ✅ Send OTP Email
+        await emailService.sendOTPEmail(email, otp);
 
-        res.status(201).json({ message: "User created", token, user: user.toObject() });
+        res.status(201).json({ message: "OTP sent. Redirecting to verification page." });
     } catch (error) {
         console.error("Signup Error:", error.message);
         res.status(500).json({ error: "Server error" });
@@ -71,6 +82,74 @@ router.post("/signup", async (req, res) => {
 async function validatePassword(enteredPassword, storedHashedPassword) {
     return await bcrypt.compare(enteredPassword, storedHashedPassword);
 }
+
+router.post("/verify-otp", async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
+            return res.status(400).json({ error: "Invalid or expired OTP" });
+        }
+
+        // ✅ Mark user as verified
+        user.isVerified = true;
+        user.otp = null; // Clear OTP
+        user.otpExpires = null;
+        await user.save();
+
+        // ✅ Auto-login user by generating JWT
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        // ✅ Set HTTP-only cookie for security
+        res.cookie("authToken", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        res.json({ success: true, message: "OTP verified! Logging in...", redirectTo: "/congratulations.html" });
+
+    } catch (error) {
+        console.error("Error in verify-otp:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+router.post("/resend-otp", async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+
+        if (user.isVerified) {
+            return res.status(400).json({ error: "User is already verified." });
+        }
+
+        // Generate new OTP
+        const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        user.otp = newOtp;
+        user.otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
+        await user.save();
+
+        // Send OTP email
+        await emailService.sendOTPEmail(email, newOtp);
+
+        res.json({ message: "New OTP sent to your email." });
+
+    } catch (error) {
+        console.error("Error in resend-otp:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
 
 // Inside your login route
 router.post('/login', async (req, res) => {
@@ -225,31 +304,104 @@ router.post("/logout", (req, res) => {
 });
 
 // =======================
-// Password Reset Route
+// Password Reset Request Route
 // =======================
-router.post("/reset-password", async (req, res) => {
+router.post("/reset-request", async (req, res) => {
     try {
-        const { email, newPassword } = req.body;
-        console.log("Reset attempt for email:", email);
+        const { email } = req.body;
+        console.log("Reset request received for:", email);
 
-        const user = await User.findOne({ email: email.trim().toLowerCase() });
+        // Trim and lowercase the email
+        const sanitizedEmail = email.trim().toLowerCase();
+
+        // Check if user exists
+        const user = await User.findOne({ email: sanitizedEmail });
         console.log("User found:", !!user);
 
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
 
+        // Generate JWT reset token (valid for 1 hour)
+        const token = jwt.sign({ email: sanitizedEmail }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+        // Create reset link with the JWT token
+        const resetLink = `${config.baseUrl}/change-password.html?token=${token}`;
+
+        // Send reset email
+        await emailService.sendResetPasswordEmail(sanitizedEmail, resetLink);
+        console.log("Reset email sent successfully to:", sanitizedEmail);
+
+        res.json({ message: "Password reset link sent to your email." });
+
+    } catch (error) {
+        console.error("Error in password reset request:", error);
+        res.status(500).json({ error: "Failed to process password reset request", details: error.message });
+    }
+});
+
+
+// =======================
+// Password Reset Route
+// =======================
+// router.post("/reset-password", async (req, res) => {
+//     try {
+//         const { email, newPassword } = req.body;
+//         console.log("Reset attempt for email:", email);
+
+//         console.log("EMAILLLLL::::", email);
+
+//         const user = await User.findOne({ email: email });
+//         console.log("User found:", !!user);
+
+//         if (!user) {
+//             return res.status(404).json({ error: "User notttttt found" });
+//         }
+
+//         const hashedPassword = await bcrypt.hash(newPassword, 12);
+//         console.log("Password hashed successfully");
+
+//         await User.updateOne({ email }, { $set: { password: hashedPassword } });
+
+//         res.json({ message: "Password reset successful" });
+//     } catch (error) {
+//         console.error("Detailed Reset Error:", error);
+//         res.status(500).json({ error: "Password reset failed", details: error.message });
+//     }
+// });
+
+router.post("/reset-password", async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        console.log("Reset attempt with token:", token);
+
+        // Verify JWT token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const email = decoded.email;
+        console.log("Decoded email from token:", email);
+
+        // Check if user exists
+        const user = await User.findOne({ email });
+        console.log("User found:", !!user);
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Hash the new password
         const hashedPassword = await bcrypt.hash(newPassword, 12);
         console.log("Password hashed successfully");
 
+        // Update password in the database
         await User.updateOne({ email }, { $set: { password: hashedPassword } });
 
         res.json({ message: "Password reset successful" });
     } catch (error) {
-        console.error("Detailed Reset Error:", error);
-        res.status(500).json({ error: "Password reset failed", details: error.message });
+        console.error("🚨 Error in resetPassword:", error);
+        res.status(400).json({ error: "Invalid or expired reset token" });
     }
 });
+
 
 // =======================
 // Admin Creation Route

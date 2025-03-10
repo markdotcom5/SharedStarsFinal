@@ -1,0 +1,86 @@
+{
+    "en": {
+        "nav": {
+            "home": "Home",
+            "about": "About",
+            "academy": "SharedStars Academy",
+            "profile": "Profile",
+            "subscribe": "Subscribe",
+            "getStarted": "Get Started"
+        },
+        "hero": {
+            "title": "World’s Largest AI-Powered Space Training Platform",
+            "subtitle": "In 36 months, humanity splits into two groups: Those who prepared for space and those who watch from Earth.",
+            "startTraining": "Start Training Now",
+            "seeCountdown": "See Your Countdown to space",
+            "exploreMembership": "Explore Membership Plans"
+        },
+        "banner": {
+            "title": "36 MONTHS TO SPACE:",
+            "subtitle": "Complete Training & Get Approved for Space Flight"
+        }
+    },
+    "zh": {
+        "nav": {
+            "home": "首页",
+            "about": "关于我们",
+            "academy": "SharedStars学院",
+            "profile": "个人资料",
+            "subscribe": "订阅",
+            "getStarted": "开始使用"
+        },
+        "hero": {
+            "title": "全球最大AI驱动的太空训练平台",
+            "subtitle": "36个月后，人类将分成两类：一类为太空做好了准备，另一类仍然留在地球上观望。",
+            "startTraining": "立即开始训练",
+            "seeCountdown": "查看您的太空倒计时",
+            "exploreMembership": "探索会员计划"
+        },
+        "banner": {
+            "title": "36个月到太空：",
+            "subtitle": "完成训练并获得太空飞行批准"
+        }
+    },
+    "ko": {
+        "nav": {
+            "home": "홈",
+            "about": "소개",
+            "academy": "SharedStars 아카데미",
+            "profile": "프로필",
+            "subscribe": "구독",
+            "getStarted": "시작하기"
+        },
+        "hero": {
+           "title": "세계 최대 AI 기반 우주 훈련 플랫폼",
+            "subtitle": "36개월 후, 인류는 두 그룹으로 나뉩니다: 우주를 준비한 자와 지구에서 지켜보는 자.",
+            "startTraining": "지금 훈련 시작하기",
+            "seeCountdown": "우주로 가는 카운트다운 확인",
+            "exploreMembership": "멤버십 플랜 탐색"
+        },
+        "banner": {
+            "title": "우주까지 36개월:",
+            "subtitle": "훈련을 완료하고 우주 비행 승인 받기"
+        }
+    },
+    "es": {
+        "nav": {
+            "home": "Inicio",
+            "about": "Acerca de",
+            "academy": "Academia SharedStars",
+            "profile": "Perfil",
+            "subscribe": "Suscribirse",
+            "getStarted": "Empezar"
+        },
+        "hero": {
+           "title": "La plataforma de entrenamiento espacial con IA más grande del mundo",
+            "subtitle": "En 36 meses, la humanidad se dividirá en dos grupos: aquellos preparados para el espacio y aquellos que miran desde la Tierra.",
+            "startTraining": "Comienza el entrenamiento ahora",
+            "seeCountdown": "Ver tu cuenta regresiva para el espacio",
+            "exploreMembership": "Explorar planes de membresía"
+        },
+        "banner": {
+            "title": "36 MESES AL ESPACIO:",
+            "subtitle": "Completa el entrenamiento y obtén la aprobación para el vuelo espacial"
+        }
+    }
+}
