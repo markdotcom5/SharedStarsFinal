@@ -111,41 +111,30 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Ask a question to STELLA AI
   async function askStella(question) {
-    const stellaFeedback = document.getElementById('stella-feedback');
-    
-    // Show thinking state
-    stellaFeedback.innerHTML = `
-      <p><strong>You:</strong> ${question}</p>
-      <p><strong>STELLA:</strong> <span class="thinking">Thinking...</span></p>
-    `;
+    const feedback = document.getElementById('stella-feedback');
+    feedback.innerHTML = "Thinking...";
     
     try {
-      // Send question to AI assistant API
-      const response = await fetch('/api/stella/ask', {
+      const response = await fetch('/api/stella/guidance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question })
+        body: JSON.stringify({ userId: currentUserId, question })
       });
       
       const data = await response.json();
       
       if (data.success) {
-        stellaFeedback.innerHTML = `
-          <p><strong>You:</strong> ${question}</p>
-          <p><strong>STELLA:</strong> ${data.answer}</p>
-        `;
+        stellaFeedback.innerHTML = `<p>${data.guidance.message}</p>`;
+        data.guidance.actionItems.forEach(item => {
+          stellaFeedback.innerHTML += `<li>${item}</li>`;
+        });
       } else {
-        stellaFeedback.innerHTML = `
-          <p><strong>You:</strong> ${question}</p>
-          <p><strong>STELLA:</strong> I'm having trouble processing your request. Please try again later.</p>
-        `;
+        stellaFeedback.innerHTML = `<p>Oops! ${data.error || 'Something went wrong.'}</p>`;
       }
+      
     } catch (error) {
-      console.error('STELLA AI Error:', error);
-      stellaFeedback.innerHTML = `
-        <p><strong>You:</strong> ${question}</p>
-        <p><strong>STELLA:</strong> I'm currently offline. Please try again in a moment.</p>
-      `;
+      console.error('Error calling STELLA:', error);
+      stellaFeedback.innerHTML = '<p>STELLA is currently offline. Try again soon.</p>';
     }
   }
   

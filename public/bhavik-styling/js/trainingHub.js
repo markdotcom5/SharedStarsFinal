@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     try {
       // Send question to AI assistant API
-      const response = await fetch('/api/stella/ask', {
+      const response = await fetch('/api/stella/guidance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question })
