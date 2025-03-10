@@ -112,7 +112,7 @@ class SpaceCountdown {
             // if (element) {
             //     element.textContent = String(value).padStart(2, '0');
             // }
-        });
+            });
     }
 
     startCountdown() {

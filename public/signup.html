@@ -302,9 +302,7 @@
               // ✅ Store email for verification page
               localStorage.setItem("userEmail", email);
 
-        if (data.authenticated) {
             window.location.href = "/welcome.html"; // Redirect if already logged in
-        }
 
               // ✅ Redirect to OTP verification page
               window.location.href = "/verification.html";
