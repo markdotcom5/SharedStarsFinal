@@ -234,7 +234,7 @@ router.post('/guidance', async (req, res) => {
       });
     }
 
-    c// Extract conversation history from request if provided
+    // Extract conversation history from request if provided
 // Extract conversation history from request if provided
 const { userId, exerciseId, metrics, question, conversationHistory = [] } = req.body;    
     // Ensure userId is provided

@@ -372,7 +372,8 @@ const SharedStars = {
           });
       } else if (this.state.hasIndexedDB) {
         // Use IndexedDB
-        import('./indexedDatabase.js')
+        import('../../db/inMemoryDatabase.js')
+
           .then(module => {
             this.db = module.default;
             this.state.components.db = this.db;
@@ -818,8 +819,8 @@ const SharedStars = {
       console.warn('Training module not available');
       
       // Try to load it
-      import('./training-module.js')
-        .then(module => {
+      import('./TrainingModule.js')
+      .then(module => {
           const { TrainingModule, PhysicalTrainingModule } = module;
           
           let trainingInstance;

@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core & Balance Foundation - Enhanced Emergency Mode</title>
+    <!-- Direct Styles - No External Dependencies -->
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #2a3b53;
+            --color-text: #e2e8f0;
+            --color-heading: #f8fafc;
+            --color-primary: #2563eb;
+            --color-primary-hover: #1d4ed8;
+            --color-success: #16a34a;
+            --color-warning: #ca8a04;
+            --color-danger: #dc2626;
+            --color-gray: #475569;
+            --color-dark-gray: #334155;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--color-text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--color-dark-gray);
+            padding-bottom: 15px;
+        }
+
+        h1, h2, h3, h4 {
+            margin-top: 0;
+            color: var(--color-heading);
+            font-weight: 600;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .warning-card {
+            background-color: rgba(146, 64, 14, 0.2);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+        
+        .mission-countdown {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 12px 20px;
+            text-align: center;
+            border-left: 4px solid var(--color-primary);
+        }
+        
+        .countdown-timer {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            font-family: 'Courier New', monospace;
+            margin: 5px 0;
+        }
+        
+        .countdown-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .stella-assistant {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.2) 100%);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .stella-bubble {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .stella-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .stella-message {
+            background-color: rgba(37, 99, 235, 0.2);
+            border-radius: 12px;
+            padding: 12px 15px;
+            position: relative;
+        }
+        
+        .stella-message:before {
+            content: "";
+            position: absolute;
+            left: -8px;
+            top: 12px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid rgba(37, 99, 235, 0.2);
+        }
+
+        .exercise-card {
+            background-color: var(--bg-card-hover);
+            border-left: 4px solid var(--color-primary);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        button:disabled {
+            background-color: var(--color-gray);
+            cursor: not-allowed;
+        }
+
+        button svg {
+            margin-right: 8px;
+        }
+
+        .yellow-btn {
+            background-color: var(--color-warning);
+        }
+
+        .yellow-btn:hover {
+            background-color: #a16207;
+        }
+
+        .success-btn {
+            background-color: var(--color-success);
+        }
+
+        .success-btn:hover {
+            background-color: #15803d;
+        }
+
+        .danger-btn {
+            background-color: var(--color-danger);
+        }
+
+        .danger-btn:hover {
+            background-color: #b91c1c;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .space-between {
+            justify-content: space-between;
+        }
+
+        .gap-2 {
+            gap: 10px;
+        }
+
+        .gap-4 {
+            gap: 20px;
+        }
+
+        .mt-4 {
+            margin-top: 20px;
+        }
+
+        .mb-4 {
+            margin-bottom: 20px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background-color: var(--bg-card);
+            border-left: 4px solid var(--color-primary);
+            border-radius: 4px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .toast.success {
+            border-left-color: var(--color-success);
+        }
+
+        .toast.warning {
+            border-left-color: var(--color-warning);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--color-dark-gray);
+            border: 1px solid var(--color-gray);
+            border-radius: 4px;
+            color: white;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .text-yellow {
+            color: #fbbf24;
+        }
+
+        .text-green {
+            color: #4ade80;
+        }
+
+        .text-blue {
+            color: #60a5fa;
+        }
+
+        .mission-progress {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--color-dark-gray);
+            border-radius: 8px;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--color-primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+            font-family: monospace;
+            color: var(--color-primary);
+        }
+
+        .exercise-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .session-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--color-dark-gray);
+            margin-bottom: 20px;
+        }
+
+        .session-tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .session-tab.active {
+            border-bottom-color: var(--color-primary);
+            color: var(--color-heading);
+        }
+
+        .session-tab:hover:not(.active) {
+            border-bottom-color: var(--color-gray);
+        }
+
+        .exercise-illustration {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* Simple placeholder for exercise images */
+        .exercise-image {
+            height: 120px;
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .exercise-steps {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .exercise-steps li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .exercise-steps li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+        }
+
+        .completion-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            background-color: rgba(22, 163, 74, 0.2);
+            color: #4ade80;
+            margin-left: 8px;
+        }
+
+        .completion-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-right: 6px;
+        }
+
+        /* Add a simple loading animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading-pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Add badge for credits earned */
+        .credits-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .credits-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <body class="bg-black text-white">
+        <!-- Stars background overlay -->
+        <div class="stars-overlay"></div>
+        
+        <!-- Header section -->
+        <header class="container mx-auto px-4 py-6 relative z-10">
+            <div class="flex justify-between items-start">
+                <div class="py-2">
+                    <a href="/training-modules" class="text-blue-400 hover:text-blue-300">
+                        <span class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+                            </svg>
+                            Back to Training Modules
+                        </span>
+                    </a>
+                </div>
+                
+                <!-- Space Readiness Countdown -->
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-blue-900">
+                    <h3 class="text-gray-300 font-medium mb-1">Space Readiness Countdown</h3>
+                    <div class="text-3xl font-bold text-blue-400" id="space-countdown">152 Days</div>
+                    <div class="text-sm text-gray-400">until mission readiness</div>
+                </div>
+            </div>
+        </header>
+        
+        <main class="container mx-auto px-4 py-6 relative z-10 min-h-screen">
+            <!-- Hero section -->
+            <section class="hero mb-12">
+                <h1 class="text-5xl md:text-6xl font-bold text-blue-300 mb-2">Core & Balance Foundation</h1>
+                <p class="text-lg text-gray-300">Physical Training: Mission 1 of 4</p>
+            </section>
+            
+            <!-- Mission Details section -->
+            <section class="mission-details bg-gray-800 bg-opacity-40 rounded-lg p-6 mb-8">
+                <h2 class="text-2xl font-semibold mb-4">Mission Details</h2>
+                <p class="text-gray-300 mb-6">Develop central body strength and stability essential for zero-gravity environments. This mission builds the foundation for all space activities.</p>
+                
+                <!-- STELLA AI Message -->
+                <div class="bg-blue-900 bg-opacity-20 rounded-lg p-5 mb-6 border border-blue-800 border-opacity-30">
+                    <div class="flex items-start">
+                        <div class="bg-blue-700 rounded-full p-2 mr-4 flex-shrink-0">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="mb-1">
+                                <span class="font-bold text-blue-300">STELLA AI:</span> Welcome to your Core & Balance Foundation mission, cadet! This training is critical for all space operations.
+                            </div>
+                            <p class="text-gray-300 mb-2">Your body will experience significant changes in microgravity - muscles weaken, balance systems become confused, and simple movements become challenging. This mission develops the specific core strength and balance control that astronauts rely on daily.</p>
+                            <p class="text-gray-300">Complete all sessions to reduce your space readiness countdown by <strong>18 days</strong>. I'll guide you through each exercise for optimal training.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mission Progress -->
+                <div class="bg-gray-900 bg-opacity-50 rounded-lg p-4 mb-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-gray-300">Mission Progress:</span>
+                        <div class="flex-grow h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-600 rounded-full" id="mission-progress-bar" style="width: 0%"></div>
+                        </div>
+                        <span id="progress-percentage" class="text-gray-300">0%</span>
+                        <span class="flex items-center bg-blue-900 bg-opacity-30 text-blue-300 text-sm px-2 py-1 rounded-full">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.94 14.06a6 6 0 018.12 0A6 6 0 0110 16a6 6 0 01-4.06-1.94zM10 4a2 2 0 100 4 2 2 0 000-4z"></path>
+                            </svg>
+                            <span id="credits-earned">0</span> Credits
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Assessment Warning -->
+                <div class="bg-yellow-900 bg-opacity-20 border border-yellow-700 border-opacity-30 rounded-lg p-5" id="assessment-warning">
+                    <div class="flex items-start gap-4">
+                        <svg class="w-6 h-6 text-yellow-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-yellow-400 font-semibold mb-1">Assessment Required</h3>
+                            <p class="text-gray-300 mb-3">You need to complete your initial assessment before starting this training mission.</p>
+                            <button id="take-assessment-btn" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 1h6v1H7V6zm6 3H7v1h6V9zm-6 3h6v1H7v-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                Take Assessment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Training Sessions -->
+            <section class="training-sessions">
+                <h2 class="text-2xl font-semibold mb-6">Training Sessions</h2>
+                <div class="tab-content hidden" id="training-1">
+                    <p class="mb-4">Complete each exercise with the timer to track your progress:</p>
+                    
+                    <div id="exercise-container">
+                        <h3 id="current-exercise-name">Ready to Begin</h3>
+                        <div class="exercise-illustration">
+                            <div class="exercise-image" id="current-exercise-image">Select an exercise to begin</div>
+                        </div>
+                        <div class="timer-display" id="exercise-timer">00:00</div>
+                        <div class="exercise-controls">
+                            <button id="start-exercise" class="success-btn">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                                </svg>
+                                Start
+                            </button>
+                            <button id="complete-exercise" class="primary-btn" disabled>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Complete
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h4>Exercise Progress:</h4>
+                        <div class="exercise-card">
+                            <div class="flex space-between items-center">
+                                <span>1. Space Plank</span>
+                                <input type="checkbox" class="completion-checkbox" id="exercise-1-completed" disabled>
+                            </div>
+                        </div>
+                        <div class="exercise-card">
+                            <div class="flex space-between items-center">
+                                <span>2. Astronaut Hollow Hold</span>
+                                <input type="checkbox" class="completion-checkbox" id="exercise-2-completed" disabled>
+                            </div>
+                        </div>
+                        <div class="exercise-card">
+                            <div class="flex space-between items-center">
+                                <span>3. Microgravity Rotations</span>
+                                <input type="checkbox" class="completion-checkbox" id="exercise-3-completed" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="complete-session-1" class="success-btn mt-4" disabled>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        Complete Session
+                    </button>
+                </div>
+                </div>
+                </div>
+                
+                <!-- Session 2 -->
+                <div class="card" id="session-2-card">
+                    <div class="flex space-between items-center">
+                        <h3>Session 2: Balance Training</h3>
+                        <div id="session-2-status"></div>
+                    </div>
+                    <p>Develop the balance and proprioception needed for operating in variable gravity environments.</p>
+                    <button id="session-2-btn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                        </svg>
+                        Complete Previous Session
+                    </button>
+                    
+                    <!-- Session 2 Content (hidden initially) -->
+                    <div id="session-2-content" class="hidden mt-4">
+                        <div class="session-tabs">
+                            <div class="session-tab active" data-tab="overview-2">Overview</div>
+                            <div class="session-tab" data-tab="exercises-2">Exercises</div>
+                            <div class="session-tab" data-tab="training-2">Training</div>
+                        </div>
+                        
+                        <div class="tab-content" id="overview-2">
+                            <div class="stella-bubble">
+                                <div class="stella-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path>
+                                    </svg>
+                                </div>
+                                <div class="stella-message">
+                                    <p><strong>Why Balance Training is Critical:</strong> Your vestibular system (inner ear) completely recalibrates in space, causing disorientation and space motion sickness. 45% of astronauts experience severe symptoms during their first days in orbit.</p>
+                                    <p>These exercises train your brain to rely less on gravity-dependent balance cues and more on visual and proprioceptive feedback - exactly what you'll need in variable gravity environments.</p>
+                                    <p>The ISS commander who trained with this protocol reported 68% less adaptation time compared to previous missions.</p>
+                                </div>
+                            </div>
+                            
+                            <h4 class="mt-4">Session Goals:</h4>
+                            <ul class="exercise-steps">
+                                <li>Develop neural pathways that maintain orientation without gravity cues</li>
+                                <li>Train your body to quickly adapt to changing gravitational conditions</li>
+                                <li>Build the specific balance skills needed for EVA operations and emergency procedures</li>
+                            </ul>
+                            
+                            <p class="text-blue mt-4">Session Duration: Approximately 25-35 minutes</p>
+                            <p>Complete all 3 exercises to earn 85 training credits and reduce your space readiness countdown by 7 days.</p>
+                        </div>
+                    <div id="exercise-container">
+                        <h3 id="current-exercise-name">Ready to Begin</h3>
+                        <div class="exercise-illustration">
+                            <div class="exercise-image" id="current-exercise-image">Select an exercise to begin</div>
+                        </div>
+                        <div class="timer-display" id="exercise-timer">00:00</div>
+                        <div class="exercise-controls">
+                            <button id="start-exercise" class="success-btn">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                                </svg>
+                                Start
+                            </button>
+                            <button id="complete-exercise" class="primary-btn" disabled>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Complete
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h4>Exercise Progress:</h4>
+                        <div class="exercise-card">
+                            <div class="flex space-between items-center">
+                                <span>1. Space Plank</span>
+                                <input type="checkbox" class="completion-checkbox" id="exercise-1-completed" disabled>
+                            </div>
+                        </div>
+                        <div class="exercise-card">
+                            <div class="flex space-between items-center">
+                                <span>2. Astronaut Hollow Hold</span>
+                                <input type="checkbox" class="completion-checkbox" id="exercise-2-completed" disabled>
+                            </div>
+                        </div>
+                        <div class="exercise-card">
+                            <div class="flex space-between items-center">
+                                <span>3. Microgravity Rotations</span>
+                                <input type="checkbox" class="completion-checkbox" id="exercise-3-completed" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="complete-session-1" class="success-btn mt-4" disabled>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        Complete Session
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Session 2 -->
+        <div class="card" id="session-2-card">
+            <div class="flex space-between items-center">
+                <h3>Session 2: Balance Training</h3>
+                <div id="session-2-status"></div>
+            </div>
+            <p>Develop the balance and proprioception needed for operating in variable gravity environments.</p>
+            <button id="session-2-btn" disabled>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                </svg>
+                Complete Previous Session
+            </button>
+            
+            <!-- Session 2 Content (hidden initially) -->
+            <div id="session-2-content" class="hidden mt-4">
+                <div class="session-tabs">
+                    <div class="session-tab active" data-tab="overview-2">Overview</div>
+                    <div class="session-tab" data-tab="exercises-2">Exercises</div>
+                    <div class="session-tab" data-tab="training-2">Training</div>
+                </div>
+                
+                <div class="tab-content" id="overview-2">
+                    <div class="stella-bubble">
+                        <div class="stella-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path>
+                            </svg>
+                        </div>
+                        <div class="stella-message">
+                            <p><strong>Why Balance Training is Critical:</strong> Your vestibular system (inner ear) completely recalibrates in space, causing disorientation and space motion sickness. 45% of astronauts experience severe symptoms during their first days in orbit.</p>
+                            <p>These exercises train your brain to rely less on gravity-dependent balance cues and more on visual and proprioceptive feedback - exactly what you'll need in variable gravity environments.</p>
+                            <p>The ISS commander who trained with this protocol reported 68% less adaptation time compared to previous missions.</p>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mt-4">Session Goals:</h4>
+                    <ul class="exercise-steps">
+                        <li>Develop neural pathways that maintain orientation without gravity cues</li>
+                        <li>Train your body to quickly adapt to changing gravitational conditions</li>
+                        <li>Build the specific balance skills needed for EVA operations and emergency procedures</li>
+                    </ul>
+                    
+                    <p class="text-blue mt-4">Session Duration: Approximately 25-35 minutes</p>
+                    <p>Complete all 3 exercises to earn 85 training credits and reduce your space readiness countdown by 7 days.</p>
+                </div>
+                
+                <div class="tab-content hidden" id="exercises-2">
+                    <p>These balance training exercises simulate the challenges of orientation in space:</p>
+                    
+                    <div class="exercise-card">
+                        <h4>1. Single-Leg Stance</h4>
+                        <div class="exercise-illustration">
+                            <div class="exercise-image">Single-Leg Balance</div>
+                        </div>
+                        <p>Develops the vestibular system to maintain orientation in variable gravity.</p>
+                        <ul class="exercise-steps">
+                            <li>Stand on one leg with the other foot raised</li>
+                            <li>Keep your eyes forward and arms at your sides</li>
+                            <li>Hold for 30 seconds, then switch legs</li>
+                            <li>Progress to closing your eyes if possible</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>2. Stability Ball Balancing</h4>
+                        <div class="exercise-illustration">
+                            <div class="exercise-image">Stability Ball Exercise</div>
+                        </div>
+                        <p>Trains your body to stabilize on unstable surfaces, similar to space station modules.</p>
+                        <ul class="exercise-steps">
+                            <li>Sit on a stability ball with feet flat on the floor</li>
+                            <li>Lift one foot slightly off the ground</li>
+                            <li>Extend arms forward for added challenge</li>
+                            <li>Hold for 20 seconds per side</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>3. Dynamic Balance Shifts</h4>
+                        <div class="exercise-illustration">
+                            <div class="exercise-image">Balance Shift Movement</div>
+                        </div>
+                        <p>Simulates balance adjustments needed during spacecraft maneuvers.</p>
+                        <ul class="exercise-steps">
+                            <li>Stand with feet shoulder-width apart</li>
+                            <li>Slowly shift weight to toes, then heels, then left, then right</li>
+                            <li>Move in smooth, controlled motions</li>
+                            <li>Complete 10 full cycles</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tab-content hidden" id="training-2">
+                    <!-- Similar training interface as Session 1 -->
+                    <p class="mb-4">Complete each exercise with the timer to track your progress:</p>
+                    
+                    <div id="exercise-container-2">
+                        <h3 id="current-exercise-name-2">Ready to Begin</h3>
+                        <div class="exercise-illustration">
+                            <div class="exercise-image" id="current-exercise-image-2">Select an exercise to begin</div>
+                        </div>
+                        <div class="timer-display" id="exercise-timer-2">00:00</div>
+                        <div class="exercise-controls">
+                            <button id="start-exercise-2" class="success-btn">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                                </svg>
+                                Start
+                            </button>
+                            <button id="complete-exercise-2" class="primary-btn" disabled>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Complete
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h4>Exercise Progress:</h4>
+                        <div class="exercise-card">
+                            <div class="flex space-between items-center">
+                                <span>1. Single-Leg Stance</span>
+                                <input type="checkbox" class="completion-checkbox" id="exercise-4-completed" disabled>
+                            </div>
+                        </div>
+                        <div class="exercise-card">
+                            <div class="flex space-between items-center">
+                                <span>2. Stability Ball Balancing</span>
+                                <input type="checkbox" class="completion-checkbox" id="exercise-5-completed" disabled>
+                            </div>
+                        </div>
+                        <div class="exercise-card">
+                            <div class="flex space-between items-center">
+                                <span>3. Dynamic Balance Shifts</span>
+                                <input type="checkbox" class="completion-checkbox" id="exercise-6-completed" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="complete-session-2" class="success-btn mt-4" disabled>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        Complete Session
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Session 3 -->
+        <div class="card" id="session-3-card">
+            <div class="flex space-between items-center">
+                <h3>Session 3: Advanced Stability</h3>
+                <p>Advanced core exercises that prepare you for the demands of extended microgravity exposure.</p>
+                <button id="session-3-btn" disabled>Complete Previous Session</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Assessment Modal -->
+    <div class="modal hidden" id="assessment-modal">
+        <div class="modal-content">
+            <h2>Core & Balance Assessment</h2>
+            <p>This assessment will evaluate your core strength and balance capabilities.</p>
+            
+            <div class="form-group">
+                <label for="core-strength">How would you rate your core strength?</label>
+                <select id="core-strength">
+                    <option>Beginner</option>
+                    <option selected>Intermediate</option>
+                    <option>Advanced</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Can you hold a plank for more than 30 seconds?</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="plank" value="yes" checked> Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="plank" value="no"> No
+                    </label>
+                </div>
+            </div>
+            
+            <div class="flex space-between">
+                <button id="cancel-assessment">Cancel</button>
+                <button id="complete-assessment">Complete Assessment</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Message goes here</div>
+<!-- FOOTER -->
+<footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
+    <!-- Animated Floating Particles -->
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+      <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+      <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
+    </div>
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
+        <!-- About -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+            <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">StelTrek Academy</a></li>
+          </ul>
+        </div>
+        <!-- Community -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+            <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+          </ul>
+        </div>
+        <!-- Resources -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+            <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+          </ul>
+        </div>
+        <!-- Legal -->
+        <div>
+          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+          <ul class="space-y-2 mt-4">
+            <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+            <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+          </ul>
+        </div>
+      <!-- Bottom section with copyright and social media -->
+      <div class="mt-12 pt-8 border-t border-blue-900/20 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+        
+        <!-- All 7 social media links -->
+        <div class="flex space-x-4 mt-4 md:mt-0">
+          <!-- LinkedIn -->
+          <a href="https://www.linkedin.com/company/106241890" class="text-gray-400 hover:text-blue-400" aria-label="LinkedIn">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          
+          <!-- Twitter/X -->
+          <a href="https://x.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Twitter">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+          </a>
+          
+          <!-- Facebook -->
+          <a href="https://www.facebook.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Facebook">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+          </a>
+          
+          <!-- Instagram -->
+          <a href="https://www.instagram.com/sharedstarsacademy/" class="text-gray-400 hover:text-blue-400" aria-label="Instagram">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          
+          <!-- Telegram -->
+          <a href="https://t.me/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Telegram">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12zm3.224 17.871c.188.133.43.166.646.085.215-.082.374-.253.463-.489.089-.236.089-.498 0-.734l-1.74-4.36 4.4-2.507c.466-.265.466-.934 0-1.199l-9.65-5.514c-.465-.266-1.048.055-1.047.577l.072 12.71c0 .522.583.843 1.048.577l3.293-1.879zm-8.791-7.414l2.083 1.188-.759 1.329-1.324-.755v-1.762zm6.442 7.385l-1.621.925c-.961.548-2.132-.106-2.132-1.186l-.04-6.99 3.793 7.251z"/></svg>
+          </a>
+          
+          <!-- TikTok -->
+          <a href="https://www.tiktok.com/@sharedstarsacademy" class="text-gray-400 hover:text-blue-400" aria-label="TikTok">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+          </a>
+          
+          <!-- YouTube -->
+          <a href="https://www.youtube.com/@SharedStarsAcademy" class="text-gray-400 hover:text-blue-400" aria-label="YouTube">
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+      </div>
+      <script>
+        // Update current year dynamically if needed
+        document.getElementById("current-year") &&
+          (document.getElementById("current-year").textContent = new Date().getFullYear());
+      </script>
+    </div>
+  </div>
+  </footer>
+    <!-- Self-contained JavaScript -->
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Emergency page loaded');
+            
+            // Get elements
+            const assessmentBtn = document.getElementById('take-assessment-btn');
+            const assessmentWarning = document.getElementById('assessment-warning');
+            const assessmentModal = document.getElementById('assessment-modal');
+            const cancelBtn = document.getElementById('cancel-assessment');
+            const completeBtn = document.getElementById('complete-assessment');
+            const toast = document.getElementById('toast');
+            const session1Btn = document.getElementById('session-1-btn');
+            const session2Btn = document.getElementById('session-2-btn');
+            const session3Btn = document.getElementById('session-3-btn');
+            const progressBar = document.getElementById('mission-progress-bar');
+            const progressPercentage = document.getElementById('progress-percentage');
+            
+            // Show assessment modal
+            assessmentBtn.addEventListener('click', function() {
+                assessmentModal.classList.remove('hidden');
+            });
+            
+            // Cancel assessment
+            cancelBtn.addEventListener('click', function() {
+                assessmentModal.classList.add('hidden');
+            });
+            
+            // Complete assessment
+            completeBtn.addEventListener('click', function() {
+                // Save to localStorage
+                localStorage.setItem('assessment_completed', 'true');
+                localStorage.setItem('assessment_mission-core-balance', 'true');
+                
+                // Hide modal and warning
+                assessmentModal.classList.add('hidden');
+                assessmentWarning.classList.add('hidden');
+                
+                // Update progress
+                updateProgress(40);
+                
+                // Enable session button
+                session1Btn.textContent = 'Start Session';
+                session1Btn.disabled = false;
+                
+                // Show success message
+                showToast('Assessment completed successfully!');
+            });
+            
+            // Function to update progress
+            function updateProgress(percent) {
+                progressBar.style.width = percent + '%';
+                progressPercentage.textContent = percent + '%';
+            }
+            
+            // Function to show toast
+            function showToast(message) {
+                toast.textContent = message;
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+                
+                setTimeout(function() {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(10px)';
+                }, 3000);
+            }
+            
+            // Check if assessment is already completed
+            if (localStorage.getItem('assessment_completed') === 'true') {
+                // Hide warning
+                assessmentWarning.classList.add('hidden');
+                
+                // Update progress
+                updateProgress(40);
+                
+                // Enable session button
+                session1Btn.textContent = 'Start Session';
+                session1Btn.disabled = false;
+            }
+            
+            // Session button handlers
+            session1Btn.addEventListener('click', function() {
+                if (!session1Btn.disabled) {
+                    showToast('Starting Session 1: Core Foundation');
+                    updateProgress(60);
+                    
+                    // Enable next session
+                    session2Btn.disabled = false;
+                    session2Btn.textContent = 'Start Session';
+                }
+            });
+            
+            session2Btn.addEventListener('click', function() {
+                if (!session2Btn.disabled) {
+                    showToast('Starting Session 2: Balance Training');
+                    updateProgress(80);
+                    
+                    // Enable next session
+                    session3Btn.disabled = false;
+                    session3Btn.textContent = 'Start Session';
+                }
+            });
+            
+            session3Btn.addEventListener('click', function() {
+                if (!session3Btn.disabled) {
+                    showToast('Starting Session 3: Advanced Stability');
+                    updateProgress(100);
+                    showToast('Mission Complete! 250 Training Credits Earned!');
+                }
+            });
+        });
+    </script>
+
+    // Timer functionality
+    function initializeExerciseTimers() {
+      const startBtn = document.getElementById('start-exercise');
+      const completeBtn = document.getElementById('complete-exercise');
+      const timerDisplay = document.getElementById('exercise-timer');
+      
+      // Define exercise data
+      const exercises = [
+        { id: 'exercise-1', name: 'Space Plank', duration: 30, checkboxId: 'exercise-1-completed' },
+        { id: 'exercise-2', name: 'Astronaut Hollow Hold', duration: 20, checkboxId: 'exercise-2-completed' },
+        { id: 'exercise-3', name: 'Microgravity Rotations', duration: 45, checkboxId: 'exercise-3-completed' }
+      ];
+      
+      let currentExercise = null;
+      let timerId = null;
+      
+      // Add event listeners to exercise buttons
+      exercises.forEach((exercise, index) => {
+        // Create selectable exercise buttons
+        const exerciseSelector = document.createElement('button');
+        exerciseSelector.className = 'exercise-card mb-2';
+        exerciseSelector.innerHTML = `
+          <div class="flex space-between items-center">
+            <span>${index + 1}. ${exercise.name}</span>
+            <span class="text-blue">${exercise.duration}s</span>
+          </div>
+        `;
+        
+        exerciseSelector.addEventListener('click', function() {
+          // Stop any current timer
+          if (timerId) {
+            clearInterval(timerId);
+            timerId = null;
+          }
+          
+          // Set current exercise
+          currentExercise = exercise;
+          
+          // Update display
+          document.getElementById('current-exercise-name').textContent = exercise.name;
+          document.getElementById('current-exercise-image').textContent = exercise.name + " Position";
+          timerDisplay.textContent = formatTime(exercise.duration);
+          
+          // Reset buttons
+          startBtn.disabled = false;
+          completeBtn.disabled = true;
+          
+          // Show STELLA tip
+          showToast("STELLA: Ready when you are! Remember to maintain proper form throughout.", 'info', 4000);
+        });
+        
+        // Add button to container
+        const container = document.getElementById('exercise-container');
+        if (container) {
+          container.insertBefore(exerciseSelector, document.getElementById('current-exercise-name').parentNode);
+        }
+      });
+      
+      // Start button functionality
+      if (startBtn) {
+        startBtn.addEventListener('click', function() {
+          if (!currentExercise) {
+            showToast('Please select an exercise first', 'warning');
+            return;
+          }
+          
+          // Disable button
+          startBtn.disabled = true;
+          
+          // Get duration
+          let seconds = currentExercise.duration;
+          timerDisplay.textContent = formatTime(seconds);
+          
+          // Show encouragement
+          showToast("STELLA: Maintain proper form and breathing. You're doing great!", 'info');
+          
+          // Start countdown
+          timerId = setInterval(function() {
+            seconds--;
+            
+            if (seconds < 0) {
+              clearInterval(timerId);
+              timerId = null;
+              completeBtn.disabled = false;
+              timerDisplay.textContent = "Complete!";
+              showToast("STELLA: Excellent work! This exercise builds critical space stability.", 'success');
+            } else {
+              timerDisplay.textContent = formatTime(seconds);
+            }
+          }, 1000);
+        });
+      }
+      
+      // Complete button functionality
+      if (completeBtn) {
+        completeBtn.addEventListener('click', function() {
+          if (!currentExercise) return;
+          
+          // Mark exercise as completed
+          const checkbox = document.getElementById(currentExercise.checkboxId);
+          if (checkbox) {
+            checkbox.checked = true;
+            
+            // Save to localStorage
+            localStorage.setItem(currentExercise.id + '_completed', 'true');
+          }
+          
+          // Reset for next exercise
+          currentExercise = null;
+          startBtn.disabled = false;
+          completeBtn.disabled = true;
+          
+          // Check if all exercises are completed
+          checkSessionCompletion();
+          
+          // Award credits
+          updateCredits(25);
+          
+          // Update mission progress
+          updateProgress(60);
+        });
+      }
+      
+      // Session completion function
+      function checkSessionCompletion() {
+        const allCompleted = exercises.every(ex => 
+          localStorage.getItem(ex.id + '_completed') === 'true'
+        );
+        
+        const completeSessionBtn = document.getElementById('complete-session-1');
+        if (completeSessionBtn) {
+          completeSessionBtn.disabled = !allCompleted;
+          
+          if (allCompleted) {
+            showToast("STELLA: You've completed all exercises! You can now finish the session.", 'success');
+          }
+        }
+      }
+      
+      // Complete session button
+      const completeSessionBtn = document.getElementById('complete-session-1');
+      if (completeSessionBtn) {
+        completeSessionBtn.addEventListener('click', function() {
+          // Mark session as completed
+          localStorage.setItem('session_1_completed', 'true');
+          
+          // Enable session 2
+          const session2Btn = document.getElementById('session-2-btn');
+          if (session2Btn) {
+            session2Btn.disabled = false;
+            session2Btn.textContent = 'Start Session';
+          }
+          
+          // Add status indicator
+          const statusEl = document.getElementById('session-1-status');
+          if (statusEl) {
+            statusEl.innerHTML = '<span class="completion-badge">Completed</span>';
+          }
+          
+          // Award credits
+          updateCredits(50);
+          
+          // Update countdown
+          updateCountdown(6);
+          
+          // Update progress
+          updateProgress(75);
+          
+          // Show success
+          showToast("Session completed! You've mastered the core foundation exercises needed for space environments.", 'success', 5000);
+        });
+      }
+      
+      // Check initial completion status
+      checkSessionCompletion();
+    }
+    
+    // Initialize second session similar to first
+    function initializeSession2() {
+      const session1Completed = localStorage.getItem('session_1_completed') === 'true';
+      const session2Btn = document.getElementById('session-2-btn');
+      
+      if (session1Completed && session2Btn) {
+        session2Btn.disabled = false;
+        session2Btn.textContent = 'Start Session';
+        
+        // Add completed indicator to session 1
+        const statusEl = document.getElementById('session-1-status');
+        if (statusEl) {
+          statusEl.innerHTML = '<span class="completion-badge">Completed</span>';
+        }
+      }
+      
+      // Add click handler
+      if (session2Btn) {
+        session2Btn.addEventListener('click', function() {
+          if (session2Btn.disabled) return;
+          
+          // Show content
+          const content = document.getElementById('session-2-content');
+          if (content) {
+            content.classList.remove('hidden');
+            content.scrollIntoView({ behavior: 'smooth' });
+          }
+          
+          // Update button text
+          session2Btn.textContent = 'Continue Session';
+          
+          // Show STELLA guidance
+          showToast("STELLA: Welcome to Balance Training! These exercises are designed to prepare your vestibular system for microgravity.", 'info', 5000);
+        });
+      }
+    }
+    
+    // Helper functions
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    // Call initialization functions
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize page elements
+      initializeExerciseTimers();
+      initializeSession2();
+      
+      // Initialize mission progress from localStorage
+      const progress = localStorage.getItem('mission_progress') || '0';
+      updateProgress(parseInt(progress));
+      
+      // Initialize countdown from localStorage
+      const days = parseInt(localStorage.getItem('space_countdown_days') || '152');
+      const countdownEl = document.getElementById('space-countdown');
+      if (countdownEl) countdownEl.textContent = days + ' Days';
+      
+      // Initialize credits
+      const credits = parseInt(localStorage.getItem('training_credits') || '0');
+      const creditsEl = document.getElementById('credits-earned');
+      if (creditsEl) creditsEl.textContent = credits;
+      
+      // Show welcome message after a short delay
+      setTimeout(() => {
+        showToast("STELLA: Welcome to your Core & Balance training mission. I'll guide you through each step!", 'info', 5000);
+      }, 1000);
+    });
+</body>
+</html>

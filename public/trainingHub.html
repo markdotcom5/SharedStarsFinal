@@ -669,87 +669,100 @@
       </div>
     </div>
   </section>
-
-  <!-- Footer -->
-  <footer class="bg-black py-12">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-between mb-8">
-        <!-- Logo & Description -->
-        <div class="mb-8 md:mb-0">
-          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-10 mb-4">
-          <p class="text-gray-400 max-w-xs">Preparing humanity for the stars, one person at a time.</p>
-        </div>
-        
-        <!-- Footer Links -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div>
-            <h3 class="text-lg font-semibold text-blue-400 mb-4">About</h3>
-            <ul class="space-y-2">
-              <li><a href="/about.html" class="text-gray-400 hover:text-white transition-colors">Our Story</a></li>
-              <li><a href="/about.html#mission" class="text-gray-400 hover:text-white transition-colors">Mission</a></li>
-              <li><a href="/about.html#team" class="text-gray-400 hover:text-white transition-colors">Team</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-semibold text-blue-400 mb-4">Training</h3>
-            <ul class="space-y-2">
-              <li><a href="/physicalTraining.html" class="text-gray-400 hover:text-white transition-colors">Physical</a></li>
-              <li><a href="/training-modules/mental-fitness.html" class="text-gray-400 hover:text-white transition-colors">Mental</a></li>
-              <li><a href="/training-modules/technical.html" class="text-gray-400 hover:text-white transition-colors">Technical</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-semibold text-blue-400 mb-4">Resources</h3>
-            <ul class="space-y-2">
-              <li><a href="/faq.html" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-              <li><a href="/support.html" class="text-gray-400 hover:text-white transition-colors">Support</a></li>
-              <li><a href="/blog.html" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 class="text-lg font-semibold text-blue-400 mb-4">Legal</h3>
-            <ul class="space-y-2">
-              <li><a href="/terms.html" class="text-gray-400 hover:text-white transition-colors">Terms</a></li>
-              <li><a href="/privacy.html" class="text-gray-400 hover:text-white transition-colors">Privacy</a></li>
-              <li><a href="/cookies.html" class="text-gray-400 hover:text-white transition-colors">Cookies</a></li>
-            </ul>
-          </div>
-        </div>
+<!-- FOOTER -->
+<footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
+  <!-- Animated Floating Particles -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+    <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+    <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
+  </div>
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
+      <!-- About -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+          <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">StelTrek Academy</a></li>
+        </ul>
       </div>
+      <!-- Community -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+          <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+        </ul>
+      </div>
+      <!-- Resources -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+          <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+        </ul>
+      </div>
+      <!-- Legal -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+          <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+        </ul>
+      </div>
+    <!-- Bottom section with copyright and social media -->
+    <div class="mt-12 pt-8 border-t border-blue-900/20 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-500">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
       
-      <!-- Bottom Footer -->
-      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-gray-500 mb-4 md:mb-0">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+      <!-- All 7 social media links -->
+      <div class="flex space-x-4 mt-4 md:mt-0">
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/company/106241890" class="text-gray-400 hover:text-blue-400" aria-label="LinkedIn">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
         
-        <!-- Social Media Links -->
-        <div class="flex space-x-4">
-          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
-            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z" />
-            </svg>
-          </a>
-          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
-            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.035 10.035 0 01-3.127 1.195 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-            </svg>
-          </a>
-          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
-            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z" />
-            </svg>
-          </a>
-          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
-            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-            </svg>
-          </a>
-        </div>
+        <!-- Twitter/X -->
+        <a href="https://x.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Twitter">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+        </a>
+        
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Facebook">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+        </a>
+        
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/sharedstarsacademy/" class="text-gray-400 hover:text-blue-400" aria-label="Instagram">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        
+        <!-- Telegram -->
+        <a href="https://t.me/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Telegram">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12zm3.224 17.871c.188.133.43.166.646.085.215-.082.374-.253.463-.489.089-.236.089-.498 0-.734l-1.74-4.36 4.4-2.507c.466-.265.466-.934 0-1.199l-9.65-5.514c-.465-.266-1.048.055-1.047.577l.072 12.71c0 .522.583.843 1.048.577l3.293-1.879zm-8.791-7.414l2.083 1.188-.759 1.329-1.324-.755v-1.762zm6.442 7.385l-1.621.925c-.961.548-2.132-.106-2.132-1.186l-.04-6.99 3.793 7.251z"/></svg>
+        </a>
+        
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@sharedstarsacademy" class="text-gray-400 hover:text-blue-400" aria-label="TikTok">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@SharedStarsAcademy" class="text-gray-400 hover:text-blue-400" aria-label="YouTube">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+        </a>
       </div>
     </div>
-  </footer>
+  </div>
+    </div>
+    <script>
+      // Update current year dynamically if needed
+      document.getElementById("current-year") &&
+        (document.getElementById("current-year").textContent = new Date().getFullYear());
+    </script>
+  </div>
+</div>
+</footer>
 <!-- JavaScript -->
 <script src="/js/stella-core.js"></script>
 <script src="/js/stella-integration.js"></script>
@@ -778,17 +791,18 @@
         console.error('STELLA API Error:', error);
       });
   });
-  </script>
+</script>
+
 <!-- STELLA AI Integration for Mission Control -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Get STELLA elements
-console.log('🔍 Setting up STELLA AI in Mission Control...');
+  console.log('🔍 Setting up STELLA AI in Mission Control...');
 
-// Get STELLA elements
-const stellaInput = document.getElementById('stella-question');
-const stellaButton = document.getElementById('send-to-stella');
-const stellaConversation = document.querySelector('.stella-conversation');
+  // Get STELLA elements
+  const stellaInput = document.getElementById('stella-question');
+  const stellaButton = document.getElementById('send-to-stella');
+  const stellaConversation = document.querySelector('.stella-conversation');
   
   // Verify elements exist
   if (!stellaInput || !stellaButton) {
@@ -853,18 +867,7 @@ const stellaConversation = document.querySelector('.stella-conversation');
         </div>
       </div>
     `;
-// Test direct API call with enhanced prompt
-fetch('/api/stella/test-guidance', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    userId: 'test-user',
-    question: "What's my first step?",
-    testMode: true
-  })
-})
-.then(response => response.json())
-.then(data => console.log('STELLA test response:', data));
+    
     // Scroll to bottom of conversation
     stellaConversation.scrollTop = stellaConversation.scrollHeight;
     
@@ -930,7 +933,12 @@ fetch('/api/stella/test-guidance', {
             userId: userId,
             question: question,
             exerciseId: exerciseId,
-            conversationHistory: conversationHistory
+            conversationHistory: conversationHistory,
+            // Add this to help with matching similar questions
+            context: {
+              currentPage: 'trainingHub',
+              moduleContext: document.querySelector('.module-card:hover')?.querySelector('h3')?.textContent || null
+            }
           })
         });
         
@@ -950,8 +958,10 @@ fetch('/api/stella/test-guidance', {
       if (response.success && response.guidance) {
         // Parse guidance from the response
         const message = response.guidance.message || "I'm processing your request.";
+        const messageId = response.messageId || 'latest';
+        
         let responseHTML = `
-          <div class="mb-4">
+          <div class="mb-4" data-message-id="${messageId}" data-session-id="${response.sessionId || ''}">
             <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
               <p>${message}</p>
         `;
@@ -965,8 +975,20 @@ fetch('/api/stella/test-guidance', {
           responseHTML += `</ul>`;
         }
         
-        // Close containers
+        // Close message container
         responseHTML += `
+            </div>
+            <div class="flex justify-end mt-1 space-x-2 text-xs">
+              <button class="text-gray-500 hover:text-green-500 feedback-btn" data-value="helpful">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017a2 2 0 01-1.865-1.71l-.745-4.47a2 2 0 011.865-2.29H14z" />
+                </svg>
+              </button>
+              <button class="text-gray-500 hover:text-red-500 feedback-btn" data-value="not-helpful">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.866.1l.745 4.47a2 2 0 01-1.865 2.29H10z" />
+                </svg>
+              </button>
             </div>
           </div>
         `;
@@ -1038,6 +1060,59 @@ fetch('/api/stella/test-guidance', {
     // Default response if no patterns match
     return "I'm here to help you navigate Mission Control. You can ask me about assessments, your space readiness timeline, or any aspect of your training program.";
   }
+  
+  // Add the feedback handler function
+  function handleFeedback(messageId, isHelpful, sessionId) {
+    // Send feedback to the server to help STELLA learn
+    fetch('/api/stella/feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous',
+        messageId: messageId,
+        sessionId: sessionId,
+        helpful: isHelpful,
+        feedbackText: null,
+        rating: isHelpful ? 5 : 1
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('✅ STELLA feedback recorded:', data);
+    })
+    .catch(error => {
+      console.error('❌ Error recording STELLA feedback:', error);
+    });
+  }
+  
+  // Add event listeners for feedback buttons
+  document.addEventListener('click', function(e) {
+    const button = e.target.closest('.feedback-btn');
+    if (button) {
+      const isHelpful = button.dataset.value === 'helpful';
+      const messageContainer = button.closest('.mb-4');
+      const messageId = messageContainer.dataset.messageId || 'latest';
+      const sessionId = messageContainer.dataset.sessionId || '';
+      
+      // Visual feedback
+      button.classList.remove('text-gray-500');
+      button.classList.add(isHelpful ? 'text-green-500' : 'text-red-500');
+      
+      // Send feedback to server
+      handleFeedback(messageId, isHelpful, sessionId);
+      
+      // Disable both buttons after selection
+      const buttons = messageContainer.querySelectorAll('.feedback-btn');
+      buttons.forEach(b => {
+        b.disabled = true;
+        if (b !== button) {
+          b.classList.add('opacity-30');
+        }
+      });
+    }
+  });
   
   // Set up quick action buttons
   document.querySelectorAll('.mission-control-card button').forEach(button => {
