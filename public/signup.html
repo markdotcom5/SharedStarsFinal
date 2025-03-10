@@ -287,7 +287,7 @@
           }
 
           try {
-              const response = await fetch("/api/auth/register", {
+              const response = await fetch("/api/auth/signup", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ name, email, password })
@@ -299,7 +299,15 @@
                   throw new Error(result.error || "Registration failed. Try again.");
               }
 
-              window.location.href = "/welcome.html";
+              // ✅ Store email for verification page
+              localStorage.setItem("userEmail", email);
+
+        if (data.authenticated) {
+            window.location.href = "/welcome.html"; // Redirect if already logged in
+        }
+
+              // ✅ Redirect to OTP verification page
+              window.location.href = "/verification.html";
           } catch (error) {
               signupError.textContent = error.message;
               signupError.classList.remove("hidden");

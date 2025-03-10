@@ -29,13 +29,6 @@
         <li><a href="/about.html" data-i18n="nav.about">About</a></li>
         <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
         <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
-
-        <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
-        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
-        <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
-        <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
-        <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
       </ul>
 
       <div class="relative">
@@ -69,7 +62,7 @@
             <div class="flex flex-col items-center justify-between">
               <p class="text-heading5 text-white mt-8">Congratulations, Mark.</p>
               <p class="text-body-base text-white-800 -mt-4">You have created your account successfully.</p>
-              <button type="button" class="w-[432px] form-control text-body-xsmall-semibold mt-6 mb-8 px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full">Reset</button>
+              <button type="button" id="dashboard-btn" class="w-[432px] form-control text-body-xsmall-semibold mt-6 mb-8 px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full">Go to dashboard</button>
             </div>
           </div>
         </div>
@@ -81,46 +74,9 @@
 
     <!-- JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const menuIcon = document.querySelector('.menu-icon');
-            const dropdownMenu = document.querySelector('.dropdown-menu');
-            const loginForm = document.getElementById('login-form');
-            const loginError = document.getElementById('login-error');
-
-            // Toggle dropdown menu
-            menuIcon.addEventListener('click', () => {
-                dropdownMenu.classList.toggle('show');
-            });
-
-            // Handle login form submission
-            loginForm.addEventListener('submit', async (e) => {
-              console.log("first");
-                e.preventDefault();
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-
-
-                try {
-                    const response = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, password })
-                    });
-
-                    if (response.ok) {
-                        window.location.href = '/mission-control.html';
-                    } else {
-                        const errorData = await response.json();
-                        loginError.textContent = errorData.error || "Failed to log in. Please try again.";
-                    }
-                } catch (error) {
-                    loginError.textContent = "An unexpected error occurred. Please try again.";
-                    console.error('Login Error:', error);
-                }
-            });
-        });
-    </script>
-          <!-- <script type="module" src="/js/languages.js"></script>
-          <script type="module" src="/js/academy.js"></script> -->
+      document.getElementById("dashboard-btn").addEventListener("click", function() {
+          window.location.href = "/welcome.html";
+      });
+  </script>
 </body>
 </html>
