@@ -152,10 +152,17 @@ app.use(bodyParser.json());
 app.use(cors({
   origin: ['http://localhost', 'http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true
-}));app.use(helmet({
+}));
+app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      scriptSrc: ["'self'", "'unsafe-inline'"]
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "data:"],
+      imgSrc: ["'self'", "data:"],
+      frameSrc: ["'self'", "https://www.sora.com"],
+      childSrc: ["'self'", "https://www.sora.com"]
     }
   }
 }));
@@ -218,7 +225,7 @@ let authRoutes, userRoutes, creditRoutes, paymentRoutes, trainingRoutes,
     socialPlatformRoutes, chatRoutes, stripeRoutes, stripeWebhookRoutes,
     subscriptionRoutes, aiRoutes, aiSocialRoutes, briefingRoutes,
     userRoutesAlt, assessmentRoutes, balanceRoutes, enduranceRoutes,
-    flexibilityRoutes, stellaRoutes, strengthRoutes;
+    flexibilityRoutes, stellaRoutes, strengthRoutes, applicationsRoutes;
 
 // Import routes with individual try-catch blocks
 try { userRoutes = require("./routes/userRoutes"); } catch (e) { console.error("❌ userRoutes:", e.message); }
@@ -245,6 +252,8 @@ try { enduranceRoutes = require('./routes/training/missions/endurance.js'); } ca
 try { flexibilityRoutes = require('./routes/training/missions/flexibility.js'); } catch (e) { console.error("❌ flexibilityRoutes:", e.message); }
 try { strengthRoutes = require('./routes/training/missions/strength.js'); } catch (e) { console.error("❌ strengthRoutes:", e.message); }
 try { stellaRoutes = require("./routes/api/stella-minimal"); } catch (e) { console.error("❌ stellaRoutes:", e.message); }
+try { applicationsRoutes = require("./routes/api/applications"); } 
+catch (e) { console.error("❌ applicationsRoutes:", e.message); }
 
 // ============================
 // STELLA ROUTES SETUP
@@ -301,6 +310,10 @@ if (stellaRoutes) {
   console.log("✅ STELLA routes mounted at /api/stella");
 } else {
   console.error("❌ STELLA routes failed to load - please check routes/api/stella-minimal.js");
+}
+if (applicationsRoutes) {
+  app.use("/api/applications", applicationsRoutes);
+  console.log("✅ Application routes mounted at /api/applications");
 }
 // ============================
 // 9. ADDITIONAL API ENDPOINTS
