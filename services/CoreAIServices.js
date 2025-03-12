@@ -268,21 +268,24 @@ initialize() {
   }
   
   /**
-   * Register a new AI subsystem
-   * @param {String} name - Name of the subsystem
-   * @param {Object} system - The subsystem object
-   */
-  registerSubsystem(name, system) {
-    if (this.subsystems.has(name)) {
-      console.warn(`⚠️ Subsystem '${name}' already registered. Overwriting.`);
-    }
-    
-    this.subsystems.set(name, system);
-    console.log(`✅ Registered AI subsystem: ${name}`);
-    
-    // Emit event for subsystem registration
-    this.emit('subsystem-registered', { name, system });
+ * Register a new AI subsystem
+ * @param {String} name - Name of the subsystem
+ * @param {Object} system - The subsystem object
+ * @returns {Boolean} - Whether the registration was successful
+ */
+registerSubsystem(name, system) {
+  if (this.subsystems.has(name)) {
+    console.log(`ℹ️ Subsystem '${name}' already registered. Skipping.`);
+    return false;
   }
+  
+  this.subsystems.set(name, system);
+  console.log(`✅ Registered AI subsystem: ${name}`);
+  
+  // Emit event for subsystem registration
+  this.emit('subsystem-registered', { name, system });
+  return true;
+}
   
   /**
    * Register core subsystems that are built into the main service

@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
       window.location.href = '/admin/login.html';
     }
   }
-  
+  // Add dev mode support
+localStorage.setItem('devToken', 'dev_access_token');
+
   function setupNavigation() {
     // Handle navigation clicks
     document.querySelectorAll('[data-section]').forEach(link => {
@@ -178,74 +180,58 @@ async function checkAdminAuth() {
   }
   
   async function loadRecentActivity() {
-    // This would fetch recent activity from your API
-    // For now, we'll use placeholder data
     const recentActivityContainer = document.getElementById('recent-activity');
-    
     if (!recentActivityContainer) return;
     
-    // Clear container
-    recentActivityContainer.innerHTML = '';
+    recentActivityContainer.innerHTML = '<p class="text-gray-400 italic">Loading recent activity...</p>';
     
-    // Add placeholder activities
-    const activities = [
-      {
-        type: 'application',
-        text: 'New application received from John Doe',
-        timestamp: new Date(Date.now() - 30 * 60000) // 30 minutes ago
-      },
-      {
-        type: 'stella',
-        text: 'STELLA AI received 15 new questions in the last hour',
-        timestamp: new Date(Date.now() - 60 * 60000) // 1 hour ago
-      },
-      {
-        type: 'user',
-        text: 'New user registered: jane.smith@example.com',
-        timestamp: new Date(Date.now() - 120 * 60000) // 2 hours ago
-      },
-      {
-        type: 'feedback',
-        text: 'Positive feedback received for STELLA response #12345',
-        timestamp: new Date(Date.now() - 180 * 60000) // 3 hours ago
-      }
-    ];
-    
-    // Add each activity to the container
-    activities.forEach(activity => {
-      const activityEl = document.createElement('div');
-      activityEl.className = 'flex items-start p-3 rounded-lg bg-gray-800/50';
+    try {
+      // For now, just show recent applications instead of dummy data
+      const response = await fetch('/api/admin/applications?limit=4', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken') || localStorage.getItem('devToken')}`
+        }
+      });
       
-      // Icon based on activity type
-      let icon;
-      switch(activity.type) {
-        case 'application':
-          icon = '<svg class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
-          break;
-        case 'stella':
-          icon = '<svg class="h-5 w-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>';
-          break;
-        case 'user':
-          icon = '<svg class="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>';
-          break;
-        case 'feedback':
-          icon = '<svg class="h-5 w-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>';
-          break;
+      if (!response.ok) {
+        throw new Error('Could not fetch recent applications');
       }
       
-      // Format time
-      const formattedTime = activity.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const data = await response.json();
       
-      activityEl.innerHTML = `
-        <div class="mr-3 mt-1">${icon}</div>
-        <div class="flex-1">
-          <p>${activity.text}</p>
-          <p class="text-xs text-gray-400 mt-1">${formattedTime}</p>
-        </div>
-      `;
+      // Clear the container
+      recentActivityContainer.innerHTML = '';
       
-      recentActivityContainer.appendChild(activityEl);
-    });
+      if (data.success && data.applications && data.applications.length > 0) {
+        // Add activity items for real applications
+        data.applications.forEach(app => {
+          const date = new Date(app.createdAt);
+          const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          
+          const activityEl = document.createElement('div');
+          activityEl.className = 'flex items-start p-3 rounded-lg bg-gray-800/50';
+          
+          activityEl.innerHTML = `
+            <div class="mr-3 mt-1">
+              <svg class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <p>New application received from ${app.name}</p>
+              <p class="text-xs text-gray-400 mt-1">${timeString}</p>
+            </div>
+          `;
+          
+          recentActivityContainer.appendChild(activityEl);
+        });
+      } else {
+        recentActivityContainer.innerHTML = '<p class="text-gray-400 italic">No recent activity to display</p>';
+      }
+    } catch (error) {
+      console.error('Error loading recent activity:', error);
+      recentActivityContainer.innerHTML = '<p class="text-red-400">Error loading recent activity</p>';
+    }
   }
   
   // Applications section functions
@@ -263,8 +249,17 @@ async function checkAdminAuth() {
     if (search) queryParams += `&search=${encodeURIComponent(search)}`;
     
     try {
-      // Fetch applications
-      const response = await fetch(`/api/admin/applications?${queryParams}`);
+      // Fetch applications with token
+      const response = await fetch(`/api/admin/applications?${queryParams}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken') || localStorage.getItem('devToken')}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error((await response.json()).error || 'Authentication required');
+      }
+      
       const data = await response.json();
       
       if (data.success) {
@@ -277,7 +272,7 @@ async function checkAdminAuth() {
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error loading applications. Please try again.');
+      alert('Error loading applications: ' + error.message);
     }
   }
   
