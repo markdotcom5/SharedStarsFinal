@@ -18,7 +18,7 @@ const checkAndInsertEVA = async () => {
 };
 
 class ModuleLoader extends EventEmitter {
-    cconstructor() {
+    constructor() { // FIXED: Was 'cconstructor' with a typo
         super();
         this.modules = {
             physical: physicalModule,

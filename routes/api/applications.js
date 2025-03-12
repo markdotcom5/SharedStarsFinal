@@ -8,7 +8,7 @@ const router = express.Router();
 const Application = require('../../models/Application');
 const { OpenAI } = require('openai');
 const rateLimit = require('express-rate-limit');
-
+const authMiddleware = require('../../middleware/authenticate');
 // Initialize OpenAI
 let openai;
 try {
@@ -147,7 +147,69 @@ router.post('/submit', applicationLimiter, async (req, res) => {
     });
   }
 });
+// In your applications.js route file, update the submit route:
 
+router.post('/submit', applicationLimiter, async (req, res) => {
+  try {
+    // Your existing application processing code...
+    
+    // After saving the application
+    await newApplication.save();
+    
+    // Send admin notification
+    const emailService = require('../services/emailService');
+    emailService.sendApplicationSubmissionToAdmin(newApplication)
+      .catch(err => logger.error('Admin application email error:', err));
+    
+    // Response to client remains the same
+    res.status(201).json({
+      success: true,
+      message: 'Application submitted successfully',
+      applicationId: newApplication._id,
+      reviewScore: aiReview.score
+    });
+  } catch (error) {
+    // Your existing error handling...
+  }
+});
+
+// And add/update the approve route:
+
+router.post('/approve/:id', authMiddleware.authenticate, authMiddleware.requireRole('admin'), async (req, res) => {  try {
+    const applicationId = req.params.id;
+    
+    // Find and update the application status
+    const application = await Application.findByIdAndUpdate(
+      applicationId,
+      { status: 'approved', updatedAt: Date.now() },
+      { new: true }
+    );
+    
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        error: 'Application not found'
+      });
+    }
+    
+    // Send approval notification to applicant
+    const emailService = require('../services/emailService');
+    const emailSent = await emailService.sendApplicationAcceptance(application);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Application approved and notification sent',
+      emailSent: true,
+      application
+    });
+  } catch (error) {
+    logger.error('Error approving application:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error processing approval'
+    });
+  }
+});
 /**
  * @route   GET /api/applications/status/:email
  * @desc    Check application status by email

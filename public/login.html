@@ -492,6 +492,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Password visibility toggle
+            const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+        document.getElementById('email').value = rememberedEmail;
+        document.getElementById('remember').checked = true;
+    }
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
             
@@ -530,22 +535,65 @@
             const loginForm = document.getElementById('login-form');
             
             if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const email = document.getElementById('email').value;
-                    const password = document.getElementById('password').value;
-                    
-                    // Basic validation
-                    if (!email || !password) {
-                        alert("Please enter both email and password");
-                        return;
-                    }
-                    
-                    // Redirect to mission control
-                    window.location.href = '/mission-control.html';
-                });
-            }
+                loginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    // Basic validation
+    if (!email || !password) {
+        alert("Please enter both email and password");
+        return;
+    }
+    
+    // Show loading state
+    const loginBtn = document.querySelector('.login-btn');
+    const originalBtnText = loginBtn.innerHTML;
+    loginBtn.innerHTML = 'Logging in...';
+    loginBtn.disabled = true;
+    
+    try {
+        // Make authentication request to your backend
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
         });
+        
+        if (response.ok) {
+            // Save remember me preference if checked
+            const rememberMe = document.getElementById('remember').checked;
+            if (rememberMe) {
+                localStorage.setItem('rememberedEmail', email);
+            } else {
+                localStorage.removeItem('rememberedEmail');
+            }
+            const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+    }
+            // Redirect to mission control
+            window.location.href = '/mission-control.html';
+        } else {
+            const data = await response.json();
+            alert(data.message || "Login failed. Please check your credentials.");
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert("Connection error. Please try again later.");
+    } finally {
+        // Restore button state
+        loginBtn.innerHTML = originalBtnText;
+        loginBtn.disabled = false;
+    }
+});
     </script>
 </body>
 </html>

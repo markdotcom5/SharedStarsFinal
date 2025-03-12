@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharedStars Admin Dashboard</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+  
+  <style>
+    body {
+      background-color: #0F172A;
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .card {
+      background-color: #1E293B;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    .nav-item {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    
+    .nav-item.active {
+      background-color: #3B82F6;
+      color: white;
+    }
+    
+    .nav-item:not(.active) {
+      color: #CBD5E1;
+    }
+    
+    .nav-item:not(.active):hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+    
+    .metric-card {
+      background-color: #0F182B;
+      border: 1px solid rgba(59, 130, 246, 0.1);
+      border-radius: 0.75rem;
+    }
+    
+    .metric-value {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    
+    .metric-label {
+      color: #94A3B8;
+      font-size: 0.875rem;
+    }
+
+    /* Applications table styles */
+    .applications-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .applications-table th,
+    .applications-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #1e2738;
+    }
+    
+    .applications-table th {
+      background-color: #111827;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    
+    .applications-table tr:hover {
+      background-color: #111827;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .status-pending {
+      background-color: #374151;
+      color: #d1d5db;
+    }
+    
+    .status-approved {
+      background-color: #065f46;
+      color: #a7f3d0;
+    }
+    
+    .status-rejected {
+      background-color: #7f1d1d;
+      color: #fecaca;
+    }
+    
+    .status-waitlisted {
+      background-color: #854d0e;
+      color: #fef3c7;
+    }
+    
+    .application-detail {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 400px;
+      height: 100vh;
+      background-color: #1a2536;
+      border-left: 1px solid #1e2738;
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 1000;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .application-detail.visible {
+      display: block;
+    }
+    
+    .close-detail {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    
+    .detail-section {
+      margin-bottom: 20px;
+    }
+    
+    .detail-section h3 {
+      font-size: 16px;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #1e2738;
+      padding-bottom: 5px;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .action-btn {
+      padding: 8px 15px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    
+    .approve-btn {
+      background-color: #065f46;
+      color: white;
+    }
+    
+    .reject-btn {
+      background-color: #7f1d1d;
+      color: white;
+    }
+    
+    .waitlist-btn {
+      background-color: #854d0e;
+      color: white;
+    }
+    
+    .filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    
+    .filter-select {
+      background-color: #111827;
+      border: 1px solid #1e2738;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+    }
+    
+    .search-input {
+      background-color: #111827;
+      border: 1px solid #1e2738;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      flex-grow: 1;
+      max-width: 300px;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 20px;
+    }
+    
+    .page-btn {
+      background-color: #111827;
+      border: 1px solid #1e2738;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .page-btn.active {
+      background-color: #4a7de9;
+      border-color: #4a7de9;
+    }
+    
+    .page-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .admin-notes {
+      width: 100%;
+      height: 100px;
+      background-color: #111827;
+      border: 1px solid #1e2738;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      margin-top: 10px;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="bg-gray-900 shadow-lg py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-8 mr-3">
+        <span class="text-xl font-bold">SharedStars Admin</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="text-gray-300">Mission Control Dashboard</span>
+        <button id="admin-logout" class="px-3 py-1 bg-red-800 hover:bg-red-700 text-white rounded-lg text-sm transition-colors">
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Sidebar Navigation -->
+      <aside class="lg:w-1/5">
+        <nav class="card p-4 sticky top-4">
+          <ul class="space-y-2">
+            <li>
+              <a href="#dashboard" class="nav-item active" data-section="dashboard">Dashboard</a>
+            </li>
+            <li>
+              <a href="#applications" class="nav-item" data-section="applications">Academy Applications</a>
+            </li>
+            <li>
+              <a href="#stella" class="nav-item" data-section="stella">STELLA Analytics</a>
+            </li>
+            <li>
+              <a href="#common-questions" class="nav-item" data-section="common-questions">Common Questions</a>
+            </li>
+            <li>
+              <a href="#feedback-analysis" class="nav-item" data-section="feedback-analysis">Feedback Analysis</a>
+            </li>
+            <li>
+              <a href="#response-improvements" class="nav-item" data-section="response-improvements">Response Improvements</a>
+            </li>
+            <li>
+              <a href="#users" class="nav-item" data-section="users">Manage Users</a>
+            </li>
+            <li>
+              <a href="#briefings" class="nav-item" data-section="briefings">Daily Briefings</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      
+      <!-- Main Content Area -->
+      <main class="lg:w-4/5">
+        <!-- Loading State -->
+        <div id="loading-indicator" class="text-center py-20">
+          <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500 mb-6"></div>
+          <p class="text-xl text-blue-400">Loading Admin Dashboard...</p>
+        </div>
+        
+        <!-- Dashboard Overview Section -->
+        <section id="dashboard-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">Mission Control Dashboard</h1>
+          
+          <!-- Key Metrics Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Users Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-total-users">0</div>
+              <div class="metric-label">Active Users</div>
+            </div>
+            
+            <!-- Applications Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-pending-applications">0</div>
+              <div class="metric-label">Pending Applications</div>
+            </div>
+            
+            <!-- AI Interactions Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-ai-interactions">0</div>
+              <div class="metric-label">STELLA Interactions</div>
+            </div>
+            
+            <!-- Satisfaction Rate Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-green-400" id="metric-satisfaction">0%</div>
+              <div class="metric-label">User Satisfaction</div>
+            </div>
+          </div>
+          
+          <!-- Recent Activity -->
+          <div class="card p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+            <div class="space-y-4" id="recent-activity">
+              <!-- Activity items will be added here by JS -->
+              <p class="text-gray-400 italic">Loading recent activity...</p>
+            </div>
+          </div>
+          
+          <!-- Quick Links -->
+          <div class="card p-6">
+            <h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <a href="#applications" data-section="applications" class="bg-blue-900 hover:bg-blue-800 p-4 rounded-lg flex items-center transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>Review Applications</span>
+              </a>
+              <a href="#stella" data-section="stella" class="bg-blue-900 hover:bg-blue-800 p-4 rounded-lg flex items-center transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span>STELLA Analytics</span>
+              </a>
+              <a href="#users" data-section="users" class="bg-blue-900 hover:bg-blue-800 p-4 rounded-lg flex items-center transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <span>Manage Users</span>
+              </a>
+              <a href="#briefings" data-section="briefings" class="bg-blue-900 hover:bg-blue-800 p-4 rounded-lg flex items-center transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+                <span>Manage Briefings</span>
+              </a>
+              <a href="#feedback-analysis" data-section="feedback-analysis" class="bg-blue-900 hover:bg-blue-800 p-4 rounded-lg flex items-center transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span>Review Feedback</span>
+              </a>
+              <a href="/admin/settings.html" class="bg-blue-900 hover:bg-blue-800 p-4 rounded-lg flex items-center transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Settings</span>
+              </a>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Applications Section -->
+        <section id="applications-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">Academy Applications</h1>
+          
+          <!-- Stats Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="total-applications">-</div>
+              <div class="metric-label">Total</div>
+            </div>
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="pending-applications">-</div>
+              <div class="metric-label">Pending</div>
+            </div>
+            <div class="metric-card p-6">
+              <div class="metric-value text-green-400" id="approved-applications">-</div>
+              <div class="metric-label">Approved</div>
+            </div>
+            <div class="metric-card p-6">
+              <div class="metric-value text-red-400" id="rejected-applications">-</div>
+              <div class="metric-label">Rejected</div>
+            </div>
+            <div class="metric-card p-6">
+              <div class="metric-value text-yellow-400" id="waitlisted-applications">-</div>
+              <div class="metric-label">Waitlisted</div>
+            </div>
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="last-week-applications">-</div>
+              <div class="metric-label">Last 7 Days</div>
+            </div>
+          </div>
+          
+          <!-- Filters -->
+          <div class="card p-6 mb-8">
+            <div class="filters">
+              <select id="status-filter" class="filter-select">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="waitlisted">Waitlisted</option>
+              </select>
+              <input type="text" id="search-input" placeholder="Search applications..." class="search-input">
+              <button id="search-btn" class="action-btn approve-btn">Search</button>
+              <button id="reset-btn" class="action-btn reject-btn">Reset</button>
+            </div>
+            
+            <!-- Applications Table -->
+            <table class="applications-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Background</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>AI Score</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="applications-list">
+                <!-- Will be populated by JavaScript -->
+              </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+              <!-- Will be populated by JavaScript -->
+            </div>
+          </div>
+        </section>
+        
+        <!-- STELLA Analytics Section -->
+        <section id="stella-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">STELLA AI Analytics</h1>
+          
+          <!-- Key Metrics Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Questions Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-total-questions">0</div>
+              <div class="metric-label">Total Questions</div>
+            </div>
+            
+            <!-- Total Responses Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-total-responses">0</div>
+              <div class="metric-label">Total Responses</div>
+            </div>
+            
+            <!-- Unique Users Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-unique-users">0</div>
+              <div class="metric-label">Unique Users</div>
+            </div>
+            
+            <!-- Satisfaction Rate Card -->
+            <div class="metric-card p-6">
+              <div class="metric-value text-green-400" id="metric-satisfaction">0%</div>
+              <div class="metric-label">User Satisfaction</div>
+            </div>
+          </div>
+          
+          <!-- Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Daily Trends Chart -->
+            <div class="card p-6">
+              <h2 class="text-xl font-semibold mb-4">Daily Interaction Trends</h2>
+              <div style="height: 300px;">
+                <canvas id="daily-trends-chart"></canvas>
+              </div>
+            </div>
+            
+            <!-- Question Types Chart -->
+            <div class="card p-6">
+              <h2 class="text-xl font-semibold mb-4">Question Types Distribution</h2>
+              <div style="height: 300px;">
+                <canvas id="question-types-chart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Popular Topics -->
+          <div class="card p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Popular Topics</h2>
+            <div class="flex flex-wrap gap-3" id="popular-topics">
+              <!-- Topics will be added here by JS -->
+            </div>
+          </div>
+        </section>
+        
+        <!-- Common Questions Section -->
+        <section id="common-questions-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">Most Common Questions</h1>
+          
+          <div class="card p-6 mb-8">
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b border-gray-700">
+                    <th class="text-left py-3 px-4">Question</th>
+                    <th class="text-left py-3 px-4 w-24">Frequency</th>
+                    <th class="text-left py-3 px-4 w-40">Type</th>
+                    <th class="text-left py-3 px-4 w-40">Last Asked</th>
+                    <th class="text-left py-3 px-4 w-20">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="common-questions-table">
+                  <!-- Questions will be added here by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Feedback Analysis Section -->
+        <section id="feedback-analysis-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">User Feedback Analysis</h1>
+          
+          <!-- Feedback Summary Card -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card p-6">
+              <div class="metric-value text-blue-400" id="metric-feedback-count">0</div>
+              <div class="metric-label">Total Feedback Received</div>
+            </div>
+            
+            <div class="metric-card p-6">
+              <div class="metric-value text-green-400" id="metric-positive-feedback">0</div>
+              <div class="metric-label">Positive Feedback</div>
+            </div>
+            
+            <div class="metric-card p-6">
+              <div class="metric-value text-red-400" id="metric-negative-feedback">0</div>
+              <div class="metric-label">Negative Feedback</div>
+            </div>
+          </div>
+          
+          <!-- Feedback List -->
+          <div class="card p-6">
+            <h2 class="text-xl font-semibold mb-4">Recent Feedback</h2>
+            <div id="feedback-entries" class="space-y-4">
+              <!-- Feedback entries will be added here by JS -->
+            </div>
+          </div>
+        </section>
+        
+        <!-- Response Improvements Section -->
+        <section id="response-improvements-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">Response Improvements</h1>
+          
+          <div class="card p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Add Improved Response</h2>
+            
+            <div class="mb-4">
+              <label class="block text-gray-300 mb-2">Select a Question:</label>
+              <select id="question-selector" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2">
+                <option value="">Select a question...</option>
+                <!-- Questions will be added here by JS -->
+              </select>
+            </div>
+            
+            <div class="mb-4">
+              <label class="block text-gray-300 mb-2">Current Response:</label>
+              <div id="current-response" class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-gray-400 italic">
+                Select a question to see its current response
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="block text-gray-300 mb-2">Improved Response:</label>
+              <textarea id="improved-response" rows="5" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2"></textarea>
+            </div>
+            
+            <button id="submit-improvement" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+              Save Improved Response
+            </button>
+          </div>
+        </section>
+        
+        <!-- Users Section -->
+        <section id="users-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">User Management</h1>
+          
+          <div class="card p-6 mb-8">
+            <p class="text-gray-400 italic">User management functionality coming soon.</p>
+          </div>
+        </section>
+        
+        <!-- Briefings Section -->
+        <section id="briefings-section" class="hidden">
+          <h1 class="text-3xl font-bold mb-6">Daily Briefings</h1>
+          
+          <div class="card p-6 mb-8">
+            <p class="text-gray-400 italic">Briefings management functionality coming soon.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  
+  <!-- Application Detail Sidebar -->
+  <div class="application-detail" id="application-detail">
+    <button class="close-detail" id="close-detail">&times;</button>
+    <h3 class="text-xl font-bold mb-4" id="detail-name">Applicant Name</h3>
+    
+    <div class="detail-section">
+      <h3>Contact Information</h3>
+      <p><strong>Email:</strong> <span id="detail-email"></span></p>
+      <p><strong>Application Date:</strong> <span id="detail-date"></span></p>
+    </div>
+    
+    <div class="detail-section">
+      <h3>Background</h3>
+      <p id="detail-background"></p>
+    </div>
+    
+    <div class="detail-section">
+      <h3>Motivation</h3>
+      <p id="detail-motivation"></p>
+    </div>
+    
+    <div class="detail-section">
+      <h3>AI Analysis</h3>
+      <p><strong>Score:</strong> <span id="detail-score"></span></p>
+      <p><strong>Notes:</strong> <span id="detail-ai-notes"></span></p>
+      <p><strong>Recommended Pathway:</strong> <span id="detail-pathway"></span></p>
+    </div>
+    
+    <div class="detail-section">
+      <h3>Admin Notes</h3>
+      <textarea id="admin-notes" class="admin-notes" placeholder="Add notes about this application..."></textarea>
+    </div>
+    
+    <div class="action-buttons">
+      <button id="approve-btn" class="action-btn approve-btn">Approve</button>
+      <button id="waitlist-btn" class="action-btn waitlist-btn">Waitlist</button>
+      <button id="reject-btn" class="action-btn reject-btn">Reject</button>
+    </div>
+  </div>
+  
+  <!-- JavaScript for the Admin Dashboard -->
+  <script src="/admin/js/admin-dashboard.js"></script>
