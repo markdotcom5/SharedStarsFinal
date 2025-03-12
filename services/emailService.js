@@ -195,7 +195,97 @@ class EmailService {
       this.processDeliveryQueue();
     }
   }
-  
+  /**
+ * Send application submission notification to admin
+ * @param {Object} application - Application data
+ * @returns {Promise<Object>} Send result
+ */
+async sendApplicationSubmissionToAdmin(application) {
+  try {
+    // Prepare admin notification content
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>New SharedStars Academy Application</h2>
+        <p><strong>Name:</strong> ${application.name}</p>
+        <p><strong>Email:</strong> ${application.email}</p>
+        <p><strong>Background:</strong> ${application.background}</p>
+        <p><strong>Motivation:</strong> ${application.motivation}</p>
+        <p><strong>AI Review Score:</strong> ${application.aiReview.score.toFixed(2)}</p>
+        <p><strong>AI Notes:</strong> ${application.aiReview.notes}</p>
+        <p><strong>Recommended Pathway:</strong> ${application.aiReview.recommendedPathway || 'Not specified'}</p>
+        <p><a href="${config.baseUrl}/admin/applications/${application._id}">Review in Admin Portal</a></p>
+      </div>
+    `;
+
+    // Send the email
+    const result = await this.transporter.sendMail({
+      from: `"SharedStars Academy" <${config.email.from}>`,
+      to: config.adminEmail,
+      subject: `New Academy Application: ${application.name}`,
+      html,
+      text: `New application received from ${application.name} (${application.email}). AI Score: ${application.aiReview.score.toFixed(2)}. Review at ${config.baseUrl}/admin/applications/${application._id}`
+    });
+    
+    logger.info('Sent application notification to admin', {
+      applicationId: application._id,
+      messageId: result.messageId
+    });
+    
+    return result;
+  } catch (error) {
+    logger.error('Error sending application notification to admin', {
+      applicationId: application._id,
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+/**
+ * Send acceptance email to an approved applicant
+ * @param {Object} application - Application data
+ * @returns {Promise<Object>} Send result
+ */
+async sendApplicationAcceptance(application) {
+  try {
+    // Prepare template data
+    const data = {
+      baseUrl: config.baseUrl,
+      name: application.name,
+      applicationId: application._id,
+      recommendedPathway: application.aiReview.recommendedPathway || 'Space Operations',
+      currentYear: new Date().getFullYear()
+    };
+    
+    // Load and compile the template
+    const template = await this.loadTemplate('application-acceptance');
+    const html = template(data);
+    
+    // Send the email
+    const result = await this.transporter.sendMail({
+      from: `"SharedStars Academy" <${config.email.from}>`,
+      to: application.email,
+      subject: `🚀 CONGRATULATIONS! Your SharedStars Academy Application is Approved!`,
+      html,
+      text: `Congratulations ${application.name}! Your application to SharedStars Academy has been approved. Visit ${config.baseUrl}/login to set up your account and begin your training.`
+    });
+    
+    logger.info('Sent acceptance email', { 
+      to: application.email, 
+      applicationId: application._id,
+      messageId: result.messageId 
+    });
+    
+    return result;
+  } catch (error) {
+    logger.error('Error sending acceptance email', {
+      to: application.email,
+      applicationId: application._id,
+      error: error.message
+    });
+    throw error;
+  }
+}
   /**
    * Process the delivery queue
    * @private

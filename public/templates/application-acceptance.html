@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Congratulations on Your Acceptance!</title>
+</head>
+<body style="background-color: #0c1017; color: white; font-family: Arial, sans-serif; padding: 20px; margin: 0;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #121d33; padding: 30px; border-radius: 10px; border: 1px solid #3b82f6;">
+    <img src="{{baseUrl}}/images/SharedStars.svg" alt="SharedStars Academy" style="width: 180px; margin-bottom: 20px;">
+    
+    <h1 style="color: #4a7de9;">CONGRATULATIONS, {{name}}!</h1>
+    
+    <p style="font-size: 18px;">You've been <span style="color: #4a7de9; font-weight: bold;">ACCEPTED</span> into the SharedStars Academy!</p>
+    
+    <p>After careful analysis of your application, STELLA has determined you have the potential to excel in our astronaut training program. Your profile shows exceptional promise in the areas of {{recommendedPathway}}.</p>
+    
+    <p>Your Application ID: <strong>{{applicationId}}</strong></p>
+    
+    <div style="background-color: rgba(59, 130, 246, 0.2); padding: 20px; border-radius: 8px; margin: 30px 0;">
+      <h3 style="color: #4a7de9; margin-top: 0;">Your Next Steps:</h3>
+      <ol style="padding-left: 20px;">
+        <li>Complete your account setup</li>
+        <li>Schedule your orientation call</li>
+        <li>Access your personalized training dashboard</li>
+        <li>Begin your first training module within 48 hours</li>
+      </ol>
+    </div>
+    
+    <a href="{{baseUrl}}/login" style="display: block; background-color: #4a7de9; color: white; text-decoration: none; text-align: center; padding: 15px; border-radius: 8px; font-weight: bold; margin: 30px 0;">ACCESS YOUR TRAINING PORTAL</a>
+    
+    <p>Remember, only 100 candidates are accepted each month. You're now part of an elite group preparing for the future of space exploration.</p>
+    
+    <p>If you have any questions, your personal AI coach STELLA is ready to assist you 24/7 in your training portal.</p>
+    
+    <p style="margin-top: 40px; font-style: italic; color: #ccc;">This is an automated message from SharedStars Academy. Please do not reply to this email.</p>
+    
+    <div style="margin-top: 30px; border-top: 1px solid #1e2738; padding-top: 20px; text-align: center; font-size: 12px; color: #667085;">
+      <p>&copy; {{currentYear}} SharedStars Academy. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

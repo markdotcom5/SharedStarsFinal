@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharedStars Admin Login</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <style>
+    body {
+      background-color: #0F172A;
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .login-card {
+      background-color: #1E293B;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .form-input {
+      background-color: #0F182B;
+      border: 1px solid #334155;
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 0.375rem;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+    
+    .login-btn {
+      background-color: #3B82F6;
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.375rem;
+      transition: all 0.2s;
+    }
+    
+    .login-btn:hover {
+      background-color: #2563EB;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+  <div class="login-card p-8 w-full max-w-md">
+    <div class="text-center mb-8">
+      <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-12 mx-auto mb-6">
+      <h1 class="text-2xl font-bold text-blue-400">Admin Login</h1>
+      <p class="text-gray-400 mt-2">Enter your credentials to access the admin dashboard</p>
+    </div>
+    
+    <form id="admin-login-form">
+      <div class="mb-5">
+        <label for="email" class="block text-gray-300 mb-2">Email</label>
+        <input type="email" id="email" name="email" class="form-input" required>
+      </div>
+      
+      <div class="mb-6">
+        <label for="password" class="block text-gray-300 mb-2">Password</label>
+        <input type="password" id="password" name="password" class="form-input" required>
+      </div>
+      
+      <div id="error-message" class="hidden mb-4 p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-400 text-sm">
+        Invalid credentials
+      </div>
+      
+      <button type="submit" class="login-btn w-full">
+        Login to Dashboard
+      </button>
+
+      <!-- Direct access button for development -->
+      <div class="mt-4 text-center">
+        <p class="text-gray-500 text-sm mb-2">Development Mode</p>
+        <button type="button" id="dev-access" class="bg-gray-800 hover:bg-gray-700 text-gray-300 py-2 px-4 rounded">
+          Access Dashboard (Dev Only)
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginForm = document.getElementById('admin-login-form');
+      const errorMessage = document.getElementById('error-message');
+      const devAccessButton = document.getElementById('dev-access');
+      
+      loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok && data.success) {
+            // Store the token
+            localStorage.setItem('authToken', data.token);
+            // Redirect to dashboard
+            window.location.href = '/admin/dashboard.html';
+          } else {
+            // Show error message
+            errorMessage.classList.remove('hidden');
+            errorMessage.textContent = data.error || 'Invalid credentials';
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          errorMessage.classList.remove('hidden');
+          errorMessage.textContent = 'An error occurred during login';
+        }
+      });
+      
+      // Development access button (for testing only)
+      devAccessButton.addEventListener('click', function() {
+        // Store a dummy token for development testing
+        localStorage.setItem('devToken', 'dev_access_token');
+        // Redirect to dashboard
+        window.location.href = '/admin/dashboard.html';
+      });
+    });
+  </script>
+</body>
+</html>
