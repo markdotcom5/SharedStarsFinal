@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
+
+.container {
+    @apply max-w-[1240px] px-5
+}
+
 @tailwind utilities;
+
+
+/* Button components */
+.primary-btn {
+    @apply rounded-full p-[2px] border-0
+}
+
+.primary-btn span {
+    @apply rounded-full backdrop-blur-[43px] px-[18px] py-[9px] min-w-[110px] bg-brand-700 font-body text-body-2xsmall-semibold transition-all
+}
+.primary-btn:hover span {
+    @apply bg-brand-800
+}
+
+.secondary-btn {
+    @apply rounded-full p-[2px] border-0 backdrop-blur-[44px]
+}
+
+.secondary-btn span {
+    @apply rounded-full flex items-center justify-center gap-2 backdrop-blur-[43px] px-[14px] py-[8px] min-w-[110px] bg-[#0d0d0d] font-body text-body-2xsmall-semibold transition-all
+}
+
+
+/* Input field */
+input {
+    @apply shadow-fieldShadow placeholder:text-white-300
+}

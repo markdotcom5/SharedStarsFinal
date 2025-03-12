@@ -266,11 +266,11 @@ section {
 
 
 
-.container {
+/* .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
-}
+} */
 
 .header-content {
   display: flex;
@@ -1009,11 +1009,11 @@ p {
   border-bottom: 1px solid #2c2c2c;
 }
 
-.container {
+/* .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
-}
+} */
 
 /* Hero Section with Video Backdrop */
 #about-hero {
@@ -1065,7 +1065,7 @@ p {
   margin-bottom: 2rem;
 }
 
-.primary-btn {
+/* .primary-btn {
   background-color: #00d9ff;
   color: #fff;
   padding: 0.8rem 1.5rem;
@@ -1074,10 +1074,24 @@ p {
   text-decoration: none;
   font-size: 1.2rem;
   transition: background-color 0.3s ease;
+} */
+.primary-btn {
+  background: linear-gradient(157deg, rgba(255, 255, 255, 1) 0%, rgba(0, 79, 215, 1) 20%, rgba(19, 92, 218, 1) 100%);
+  display: inline-flex;
+  transition: all .5s ease;
+}
+.primary-btn:hover {
+  background: linear-gradient(157deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 20%, rgba(19, 92, 218, 1) 100%);
 }
 
-.primary-btn:hover {
-  background-color: #007ea7;
+.secondary-btn {
+  background-image: linear-gradient(157deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.02) 80%, rgba(19, 92, 218, 0) 100%);
+  background-size: 400% 100%;
+  background-position: 100% 0%;
+  transition: all .5s ease;
+}
+.secondary-btn:hover {
+  background-position: 60% 0%;
 }
 
 /* Featured Advisors Grid */
@@ -1471,14 +1485,14 @@ p {
 }
 
 /* Content Overlay */
-.container {
-  position: relative;
+/* .container { */
+  /* position: relative;
   z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 100%; /* Full height to match the video */
-}
+  justify-content: space-between; */
+  /* height: 100%; /* Full height to match the video */ */
+/* } */
 
 .text-overlay {
   background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for better readability */

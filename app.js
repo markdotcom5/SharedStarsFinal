@@ -629,15 +629,15 @@ staticPages.forEach(({ route, file }) => {
 });
 
 // ✅ New: Serve pages inside "bhavik-designing/html"
-// app.get("/bhavik-styling/:page", (req, res) => {
-//   const file = req.params.page;
-//   res.sendFile(path.join(__dirname, "public", "bhavik-styling", "html", file), (err) => {
-//       if (err) {
-//           console.error(`Error sending file ${file}:`, err.message);
-//           res.status(404).send("File not found");
-//       }
-//   });
-// });
+app.get("/bhavik-styling/:page", (req, res) => {
+  const file = req.params.page;
+  res.sendFile(path.join(__dirname, "public", "bhavik-styling", "html", file), (err) => {
+      if (err) {
+          console.error(`Error sending file ${file}:`, err.message);
+          res.status(404).send("File not found");
+      }
+  });
+});
 
 // ============================
 // 12. ERROR HANDLING
