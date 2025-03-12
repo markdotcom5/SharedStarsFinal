@@ -63,6 +63,7 @@
     "semver": "^7.7.1",
     "sharp": "^0.33.5",
     "stripe": "^17.6.0",
+    "three-bmfont-text": "github:dmarcos/three-bmfont-text#eed4878795be9b3e38cf6aec6b903f56acd1f695",
     "tough-cookie": "^5.1.1",
     "tunnel-agent": "^0.6.0",
     "twitter-api-v2": "^1.20.1",

@@ -9,8 +9,10 @@ const Application = require('../../models/Application');
 const { OpenAI } = require('openai');
 const rateLimit = require('express-rate-limit');
 const authMiddleware = require('../../middleware/authenticate');
-// At the top of routes/api/applications.js, add:
 const emailService = require('../../services/emailService');
+const multer = require('multer'); // Add this to import multer
+const logger = console; // For compatibility with logger references
+
 // Initialize OpenAI
 let openai;
 try {
@@ -39,8 +41,6 @@ const applicationLimiter = rateLimit({
  * @desc    Submit a new application
  * @access  Public
  */
-
-// Submit a new application
 router.post('/submit', applicationLimiter, multer().single('resume'), async (req, res) => {
   try {
     const {
@@ -55,10 +55,16 @@ router.post('/submit', applicationLimiter, multer().single('resume'), async (req
       linkedInUrl
     } = req.body;
 
-    if (!fullName || !email || !lifeMissionAlignment || !spaceMissionChoice) {
+    // Handle backward compatibility with older form format
+    const name = fullName || req.body.name;
+    const background = req.body.background;
+    const motivation = req.body.motivation || lifeMissionAlignment;
+
+    // Check required fields with backward compatibility
+    if ((!name || !email) && (!fullName || !email)) {
       return res.status(400).json({
         success: false,
-        error: 'Please provide all required fields.'
+        error: 'Please provide at least name and email fields.'
       });
     }
 
@@ -68,18 +74,19 @@ router.post('/submit', applicationLimiter, multer().single('resume'), async (req
       referrer: req.headers.referer || 'direct'
     };
 
-    // Prepare prompt for OpenAI review (enhanced content)
+    // Prepare prompt for OpenAI review
     let aiReview = { score: 0.5, notes: 'Average', recommendedPathway: 'General' };
 
     if (openai) {
       const aiPrompt = `
         Review application for SharedStars Academy:
-        Name: ${fullName}
-        Education: ${highestEducation}
-        Experience: ${experience}
-        Skills: ${skills}
-        Life Mission Alignment: ${lifeMissionAlignment}
-        Chosen Space Mission: ${spaceMissionChoice}
+        Name: ${name || fullName}
+        Education: ${highestEducation || 'Not provided'}
+        Experience: ${experience || 'Not provided'}
+        Skills: ${skills || 'Not provided'}
+        Background: ${background || 'Not provided'}
+        Life Mission Alignment/Motivation: ${motivation || lifeMissionAlignment || 'Not provided'}
+        Chosen Space Mission: ${spaceMissionChoice || 'Not provided'}
         VR/AI Experience: ${vrAiExperience || 'None'}
       `;
 
@@ -102,21 +109,31 @@ router.post('/submit', applicationLimiter, multer().single('resume'), async (req
       }
     }
 
-    const newApplication = new Application({
-      fullName,
+    // Create application with support for both old and new form formats
+    const applicationData = {
+      name: name || fullName,
       email,
-      highestEducation,
-      experience,
-      skills: JSON.parse(skills),
-      lifeMissionAlignment,
-      spaceMissionChoice,
-      vrAiExperience,
-      linkedInUrl,
+      background: background || '',
+      motivation: motivation || lifeMissionAlignment || '',
+      highestEducation: highestEducation || '',
+      experience: experience || '',
+      skills: skills ? (typeof skills === 'string' ? JSON.parse(skills) : skills) : [],
+      spaceMissionChoice: spaceMissionChoice || '',
+      vrAiExperience: vrAiExperience || '',
+      linkedInUrl: linkedInUrl || '',
       aiReview,
       metadata
-    });
+    };
 
+    const newApplication = new Application(applicationData);
     await newApplication.save();
+
+    // Send admin notification
+    try {
+      await emailService.sendApplicationSubmissionToAdmin(newApplication);
+    } catch (emailError) {
+      console.error('Admin email notification error:', emailError);
+    }
 
     res.status(201).json({
       success: true,
@@ -139,7 +156,7 @@ router.post('/submit', applicationLimiter, multer().single('resume'), async (req
  * @desc    Submit a new application (test version)
  * @access  Public
  */
-router.post('/submit-test', applicationLimiter, async (req, res) => {
+router.post('/submit-test', async (req, res) => {
   try {
     const { name, email, background, motivation } = req.body;
     
@@ -229,35 +246,14 @@ router.post('/submit-test', applicationLimiter, async (req, res) => {
     });
   }
 });
-// In your applications.js route file, update the submit route:
 
-router.post('/submit', applicationLimiter, async (req, res) => {
+/**
+ * @route   POST /api/applications/approve/:id
+ * @desc    Approve an application
+ * @access  Private (Admin only)
+ */
+router.post('/approve/:id', authMiddleware.authenticate, authMiddleware.requireRole('admin'), async (req, res) => {  
   try {
-    // Your existing application processing code...
-    
-    // After saving the application
-    await newApplication.save();
-    
-    // Send admin notification
-    const emailService = require('../services/emailService');
-    emailService.sendApplicationSubmissionToAdmin(newApplication)
-      .catch(err => logger.error('Admin application email error:', err));
-    
-    // Response to client remains the same
-    res.status(201).json({
-      success: true,
-      message: 'Application submitted successfully',
-      applicationId: newApplication._id,
-      reviewScore: aiReview.score
-    });
-  } catch (error) {
-    // Your existing error handling...
-  }
-});
-
-// And add/update the approve route:
-
-router.post('/approve/:id', authMiddleware.authenticate, authMiddleware.requireRole('admin'), async (req, res) => {  try {
     const applicationId = req.params.id;
     
     // Find and update the application status
@@ -275,23 +271,28 @@ router.post('/approve/:id', authMiddleware.authenticate, authMiddleware.requireR
     }
     
     // Send approval notification to applicant
-    const emailService = require('../services/emailService');
-    const emailSent = await emailService.sendApplicationAcceptance(application);
+    let emailSent = false;
+    try {
+      emailSent = await emailService.sendApplicationAcceptance(application);
+    } catch (emailError) {
+      console.error('Error sending acceptance email:', emailError);
+    }
     
     res.status(200).json({
       success: true,
       message: 'Application approved and notification sent',
-      emailSent: true,
+      emailSent: emailSent,
       application
     });
   } catch (error) {
-    logger.error('Error approving application:', error);
+    console.error('Error approving application:', error);
     res.status(500).json({
       success: false,
       error: 'Server error processing approval'
     });
   }
 });
+
 /**
  * @route   GET /api/applications/status/:email
  * @desc    Check application status by email
