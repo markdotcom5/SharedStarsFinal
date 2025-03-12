@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const StellaConversation = require('../../models/StellaConversation');
-const { authenticate, isAdmin } = require('../../middleware/authenticate');
+const { authenticate, isAdmin } = require('../../middleware/auth');
 
 // Secure all admin routes
 router.use(authenticate);

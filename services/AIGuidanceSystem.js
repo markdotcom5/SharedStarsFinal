@@ -104,7 +104,6 @@ class AIGuidanceSystem extends EventEmitter {
             duration: { started: new Date() }
         });
     }
-
     // ✅ Emergency Response Simulation
     async simulateEmergencyResponse(userId, scenarioType) {
         try {

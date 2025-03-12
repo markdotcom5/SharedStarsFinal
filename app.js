@@ -65,6 +65,7 @@ const cron = require('node-cron');
 const dailyBriefingService = require('./services/dailyBriefingService');
 const schedule = require('node-schedule');
 const { getPhysicalTrainingProgress } = require('./services/progressServices');
+const stellaAnalyticsRoutes = require('./routes/admin/stellaAnalytics');
 
 // ============================
 // 0. SESSION STORE SETUP
@@ -122,6 +123,7 @@ const mongoose = require("mongoose");
 
 // Disable Mongoose debug mode to reduce console spam
 mongoose.set('debug', false);
+mongoose.set('autoIndex', false);
 
 // Connect to MongoDB with reduced logging
 mongoose.connect(process.env.MONGO_URI)
@@ -274,21 +276,18 @@ enduranceRoutes = safeRequire('./routes/training/missions/endurance.js', "endura
 flexibilityRoutes = safeRequire('./routes/training/missions/flexibility.js', "flexibilityRoutes");
 strengthRoutes = safeRequire('./routes/training/missions/strength.js', "strengthRoutes");
 stellaRoutes = safeRequire("./routes/api/stella-minimal", "stellaRoutes");
-
-// ============================
+applicationsRoutes = safeRequire("./routes/api/applications", "applicationsRoutes");
 // 7. TEST ROUTES
 // ============================
 // Simple test routes
 app.get('/api/test-direct', (req, res) => {
   res.json({ message: 'Direct test route is working' });
 });
-
 const testRouter = express.Router();
 testRouter.get('/test', (req, res) => {
   res.json({ message: 'Test router is working' });
 });
 app.use('/api/test-router', testRouter);
-
 // ============================
 // 8. ROUTES MOUNTING
 // ============================
@@ -315,7 +314,7 @@ if (balanceRoutes) app.use('/training/physical/mission/balance', balanceRoutes);
 if (enduranceRoutes) app.use('/training/physical/mission/endurance', enduranceRoutes);
 if (flexibilityRoutes) app.use('/training/physical/mission/flexibility', flexibilityRoutes);
 if (strengthRoutes) app.use('/training/physical/mission/strength', strengthRoutes);
-
+if (applicationsRoutes) app.use("/api/applications", applicationsRoutes);
 // Mount STELLA routes
 if (stellaRoutes) {
   app.use("/api/stella", stellaRoutes);
@@ -339,6 +338,7 @@ if (typeof adminAuthRoutes === 'function') {
   app.use('/api/admin/auth', adminAuthRoutes);
   console.log("✅ Admin auth routes mounted");
 }
+app.use('/api/admin/stella-analytics', stellaAnalyticsRoutes)
 
 // ============================
 // 9. ADDITIONAL API ENDPOINTS
@@ -547,16 +547,56 @@ app.use((err, req, res, next) => {
   console.error("❌ Server Error:", err.message);
   res.status(500).json({ error: "Internal Server Error", message: err.message });
 });
-
+// Replace the server startup section with this more flexible version
 // ============================
 // 13. SERVER STARTUP
 // ============================
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`✅ STELLA AI integrated with OpenAI GPT-4o`);
+
+// Add graceful shutdown handlers
+process.on('SIGINT', () => {
+  console.log('🔄 SIGINT received, shutting down gracefully...');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
 });
+
+// Start server on port 3000 with fallback options
+const startServer = () => {
+  try {
+    server.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`✅ STELLA AI integrated with OpenAI GPT-4o`);
+    }).on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        console.log(`⚠️ Port ${PORT} is already in use.`);
+        console.log(`ℹ️ Try using a different port with PORT=3001 npm start`);
+        
+        // In development with nodemon, we don't want to exit
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`⏳ Waiting for file changes before retrying...`);
+          // Don't exit - let nodemon handle it
+        } else {
+          // In production, exit with error
+          process.exit(1);
+        }
+      } else {
+        console.error('❌ Server error:', err);
+      }
+    });
+  } catch (err) {
+    console.error('❌ Failed to start server:', err);
+    // Don't exit in development
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    }
+  }
+};
+
+// Start the server
+startServer();
 
 // Export app and server for testing
 module.exports = { app, server };

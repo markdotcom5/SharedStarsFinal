@@ -9,6 +9,8 @@ const Application = require('../../models/Application');
 const { OpenAI } = require('openai');
 const rateLimit = require('express-rate-limit');
 const authMiddleware = require('../../middleware/authenticate');
+// At the top of routes/api/applications.js, add:
+const emailService = require('../../services/emailService');
 // Initialize OpenAI
 let openai;
 try {
@@ -37,7 +39,107 @@ const applicationLimiter = rateLimit({
  * @desc    Submit a new application
  * @access  Public
  */
-router.post('/submit', applicationLimiter, async (req, res) => {
+
+// Submit a new application
+router.post('/submit', applicationLimiter, multer().single('resume'), async (req, res) => {
+  try {
+    const {
+      fullName,
+      email,
+      highestEducation,
+      experience,
+      skills,
+      lifeMissionAlignment,
+      spaceMissionChoice,
+      vrAiExperience,
+      linkedInUrl
+    } = req.body;
+
+    if (!fullName || !email || !lifeMissionAlignment || !spaceMissionChoice) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide all required fields.'
+      });
+    }
+
+    const metadata = {
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+      referrer: req.headers.referer || 'direct'
+    };
+
+    // Prepare prompt for OpenAI review (enhanced content)
+    let aiReview = { score: 0.5, notes: 'Average', recommendedPathway: 'General' };
+
+    if (openai) {
+      const aiPrompt = `
+        Review application for SharedStars Academy:
+        Name: ${fullName}
+        Education: ${highestEducation}
+        Experience: ${experience}
+        Skills: ${skills}
+        Life Mission Alignment: ${lifeMissionAlignment}
+        Chosen Space Mission: ${spaceMissionChoice}
+        VR/AI Experience: ${vrAiExperience || 'None'}
+      `;
+
+      try {
+        const response = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: [{ role: 'system', content: aiPrompt }],
+          max_tokens: 500,
+          temperature: 0.6
+        });
+
+        aiReview = {
+          score: 0.8, // Assume good until OpenAI scores
+          notes: response.choices[0].message.content,
+          recommendedPathway: "To be determined by AI"
+        };
+      } catch (aiError) {
+        console.error('OpenAI Error:', aiError);
+        aiReview.notes = 'AI review encountered an error, manual check recommended.';
+      }
+    }
+
+    const newApplication = new Application({
+      fullName,
+      email,
+      highestEducation,
+      experience,
+      skills: JSON.parse(skills),
+      lifeMissionAlignment,
+      spaceMissionChoice,
+      vrAiExperience,
+      linkedInUrl,
+      aiReview,
+      metadata
+    });
+
+    await newApplication.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Your application has been submitted! STELLA will review shortly.',
+      applicationId: newApplication._id,
+      reviewScore: aiReview.score
+    });
+
+  } catch (error) {
+    console.error('Application submission error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error processing your application'
+    });
+  }
+});
+
+/**
+ * @route   POST /api/applications/submit-test
+ * @desc    Submit a new application (test version)
+ * @access  Public
+ */
+router.post('/submit-test', applicationLimiter, async (req, res) => {
   try {
     const { name, email, background, motivation } = req.body;
     
@@ -49,8 +151,22 @@ router.post('/submit', applicationLimiter, async (req, res) => {
       });
     }
     
-    // Check for existing email
-    const emailExists = await Application.emailExists(email);
+    // Modify the email for development/testing to avoid duplicates
+    let modifiedEmail = email;
+    if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+      modifiedEmail = `${email.split('@')[0]}+${Date.now()}@${email.split('@')[1]}`;
+      console.log(`Modified email for testing: ${modifiedEmail}`);
+    }
+    
+    // Check for existing email - with try/catch to handle potential errors
+    let emailExists = false;
+    try {
+      emailExists = await Application.emailExists(modifiedEmail);
+    } catch (emailCheckError) {
+      console.error('Error checking email existence:', emailCheckError);
+      // Continue with emailExists = false if there's an error
+    }
+    
     if (emailExists) {
       return res.status(400).json({
         success: false,
@@ -65,71 +181,36 @@ router.post('/submit', applicationLimiter, async (req, res) => {
       referrer: req.headers.referer || 'direct'
     };
     
-    // Call STELLA AI for application review if OpenAI is configured
-    let aiReview = { score: 0.5, notes: "Automated review not available" };
-    
-    if (openai && process.env.OPENAI_API_KEY !== "MISSING_KEY") {
-      try {
-        // Prepare prompt for AI review
-        const prompt = `
-        Please review this application for SharedStars Academy space training program.
-        
-        Applicant Name: ${name}
-        Background: ${background}
-        Motivation: "${motivation}"
-        
-        Evaluate the applicant's potential as a space trainee based on their motivation statement and background.
-        Assign a score from 0.0 to 1.0 where 1.0 is the highest potential.
-        Recommend a suitable training pathway based on their background.
-        Provide brief notes about strengths and areas for improvement.
-        
-        Format your response as JSON:
-        {
-          "score": [number between 0 and 1],
-          "notes": [brief evaluation],
-          "recommendedPathway": [one of: "Physical Training", "Technical Training", "Leadership", "EVA Training", "Scientific Research"]
-        }
-        `;
-        
-        const response = await openai.chat.completions.create({
-          model: "gpt-4o",
-          messages: [{ role: "system", content: prompt }],
-          max_tokens: 500,
-          temperature: 0.7
-        });
-        
-        // Parse AI response
-        const aiResponseText = response.choices[0].message.content;
-        try {
-          // Extract JSON from the response
-          const jsonMatch = aiResponseText.match(/({[\s\S]*})/);
-          if (jsonMatch) {
-            const jsonText = jsonMatch[1];
-            aiReview = JSON.parse(jsonText);
-          }
-        } catch (jsonError) {
-          console.error('Error parsing AI review JSON:', jsonError);
-          // Fall back to default AI review
-        }
-      } catch (aiError) {
-        console.error('Error getting AI review:', aiError);
-        // Continue with default AI review
-      }
-    }
+    // Use simplified AI review for test endpoint
+    const aiReview = { 
+      score: 0.75, 
+      notes: "Test application - automatically approved", 
+      recommendedPathway: "Technical Training" 
+    };
     
     // Create and save new application
     const newApplication = new Application({
       name,
-      email,
+      email: modifiedEmail, // Use the modified email
       background,
       motivation,
       aiReview,
-      metadata
+      metadata,
+      status: 'pending' // or 'approved' for test purposes
     });
     
-    await newApplication.save();
-    
-    // Send notification to admin (could be implemented here)
+    // Save with detailed error handling
+    try {
+      await newApplication.save();
+      console.log(`Application saved successfully for ${modifiedEmail}`);
+    } catch (saveError) {
+      console.error('Error saving application:', saveError);
+      return res.status(500).json({
+        success: false,
+        error: 'Database error saving application',
+        details: saveError.message
+      });
+    }
     
     // Return success response
     res.status(201).json({
@@ -140,10 +221,11 @@ router.post('/submit', applicationLimiter, async (req, res) => {
     });
     
   } catch (error) {
-    console.error('Error submitting application:', error);
+    console.error('Error submitting test application:', error);
     res.status(500).json({
       success: false,
-      error: 'Server error processing your application'
+      error: 'Server error processing your application',
+      details: error.message
     });
   }
 });
