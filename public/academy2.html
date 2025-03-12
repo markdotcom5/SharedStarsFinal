@@ -958,7 +958,7 @@ header a[href="signup.html"] {
       </div>
     </div></section>
 <!-- Enhanced Apply to Academy Popup -->
-<div id="apply-popup" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden">
+<div id="application-popup" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden">
   <div class="bg-gray-900 border border-blue-500/30 rounded-xl max-w-lg w-full p-6 relative">
     <button id="close-popup" class="absolute top-3 right-3 text-gray-400 hover:text-white">
       &times;
@@ -970,18 +970,30 @@ header a[href="signup.html"] {
       <!-- Step 1: Personal Information -->
       <div class="step" data-step="0">
         <input id="name" type="text" placeholder="Full Name" required class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
-        <input id="email" type="email" placeholder="Email" required class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
-        <button type="button" class="next-step w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-white">Next →</button>
+        <input id="email" type="email" placeholder="Email" required class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white mt-4">
+        <button type="button" class="next-step w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-white mt-4">Next →</button>
       </div>
 
-      <!-- Step 2 -->
+      <!-- Step 2: Background -->
       <div class="step hidden" data-step="1">
         <input id="highestEducation" type="text" placeholder="Highest Education Level" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
-        <input id="experience" type="text" placeholder="Briefly describe your experience" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
-        <button type="button" class="next-step w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-white">Next →</button>
+        <select id="background" name="background" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white mt-4" required>
+          <option value="">Select your background</option>
+          <option value="engineering">Engineering</option>
+          <option value="science">Science</option>
+          <option value="medical">Medical</option>
+          <option value="military">Military</option>
+          <option value="aviation">Aviation</option>
+          <option value="business">Business</option>
+          <option value="other">Other</option>
+        </select>
+        <div class="flex mt-4">
+          <button type="button" class="prev-step w-1/2 bg-gray-600 hover:bg-gray-700 py-2 rounded-l text-white">← Back</button>
+          <button type="button" class="next-step w-1/2 bg-blue-600 hover:bg-blue-700 py-2 rounded-r text-white">Next →</button>
+        </div>
       </div>
 
-      <!-- Step 3 -->
+      <!-- Step 3: Skills -->
       <div class="step hidden" data-step="2">
         <label class="text-gray-300">Your Skills:</label>
         <select id="skills" multiple class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
@@ -991,97 +1003,283 @@ header a[href="signup.html"] {
           <option>Space Sciences</option>
           <option>Entrepreneurship</option>
         </select>
-        <button type="button" class="next-step w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-white">Next →</button>
+        <div class="flex mt-4">
+          <button type="button" class="prev-step w-1/2 bg-gray-600 hover:bg-gray-700 py-2 rounded-l text-white">← Back</button>
+          <button type="button" class="next-step w-1/2 bg-blue-600 hover:bg-blue-700 py-2 rounded-r text-white">Next →</button>
+        </div>
       </div>
 
-      <!-- Step 4 -->
+      <!-- Step 4: Motivation and Resume -->
       <div class="step hidden" data-step="3">
         <textarea id="motivation" rows="3" placeholder="Why do you want to join?" required class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white"></textarea>
-        <label class="text-gray-400 block">Upload Resume/CV (optional)</label>
+        <label class="text-gray-400 block mt-4">Upload Resume/CV (optional)</label>
         <input type="file" id="resume-upload" class="text-white w-full">
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-2 rounded text-white">Submit Application ✅</button>
+        <div class="flex mt-4">
+          <button type="button" class="prev-step w-1/2 bg-gray-600 hover:bg-gray-700 py-2 rounded-l text-white">← Back</button>
+          <button type="submit" class="w-1/2 bg-green-600 hover:bg-green-700 py-2 rounded-r text-white">Submit Application ✅</button>
+        </div>
       </div>
     </form>
   </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const applyPopup = document.getElementById('apply-popup');
-  const openPopupBtn = document.querySelector('a[href="#application-process"]');
-  const closePopupBtn = document.getElementById('close-popup');
-  const steps = document.querySelectorAll('.step');
-  const nextBtns = document.querySelectorAll('.next-step');
-  const form = document.getElementById('application-form');
-  let currentStep = 0;
-
-  function showStep(index) {
-    steps.forEach((step, idx) => {
-      step.classList.toggle('hidden', idx !== index);
-    });
-  }
-
-  openPopupBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    applyPopup.classList.remove('hidden');
-    currentStep = 0;
-    showStep(currentStep);
-  });
-
-  closePopupBtn.addEventListener('click', () => {
-    applyPopup.classList.add('hidden');
-  });
-
-  nextBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (currentStep < steps.length - 1) {
-        currentStep++;
-        showStep(currentStep);
-      }
-    });
-  });
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('fullName', document.getElementById('name').value);
-    formData.append('email', document.getElementById('email').value);
-    formData.append('highestEducation', document.getElementById('highestEducation').value);
-    formData.append('experience', document.getElementById('experience').value);
-    formData.append('skills', JSON.stringify(Array.from(document.getElementById('skills').selectedOptions).map(opt => opt.value)));
-    formData.append('motivation', document.getElementById('motivation').value);
+  document.addEventListener('DOMContentLoaded', function() {
+    // Find all possible Apply Now buttons using multiple selectors for reliability
+    function setupApplyButtons() {
+      console.log("Setting up Apply buttons...");
+      
+      // Try multiple selectors to find Apply buttons
+      const applyButtons = [
+        ...document.querySelectorAll('a[href="#application-process"]'),
+        ...Array.from(document.querySelectorAll('.cosmic-hover')).filter(el => 
+          el.textContent.includes('Apply Now')),
+        ...document.querySelectorAll('.apply-button'),
+        ...document.querySelectorAll('a[href*="apply"]'),
+        ...Array.from(document.querySelectorAll('a, button')).filter(el => 
+          el.textContent.toLowerCase().includes('apply'))
+      ];
+      
+      console.log(`Found ${applyButtons.length} possible apply buttons`);
+      
+      // Add click handlers to all potential apply buttons
+      applyButtons.forEach(button => {
+        if (button) {
+          button.addEventListener('click', function(e) {
+            console.log("Apply button clicked!");
+            e.preventDefault();
+            showApplicationPopup();
+          });
+        }
+      });
+      
+      // Also setup manual trigger for testing
+      window.showApplication = showApplicationPopup;
+      console.log("Setup complete. You can also trigger the form manually with showApplication() in console");
+    }
     
-    const resumeUpload = document.getElementById('resume-upload').files[0];
-    if (resumeUpload) formData.append('resume', resumeUpload);
-
-    fetch('/api/applications/submit', {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(result => {
-      if (result.success) {
-        alert('✅ Application submitted successfully!');
-        applyPopup.classList.add('hidden');
+    // Show the application popup
+    function showApplicationPopup() {
+      const popup = document.getElementById('application-popup');
+      if (popup) {
+        popup.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+        
+        // Reset to first step
+        const steps = document.querySelectorAll('.step');
+        steps.forEach((step, idx) => {
+          step.classList.toggle('hidden', idx !== 0);
+        });
       } else {
-        alert('Error: ' + result.error);
+        console.error("Application popup element not found!");
       }
-    })
-    .catch(err => {
-      console.error(err);
-      alert('Submission failed, please retry.');
-    });
+    }
+    
+    // Multi-step form navigation
+    const applicationForm = document.getElementById('application-form');
+    if (applicationForm) {
+      const steps = applicationForm.querySelectorAll('.step');
+      const nextButtons = applicationForm.querySelectorAll('.next-step');
+      const prevButtons = applicationForm.querySelectorAll('.prev-step');
+      let currentStep = 0;
+      
+      // Next button handlers
+      nextButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Validate current step
+          const currentStepEl = steps[currentStep];
+          const requiredFields = currentStepEl.querySelectorAll('[required]');
+          let isValid = true;
+          
+          requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+              field.classList.add('border-red-500');
+              isValid = false;
+            } else {
+              field.classList.remove('border-red-500');
+            }
+          });
+          
+          if (!isValid) {
+            // Show validation message
+            let errorMsg = currentStepEl.querySelector('.error-message');
+            if (!errorMsg) {
+              errorMsg = document.createElement('div');
+              errorMsg.className = 'error-message text-red-500 text-sm mt-2';
+              errorMsg.textContent = 'Please fill in all required fields';
+              currentStepEl.appendChild(errorMsg);
+            }
+            return;
+          }
+          
+          // Remove error message if it exists
+          const errorMsg = currentStepEl.querySelector('.error-message');
+          if (errorMsg) errorMsg.remove();
+          
+          // Move to next step
+          if (currentStep < steps.length - 1) {
+            steps[currentStep].classList.add('hidden');
+            currentStep++;
+            steps[currentStep].classList.remove('hidden');
+          }
+        });
+      });
+      
+      // Previous button handlers
+      prevButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          if (currentStep > 0) {
+            steps[currentStep].classList.add('hidden');
+            currentStep--;
+            steps[currentStep].classList.remove('hidden');
+          }
+        });
+      });
+      
+      // Form submission
+      applicationForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = new FormData();
+        formData.append('name', document.getElementById('name').value);
+        formData.append('email', document.getElementById('email').value);
+        formData.append('background', document.getElementById('background').value);
+        formData.append('highestEducation', document.getElementById('highestEducation').value);
+        formData.append('motivation', document.getElementById('motivation').value);
+        
+        // Get selected skills
+        const skillsSelect = document.getElementById('skills');
+        const selectedSkills = Array.from(skillsSelect.selectedOptions).map(opt => opt.value);
+        formData.append('skills', JSON.stringify(selectedSkills));
+        
+        // Add resume if provided
+        const resumeUpload = document.getElementById('resume-upload').files[0];
+        if (resumeUpload) {
+          formData.append('resume', resumeUpload);
+        }
+        
+        console.log("Application form being submitted...");
+        
+        // Validate form
+        if (!formData.get('name') || !formData.get('email') || !formData.get('background') || !formData.get('motivation')) {
+          alert("Please fill in all required fields");
+          return;
+        }
+        
+        // Show loading state
+        const submitButton = applicationForm.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Processing...
+        `;
+        
+        try {
+          // For JSON submission (for API compatibility)
+          const jsonData = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            background: formData.get('background'),
+            highestEducation: formData.get('highestEducation'),
+            skills: selectedSkills,
+            motivation: formData.get('motivation')
+          };
+          
+          // Submit data to server
+          const response = await fetch('/api/applications/submit-test', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonData),
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+          }
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            // Show success message
+            showSuccessMessage(result.applicationId);
+          } else {
+            // Show error message
+            throw new Error(result.error || 'Unknown error occurred');
+          }
+        } catch (error) {
+          console.error('Application submission error:', error);
+          
+          // Reset submit button
+          submitButton.disabled = false;
+          submitButton.innerHTML = originalButtonText;
+          
+          // Show error message
+          alert(`Error submitting application: ${error.message}`);
+        }
+      });
+    }
+    
+    // Show success message after form submission
+    function showSuccessMessage(applicationId) {
+      const popup = document.getElementById('application-popup');
+      if (popup) {
+        popup.innerHTML = `
+          <div class="bg-gray-900 border border-blue-500/30 rounded-xl max-w-lg w-full p-6 relative text-center">
+            <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            
+            <h2 class="text-2xl text-green-400 font-bold mb-4">Application Received!</h2>
+            
+            <p class="text-gray-300 mb-6">Your application has been submitted successfully. We'll review it and get back to you via email shortly.</p>
+            
+            <p class="text-gray-400 mb-8">Application ID: ${applicationId}</p>
+            
+            <button type="button" id="close-success" class="bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-lg">Close</button>
+            
+            <p class="text-xs text-gray-500 mt-6">Your data is encrypted and processed by STELLA AI for qualification assessment only. See our <a href="/privacy.html" class="text-blue-400">privacy policy</a>.</p>
+          </div>
+        `;
+        
+        document.getElementById('close-success').addEventListener('click', function() {
+          popup.classList.add('hidden');
+          document.body.style.overflow = 'auto';
+        });
+      }
+    }
+    
+    // Close popup when clicking the close button
+    const closePopupButton = document.getElementById('close-popup');
+    if (closePopupButton) {
+      closePopupButton.addEventListener('click', function() {
+        const popup = document.getElementById('application-popup');
+        if (popup) {
+          popup.classList.add('hidden');
+          document.body.style.overflow = 'auto';
+        }
+      });
+    }
+    
+    // Close popup when clicking outside the form
+    const popup = document.getElementById('application-popup');
+    if (popup) {
+      popup.addEventListener('click', function(e) {
+        if (e.target === popup) {
+          popup.classList.add('hidden');
+          document.body.style.overflow = 'auto';
+        }
+      });
+    }
+    
+    // Initialize the apply buttons
+    setupApplyButtons();
   });
-
-  function showStep(index) {
-    steps.forEach((step, i) => {
-      step.classList.toggle('hidden', i !== index);
-    });
-  }
-  
-  // Start with step 0
-  showStep(0);
-});
 </script>
   
     <!-- FOOTER -->
@@ -1185,279 +1383,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Handle quick application form (if it exists on the page)
-        const quickApplicationForm = document.getElementById('quick-application-form');
-        if (quickApplicationForm) {
-          quickApplicationForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = {
-              name: document.getElementById('name').value,
-              email: document.getElementById('email').value,
-              background: document.getElementById('background').value,
-              motivation: document.getElementById('motivation').value
-            };
-            
-            console.log("Quick form values:", formData);
-            
-            // Check if all fields are filled
-            if (!formData.name || !formData.email || !formData.background || !formData.motivation) {
-              alert("Please fill in all required fields");
-              return;
-            }
-            
-            // Disable form elements during submission
-            const submitButton = quickApplicationForm.querySelector('button[type="submit"]');
-            const formElements = quickApplicationForm.querySelectorAll('input, select, textarea, button');
-            formElements.forEach(el => el.disabled = true);
-            
-            // Show loading state
-            const originalButtonText = submitButton.innerHTML;
-            submitButton.innerHTML = `
-              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Processing...
-            `;
-            
-            try {
-              // Submit form data to API
-              const response = await fetch('/api/applications/submit-test', {                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-              });
-              
-              const result = await response.json();
-              
-              // Reset form state
-              formElements.forEach(el => el.disabled = false);
-              submitButton.innerHTML = originalButtonText;
-              
-              if (result.success) {
-                // Success! Show confirmation
-                quickApplicationForm.innerHTML = `
-                  <div class="text-center">
-                    <div class="w-16 h-16 rounded-full bg-green-600/20 flex items-center justify-center mx-auto mb-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-green-400 mb-2">Application Received!</h3>
-                    <p class="text-gray-300 mb-4">Your application has been submitted successfully. We'll review it and get back to you via email shortly.</p>
-                    <p class="text-gray-400 text-sm">Application ID: ${result.applicationId.substring(0, 8)}...</p>
-                    
-                    <button type="button" id="close-success" class="mt-6 bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-                      Close
-                    </button>
-                  </div>
-                `;
-                
-                document.getElementById('close-success').addEventListener('click', function() {
-                  if (document.getElementById('application-popup')) {
-                    document.getElementById('application-popup').classList.add('hidden');
-                    document.body.style.overflow = 'auto';
-                  }
-                });
-              } else {
-                // Show error
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'mt-4 p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-400 text-sm';
-                errorMessage.innerHTML = `<p class="font-semibold">Error: ${result.error}</p>`;
-                quickApplicationForm.appendChild(errorMessage);
-                
-                setTimeout(() => errorMessage.remove(), 5000);
-              }
-            } catch (error) {
-              console.error('Application submission error:', error);
-              
-              // Reset form state
-              formElements.forEach(el => el.disabled = false);
-              submitButton.innerHTML = originalButtonText;
-              
-              // Show error
-              const errorMessage = document.createElement('div');
-              errorMessage.className = 'mt-4 p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-400 text-sm';
-              errorMessage.innerHTML = `<p class="font-semibold">Network error. Please try again later.</p>`;
-              quickApplicationForm.appendChild(errorMessage);
-              
-              setTimeout(() => errorMessage.remove(), 5000);
-            }
-          });
-        }
-        
-        // Apply Now button functionality
-        const setupApplyButton = () => {
-          const linkButtons = document.querySelectorAll('a[href="#application-process"]');
-          const applyButtons = Array.from(document.querySelectorAll('.cosmic-hover')).filter(el => 
-            el.textContent.includes('Apply Now')
-          );
-          const applyButton = linkButtons.length > 0 ? linkButtons[0] : 
-                             (applyButtons.length > 0 ? applyButtons[0] : null);
-          
-          if (applyButton) {
-            applyButton.addEventListener('click', function(e) {
-              e.preventDefault();
-              showApplicationForm();
-            });
-          }
-        };
-        
-        // Modal application form
-        const showApplicationForm = () => {
-          if (!document.getElementById('application-form-modal')) {
-            const modal = document.createElement('div');
-            modal.id = 'application-form-modal';
-            modal.className = 'fixed inset-0 flex items-center justify-center z-50';
-            modal.innerHTML = `
-              <div class="absolute inset-0 bg-black opacity-75"></div>
-              <div class="bg-gray-900 border border-blue-500 rounded-lg p-8 max-w-md w-full relative z-10">
-                <h2 class="text-2xl text-blue-400 font-bold mb-4">60-Second Application</h2>
-                <p class="text-gray-300 mb-6">STELLA will analyze your profile instantly</p>
-                
-                <form id="stella-application-form">
-                  <div class="mb-4">
-                    <label class="block text-blue-300 mb-2" for="modal-name">Your Name</label>
-                    <input type="text" id="modal-name" name="name" class="w-full bg-gray-800 border border-blue-700 rounded px-3 py-2 text-white" required>
-                  </div>
-                  
-                  <div class="mb-4">
-                    <label class="block text-blue-300 mb-2" for="modal-email">Email Address</label>
-                    <input type="email" id="modal-email" name="email" class="w-full bg-gray-800 border border-blue-700 rounded px-3 py-2 text-white" required>
-                  </div>
-                  
-                  <div class="mb-4">
-                    <label class="block text-blue-300 mb-2" for="modal-background">Background</label>
-                    <select id="modal-background" name="background" class="w-full bg-gray-800 border border-blue-700 rounded px-3 py-2 text-white" required>
-                      <option value="">Select your background</option>
-                      <option value="engineering">Engineering</option>
-                      <option value="science">Science</option>
-                      <option value="medical">Medical</option>
-                      <option value="military">Military</option>
-                      <option value="aviation">Aviation</option>
-                      <option value="business">Business</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                  
-                  <div class="mb-6">
-                    <label class="block text-blue-300 mb-2" for="modal-motivation">Why do you want to join SharedStars Academy?</label>
-                    <textarea id="modal-motivation" name="motivation" rows="4" class="w-full bg-gray-800 border border-blue-700 rounded px-3 py-2 text-white" required></textarea>
-                  </div>
-                  
-                  <div class="flex justify-end">
-                    <button type="button" id="cancel-application" class="bg-gray-700 text-white px-4 py-2 rounded mr-2">Cancel</button>
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Submit Application</button>
-                  </div>
-                </form>
-              </div>
-            `;
-            
-            document.body.appendChild(modal);
-            
-            document.getElementById('cancel-application').addEventListener('click', function() {
-              modal.remove();
-            });
-            
-            document.getElementById('stella-application-form').addEventListener('submit', function(e) {
-              e.preventDefault();
-              
-              // Get form data with correct IDs
-              const name = document.getElementById('modal-name').value;
-              const email = document.getElementById('modal-email').value;
-              const background = document.getElementById('modal-background').value;
-              const motivation = document.getElementById('modal-motivation').value;
-              
-              console.log("Modal form values:", { name, email, background, motivation });
-              
-              // Check if all fields are filled
-              if (!name || !email || !background || !motivation) {
-                alert("Please fill in all required fields");
-                return;
-              }
-              
-              // Show loading state
-              const submitButton = document.querySelector('#stella-application-form button[type="submit"]');
-              submitButton.disabled = true;
-              submitButton.innerHTML = 'Processing...';
-          
-              // Send data to API
-              fetch('/api/applications/submit-test', {               
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  name,
-                  email,
-                  background,
-                  motivation
-                })
-              })
-              .then(response => response.json())
-              .then(data => {
-                if (data.success) {
-                  showApplicationConfirmation(data.applicationId);
-                } else {
-                  alert(data.error || 'There was an error submitting your application. Please try again.');
-                  submitButton.disabled = false;
-                  submitButton.innerHTML = 'Submit Application';
-                }
-              })
-              .catch(error => {
-                console.error('Error:', error);
-                alert('There was an error submitting your application. Please try again.');
-                submitButton.disabled = false;
-                submitButton.innerHTML = 'Submit Application';
-              });
-            });
-          } else {
-            document.getElementById('application-form-modal').style.display = 'flex';
-          }
-        };
-        
-        // Show confirmation after successful submission
-        const showApplicationConfirmation = (applicationId) => {
-          const formModal = document.getElementById('application-form-modal');
-          if (formModal) {
-            formModal.remove();
-          }
-          
-          const confirmationModal = document.createElement('div');
-          confirmationModal.id = 'confirmation-modal';
-          confirmationModal.className = 'fixed inset-0 flex items-center justify-center z-50';
-          confirmationModal.innerHTML = `
-            <div class="absolute inset-0 bg-black opacity-75"></div>
-            <div class="bg-gray-900 border border-blue-500 rounded-lg p-8 max-w-md w-full relative z-10 text-center">
-              <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              
-              <h2 class="text-2xl text-green-400 font-bold mb-4">Application Received!</h2>
-              
-              <p class="text-gray-300 mb-6">Your application has been submitted successfully. We'll review it and get back to you via email shortly.</p>
-              
-              <p class="text-gray-400 mb-8">Application ID: ${applicationId}</p>
-              
-              <button type="button" id="close-confirmation" class="bg-green-600 text-white px-6 py-3 rounded-lg">Close</button>
-              
-              <p class="text-xs text-gray-500 mt-6">Your data is encrypted and processed by STELLA AI for qualification assessment only. See our <a href="/privacy.html" class="text-blue-400">privacy policy</a>.</p>
-            </div>
-          `;
-          
-          document.body.appendChild(confirmationModal);
-          
-          document.getElementById('close-confirmation').addEventListener('click', function() {
-            confirmationModal.remove();
-          });
-        };
-        
-        // Set up the apply button
-        setupApplyButton();
-        
         // Countdown timer functionality
         const setupCountdown = () => {
           // Target date: March 15, 2025
@@ -1535,7 +1460,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('current-year')) {
           document.getElementById('current-year').textContent = new Date().getFullYear();
         }
-      });
+      }); // Now this closing bracket is matched with the opening one
     </script>
 </body>
 </html>
