@@ -119,95 +119,94 @@ if (!window.StellaCore) {
     }
     
     /**
-     * Get guidance for current activity
-     * @param {String} activity - Activity type (e.g., 'endurance', 'balance')
-     * @param {Object} metrics - Current metrics
-     * @returns {Promise<Object>} Guidance data
-     */
-    async getGuidance(activity, metrics = {}) {
+ * Get guidance for current activity
+ * @param {String} activity - Activity type (e.g., 'endurance', 'balance')
+ * @param {Object} metrics - Current metrics
+ * @returns {Promise<Object>} Guidance data
+ */
+async getGuidance(activity, metrics = {}) {
+  try {
+    // Log request in debug mode
+    if (this.options.debugMode) {
+      console.log(`Getting guidance for ${activity} with metrics:`, metrics);
+    }
+
+    // Merge current session metrics with provided metrics
+    const combinedMetrics = {
+      ...this.sessionMetrics,
+      ...metrics
+    };
+
+    // Update stored metrics
+    this.sessionMetrics = combinedMetrics;
+
+    // For MVP or offline mode, use mock guidance
+    if (this.options.mockApi !== false || this.offlineMode) {
+      return this._getMockGuidance(activity, combinedMetrics);
+    }
+
+    // Add retry logic for API calls
+    let attempts = 0;
+    const maxAttempts = 3;
+
+    while (attempts < maxAttempts) {
       try {
-        // Log request in debug mode
-        if (this.options.debugMode) {
-          console.log(`Getting guidance for ${activity} with metrics:`, metrics);
+        // Call backend API for guidance (Corrected API endpoint)
+        const response = await fetch('/api/stella/guidance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            activity,
+            metrics: combinedMetrics,
+            module: this.currentModuleType,
+            mission: this.currentMission
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to get guidance: ${response.status}`);
         }
-        
-        // Merge current session metrics with provided metrics
-        const combinedMetrics = {
-          ...this.sessionMetrics,
-          ...metrics
-        };
-        
-        // Update stored metrics
-        this.sessionMetrics = combinedMetrics;
-        
-        // For MVP or offline mode, use mock guidance
-        if (this.options.mockApi !== false || this.offlineMode) {
-          return this._getMockGuidance(activity, combinedMetrics);
-        }
-        
-        // Add retry logic for API calls
-        let attempts = 0;
-        const maxAttempts = 3;
-        
-        while (attempts < maxAttempts) {
-          try {
-            // Call backend API for guidance
-            const response = await fetch('/api/ai/guidance', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                activity,
-                metrics: combinedMetrics,
-                module: this.currentModuleType,
-                mission: this.currentMission
-              })
-            });
-            
-            if (!response.ok) {
-              throw new Error(`Failed to get guidance: ${response.status}`);
-            }
-            
-            const guidance = await response.json();
-            
-            // Store guidance in history
-            this._addToGuidanceHistory(activity, guidance);
-            
-            // Update UI with guidance
-            this._updateGuidance(guidance);
-            
-            // Dispatch guidance event
-            this._dispatchGuidanceEvent(guidance);
-            
-            return guidance;
-          } catch (error) {
-            attempts++;
-            if (attempts >= maxAttempts) {
-              throw error;
-            }
-            // Wait before retry (exponential backoff)
-            await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
-          }
-        }
+
+        const guidance = await response.json();
+
+        // Store guidance in history
+        this._addToGuidanceHistory(activity, guidance);
+
+        // Update UI with guidance
+        this._updateGuidance(guidance);
+
+        // Dispatch guidance event
+        this._dispatchGuidanceEvent(guidance);
+
+        return guidance;
       } catch (error) {
-        console.error('Error getting STELLA guidance:', error);
-        this.offlineMode = true;
-        
-        // Fallback guidance
-        const fallbackGuidance = {
-          message: 'I\'m currently operating in offline mode. Focus on maintaining proper form and steady breathing during your exercises.',
-          actionItems: ['Monitor your breathing', 'Maintain proper posture', 'Stay hydrated'],
-          source: 'fallback'
-        };
-        
-        this._updateGuidance(fallbackGuidance);
-        this._dispatchGuidanceEvent(fallbackGuidance);
-        
-        return fallbackGuidance;
+        attempts++;
+        if (attempts >= maxAttempts) {
+          throw error;
+        }
+        // Wait before retry (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
       }
     }
-    
+  } catch (error) {
+    console.error('Error getting STELLA guidance:', error);
+    this.offlineMode = true;
+
+    // Fallback guidance
+    const fallbackGuidance = {
+      message: "I'm currently operating in offline mode. Focus on maintaining proper form and steady breathing during your exercises.",
+      actionItems: ['Monitor your breathing', 'Maintain proper posture', 'Stay hydrated'],
+      source: 'fallback'
+    };
+
+    this._updateGuidance(fallbackGuidance);
+    this._dispatchGuidanceEvent(fallbackGuidance);
+
+    return fallbackGuidance;
+  }
+}
     /**
      * Ask STELLA a specific question
      * @param {String} question - User's question

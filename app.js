@@ -149,8 +149,10 @@ const server = http.createServer(app);
 // ============================
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
-app.use(helmet({
+app.use(cors({
+  origin: ['http://localhost', 'http://localhost:3000', 'http://127.0.0.1:3000'],
+  credentials: true
+}));app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       scriptSrc: ["'self'", "'unsafe-inline'"]
@@ -193,7 +195,7 @@ app.use(session({
 }));
 
 // ============================
-// 4. SCHEDULED TASKS
+// 5. SCHEDULED TASKS
 // ============================
 cron.schedule('0 5 * * *', async () => {
   console.log('Running scheduled daily briefing generation');
@@ -206,7 +208,7 @@ cron.schedule('0 5 * * *', async () => {
 });
 
 // ============================
-// 5. ROUTE IMPORTS & SETUP
+// 6. ROUTE IMPORTS & SETUP
 // ============================
 console.log("🔄 Starting route setup...");
 
@@ -245,183 +247,14 @@ try { strengthRoutes = require('./routes/training/missions/strength.js'); } catc
 try { stellaRoutes = require("./routes/api/stella-minimal"); } catch (e) { console.error("❌ stellaRoutes:", e.message); }
 
 // ============================
-// 6. DIRECT STELLA ROUTER SETUP
+// STELLA ROUTES SETUP
 // ============================
-// Create a direct stella router since the imported one isn't working
-const stellaDirectRouter = express.Router();
-
-// Simple STELLA endpoints
-stellaDirectRouter.get('/test', (req, res) => {
-  res.json({ message: "STELLA API is working" });
-});
-
-stellaDirectRouter.post('/initialize', (req, res) => {
-  res.json({
-    success: true,
-    message: "STELLA initialized successfully",
-    version: "1.0"
-  });
-});
-
-stellaDirectRouter.post('/connect', (req, res) => {
-  const { userId } = req.body;
-  res.json({
-    success: true,
-    sessionId: `stella_${Date.now()}`,
-    message: "Connected to STELLA"
-  });
-});
-
-// New endpoint for assessment status
-stellaDirectRouter.post('/assessment/status', (req, res) => {
-  const { userId, assessmentType } = req.body;
-  
-  // Mock response - in production, you'd check a database
-  res.json({
-    success: true,
-    completed: false,
-    lastCompleted: null,
-    nextAssessment: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-  });
-});
-
-// New endpoint for assessment completion
-stellaDirectRouter.post('/assessment/complete', (req, res) => {
-  const { userId, assessmentType, results } = req.body;
-  
-  // In production, you'd save this to a database
-  console.log(`Assessment completed for user ${userId}, type: ${assessmentType}`);
-  
-  res.json({
-    success: true,
-    message: "Assessment recorded successfully",
-    recommendations: [
-      "Focus on core stability exercises",
-      "Increase vestibular training frequency",
-      "Add balance challenge progressions"
-    ]
-  });
-});
-
-// Mount the correct STELLA routes
-if (stellaRoutes) {
-  app.use("/api/stella", stellaRoutes);
-  console.log("✅ STELLA routes mounted at /api/stella");
-} else {
-  // Use direct router if import fails
-  app.use('/api/stella', stellaDirectRouter);
-  console.log("✅ Direct STELLA routes mounted at /api/stella");
+// Import STELLA routes
+try { 
+  stellaRoutes = require("./routes/api/stella-minimal.js"); 
+} catch (e) { 
+  console.error("❌ stellaRoutes:", e.message); 
 }
-
-// Enhanced STELLA guidance endpoint with OpenAI integration
-stellaDirectRouter.post('/guidance', async (req, res) => {
-  try {
-    const { userId, question } = req.body;
-    
-    if (!question) {
-      return res.json({
-        success: true,
-        guidance: {
-          message: "What would you like to know about your space training?",
-          actionItems: ["Ask about modules", "Check your progress", "Get exercise guidance"]
-        }
-      });
-    }
-    
-    // If OpenAI is configured, use it
-    if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== "MISSING_KEY") {
-      try {
-        const { OpenAI } = require("openai");
-        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-        
-        // Call OpenAI
-        const response = await openai.chat.completions.create({
-          model: "gpt-4o",
-          messages: [
-            { 
-              role: "system", 
-              content: "You are STELLA, an AI assistant for space training on SharedStars. You help users prepare for space missions through guided training programs. Your name stands for Space Training Enhancement and Learning Logic Assistant. Respond in a helpful, encouraging tone. Format your response with a main message followed by 2-3 actionable suggestions."
-            },
-            { role: "user", content: question }
-          ],
-          max_tokens: 500,
-          temperature: 0.7
-        });
-        
-        // Extract the assistant's response
-        const assistantResponse = response.choices[0].message.content;
-        
-        // Split into message and action items
-        let message = assistantResponse;
-        let actionItems = [];
-        
-        // Try to extract action items from bullet points
-        const paragraphs = assistantResponse.split('\n\n');
-        if (paragraphs.length > 1) {
-          message = paragraphs[0];
-          
-          // Look for bullet points in remaining paragraphs
-          for (let i = 1; i < paragraphs.length; i++) {
-            const bulletPoints = paragraphs[i].split('\n').filter(line => 
-              line.trim().startsWith('- ') || 
-              line.trim().startsWith('* ')
-            );
-            
-            if (bulletPoints.length > 0) {
-              actionItems = bulletPoints.map(bp => 
-                bp.trim().replace(/^[\-\*]\s+/, '')
-              );
-              break;
-            }
-          }
-        }
-        
-        // If no action items found, use default
-        if (actionItems.length === 0) {
-          actionItems = [
-            "Ask about specific training modules",
-            "Check your progress dashboard",
-            "Request personalized guidance"
-          ];
-        }
-        
-        return res.json({
-          success: true,
-          guidance: {
-            message: message,
-            actionItems: actionItems.slice(0, 3)
-          }
-        });
-      } catch (openaiError) {
-        console.error('Error with OpenAI API:', openaiError);
-      }
-    }
-    
-    // Fallback response if OpenAI fails or isn't configured
-    return res.json({
-      success: true,
-      guidance: {
-        message: `I'll help you with your space training. You asked: "${question}"`,
-        actionItems: [
-          "Check your current training modules",
-          "Review your progress in the dashboard",
-          "Complete your assessment to unlock personalized guidance"
-        ]
-      }
-    });
-  } catch (error) {
-    console.error('Error handling guidance request:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to get guidance',
-      guidance: {
-        message: "I'm having trouble with my systems right now. Please try again in a moment.",
-        actionItems: ["Try refreshing the page", "Check your internet connection"]
-      }
-    });
-  }
-});
-
 // ============================
 // 7. TEST ROUTES
 // ============================
@@ -462,7 +295,13 @@ if (balanceRoutes) app.use('/training/physical/mission/balance', balanceRoutes);
 if (enduranceRoutes) app.use('/training/physical/mission/endurance', enduranceRoutes);
 if (flexibilityRoutes) app.use('/training/physical/mission/flexibility', flexibilityRoutes);
 if (strengthRoutes) app.use('/training/physical/mission/strength', strengthRoutes);
-
+// Mount STELLA routes
+if (stellaRoutes) {
+  app.use("/api/stella", stellaRoutes);
+  console.log("✅ STELLA routes mounted at /api/stella");
+} else {
+  console.error("❌ STELLA routes failed to load - please check routes/api/stella-minimal.js");
+}
 // ============================
 // 9. ADDITIONAL API ENDPOINTS
 // ============================
@@ -659,6 +498,7 @@ app.use((err, req, res, next) => {
   console.error("❌ Server Error:", err.message);
   res.status(500).json({ error: "Internal Server Error", message: err.message });
 });
+
 // ============================
 // 13. SERVER STARTUP
 // ============================

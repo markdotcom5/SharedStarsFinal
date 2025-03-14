@@ -278,7 +278,13 @@
       class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition-colors">
       Ask
     </button>
-  </div>
+    <button 
+    id="test-stella-api" 
+    class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium transition-colors ml-2">
+    Test API
+  </button>
+</div>
+
   
   <!-- Conversation container for STELLA's responses -->
   <div class="stella-conversation mt-4 max-h-60 overflow-y-auto px-1"></div>
@@ -419,6 +425,12 @@
 <a href="/training-modules/mental/index.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
   Continue Training
 </a>
+<!-- Add this button right next to your "Ask" button in the STELLA section -->
+<button 
+  id="test-stella-api" 
+  class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium transition-colors ml-2">
+  Test API
+</button>
           </div>
         </div>
         
@@ -518,7 +530,9 @@
 </a>
           </div>
         </div>
-        
+        <button id="test-stella-api" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium transition-colors">
+          Test API Connection
+        </button>
         <!-- Assessment Card -->
         <div class="module-card overflow-hidden">
           <div class="relative">
@@ -762,12 +776,18 @@
     </script>
   </div>
 </div>
-</footer>
+<footer>
+<!-- FOOTER -->
 <!-- JavaScript -->
-<script src="/js/stella-core.js"></script>
+
 <script src="/js/stella-integration.js"></script>
 <script src="/js/countdown.js"></script>
 <script src="/js/languageSelection.js"></script>
+<!-- Add these before your closing body tag if not already present -->
+<script src="/js/progressAssessment.js"></script>
+
+<!-- JavaScript -->
+<script src="/js/stella-core.js"></script>
 <!-- Add these before your closing body tag if not already present -->
 <script src="/js/progressAssessment.js"></script>
 <script src="/js/progressChart.js"></script>
@@ -775,34 +795,18 @@
 
 <script>
   // Debug STELLA Connection
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('Checking STELLA elements:');
-    console.log('Input element:', document.getElementById('stella-question'));
-    console.log('Button element:', document.getElementById('send-to-stella'));
-    console.log('Conversation element:', document.querySelector('.stella-conversation'));
-    
-    // Test direct API call
-    fetch('/api/stella/status')
-      .then(response => response.json())
-      .then(data => {
-        console.log('STELLA API Status:', data);
-      })
-      .catch(error => {
-        console.error('STELLA API Error:', error);
-      });
-  });
-</script>
+  // Find this section in your document.addEventListener('DOMContentLoaded', function() {...}) setup
+// and make sure it explicitly attaches the event listeners properly:
 
-<!-- STELLA AI Integration for Mission Control -->
-<script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Get STELLA elements
-  console.log('🔍 Setting up STELLA AI in Mission Control...');
-
-  // Get STELLA elements
+  console.log('Checking STELLA elements:');
   const stellaInput = document.getElementById('stella-question');
   const stellaButton = document.getElementById('send-to-stella');
   const stellaConversation = document.querySelector('.stella-conversation');
+  
+  console.log('Input element:', stellaInput);
+  console.log('Button element:', stellaButton);
+  console.log('Conversation element:', stellaConversation);
   
   // Verify elements exist
   if (!stellaInput || !stellaButton) {
@@ -815,316 +819,313 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   
-  // Remove any existing event listeners
-  stellaButton.replaceWith(stellaButton.cloneNode(true));
-  stellaInput.replaceWith(stellaInput.cloneNode(true));
+  // IMPORTANT: Explicitly attach event listeners here
+  console.log('Attaching click handler to button...');
+  stellaButton.addEventListener('click', function() {
+    console.log('Send button clicked!');
+    handleStellaMessage();
+  });
   
-  // Get fresh references after replacement
-  const newStellaButton = document.getElementById('send-to-stella');
-  const newStellaInput = document.getElementById('stella-question');
-  
-  // Add event listeners
-  newStellaButton.addEventListener('click', handleStellaMessage);
-  newStellaInput.addEventListener('keydown', function(e) {
+  console.log('Attaching keydown handler to input...');
+  stellaInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
+      console.log('Enter key pressed!');
       handleStellaMessage();
     }
   });
   
   console.log('✅ STELLA event listeners attached successfully');
   
-  // Main STELLA handler function
-  async function handleStellaMessage() {
-    const question = newStellaInput.value.trim();
-    if (!question) return;
-    
-    console.log('🤖 STELLA processing question:', question);
-    
-    // Make sure conversation container is visible
-    stellaConversation.classList.remove('hidden');
-    
-    // Display user message
-    stellaConversation.innerHTML += `
-      <div class="mb-2 text-right">
-        <div class="inline-block bg-blue-600 ml-auto px-3 py-2 rounded-lg max-w-xs">
-          ${question}
-        </div>
-      </div>
-    `;
-    
-    // Clear input
-    newStellaInput.value = '';
-    
-    // Add loading indicator
-    stellaConversation.innerHTML += `
-      <div class="mb-2" id="stella-loading">
-        <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
-          <div class="flex space-x-2">
-            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce"></div>
-            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-75"></div>
-            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-150"></div>
-          </div>
-        </div>
-      </div>
-    `;
-    
-    // Scroll to bottom of conversation
-    stellaConversation.scrollTop = stellaConversation.scrollHeight;
-    
-    // Extract recent conversation messages to provide context
-    const conversationHistory = [];
-    const messageElements = stellaConversation.querySelectorAll('.mb-2, .mb-4');
-    
-    // Process messages (skip the loading indicator)
-    let count = 0;
-    for (let i = messageElements.length-1; i >= 0 && count < 5; i--) {
-      const element = messageElements[i];
-      if (element.id === 'stella-loading') continue;
+  // Test API button setup
+  const testApiButton = document.getElementById('test-stella-api');
+  if (testApiButton) {
+    testApiButton.addEventListener('click', async () => {
+      console.log('Testing direct API connection...');
+      const stellaConversation = document.querySelector('.stella-conversation');
       
-      const messageDiv = element.querySelector('div.inline-block');
-      if (!messageDiv) continue;
-      
-      const messageText = messageDiv.textContent.trim();
-      if (!messageText) continue;
-      
-      const isUser = element.classList.contains('text-right');
-      
-      conversationHistory.unshift({
-        fromUser: isUser,
-        content: messageText,
-        timestamp: new Date().toISOString()
-      });
-      
-      count++;
-    }
-    
-    try {
-      // Get user ID from localStorage or use a default
-      const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous';
-      const exerciseId = 'mission-control';
-      
-      let response;
-      
-      // Try to use StellaIntegration if available
-      if (window.StellaIntegration && window.StellaIntegration.isInitialized) {
-        console.log('🔍 Using StellaIntegration...');
-        
-        // Connect if not already connected
-        if (!window.StellaIntegration.isConnected) {
-          await window.StellaIntegration.connect(userId);
-        }
-        
-        // Ask STELLA through integration
-        response = await window.StellaIntegration.askQuestion(question, {
-          userId: userId,
-          exerciseId: exerciseId,
-          conversationHistory: conversationHistory
-        });
-      } else {
-        // Direct API call if integration not available
-        console.log('🔍 StellaIntegration not available, using direct API call...');
-        
-        const apiResponse = await fetch('/api/stella/guidance', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            userId: userId,
-            question: question,
-            exerciseId: exerciseId,
-            conversationHistory: conversationHistory,
-            // Add this to help with matching similar questions
-            context: {
-              currentPage: 'trainingHub',
-              moduleContext: document.querySelector('.module-card:hover')?.querySelector('h3')?.textContent || null
-            }
-          })
-        });
-        
-        if (!apiResponse.ok) {
-          throw new Error(`Failed to get STELLA response: ${apiResponse.status}`);
-        }
-        
-        response = await apiResponse.json();
-      }
-      
-      // Handle response
-      console.log('✅ STELLA response:', response);
-      
-      // Remove loading indicator
-      document.getElementById('stella-loading')?.remove();
-      
-      if (response.success && response.guidance) {
-        // Parse guidance from the response
-        const message = response.guidance.message || "I'm processing your request.";
-        const messageId = response.messageId || 'latest';
-        
-        let responseHTML = `
-          <div class="mb-4" data-message-id="${messageId}" data-session-id="${response.sessionId || ''}">
-            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-              <p>${message}</p>
-        `;
-        
-        // Add action items if available
-        if (response.guidance.actionItems && response.guidance.actionItems.length > 0) {
-          responseHTML += `<ul class="mt-3 space-y-2">`;
-          response.guidance.actionItems.forEach(item => {
-            responseHTML += `<li class="text-blue-300">• ${item}</li>`;
-          });
-          responseHTML += `</ul>`;
-        }
-        
-        // Close message container
-        responseHTML += `
-            </div>
-            <div class="flex justify-end mt-1 space-x-2 text-xs">
-              <button class="text-gray-500 hover:text-green-500 feedback-btn" data-value="helpful">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017a2 2 0 01-1.865-1.71l-.745-4.47a2 2 0 011.865-2.29H14z" />
-                </svg>
-              </button>
-              <button class="text-gray-500 hover:text-red-500 feedback-btn" data-value="not-helpful">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.866.1l.745 4.47a2 2 0 01-1.865 2.29H10z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        `;
-        
-        // Add to conversation
-        stellaConversation.innerHTML += responseHTML;
-      } else {
-        // Fallback response
-        stellaConversation.innerHTML += `
-          <div class="mb-4">
-            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-              <p>I'm having trouble processing your request. Could you please try again?</p>
-            </div>
-          </div>
-        `;
-      }
-    } catch (error) {
-      console.error('❌ STELLA error:', error);
-      
-      // Remove loading indicator
-      document.getElementById('stella-loading')?.remove();
-      
-      // Fall back to local responses if API fails
-      const localResponse = getLocalStellaResponse(question);
-      
+      // Add a message to the conversation to show we're testing
       stellaConversation.innerHTML += `
         <div class="mb-4">
           <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-            <p>${localResponse}</p>
+            <p>Testing API connection...</p>
           </div>
         </div>
       `;
-    }
-    
-    // Scroll to bottom regardless of outcome
-    stellaConversation.scrollTop = stellaConversation.scrollHeight;
+      
+      try {
+        const response = await fetch('http://localhost:3000/api/stella/test', {
+          method: 'GET'
+        });
+        
+        console.log('API Status:', response.status);
+        const data = await response.json();
+        console.log('API Response:', data);
+        
+        // Show success in the conversation
+        stellaConversation.innerHTML += `
+          <div class="mb-4">
+            <div class="inline-block bg-green-700 px-3 py-2 rounded-lg max-w-xs">
+              <p>API Connection Success!</p>
+              <p>Status: ${response.status}</p>
+              <p>Message: ${data.message}</p>
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        console.error('API Connection Failed:', error);
+        
+        // Show error in the conversation
+        stellaConversation.innerHTML += `
+          <div class="mb-4">
+            <div class="inline-block bg-red-700 px-3 py-2 rounded-lg max-w-xs">
+              <p>API Connection Failed!</p>
+              <p>Error: ${error.message}</p>
+            </div>
+          </div>
+        `;
+      }
+    });
+    console.log('✅ Test API button handler attached');
+  } else {
+    console.error('❌ Test API button not found!');
   }
   
-  // Backup static responses if API fails
-  function getLocalStellaResponse(question) {
-    // Convert question to lowercase for easier matching
-    const lowerQuestion = question.toLowerCase();
-    
-    // Check for common question patterns
-    if (lowerQuestion.includes('hello') || lowerQuestion.includes('hi')) {
-      return "Hello! I'm STELLA, your AI assistant for Mission Control. How can I help you today?";
+  // Call the setup function
+  setupQuickActions();
+});
+
+// Setup quick action buttons function (moved outside the event listener)
+function setupQuickActions() {
+  const assessmentButton = document.getElementById('start-assessment-btn');
+  if (assessmentButton) {
+    assessmentButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = '/physicalTraining.html';
+    });
+  }
+}
+</script>
+
+<!-- STELLA AI Integration for Training Hub -->
+<script>
+// Add the intelligent response function
+function getIntelligentResponse(question, history) {
+  // Simple fallback responses when API is unavailable
+  const responses = [
+    {
+      message: "I'm having trouble connecting to my backend systems. Let me provide some general information about your training program.",
+      actionItems: ["Check out the Physical Training module", "Complete your initial assessment"]
+    },
+    {
+      message: "While I'm reconnecting to my knowledge base, I can tell you that the Core & Balance mission is an excellent starting point for your space training.",
+      actionItems: ["Begin with the Core & Balance exercises", "Track your progress in the dashboard"]
+    },
+    {
+      message: "I'm currently operating in offline mode. Our training modules are designed to prepare you physically and mentally for the challenges of space travel.",
+      actionItems: ["Review available training modules", "Start with beginner-level exercises"]
     }
-    
-    if (lowerQuestion.includes('assessment') || lowerQuestion.includes('test')) {
-      return "Our assessments help tailor your space training program. The initial assessment is required before starting specialized training modules. Would you like to begin?";
-    }
-    
-    if (lowerQuestion.includes('physical') || lowerQuestion.includes('train')) {
-      return "Physical training is essential for space missions. It includes exercises for core strength, balance, endurance, and flexibility - all critical for zero gravity environments.";
-    }
-    
-    if (lowerQuestion.includes('start') || lowerQuestion.includes('begin')) {
-      return "Yes, you're ready to begin your training! Click one of these options to get started: Start Assessment - Begin with a personalized evaluation (recommended for new trainees), Physical Training - Jump straight into physical conditioning exercises, or Technical Skills - Start with technical knowledge modules.";
-    }
-    
-    if (lowerQuestion.includes('mission') || lowerQuestion.includes('module')) {
-      return "Mission Control tracks your progress through training modules. You'll need to complete your initial assessment to unlock mission-specific training paths.";
-    }
-    
-    if (lowerQuestion.includes('countdown') || lowerQuestion.includes('timeline')) {
-      return "Your space readiness countdown shows your estimated timeline to space. Complete assessments and training modules to accelerate your timeline.";
-    }
-    
-    // Default response if no patterns match
-    return "I'm here to help you navigate Mission Control. You can ask me about assessments, your space readiness timeline, or any aspect of your training program.";
+  ];
+  
+  // Choose a response based on the question content
+  if (question.toLowerCase().includes("physical")) {
+    return {
+      message: "Physical training is crucial for space readiness. It helps your body adapt to microgravity and the physical demands of space travel.",
+      actionItems: ["Start with the Core & Balance mission", "Progress to Strength & Endurance"]
+    };
+  } else if (question.toLowerCase().includes("mental")) {
+    return {
+      message: "Mental fitness training helps develop cognitive resilience needed for the psychological challenges of space travel.",
+      actionItems: ["Try the Stress Management module", "Practice the Space Adaptation exercises"]
+    };
   }
   
-  // Add the feedback handler function
-  function handleFeedback(messageId, isHelpful, sessionId) {
-    // Send feedback to the server to help STELLA learn
-    fetch('/api/stella/feedback', {
+  // Default to a random response
+  return responses[Math.floor(Math.random() * responses.length)];
+}
+
+// Update your handleStellaMessage function
+async function handleStellaMessage() {
+  // Get the question from the input field
+  const question = document.getElementById('stella-question').value.trim();
+  
+  // Don't process empty questions
+  if (!question) {
+    return;
+  }
+  
+  // Clear input field
+  document.getElementById('stella-question').value = '';
+  
+  // Get conversation container
+  const stellaConversation = document.querySelector('.stella-conversation');
+  
+  // Add user message to the conversation
+  stellaConversation.innerHTML += `
+    <div class="mb-4 flex justify-end">
+      <div class="inline-block bg-blue-600 px-3 py-2 rounded-lg max-w-xs">
+        <p>${question}</p>
+      </div>
+    </div>
+  `;
+  
+  // Add loading indicator
+  stellaConversation.innerHTML += `
+    <div id="stella-loading" class="mb-4">
+      <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
+        <p>Thinking...</p>
+      </div>
+    </div>
+  `;
+  
+  // Get or initialize conversation history
+  let conversationHistory = JSON.parse(localStorage.getItem('stellaConversationHistory') || '[]');
+  
+  // Add user message to history
+  conversationHistory.push({
+    fromUser: true,
+    content: question,
+    timestamp: new Date().toISOString()
+  });
+  
+  // Save history
+  localStorage.setItem('stellaConversationHistory', JSON.stringify(conversationHistory));
+  
+  // Scroll to bottom
+  stellaConversation.scrollTop = stellaConversation.scrollHeight;
+  
+  // Generate message IDs outside of any async code to ensure they're defined
+  const messageId = 'msg_' + Date.now();
+  const sessionId = localStorage.getItem('stellaSessionId') || 'session_' + Date.now();
+  
+  console.log('🔍 Preparing to call STELLA API with question:', question);
+  
+  try {
+    console.log('🔍 Attempting to call STELLA API...');
+    
+    // Make API call - use exact same format as the test button
+    const apiResponse = await fetch('http://localhost:3000/api/stella/guidance', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        userId: localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous',
-        messageId: messageId,
-        sessionId: sessionId,
-        helpful: isHelpful,
-        feedbackText: null,
-        rating: isHelpful ? 5 : 1
+        userId: 'test-user', // Use fixed user ID to match test
+        question: question,
+        exerciseId: 'training-hub',
+        conversationHistory: conversationHistory
       })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('✅ STELLA feedback recorded:', data);
-    })
-    .catch(error => {
-      console.error('❌ Error recording STELLA feedback:', error);
     });
+    
+    console.log('✅ API response status:', apiResponse.status);
+    console.log('✅ Full API response:', apiResponse);
+    
+    if (!apiResponse.ok) {
+      console.error(`❌ API returned error status: ${apiResponse.status}`);
+      throw new Error(`API returned status: ${apiResponse.status}`);
+    }
+    
+    // Remove loading indicator
+    document.getElementById('stella-loading')?.remove();
+    
+    // Parse the response
+    const response = await apiResponse.json();
+    console.log('✅ API response data:', response);
+    
+    // Extract the message and action items with proper fallbacks
+    const stellaResponse = response.guidance?.message || response.message || "I couldn't process your request.";
+    const actionItems = response.guidance?.actionItems || response.actionItems || [];
+    
+    console.log('✅ Extracted message:', stellaResponse);
+    console.log('✅ Extracted action items:', actionItems);
+    
+    // Add STELLA's response to the conversation
+    stellaConversation.innerHTML += `
+      <div class="mb-4" data-message-id="${messageId}" data-session-id="${sessionId}">
+        <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+          <p>${stellaResponse}</p>
+          ${actionItems.length > 0 ? `
+            <ul class="mt-2 space-y-1">
+              ${actionItems.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+          ` : ''}
+        </div>
+        <div class="mt-1 flex space-x-2">
+          <button class="feedback-btn text-gray-500 hover:text-green-500" data-value="helpful">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+            </svg>
+          </button>
+          <button class="feedback-btn text-gray-500 hover:text-red-500" data-value="unhelpful">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8.864 15.674c-.956.24-1.843-.484-1.908-1.42-.072-1.05-.23-2.015-.428-2.59-.125-.36-.479-1.012-1.04-1.638-.557-.624-1.282-1.179-2.131-1.41C2.685 8.432 2 7.85 2 7V3c0-.845.682-1.464 1.448-1.546 1.07-.113 1.564-.415 2.068-.723l.048-.029c.272-.166.578-.349.97-.484C6.931.08 7.395 0 8 0h3.5c.937 0 1.599.478 1.934 1.064.164.287.254.607.254.913 0 .152-.023.312-.077.464.201.262.38.577.488.9.11.33.172.762.004 1.15.069.13.12.268.159.403.077.27.113.567.113.856 0 .289-.036.586-.113.856-.035.12-.08.244-.138.363.394.571.418 1.2.234 1.733-.206.592-.682 1.1-1.2 1.272-.847.283-1.803.276-2.516.211a9.877 9.877 0 0 1-.443-.05 9.364 9.364 0 0 1-.062 4.51c-.138.508-.55.848-1.012.964l-.261.065zM11.5 1.5H8c-.51 0-.863.068-1.14.163-.281.097-.506.229-.776.393l-.04.025c-.555.338-1.198.73-2.49.866-.333.035-.554.29-.554.55V7c0 .255.226.543.62.65 1.095.3 1.977.997 2.614 1.709.635.71 1.064 1.475 1.238 1.977.243.7.407 1.768.482 2.85.025.362.36.595.667.518l.262-.065c.16-.04.258-.144.288-.255a8.34 8.34 0 0 0-.145-4.726.5.5 0 0 1 .595-.643h.003l.014.004.058.013a8.912 8.912 0 0 0 1.036.157c.663.06 1.457.054 2.11-.163.175-.059.45-.301.57-.651.107-.308.087-.67-.266-1.021l-.353-.354.353-.354c.043-.042.105-.14.154-.315.048-.167.075-.37.075-.581 0-.211-.027-.414-.075-.581-.05-.174-.111-.273-.154-.315l-.353-.354.353-.354c.047-.047.109-.176.005-.488a2.224 2.224 0 0 0-.505-.804l-.353-.354.353-.354c.006-.005.041-.05.041-.17a.866.866 0 0 0-.121-.415C12.4 1.272 12.063 1 11.5 1z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `;
+    
+    // Add message to history
+    conversationHistory.push({
+      fromUser: false,
+      content: stellaResponse,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Save history
+    localStorage.setItem('stellaConversationHistory', JSON.stringify(conversationHistory));
+    
+    // Scroll to bottom
+    stellaConversation.scrollTop = stellaConversation.scrollHeight;
+    
+  } catch (error) {
+    console.error('❌ STELLA API error:', error);
+    console.error('❌ Error details:', error.message);
+    
+    // Remove loading indicator if it exists
+    document.getElementById('stella-loading')?.remove();
+    
+    // Fall back to local responses
+    const intelligentResponse = getIntelligentResponse(question, conversationHistory);
+    
+    stellaConversation.innerHTML += `
+      <div class="mb-4" data-message-id="${messageId}" data-session-id="${sessionId}">
+        <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+          <p>${intelligentResponse.message}</p>
+          ${intelligentResponse.actionItems ? `
+            <ul class="mt-2 space-y-1">
+              ${intelligentResponse.actionItems.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+          ` : ''}
+        </div>
+        <div class="mt-1 flex space-x-2">
+          <button class="feedback-btn text-gray-500 hover:text-green-500" data-value="helpful">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+            </svg>
+          </button>
+          <button class="feedback-btn text-gray-500 hover:text-red-500" data-value="unhelpful">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8.864 15.674c-.956.24-1.843-.484-1.908-1.42-.072-1.05-.23-2.015-.428-2.59-.125-.36-.479-1.012-1.04-1.638-.557-.624-1.282-1.179-2.131-1.41C2.685 8.432 2 7.85 2 7V3c0-.845.682-1.464 1.448-1.546 1.07-.113 1.564-.415 2.068-.723l.048-.029c.272-.166.578-.349.97-.484C6.931.08 7.395 0 8 0h3.5c.937 0 1.599.478 1.934 1.064.164.287.254.607.254.913 0 .152-.023.312-.077.464.201.262.38.577.488.9.11.33.172.762.004 1.15.069.13.12.268.159.403.077.27.113.567.113.856 0 .289-.036.586-.113.856-.035.12-.08.244-.138.363.394.571.418 1.2.234 1.733-.206.592-.682 1.1-1.2 1.272-.847.283-1.803.276-2.516.211a9.877 9.877 0 0 1-.443-.05 9.364 9.364 0 0 1-.062 4.51c-.138.508-.55.848-1.012.964l-.261.065zM11.5 1.5H8c-.51 0-.863.068-1.14.163-.281.097-.506.229-.776.393l-.04.025c-.555.338-1.198.73-2.49.866-.333.035-.554.29-.554.55V7c0 .255.226.543.62.65 1.095.3 1.977.997 2.614 1.709.635.71 1.064 1.475 1.238 1.977.243.7.407 1.768.482 2.85.025.362.36.595.667.518l.262-.065c.16-.04.258-.144.288-.255a8.34 8.34 0 0 0-.145-4.726.5.5 0 0 1 .595-.643h.003l.014.004.058.013a8.912 8.912 0 0 0 1.036.157c.663.06 1.457.054 2.11-.163.175-.059.45-.301.57-.651.107-.308.087-.67-.266-1.021l-.353-.354.353-.354c.043-.042.105-.14.154-.315.048-.167.075-.37.075-.581 0-.211-.027-.414-.075-.581-.05-.174-.111-.273-.154-.315l-.353-.354.353-.354c.047-.047.109-.176.005-.488a2.224 2.224 0 0 0-.505-.804l-.353-.354.353-.354c.006-.005.041-.05.041-.17a.866.866 0 0 0-.121-.415C12.4 1.272 12.063 1 11.5 1z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `;
+    
+    // Add message to history
+    conversationHistory.push({
+      fromUser: false,
+      content: intelligentResponse.message,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Save history
+    localStorage.setItem('stellaConversationHistory', JSON.stringify(conversationHistory));
+    
+    // Scroll to bottom
+    stellaConversation.scrollTop = stellaConversation.scrollHeight;
   }
-  
-  // Add event listeners for feedback buttons
-  document.addEventListener('click', function(e) {
-    const button = e.target.closest('.feedback-btn');
-    if (button) {
-      const isHelpful = button.dataset.value === 'helpful';
-      const messageContainer = button.closest('.mb-4');
-      const messageId = messageContainer.dataset.messageId || 'latest';
-      const sessionId = messageContainer.dataset.sessionId || '';
-      
-      // Visual feedback
-      button.classList.remove('text-gray-500');
-      button.classList.add(isHelpful ? 'text-green-500' : 'text-red-500');
-      
-      // Send feedback to server
-      handleFeedback(messageId, isHelpful, sessionId);
-      
-      // Disable both buttons after selection
-      const buttons = messageContainer.querySelectorAll('.feedback-btn');
-      buttons.forEach(b => {
-        b.disabled = true;
-        if (b !== button) {
-          b.classList.add('opacity-30');
-        }
-      });
-    }
-  });
-  
-  // Set up quick action buttons
-  document.querySelectorAll('.mission-control-card button').forEach(button => {
-    if (button.id !== 'send-to-stella') {
-      button.addEventListener('click', function() {
-        const action = this.textContent.trim();
-        newStellaInput.value = `Tell me about ${action}`;
-        handleStellaMessage();
-      });
-    }
-  });
-});
+}
 </script>
 </body>
 </html>

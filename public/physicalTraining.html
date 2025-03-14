@@ -458,132 +458,318 @@
 }
 </script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Ensure STELLA integration is initialized
-    if (window.StellaIntegration && !window.StellaIntegration.isInitialized) {
-      window.StellaIntegration.init({
-        apiEndpoint: '/api/stella',
-        debug: true
-      });
-    }
-    
-    // Connect STELLA Ask button if not already connected
-    const stellaInput = document.getElementById('stella-question');
-    const stellaButton = document.getElementById('send-to-stella');
-    
-    if (stellaButton && stellaInput && !stellaButton.hasEventListeners) {
-      stellaButton.addEventListener('click', function() {
-        const question = stellaInput.value.trim();
-        if (question) {
-          // Get conversation container
-          const conversationDiv = document.querySelector('.stella-conversation');
-          if (conversationDiv) {
-            // Add user message
-            conversationDiv.innerHTML += `
-              <div class="mb-2 text-right">
-                <div class="inline-block bg-blue-600 ml-auto px-3 py-2 rounded-lg max-w-xs">
-                  ${question}
-                </div>
-              </div>
-            `;
-            
-            // Add loading indicator
-            conversationDiv.innerHTML += `
-              <div class="mb-2" id="stella-loading">
-                <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
-                  <div class="flex space-x-2">
-                    <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce"></div>
-                    <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-75"></div>
-                    <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-150"></div>
-                  </div>
-                </div>
-              </div>
-            `;
-            
-            // Call STELLA API
-            fetch('/api/stella/guidance', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                userId: 'anonymous',
-                question: question
-              })
-            })
-            .then(response => response.json())
-            .then(data => {
-              // Remove loading indicator
-              document.getElementById('stella-loading')?.remove();
-              
-              // Display STELLA's response
-              if (data.success && data.guidance) {
-                let stellaMessage = data.guidance.message || "I'm analyzing your question.";
-                
-                // Add action items if available
-                let actionItemsHtml = '';
-                if (data.guidance.actionItems && data.guidance.actionItems.length > 0) {
-                  actionItemsHtml = "<ul class='mt-2 space-y-1'>" + 
-                    data.guidance.actionItems.map(item => `<li>• ${item}</li>`).join('') + 
-                    "</ul>";
-                }
-                
-                conversationDiv.innerHTML += `
-                  <div class="mb-2">
-                    <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-                      ${stellaMessage}
-                      ${actionItemsHtml}
-                    </div>
-                  </div>
-                `;
-              } else {
-                conversationDiv.innerHTML += `
-                  <div class="mb-2">
-                    <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-                      I'm having trouble processing your question right now. Could you try asking in a different way?
-                    </div>
-                  </div>
-                `;
-              }
-              
-              // Scroll to bottom
-              conversationDiv.scrollTop = conversationDiv.scrollHeight;
-            })
-            .catch(error => {
-              console.error('Error asking STELLA:', error);
-              
-              // Remove loading indicator
-              document.getElementById('stella-loading')?.remove();
-              
-              // Display error message
-              conversationDiv.innerHTML += `
-                <div class="mb-2">
-                  <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-                    I'm having trouble connecting to my knowledge base right now. Please try again in a moment.
-                  </div>
-                </div>
-              `;
-              
-              // Scroll to bottom
-              conversationDiv.scrollTop = conversationDiv.scrollHeight;
-            });
-            
-            // Clear input
-            stellaInput.value = '';
-          }
-        }
-      });
-      
-      stellaInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          stellaButton.click();
-        }
-      });
-      
-      // Mark as having event listeners
-      stellaButton.hasEventListeners = true;
+  // 1. Fix for ReferenceError: Can't find variable: a (around line 877)
+// Look for this section:
+// 1. Fix for ReferenceError: Can't find variable: a (around line 877)
+// Look for this section:
+// Find this section in your document.addEventListener('DOMContentLoaded', function() {...}) setup
+// and make sure it explicitly attaches the event listeners properly:
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Checking STELLA elements:');
+  const stellaInput = document.getElementById('stella-question');
+  const stellaButton = document.getElementById('send-to-stella');
+  const stellaConversation = document.querySelector('.stella-conversation');
+  
+  console.log('Input element:', stellaInput);
+  console.log('Button element:', stellaButton);
+  console.log('Conversation element:', stellaConversation);
+  
+  // Verify elements exist
+  if (!stellaInput || !stellaButton) {
+    console.error('❌ STELLA input or button not found!');
+    return;
+  }
+  
+  if (!stellaConversation) {
+    console.error('❌ STELLA conversation container not found!');
+    return;
+  }
+  
+  // IMPORTANT: Explicitly attach event listeners here
+  console.log('Attaching click handler to button...');
+  stellaButton.addEventListener('click', function() {
+    console.log('Send button clicked!');
+    handleStellaMessage();
+  });
+  
+  console.log('Attaching keydown handler to input...');
+  stellaInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      console.log('Enter key pressed!');
+      handleStellaMessage();
     }
   });
+  
+  console.log('✅ STELLA event listeners attached successfully');
+  
+  // Test API button setup
+  const testApiButton = document.getElementById('test-stella-api');
+  if (testApiButton) {
+    testApiButton.addEventListener('click', async () => {
+      console.log('Testing direct API connection...');
+      try {
+        const response = await fetch('http://localhost:3000/api/stella/guidance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: 'test-user',
+            question: 'Test connection',
+            exerciseId: 'training-hub',
+            conversationHistory: []
+          })
+        });
+        
+        console.log('API Status:', response.status);
+        const data = await response.json();
+        console.log('API Response:', data);
+        alert('API Connection Success! Check console for details.');
+      } catch (error) {
+        console.error('API Connection Failed:', error);
+        alert('API Connection Failed: ' + error.message);
+      }
+    });
+    console.log('✅ Test API button handler attached');
+  } else {
+    console.error('❌ Test API button not found!');
+  }
+  
+  // Add page initialization logic
+  updateModuleProgress();
+  setupQuickActions();
+});
+  
+  // Remove any existing event listeners
+  stellaButton.replaceWith(stellaButton.cloneNode(true));
+  stellaInput.replaceWith(stellaInput.cloneNode(true));
+  
+  // Get fresh references after replacement
+  const newStellaButton = document.getElementById('send-to-stella');
+  const newStellaInput = document.getElementById('stella-question');
+  
+  // Add event listeners
+  newStellaButton.addEventListener('click', handleStellaMessage);
+  newStellaInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      handleStellaMessage();
+    }
+  });
+  
+  console.log('✅ STELLA event listeners attached successfully');
+  
+  // 2. Fix for API Response Handling (modify handleStellaMessage function)
+  async function handleStellaMessage() {
+    // Get the question from the input field
+    const question = document.getElementById('stella-question').value.trim();
+    
+    // Don't process empty questions
+    if (!question) {
+      return;
+    }
+    
+    // Clear input field
+    document.getElementById('stella-question').value = '';
+    
+    // Get conversation container
+    const stellaConversation = document.querySelector('.stella-conversation');
+    
+    // Add user message to the conversation
+    stellaConversation.innerHTML += `
+      <div class="mb-4 flex justify-end">
+        <div class="inline-block bg-blue-600 px-3 py-2 rounded-lg max-w-xs">
+          <p>${question}</p>
+        </div>
+      </div>
+    `;
+    
+    // Add loading indicator
+    stellaConversation.innerHTML += `
+      <div id="stella-loading" class="mb-4">
+        <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
+          <p>Thinking...</p>
+        </div>
+      </div>
+    `;
+    
+    // Get or initialize conversation history
+    let conversationHistory = JSON.parse(localStorage.getItem('stellaConversationHistory') || '[]');
+    
+    // Add user message to history
+    conversationHistory.push({
+      fromUser: true,
+      content: question,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Save history
+    localStorage.setItem('stellaConversationHistory', JSON.stringify(conversationHistory));
+    
+    // Scroll to bottom
+    stellaConversation.scrollTop = stellaConversation.scrollHeight;
+    
+    try {
+      // Remove loading after a short delay
+      setTimeout(async () => {
+        document.getElementById('stella-loading')?.remove();
+        
+        // Get user ID from localStorage or use a default
+        const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous';
+        
+        console.log('🔍 Calling STELLA API...');
+        
+        try {
+          // Make API call to your backend
+          const apiResponse = await fetch('http://localhost:3000/api/stella/guidance', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              userId: userId,
+              question: question,
+              exerciseId: 'training-hub',
+              conversationHistory: conversationHistory,
+              context: {
+                currentPage: 'trainingHub',
+                availableModules: Array.from(document.querySelectorAll('.module-card h3'))
+                  .map(heading => heading.textContent.trim()),
+                userProgress: {
+                  completedModules: Array.from(document.querySelectorAll('.progress-fill'))
+                    .filter(el => parseInt(el.style.width) > 0)
+                    .length,
+                  totalModules: document.querySelectorAll('.progress-fill').length
+                }
+              }
+            })
+          });
+          
+          // Log the response status to debug
+          console.log('API Response Status:', apiResponse.status);
+          
+          if (!apiResponse.ok) {
+            throw new Error(`API returned status: ${apiResponse.status}`);
+          }
+          
+          const response = await apiResponse.json();
+          console.log('✅ STELLA API response:', response);
+          
+          // Fix: Updated to properly handle the API response structure
+          let stellaResponse = response.guidance?.message || response.message || response.response || "I apologize, but I couldn't process your request.";
+          let actionItems = response.guidance?.actionItems || response.actionItems || [];
+          
+          // Generate a unique ID for this message
+          const messageId = 'msg_' + Date.now();
+          const sessionId = localStorage.getItem('stellaSessionId') || 'session_' + Date.now();
+          
+          // Add STELLA's response to the conversation
+          stellaConversation.innerHTML += `
+            <div class="mb-4" data-message-id="${messageId}" data-session-id="${sessionId}">
+              <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+                <p>${stellaResponse}</p>
+                ${actionItems.length > 0 ? `
+                  <ul class="mt-2 space-y-1">
+                    ${actionItems.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                ` : ''}
+              </div>
+              <div class="mt-1 flex space-x-2">
+                <button class="feedback-btn text-gray-500 hover:text-green-500" data-value="helpful">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+                  </svg>
+                </button>
+                <button class="feedback-btn text-gray-500 hover:text-red-500" data-value="unhelpful">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8.864 15.674c-.956.24-1.843-.484-1.908-1.42-.072-1.05-.23-2.015-.428-2.59-.125-.36-.479-1.012-1.04-1.638-.557-.624-1.282-1.179-2.131-1.41C2.685 8.432 2 7.85 2 7V3c0-.845.682-1.464 1.448-1.546 1.07-.113 1.564-.415 2.068-.723l.048-.029c.272-.166.578-.349.97-.484C6.931.08 7.395 0 8 0h3.5c.937 0 1.599.478 1.934 1.064.164.287.254.607.254.913 0 .152-.023.312-.077.464.201.262.38.577.488.9.11.33.172.762.004 1.15.069.13.12.268.159.403.077.27.113.567.113.856 0 .289-.036.586-.113.856-.035.12-.08.244-.138.363.394.571.418 1.2.234 1.733-.206.592-.682 1.1-1.2 1.272-.847.283-1.803.276-2.516.211a9.877 9.877 0 0 1-.443-.05 9.364 9.364 0 0 1-.062 4.51c-.138.508-.55.848-1.012.964l-.261.065zM11.5 1.5H8c-.51 0-.863.068-1.14.163-.281.097-.506.229-.776.393l-.04.025c-.555.338-1.198.73-2.49.866-.333.035-.554.29-.554.55V7c0 .255.226.543.62.65 1.095.3 1.977.997 2.614 1.709.635.71 1.064 1.475 1.238 1.977.243.7.407 1.768.482 2.85.025.362.36.595.667.518l.262-.065c.16-.04.258-.144.288-.255a8.34 8.34 0 0 0-.145-4.726.5.5 0 0 1 .595-.643h.003l.014.004.058.013a8.912 8.912 0 0 0 1.036.157c.663.06 1.457.054 2.11-.163.175-.059.45-.301.57-.651.107-.308.087-.67-.266-1.021l-.353-.354.353-.354c.043-.042.105-.14.154-.315.048-.167.075-.37.075-.581 0-.211-.027-.414-.075-.581-.05-.174-.111-.273-.154-.315l-.353-.354.353-.354c.047-.047.109-.176.005-.488a2.224 2.224 0 0 0-.505-.804l-.353-.354.353-.354c.006-.005.041-.05.041-.17a.866.866 0 0 0-.121-.415C12.4 1.272 12.063 1 11.5 1z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          `;
+          
+          // Add message to history
+          conversationHistory.push({
+            fromUser: false,
+            content: stellaResponse,
+            timestamp: new Date().toISOString()
+          });
+          
+          // Save history
+          localStorage.setItem('stellaConversationHistory', JSON.stringify(conversationHistory));
+          
+          // Scroll to bottom
+          stellaConversation.scrollTop = stellaConversation.scrollHeight;
+          
+        } catch (apiError) {
+          console.error('❌ STELLA API error:', apiError);
+          
+          // Fallback to local intelligent responses
+          const intelligentResponse = getIntelligentResponse(question, conversationHistory);
+          
+          const messageId = 'msg_' + Date.now();
+          const sessionId = localStorage.getItem('stellaSessionId') || 'session_' + Date.now();
+          
+          stellaConversation.innerHTML += `
+            <div class="mb-4" data-message-id="${messageId}" data-session-id="${sessionId}">
+              <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+                <p>${intelligentResponse.message}</p>
+                ${intelligentResponse.actionItems ? `
+                  <ul class="mt-2 space-y-1">
+                    ${intelligentResponse.actionItems.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                ` : ''}
+              </div>
+              <div class="mt-1 flex space-x-2">
+                <button class="feedback-btn text-gray-500 hover:text-green-500" data-value="helpful">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+                  </svg>
+                </button>
+                <button class="feedback-btn text-gray-500 hover:text-red-500" data-value="unhelpful">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8.864 15.674c-.956.24-1.843-.484-1.908-1.42-.072-1.05-.23-2.015-.428-2.59-.125-.36-.479-1.012-1.04-1.638-.557-.624-1.282-1.179-2.131-1.41C2.685 8.432 2 7.85 2 7V3c0-.845.682-1.464 1.448-1.546 1.07-.113 1.564-.415 2.068-.723l.048-.029c.272-.166.578-.349.97-.484C6.931.08 7.395 0 8 0h3.5c.937 0 1.599.478 1.934 1.064.164.287.254.607.254.913 0 .152-.023.312-.077.464.201.262.38.577.488.9.11.33.172.762.004 1.15.069.13.12.268.159.403.077.27.113.567.113.856 0 .289-.036.586-.113.856-.035.12-.08.244-.138.363.394.571.418 1.2.234 1.733-.206.592-.682 1.1-1.2 1.272-.847.283-1.803.276-2.516.211a9.877 9.877 0 0 1-.443-.05 9.364 9.364 0 0 1-.062 4.51c-.138.508-.55.848-1.012.964l-.261.065zM11.5 1.5H8c-.51 0-.863.068-1.14.163-.281.097-.506.229-.776.393l-.04.025c-.555.338-1.198.73-2.49.866-.333.035-.554.29-.554.55V7c0 .255.226.543.62.65 1.095.3 1.977.997 2.614 1.709.635.71 1.064 1.475 1.238 1.977.243.7.407 1.768.482 2.85.025.362.36.595.667.518l.262-.065c.16-.04.258-.144.288-.255a8.34 8.34 0 0 0-.145-4.726.5.5 0 0 1 .595-.643h.003l.014.004.058.013a8.912 8.912 0 0 0 1.036.157c.663.06 1.457.054 2.11-.163.175-.059.45-.301.57-.651.107-.308.087-.67-.266-1.021l-.353-.354.353-.354c.043-.042.105-.14.154-.315.048-.167.075-.37.075-.581 0-.211-.027-.414-.075-.581-.05-.174-.111-.273-.154-.315l-.353-.354.353-.354c.047-.047.109-.176.005-.488a2.224 2.224 0 0 0-.505-.804l-.353-.354.353-.354c.006-.005.041-.05.041-.17a.866.866 0 0 0-.121-.415C12.4 1.272 12.063 1 11.5 1z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          `;
+          
+          // Add message to history
+          conversationHistory.push({
+            fromUser: false,
+            content: intelligentResponse.message,
+            timestamp: new Date().toISOString()
+          });
+          
+          // Save history
+          localStorage.setItem('stellaConversationHistory', JSON.stringify(conversationHistory));
+          
+          // Scroll to bottom
+          stellaConversation.scrollTop = stellaConversation.scrollHeight;
+        }
+      }, 1000);
+    } catch (error) {
+        console.error('❌ STELLA error:', error);
+        document.getElementById('stella-loading')?.remove();
+        
+        // Fall back to basic responses
+        const localResponse = getLocalStellaResponse(question);
+        
+        stellaConversation.innerHTML += `
+          <div class="mb-4">
+            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+              <p>${localResponse}</p>
+            </div>
+          </div>
+        `;
+        
+        // Scroll to bottom
+        stellaConversation.scrollTop = stellaConversation.scrollHeight;
+      }
+  }
+});
 </script>
 </body>
 </html>

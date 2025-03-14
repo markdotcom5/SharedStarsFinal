@@ -101,7 +101,6 @@ const StellaConversationSchema = new Schema({
 }, { timestamps: true });
 
 // ✅ Indexes for efficient queries
-StellaConversationSchema.index({ 'userId': 1, 'timestamp': -1 });
 StellaConversationSchema.index({ 'metadata.context': 1 });
 StellaConversationSchema.index({ 'metadata.moduleId': 1, 'metadata.missionId': 1 });
 StellaConversationSchema.index({ 'aiAnalysis.questionType': 1 });
