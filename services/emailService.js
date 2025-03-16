@@ -246,44 +246,63 @@ async sendApplicationSubmissionToAdmin(application) {
  * @param {Object} application - Application data
  * @returns {Promise<Object>} Send result
  */
+/**
+ * Send acceptance email to an approved applicant - no authentication required
+ * @param {Object} application - Application data
+ * @returns {Promise<Object>} Send result
+ */
 async sendApplicationAcceptance(application) {
   try {
-    // Prepare template data
-    const data = {
-      baseUrl: config.baseUrl,
-      name: application.name,
-      applicationId: application._id,
-      recommendedPathway: application.aiReview.recommendedPathway || 'Space Operations',
-      currentYear: new Date().getFullYear()
-    };
+    // Create a name from firstName and lastName
+    const fullName = application.fullName || application.name || 'Academy Applicant';
     
-    // Load and compile the template
-    const template = await this.loadTemplate('application-acceptance');
-    const html = template(data);
+    console.log('Sending acceptance email to:', fullName, application.email);
     
-    // Send the email
+    // Check if email is available
+    if (!application.email) {
+      console.error('Cannot send acceptance email - no email address');
+      return { success: false, error: 'No email address available' };
+    }
+    
+    // HTML email content with SharedStars branding
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <!-- Your existing HTML template -->
+      </html>
+    `;
+    
+    // Plain text version for email clients that don't support HTML
+    const text = `
+      CONGRATULATIONS, ${fullName}!
+      
+      I am personally thrilled to inform you that your application to SharedStars Academy has been APPROVED!
+      
+      <!-- Rest of your plain text email -->
+    `;
+    
+    // Send the actual email
     const result = await this.transporter.sendMail({
       from: `"SharedStars Academy" <${config.email.from}>`,
       to: application.email,
-      subject: `🚀 CONGRATULATIONS! Your SharedStars Academy Application is Approved!`,
-      html,
-      text: `Congratulations ${application.name}! Your application to SharedStars Academy has been approved. Visit ${config.baseUrl}/login to set up your account and begin your training.`
+      subject: `🚀 Welcome to SharedStars Academy, ${fullName}!`,
+      html: html,
+      text: text
     });
     
-    logger.info('Sent acceptance email', { 
-      to: application.email, 
-      applicationId: application._id,
-      messageId: result.messageId 
-    });
-    
-    return result;
-  } catch (error) {
-    logger.error('Error sending acceptance email', {
+    console.log('Email sent successfully:', {
       to: application.email,
-      applicationId: application._id,
-      error: error.message
+      messageId: result.messageId
     });
-    throw error;
+    
+    return { 
+      success: true, 
+      messageId: result.messageId,
+      message: `Email sent to ${application.email}`
+    };
+  } catch (error) {
+    console.error('Error sending acceptance email:', error);
+    return { success: false, error: error.message };
   }
 }
   /**

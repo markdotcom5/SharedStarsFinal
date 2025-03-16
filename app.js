@@ -66,6 +66,7 @@ const dailyBriefingService = require('./services/dailyBriefingService');
 const schedule = require('node-schedule');
 const { getPhysicalTrainingProgress } = require('./services/progressServices');
 const stellaAnalyticsRoutes = require('./routes/admin/stellaAnalytics');
+const { v4: uuidv4 } = require('uuid');
 
 // ============================
 // 0. SESSION STORE SETUP
@@ -339,7 +340,157 @@ if (typeof adminAuthRoutes === 'function') {
   console.log("✅ Admin auth routes mounted");
 }
 app.use('/api/admin/stella-analytics', stellaAnalyticsRoutes)
+app.use('/api/applications', require('./routes/api/applications'));
 
+// ============================
+// BLOG FUNCTIONALITY
+// ============================
+console.log("🔄 Setting up blog functionality...");
+
+// Ensure the data directory exists
+const blogDataDir = path.join(__dirname, 'data');
+if (!fs.existsSync(blogDataDir)) {
+  fs.mkdirSync(blogDataDir, { recursive: true });
+}
+
+// Blog posts data file
+const BLOG_DB_FILE = path.join(__dirname, 'data/blog-posts.json');
+
+// Create the blog posts file if it doesn't exist
+if (!fs.existsSync(BLOG_DB_FILE)) {
+  fs.writeFileSync(BLOG_DB_FILE, JSON.stringify([]));
+  console.log("✅ Blog data file created");
+}
+
+// Helper functions to read and write blog posts
+function getBlogPosts() {
+  try {
+    const data = fs.readFileSync(BLOG_DB_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading blog posts:', error.message);
+    return [];
+  }
+}
+
+function saveBlogPosts(posts) {
+  try {
+    fs.writeFileSync(BLOG_DB_FILE, JSON.stringify(posts, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Error saving blog posts:', error.message);
+    return false;
+  }
+}
+
+// Generate a slug from title
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s]/g, '')
+    .replace(/\s+/g, '-');
+}
+
+// Blog API endpoints
+app.post('/api/blog/posts', (req, res) => {
+  try {
+    const { title, category, content } = req.body;
+    
+    if (!title || !content) {
+      return res.status(400).json({ message: 'Title and content are required' });
+    }
+    
+    const posts = getBlogPosts();
+    const slug = generateSlug(title);
+    
+    const newPost = {
+      id: uuidv4(),
+      title,
+      slug,
+      category: category || 'Featured',
+      content,
+      published: true,
+      publishedDate: new Date().toISOString(),
+      author: {
+        name: 'Mark Sendo',
+        title: 'SharedStars Founder',
+        imageUrl: '/images/mark-sendo.png'
+      }
+    };
+    
+    posts.push(newPost);
+    saveBlogPosts(posts);
+    
+    res.status(201).json(newPost);
+    console.log(`✅ New blog post created: "${title}"`);
+  } catch (error) {
+    console.error('Error creating post:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+app.get('/api/blog/latest', (req, res) => {
+  try {
+    const posts = getBlogPosts();
+    // Sort by date descending and take the 3 most recent
+    const latestPosts = posts
+      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+      .slice(0, 3);
+    
+    res.json(latestPosts);
+  } catch (error) {
+    console.error('Error fetching latest posts:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+app.get('/api/blog/posts', (req, res) => {
+  try {
+    const posts = getBlogPosts();
+    res.json(posts);
+  } catch (error) {
+    console.error('Error fetching all posts:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+app.get('/api/blog/posts/:id', (req, res) => {
+  try {
+    const posts = getBlogPosts();
+    const post = posts.find(p => p.id === req.params.id);
+    
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    
+    res.json(post);
+  } catch (error) {
+    console.error('Error fetching post by ID:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+app.delete('/api/blog/posts/:id', (req, res) => {
+  try {
+    const posts = getBlogPosts();
+    const postIndex = posts.findIndex(p => p.id === req.params.id);
+    
+    if (postIndex === -1) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    
+    posts.splice(postIndex, 1);
+    saveBlogPosts(posts);
+    
+    res.json({ message: 'Post deleted' });
+    console.log(`✅ Blog post deleted: ID ${req.params.id}`);
+  } catch (error) {
+    console.error('Error deleting post:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+console.log("✅ Blog functionality setup complete");
 // ============================
 // 9. ADDITIONAL API ENDPOINTS
 // ============================
@@ -477,6 +628,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const staticPages = [
  { route: "/", file: "index.html" },
  { route: "/about", file: "about.html" },
+ { route: "/aboutus", file: "aboutus.html" },
  { route: "/academy", file: "academy.html" },
  { route: "/leaderboard", file: "leaderboard.html" },
  { route: "/login", file: "login.html" },

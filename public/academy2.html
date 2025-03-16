@@ -17,56 +17,62 @@
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/ai-assistant.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
   <style>
     /* Custom styles to match Figma design */
     .hero-text {
       font-size: 3.5rem;
       line-height: 1.2;
     }
+    
     header img {
-  height: 50px; /* Keep the larger size we established */
-  margin-left: 0; /* Remove left margin to push it to far left */
-}
-.cosmic-hover {
-  transform: translateY(0);
-  transition: all 0.3s ease;
-}
-
-.cosmic-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
-}
-
+      height: 50px; /* Keep the larger size we established */
+      margin-left: 0; /* Remove left margin to push it to far left */
+    }
+    
+    .cosmic-hover {
+      transform: translateY(0);
+      transition: all 0.3s ease;
+    }
+  
+    .cosmic-hover:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+    }
+  
     header nav {
-  padding-left: 0 !important;
-}
-
-header nav div:first-child {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-
-header .container {
-  padding: 0 20px; /* Add more horizontal padding */
-}
-/* Increase the brightness of the hero background */
-.hero-section video,
-.hero-section img {
-  filter: brightness(1.2); /* Increase brightness by 20% */
-}
-#hero .cosmic-hover {
-  font-size: 1.1rem;
-  letter-spacing: 0.5px;
-}
-/* Reduce the opacity of the overlay */
-.hero-section .absolute.inset-0.bg-black {
-  opacity: 0.3; /* Reduce from 0.5 to 0.3 */
-}
-/* Make Apply Now button stand out more */
-header a[href="signup.html"] {
-  margin-left: 15px; /* Add space between this and the previous item */
-}
+      padding-left: 0 !important;
+    }
+  
+    header nav div:first-child {
+      margin-left: 0 !important;
+      padding-left: 0 !important;
+    }
+  
+    header .container {
+      padding: 0 20px; /* Add more horizontal padding */
+    }
+    
+    /* Increase the brightness of the hero background */
+    .hero-section video,
+    .hero-section img {
+      filter: brightness(1.2); /* Increase brightness by 20% */
+    }
+    
+    #hero .cosmic-hover {
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Reduce the opacity of the overlay */
+    .hero-section .absolute.inset-0.bg-black {
+      opacity: 0.3; /* Reduce from 0.5 to 0.3 */
+    }
+    
+    /* Make Apply Now button stand out more */
+    header a[href="signup.html"] {
+      margin-left: 15px; /* Add space between this and the previous item */
+    }
+    
     .step-circle {
       width: 30px;
       height: 30px;
@@ -86,7 +92,7 @@ header a[href="signup.html"] {
       border-color: rgba(59, 130, 246, 0.5);
       transform: translateY(-2px);
     }
-
+  
     .pulse-dot {
       position: relative;
     }
@@ -118,7 +124,7 @@ header a[href="signup.html"] {
         opacity: 0;
       }
     }
-
+  
     /* Added styles to match Figma design */
     .badge {
       display: inline-block;
@@ -127,25 +133,25 @@ header a[href="signup.html"] {
       font-size: 0.75rem;
       font-weight: 600;
     }
-
+  
     .progress-bar {
       height: 8px;
       border-radius: 4px;
       background-color: rgba(59, 130, 246, 0.2);
       overflow: hidden;
     }
-
+  
     .progress-fill {
       height: 100%;
       background-color: #3B82F6;
       border-radius: 4px;
     }
-
+  
     .certification-card {
       background: linear-gradient(135deg, rgba(13, 22, 41, 0.8) 0%, rgba(9, 16, 32, 0.9) 100%);
       border: 1px solid rgba(59, 130, 246, 0.3);
     }
-
+  
     .countdown-item {
       width: 60px;
       height: 60px;
@@ -157,26 +163,27 @@ header a[href="signup.html"] {
       border-radius: 8px;
       border: 1px solid rgba(59, 130, 246, 0.3);
     }
-
+  
     .tier-card {
       background: linear-gradient(180deg, rgba(17, 24, 39, 0.7) 0%, rgba(9, 14, 27, 0.9) 100%);
       border: 1px solid rgba(59, 130, 246, 0.3);
       transition: all 0.3s ease;
     }
+    
     .logo {
-  height: 60px; /* adjust as needed for size */
-  width: auto;
-  position: absolute;
-  top: 20px;
-  left: 20px;
-}
-
+      height: 60px; /* adjust as needed for size */
+      width: auto;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+  
     .tier-card:hover {
       transform: translateY(-5px);
       border-color: rgba(59, 130, 246, 0.6);
       box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.4);
     }
-
+  
     .ai-assistant-bubble {
       background-color: rgba(59, 130, 246, 0.15);
       border: 1px solid rgba(59, 130, 246, 0.3);
@@ -184,7 +191,7 @@ header a[href="signup.html"] {
       padding: 20px;
       position: relative;
     }
-
+  
     .ai-assistant-bubble:before {
       content: '';
       position: absolute;
@@ -203,7 +210,7 @@ header a[href="signup.html"] {
       padding: 2px 6px;
       border-radius: 10px;
     }
-
+  
     @keyframes pulse-red {
       0%, 100% {
         background-color: rgba(220, 38, 38, 0.8);
@@ -212,16 +219,16 @@ header a[href="signup.html"] {
         background-color: rgba(239, 68, 68, 0.8);
       }
     }
-
+  
     .animate-pulse-red {
       animation: pulse-red 2s infinite;
     }
     
-    /* Countdown container style */
+    /* Enhanced Countdown Styles to Match Figma */
     .countdown-container {
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 12px;
       margin: 20px 0;
       flex-wrap: wrap;
     }
@@ -231,22 +238,132 @@ header a[href="signup.html"] {
       border: 1px solid rgba(59, 130, 246, 0.3);
       border-radius: 8px;
       width: 80px;
-      height: 80px;
+      height: 90px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .countdown-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
     }
     
     .countdown-box span:first-child {
-      font-size: 24px;
+      font-size: 2.5rem;
       font-weight: bold;
       color: white;
+      line-height: 1;
     }
     
     .countdown-box span:last-child {
-      font-size: 12px;
+      font-size: 0.875rem;
       color: #9CA3AF;
+      margin-top: 4px;
+    }
+    
+    .countdown-box .blue-line {
+      width: 100%;
+      height: 2px;
+      background-color: #3B82F6;
+      position: absolute;
+      bottom: 24px;
+    }
+    
+    /* Blue bar countdown */
+    .blue-bar-countdown {
+      background-color: #3B82F6;
+      padding: 1rem 0;
+      width: 100%;
+    }
+    
+    .blue-bar-countdown .countdown-item {
+      width: auto;
+      background: transparent;
+      border: none;
+      color: white;
+    }
+    
+    .blue-bar-countdown .countdown-item span:first-child {
+      font-size: 1.75rem;
+      font-weight: bold;
+    }
+    
+    .blue-bar-countdown .countdown-item span:last-child {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+    
+    /* Final CTA Section Box */
+    .final-cta-box {
+      background-color: rgba(23, 37, 84, 0.7);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .final-cta-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('/images/stars-bg.jpg');
+      background-size: cover;
+      opacity: 0.4;
+      z-index: -1;
+    }
+    
+    .subscribe-now-btn {
+      background-color: rgba(30, 64, 175, 0.7);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: 9999px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    
+    .subscribe-now-btn:hover {
+      background-color: rgba(37, 99, 235, 0.8);
+      border-color: rgba(59, 130, 246, 0.6);
+    }
+    
+    /* Checkmark list items */
+    .checkmark-list-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .checkmark-icon {
+      margin-right: 0.75rem;
+      color: #3B82F6;
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+    
+    /* Stellatrex building background */
+    .stellatrex-bg {
+      background-image: url('/images/stellatrex-building.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    
+    .stellatrex-bg::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
     }
     
     /* Floating animation for particles */
@@ -275,6 +392,45 @@ header a[href="signup.html"] {
     
     .animate-float-fast {
       animation: float-fast 4s ease-in-out infinite;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .countdown-box {
+        width: 70px;
+        height: 80px;
+      }
+      
+      .countdown-box span:first-child {
+        font-size: 2rem;
+      }
+      
+      .countdown-box span:last-child {
+        font-size: 0.75rem;
+      }
+      
+      .blue-bar-countdown .countdown-item span:first-child {
+        font-size: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .countdown-container {
+        gap: 8px;
+      }
+      
+      .countdown-box {
+        width: 60px;
+        height: 70px;
+      }
+      
+      .countdown-box span:first-child {
+        font-size: 1.75rem;
+      }
+      
+      .countdown-box .blue-line {
+        bottom: 20px;
+      }
     }
   </style>
 </head>
@@ -319,10 +475,11 @@ header a[href="signup.html"] {
           <a href="#stella-ai" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-500 transition cosmic-hover">
             Meet STELLA
           </a>
-          <a href="/signup.html" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition cosmic-hover">
-            SECURE YOUR SPOT NOW
-          </a>
-        </div>
+          <!-- For hero section -->
+        <!-- For STELLA section -->
+        <a href="/signup.html" class="inline-block bg-red-600 hover:bg-red-500 text-white px-8 py-4 rounded-lg font-bold transition-colors cosmic-hover text-xl animate-pulse">
+          SIGN UP NOW
+        </a>
     </div>
   </section>
 
@@ -418,9 +575,10 @@ header a[href="signup.html"] {
           </div>
 
           <div class="mt-10 text-center">
-            <button class="open-apply-popup bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition cosmic-hover">
-              🚀 Apply Now and Train with STELLA
-            </button>
+           <!-- For hero section -->
+          <a href="/signup.html" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition cosmic-hover">
+             SignUp and Secure Your Spots
+            </a>
             <p class="text-gray-400 text-sm mt-3">Act fast—founder spots 68% filled and decreasing daily!</p>
           </div>
         </div>
@@ -573,169 +731,498 @@ header a[href="signup.html"] {
     </div>
   </section>
 
-  <!-- Certification & Real-World Readiness Section -->
-  <section id="certification" class="py-20 bg-gray-900 relative overflow-hidden">
-    <div class="absolute inset-0 bg-[url('/images/stars-bg.png')] opacity-20"></div>
-    <div class="container mx-auto px-4 relative z-10">
-      <div class="text-center mb-12" data-aos="fade-up">
+<!-- Certification & Real-World Readiness Section - Updated Version -->
+<section id="certification" class="py-20 bg-black relative overflow-hidden">
+  <div class="absolute inset-0 bg-[url('/images/stars-bg.png')] opacity-30"></div>
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="flex flex-col md:flex-row items-start justify-between mb-10">
+      <div class="md:w-1/3 mb-10 md:mb-0">
         <div class="inline-block border border-blue-500/30 rounded-full px-4 py-1 text-blue-400 text-sm mb-4">Official Recognition</div>
-        <h2 class="text-4xl font-bold mb-4">Industry-Recognized Certifications</h2>
-        <p class="text-gray-400 max-w-2xl mx-auto">Training aligns with globally recognized space-industry standards, significantly increasing your opportunities for real-world astronaut positions.</p>
+        <h2 class="text-5xl font-bold mb-6 text-blue-300">Industry-Recognized Certifications</h2>
+        <p class="text-gray-400">Training modules and training missions are inspired by NASA/OSHA/ISO Guidelines, significantly increasing your opportunities for space industry positions.</p>
       </div>
-
-      <div class="max-w-5xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Level 1 Certification -->
-          <div class="certification-card rounded-xl p-6 relative" data-aos="fade-up">
-            <div class="absolute top-0 right-0">
-              <div class="badge bg-blue-900/60 text-blue-400 m-2">LEVEL 1</div>
+      
+      <div class="md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Level 1 Certification -->
+        <div class="certification-card rounded-xl p-6 bg-gray-900/80 border border-blue-900/40 flex flex-col">
+          <div class="text-center mb-5">
+            <h3 class="text-lg font-bold text-white mb-1">LEVEL 1</h3>
+            <div class="w-16 h-16 mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
             </div>
-            <div class="mb-4 text-center">
-              <div class="w-16 h-16 rounded-full bg-blue-600/20 flex items-center justify-center mb-4 mx-auto">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-white">Space Fundamentals</h3>
-              <p class="text-sm text-gray-400 mt-2">7 Core Modules + Assessment</p>
-            </div>
-            
-            <div class="text-center mt-auto">
-              <a href="/certification/level1" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-medium transition-colors w-full">
-                Start Level 1
-              </a>
-            </div>
+            <h3 class="text-2xl font-bold text-white mb-2">Space Fundamentals</h3>
+            <p class="text-sm text-gray-400">7 Core Modules + Assessment</p>
           </div>
           
-          <!-- Level 2 Certification -->
-          <div class="certification-card rounded-xl p-6 relative" data-aos="fade-up" data-aos-delay="100">
-            <div class="absolute top-0 right-0">
-              <div class="badge bg-purple-900/60 text-purple-400 m-2">LEVEL 2</div>
+          <!-- Certificate Modal Trigger -->
+          <div class="mt-auto">
+            <button id="level1-btn" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-all w-full">
+              Start Level 1
+            </button>
+          </div>
+        </div>
+        
+        <!-- Level 2 Certification -->
+        <div class="certification-card rounded-xl p-6 bg-gray-900/80 border border-purple-900/40 flex flex-col">
+          <div class="text-center mb-5">
+            <h3 class="text-lg font-bold text-white mb-1">LEVEL 2</h3>
+            <div class="w-16 h-16 mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+              </svg>
             </div>
-            <div class="mb-4 text-center">
-              <div class="w-16 h-16 rounded-full bg-purple-600/20 flex items-center justify-center mb-4 mx-auto">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-white">Space Specialist</h3>
-              <p class="text-sm text-gray-400 mt-2">10 Specialized Modules + Simulations</p>
-            </div>
-            
-            <div class="text-center mt-auto">
-              <a href="/certification/level2" class="inline-block bg-purple-600 hover:bg-purple-500 text-white px-6 py-2 rounded-lg font-medium transition-colors w-full">
-                Advance to Level 2
-              </a>
-            </div>
+            <h3 class="text-2xl font-bold text-white mb-2">Space Specialist</h3>
+            <p class="text-sm text-gray-400">10 Specialized Modules + Simulations</p>
           </div>
           
-          <!-- Level 3 Certification -->
-          <div class="certification-card rounded-xl p-6 relative" data-aos="fade-up" data-aos-delay="200">
-            <div class="absolute top-0 right-0">
-              <div class="badge bg-green-900/60 text-green-400 m-2">LEVEL 3</div>
+          <!-- Certificate Modal Trigger -->
+          <div class="mt-auto">
+            <button id="level2-btn" class="inline-block bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 rounded-lg font-medium transition-all w-full">
+              Advance to Level 2
+            </button>
+          </div>
+        </div>
+        
+        <!-- Level 3 Certification -->
+        <div class="certification-card rounded-xl p-6 bg-gray-900/80 border border-green-900/40 flex flex-col">
+          <div class="text-center mb-5">
+            <h3 class="text-lg font-bold text-white mb-1">LEVEL 3</h3>
+            <div class="w-16 h-16 mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+              </svg>
             </div>
-            <div class="mb-4 text-center">
-              <div class="w-16 h-16 rounded-full bg-green-600/20 flex items-center justify-center mb-4 mx-auto">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                </svg>
+            <h3 class="text-2xl font-bold text-white mb-2">Mission Ready</h3>
+            <p class="text-sm text-gray-400">4 Advanced Modules + Live Simulation</p>
+          </div>
+          
+          <!-- Certificate Modal Trigger -->
+          <div class="mt-auto">
+            <button id="level3-btn" class="inline-block bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-lg font-medium transition-all w-full">
+              Reach Level 3
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center mt-4">
+      <p class="text-blue-400 text-sm mb-6">All certifications verified via secure blockchain for employer verification</p>
+      <button id="cert-details-btn" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium transition-all">
+        View Certification Details
+      </button>
+    </div>
+  </div>
+  
+  <!-- Certificate Modal (hidden by default) -->
+  <div id="certificate-modal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center hidden backdrop-blur-sm">
+    <div class="modal-content bg-gray-900 max-w-4xl w-full mx-4 rounded-xl border border-blue-800/30 overflow-hidden">
+      <div class="modal-header p-4 flex justify-between items-center border-b border-gray-800">
+        <h3 class="text-xl font-bold text-white" id="modal-title">Your Certification</h3>
+        <button id="close-modal-btn" class="text-gray-400 hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <div class="tabs border-b border-gray-800">
+        <div class="flex">
+          <button class="tab-btn active py-3 px-6 text-blue-400 border-b-2 border-blue-500" data-tab="certificate">Certificate</button>
+          <button class="tab-btn py-3 px-6 text-gray-400 hover:text-white" data-tab="missions">Mission Badges</button>
+          <button class="tab-btn py-3 px-6 text-gray-400 hover:text-white" data-tab="readiness">Space Ready Seal</button>
+        </div>
+      </div>
+      
+      <div class="tab-content p-6" id="certificate-tab">
+        <div id="certificate-display" class="text-center mb-6">
+          <!-- Certificate will be displayed here -->
+          <div class="certificate-placeholder p-8 bg-gradient-to-b from-blue-900/20 to-gray-900 rounded-lg border border-blue-800/30">
+            <div class="w-24 h-24 mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2">Space Fundamentals Certification</h3>
+            <p class="text-gray-400 mb-4">This certifies that you have successfully completed all required training modules and assessments for Level 1 Space Fundamentals.</p>
+            
+            <div class="my-6 py-6 border-t border-b border-blue-900/30">
+              <div class="grid grid-cols-3 gap-4">
+                <div class="text-center">
+                  <div class="text-sm text-gray-400">Date Issued</div>
+                  <div class="text-white font-medium">March 13, 2025</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-sm text-gray-400">Certificate ID</div>
+                  <div class="text-white font-medium">SSTF-L1-24875</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-sm text-gray-400">Progress</div>
+                  <div class="text-white font-medium">4/7 Modules</div>
+                </div>
               </div>
-              <h3 class="text-xl font-bold text-white">Mission Ready</h3>
-              <p class="text-sm text-gray-400 mt-2">4 Advanced Modules + Live Simulation</p>
             </div>
             
-            <div class="text-center mt-auto">
-              <a href="/certification/level3" class="inline-block bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-lg font-medium transition-colors w-full">
-                Reach Level 3
-              </a>
+            <div class="flex items-center justify-center gap-2 text-sm text-blue-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Complete all 7 modules to receive your full certificate</span>
             </div>
           </div>
         </div>
         
-        <div class="mt-8 text-center" data-aos="fade-up">
-          <p class="text-blue-400 text-sm font-medium mb-4">All certifications verified via secure blockchain for employer verification</p>
-          <a href="/certification" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-            View Certification Details
+        <div class="flex flex-wrap gap-4 justify-center mt-6">
+          <button class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download Certificate
+          </button>
+          
+          <button class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            Share on LinkedIn
+          </button>
+        </div>
+      </div>
+      
+      <div class="tab-content p-6 hidden" id="missions-tab">
+        <h3 class="text-xl font-bold text-white mb-4">Your Mission Badges</h3>
+        <p class="text-gray-400 mb-6">Each completed mission earns you a badge and credits. Collect all mission badges to earn your full certification.</p>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
+          <!-- Completed Mission Badges -->
+          <div class="badge-item text-center bg-gray-800/50 p-4 rounded-lg border border-blue-900/20">
+            <div class="badge-icon w-16 h-16 rounded-full bg-blue-900/20 flex items-center justify-center mx-auto mb-3 border border-blue-800/30">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h4 class="text-sm font-medium text-white">Launch Protocols</h4>
+            <p class="text-xs text-blue-400 mt-1">+50 Credits</p>
+          </div>
+          
+          <div class="badge-item text-center bg-gray-800/50 p-4 rounded-lg border border-blue-900/20">
+            <div class="badge-icon w-16 h-16 rounded-full bg-blue-900/20 flex items-center justify-center mx-auto mb-3 border border-blue-800/30">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            </div>
+            <h4 class="text-sm font-medium text-white">Zero-G Training</h4>
+            <p class="text-xs text-blue-400 mt-1">+50 Credits</p>
+          </div>
+          
+          <!-- Locked Mission Badges -->
+          <div class="badge-item text-center bg-gray-800/20 p-4 rounded-lg border border-gray-800/30 opacity-50">
+            <div class="badge-icon w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mx-auto mb-3 border border-gray-700/30">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h4 class="text-sm font-medium text-gray-400">Life Support</h4>
+            <p class="text-xs text-gray-500 mt-1">Locked</p>
+          </div>
+          
+          <div class="badge-item text-center bg-gray-800/20 p-4 rounded-lg border border-gray-800/30 opacity-50">
+            <div class="badge-icon w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mx-auto mb-3 border border-gray-700/30">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h4 class="text-sm font-medium text-gray-400">Orbital Mechanics</h4>
+            <p class="text-xs text-gray-500 mt-1">Locked</p>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <button class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-all">
+            View All Mission Badges
+          </button>
+        </div>
+      </div>
+      
+      <div class="tab-content p-6 hidden" id="readiness-tab">
+        <div class="flex flex-col md:flex-row gap-8 items-center">
+          <div class="md:w-1/3 text-center">
+            <div class="space-ready-seal relative">
+              <div class="w-40 h-40 mx-auto rounded-full bg-gradient-to-br from-blue-600/20 to-blue-900/40 border-4 border-blue-500/30 flex items-center justify-center">
+                <div class="text-center">
+                  <div class="text-3xl font-bold text-white mb-1">24</div>
+                  <div class="text-xs text-blue-400 font-semibold tracking-wider">MONTHS</div>
+                  <div class="text-xs text-gray-400 mt-1">of training</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="md:w-2/3">
+            <h3 class="text-xl font-bold text-white mb-4">Space Ready Certification</h3>
+            <p class="text-gray-400 mb-4">The ultimate recognition of your commitment to space training. This prestigious seal is awarded to members who have:</p>
+            
+            <div class="space-y-3 mb-6">
+              <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Completed all training modules across all 3 certification levels</span>
+              </div>
+              
+              <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-gray-300">Maintained an active subscription for at least 36 months</span>
+              </div>
+              
+              <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span class="text-gray-300">You're currently at <strong>24 months</strong> out of the required 36 months</span>
+              </div>
+            </div>
+            
+            <div class="progress-container">
+              <div class="flex justify-between text-xs text-gray-400 mb-1">
+                <span>Progress to Space Ready Status</span>
+                <span>24/36 months</span>
+              </div>
+              <div class="progress-bar h-2 bg-gray-700 rounded-full">
+                <div class="h-full bg-blue-500 rounded-full" style="width: 66.66%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add JavaScript for tab switching and modal functionality -->
+<!-- Add JavaScript for tab switching and modal functionality -->
+<script>
+  // Functions
+  function showCertificate(level) {
+    // Show the modal
+    document.getElementById('certificate-modal').classList.remove('hidden');
+    
+    // Set the active tab to certificate
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => btn.classList.remove('active', 'text-blue-400', 'border-b-2', 'border-blue-500'));
+    tabBtns.forEach(btn => btn.classList.add('text-gray-400'));
+    tabContents.forEach(content => content.classList.add('hidden'));
+    
+    document.querySelector('[data-tab="certificate"]').classList.add('active', 'text-blue-400', 'border-b-2', 'border-blue-500');
+    document.querySelector('[data-tab="certificate"]').classList.remove('text-gray-400');
+    document.getElementById('certificate-tab').classList.remove('hidden');
+    
+    // Update modal title and content based on level
+    const titles = {
+      'level1': 'Space Fundamentals Certificate',
+      'level2': 'Space Specialist Certificate',
+      'level3': 'Mission Ready Certificate'
+    };
+    
+    const moduleInfo = {
+      'level1': {
+        name: 'Space Fundamentals',
+        progress: '4/7',
+        totalModules: '7 Core Modules',
+        idPrefix: 'SSTF-L1'
+      },
+      'level2': {
+        name: 'Space Specialist',
+        progress: '2/10',
+        totalModules: '10 Specialized Modules',
+        idPrefix: 'SSTF-L2'
+      },
+      'level3': {
+        name: 'Mission Ready',
+        progress: '0/4',
+        totalModules: '4 Advanced Modules',
+        idPrefix: 'SSTF-L3'
+      }
+    };
+    
+    // Set title
+    document.getElementById('modal-title').textContent = titles[level] || 'Your Certification';
+    
+    // Update certificate content
+    if (moduleInfo[level]) {
+      const info = moduleInfo[level];
+      
+      // Update certificate title and description
+      const certTitle = document.querySelector('#certificate-display h3.text-2xl');
+      if (certTitle) {
+        certTitle.textContent = info.name + ' Certification';
+      }
+      
+      const certDesc = document.querySelector('#certificate-display p.text-gray-400');
+      if (certDesc) {
+        certDesc.textContent = `This certifies that you have successfully completed all required training modules and assessments for ${info.name}.`;
+      }
+      
+      // Update progress info
+      const progressElement = document.querySelectorAll('#certificate-display .grid-cols-3 .text-center')[2];
+      if (progressElement) {
+        progressElement.querySelector('.text-white.font-medium').textContent = info.progress + ' Modules';
+      }
+      
+      // Generate a unique certificate ID based on level and timestamp
+      const timestamp = Date.now().toString().slice(-5);
+      const certId = `${info.idPrefix}-${timestamp}`;
+      
+      const certIdElement = document.querySelectorAll('#certificate-display .grid-cols-3 .text-center')[1];
+      if (certIdElement) {
+        certIdElement.querySelector('.text-white.font-medium').textContent = certId;
+      }
+    }
+    
+    // Update current date
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    const dateElement = document.querySelectorAll('#certificate-display .grid-cols-3 .text-center')[0];
+    if (dateElement) {
+      dateElement.querySelector('.text-white.font-medium').textContent = formattedDate;
+    }
+  }
+  
+  function showAllCertificates() {
+    // Show modal with all certification details
+    document.getElementById('certificate-modal').classList.remove('hidden');
+  }
+  
+  function closeModal() {
+    document.getElementById('certificate-modal').classList.add('hidden');
+  }
+  
+  // Add event listeners when DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    // Certification buttons
+    document.getElementById('level1-btn').addEventListener('click', function() {
+      showCertificate('level1');
+    });
+    
+    document.getElementById('level2-btn').addEventListener('click', function() {
+      showCertificate('level2');
+    });
+    
+    document.getElementById('level3-btn').addEventListener('click', function() {
+      showCertificate('level3');
+    });
+    
+    // View all certificates button
+    document.getElementById('cert-details-btn').addEventListener('click', function() {
+      showAllCertificates();
+    });
+    
+    // Close modal button
+    document.getElementById('close-modal-btn').addEventListener('click', function() {
+      closeModal();
+    });
+    
+    // Tab switching
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all tabs and contents
+        tabBtns.forEach(b => b.classList.remove('active', 'text-blue-400', 'border-b-2', 'border-blue-500'));
+        tabBtns.forEach(b => b.classList.add('text-gray-400'));
+        tabContents.forEach(c => c.classList.add('hidden'));
+        
+        // Add active class to clicked tab
+        btn.classList.remove('text-gray-400');
+        btn.classList.add('active', 'text-blue-400', 'border-b-2', 'border-blue-500');
+        
+        // Show corresponding content
+        const tabId = btn.getAttribute('data-tab') + '-tab';
+        document.getElementById(tabId).classList.remove('hidden');
+      });
+    });
+  });
+</script>
+  <!-- Train Together, Explore Together Section -->
+<section id="community" class="py-20 bg-black relative overflow-hidden">
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="flex flex-col lg:flex-row items-center gap-16">
+      <!-- Left side - Image -->
+      <div class="w-full lg:w-1/2" data-aos="fade-right">
+        <img src="/images/communityicon.png" alt="SharedStars Community" class="max-w-full">
+      </div>
+      
+      <!-- Right side - Content -->
+      <div class="w-full lg:w-1/2" data-aos="fade-left">
+        <div class="inline-block border border-purple-500/30 rounded-full px-4 py-1 text-purple-400 text-sm mb-4">Join Our Crew</div>
+        <h2 class="text-4xl md:text-5xl font-bold mb-10 text-white">Train Together, Explore Together</h2>
+      
+        <div class="space-y-8">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full border border-purple-500 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-purple-400 mb-2">Collaborative Training</h3>
+              <p class="text-gray-300">Form mission crews with fellow trainees and participate in group sessions facilitated by STELLA AI.</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full border border-purple-500 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-purple-400 mb-2">Community Events</h3>
+              <p class="text-gray-300">Access exclusive webinars, virtual meetups, and special training sessions only available to community members.</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full border border-purple-500 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-purple-400 mb-2">Dedicated Support</h3>
+              <p class="text-gray-300">Connect through dedicated chat channels for each training module and learn from the collective experience.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-10">
+          <a href="/signup" class="inline-block bg-purple-600 hover:bg-purple-500 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+            Join the Community
           </a>
+          <p class="text-sm text-purple-400 mt-3">Over 500 active members training together</p>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- SharedStars Community Section -->
-  <section id="community" class="py-20 bg-black relative">
-    <div class="absolute inset-0 bg-gradient-to-b from-purple-900/10 to-black"></div>
-    <div class="container mx-auto px-4 relative z-10">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-10" data-aos="fade-up">
-          <span class="inline-block bg-purple-500/10 border border-purple-500/30 rounded-full px-4 py-1 text-purple-400 text-sm mb-4 uppercase tracking-widest">Community</span>
-          <h2 class="text-4xl font-bold mb-4">Train Together, Explore Together</h2>
-          <p class="text-gray-300 max-w-2xl mx-auto">
-            Join a thriving community of future astronauts training alongside you.
-          </p>
-        </div>
-
-        <div class="bg-gray-900/50 backdrop-blur-sm border border-purple-500/20 rounded-xl p-8" data-aos="fade-up">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 class="text-2xl font-bold text-purple-400 mb-4">Collaborative Training</h3>
-              <ul class="space-y-3">
-                <li class="flex items-start">
-                  <svg class="h-5 w-5 text-purple-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span class="text-gray-300">Participate in group training sessions facilitated by STELLA AI</span>
-                </li>
-                <li class="flex items-start">
-                  <svg class="h-5 w-5 text-purple-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span class="text-gray-300">Engage in peer-to-peer training to reinforce skills</span>
-                </li>
-                <li class="flex items-start">
-                  <svg class="h-5 w-5 text-purple-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span class="text-gray-300">Form mission crews with fellow trainees for collaborative challenges</span>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 class="text-2xl font-bold text-purple-400 mb-4">Community Events</h3>
-              <ul class="space-y-3">
-                <li class="flex items-start">
-                  <svg class="h-5 w-5 text-purple-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span class="text-gray-300">Access exclusive community events and webinars</span>
-                </li>
-                <li class="flex items-start">
-                  <svg class="h-5 w-5 text-purple-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span class="text-gray-300">Connect through dedicated chat channels for each training module</span>
-                </li>
-                <li class="flex items-start">
-                  <svg class="h-5 w-5 text-purple-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span class="text-gray-300">Learn from the collective experience of the SharedStars community</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="mt-8 text-center">
-            <a href="/community" class="inline-block bg-purple-600 hover:bg-purple-500 text-white px-8 py-3 rounded-lg font-bold transition-colors cosmic-hover">
-              Join the Community
-            </a>
-            <p class="text-sm text-gray-400 mt-2">Over 500 active members training together</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
   
   <!-- Your Spaceflight Readiness Timeline -->
   <section id="timeline" class="py-20 bg-gray-900 relative">
@@ -819,359 +1306,250 @@ header a[href="signup.html"] {
       </div>
     </div>
   </section>
-
-  <!-- Urgency & Limited Availability Section -->
-  <section id="limited-time" class="py-20 bg-black relative">
-    <div class="absolute inset-0 bg-gradient-to-b from-red-900/10 to-black"></div>
-    <div class="container mx-auto px-4 relative z-10">
-      <div class="max-w-4xl mx-auto">
-        <div class="bg-black/50 backdrop-blur-sm border border-red-500/30 rounded-xl p-8 overflow-hidden relative" data-aos="fade-up">
-          <!-- Diagonal "Limited Time" Banner -->
-          <div class="absolute -right-12 top-5 bg-red-600 text-white text-xs font-bold py-1 px-12 transform rotate-45">
-            LIMITED TIME
-          </div>
-          
-          <div class="text-center">
-            <h2 class="text-3xl font-bold mb-2">Founding Member Opportunity</h2>
-            <p class="text-gray-400 max-w-2xl mx-auto mb-6">
-              Join the elite founding cohort with exclusive lifetime benefits before all spots are filled.
-            </p>
-            
-            <!-- Countdown Timer -->
-            <div class="countdown-container">
-              <div class="countdown-box">
-                <span id="founding-days">13</span>
-                <span>Days</span>
-              </div>
-              <div class="countdown-box">
-                <span id="founding-hours">08</span>
-                <span>Hours</span>
-              </div>
-              <div class="countdown-box">
-                <span id="founding-minutes">24</span>
-                <span>Minutes</span>
-              </div>
-              <div class="countdown-box">
-                <span id="founding-seconds">47</span>
-                <span>Seconds</span>
-              </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-6">
-              <div class="bg-red-900/20 rounded-lg p-4 border border-red-500/20">
-                <div class="flex justify-between mb-1">
-                  <span class="text-gray-300">Remaining Spots:</span>
-                  <span class="text-white font-bold">18 of 65</span>
-                </div>
-                <div class="progress-bar">
-                  <div class="progress-fill bg-red-500" style="width: 72%"></div>
-                </div>
-                <p class="text-xs text-red-400 mt-1 font-semibold">65% FILLED</p>
-              </div>
-              
-              <div class="bg-yellow-900/20 rounded-lg p-4 border border-yellow-500/20">
-                <div class="flex justify-between mb-1">
-                  <span class="text-gray-300">Founding Member Price:</span>
-                  <span class="text-white font-bold">$1,995</span>
-                </div>
-                <div class="progress-bar">
-                  <div class="progress-fill bg-yellow-500" style="width: 40%"></div>
-                </div>
-                <p class="text-xs text-yellow-400 mt-1 font-semibold">INCREASES TO $2,795 AFTER TIMER EXPIRES</p>
-              </div>
-            </div>
-            
-            <a href="#application-process" class="inline-block bg-red-600 hover:bg-red-500 text-white px-8 py-4 rounded-lg font-bold transition-colors cosmic-hover text-xl animate-pulse">
-              SECURE YOUR SPOT NOW
-            </a>
-          </div>
+<!-- Urgency & Limited Availability Section -->
+<!-- Countdown to Mass Space Travel - Matched to Figma -->
+<section id="mass-space-countdown" class="py-10 relative bg-black">
+  <!-- Background image with people/building -->
+  <div class="absolute inset-0 bg-[url('/images/stellatrex-building.jpg')] bg-cover bg-center opacity-80"></div>
+  
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-bold text-white mb-12">Time Until Projected Mass Space</h2>
+      
+      <!-- Countdown Timer with Black Boxes -->
+      <div class="flex justify-center space-x-4 mb-16">
+        <div class="countdown-box bg-black/80 backdrop-blur-sm rounded-lg p-4 w-28 flex flex-col items-center">
+          <span class="text-5xl font-bold text-white" data-countdown="years">13</span>
+          <div class="w-full h-1 bg-blue-600 my-2"></div>
+          <span class="text-gray-300">Years</span>
+        </div>
+        <div class="countdown-box bg-black/80 backdrop-blur-sm rounded-lg p-4 w-28 flex flex-col items-center">
+          <span class="text-5xl font-bold text-white" data-countdown="months">08</span>
+          <div class="w-full h-1 bg-blue-600 my-2"></div>
+          <span class="text-gray-300">Months</span>
+        </div>
+        <div class="countdown-box bg-black/80 backdrop-blur-sm rounded-lg p-4 w-28 flex flex-col items-center">
+          <span class="text-5xl font-bold text-white" data-countdown="weeks">02</span>
+          <div class="w-full h-1 bg-blue-600 my-2"></div>
+          <span class="text-gray-300">Weeks</span>
+        </div>
+        <div class="countdown-box bg-black/80 backdrop-blur-sm rounded-lg p-4 w-28 flex flex-col items-center">
+          <span class="text-5xl font-bold text-white" data-countdown="days">17</span>
+          <div class="w-full h-1 bg-blue-600 my-2"></div>
+          <span class="text-gray-300">Days</span>
+        </div>
+        <div class="countdown-box bg-black/80 backdrop-blur-sm rounded-lg p-4 w-28 flex flex-col items-center">
+          <span class="text-5xl font-bold text-white" data-countdown="hours">06</span>
+          <div class="w-full h-1 bg-blue-600 my-2"></div>
+          <span class="text-gray-300">Hours</span>
+        </div>
+        <div class="countdown-box bg-black/80 backdrop-blur-sm rounded-lg p-4 w-28 flex flex-col items-center">
+          <span class="text-5xl font-bold text-white" data-countdown="minutes">23</span>
+          <div class="w-full h-1 bg-blue-600 my-2"></div>
+          <span class="text-gray-300">Minutes</span>
         </div>
       </div>
-    </div>
-  </section>
-  <!-- Countdown to Mass Space Travel -->
-  <section id="mass-space-countdown" class="py-20 bg-gray-900 relative">
-    <div class="absolute inset-0 bg-[url('/images/earth-from-space.jpg')] bg-cover bg-center opacity-20"></div>
-    <div class="container mx-auto px-4 relative z-10">
-      <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-4xl font-bold mb-8">Time Until Projected Mass Space Travel</h2>
-        
-        <!-- Countdown Timer -->
-        <div class="countdown-container">
-          <div class="countdown-box">
-            <span>13</span>
-            <span>Years</span>
-          </div>
-          <div class="countdown-box">
-            <span>08</span>
-            <span>Months</span>
-          </div>
-          <div class="countdown-box">
-            <span>02</span>
-            <span>Weeks</span>
-          </div>
-          <div class="countdown-box">
-            <span>17</span>
-            <span>Days</span>
-          </div>
-          <div class="countdown-box">
-            <span>06</span>
-            <span>Hours</span>
-          </div>
-          <div class="countdown-box">
-            <span>23</span>
-            <span>Minutes</span>
-          </div>
-          <div class="countdown-box">
-            <span>45</span>
-            <span>Seconds</span>
-          </div>
-        </div>
-        
-        <p class="text-gray-400 max-w-xl mx-auto mt-8 mb-6">
-          Will you be trained and ready when space becomes accessible? Start your journey now to ensure your place in this new era of exploration.
-        </p>
-        
-        <a href="/trainingHub.html" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-bold transition-colors cosmic-hover">
+      
+      <!-- Go to Training Hub button -->
+      <div class="text-center mb-20">
+        <a href="/trainingHub.html" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold transition-colors">
           Go to Training Hub
         </a>
       </div>
     </div>
-  </section>
-
-  <!-- Final Call to Action -->
-  <section id="final-cta" class="py-20 bg-black">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
-        <h2 class="text-4xl font-bold mb-6">Your Space Journey Begins Now!</h2>
-        <p class="text-xl text-gray-300 mb-8">
-          Don't just dream about space—train for it. Join SharedStars Academy today.
-        </p>
-        
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <button class="open-apply-popup bg-red-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-red-500 transition animate-pulse-red">
-            APPLY NOW
-          </button>
-          <a href="/subscribe.html" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-500 transition">
-            Upgrade My Training Plan
-          </a>
-        </div>
-      </div>
-    </div></section>
-<!-- Enhanced Apply to Academy Popup -->
-<div id="apply-popup" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden">
-  <div class="bg-gray-900 border border-blue-500/30 rounded-xl max-w-lg w-full p-6 relative">
-    <button id="close-popup" class="absolute top-3 right-3 text-gray-400 hover:text-white">
-      &times;
-    </button>
-
-    <h3 class="text-2xl font-bold text-blue-400 text-center mb-4">Apply to SharedStars Academy 🚀</h3>
-
-    <form id="application-form" class="space-y-4">
-      <!-- Step 1: Personal Information -->
-      <div class="step" data-step="0">
-        <input id="name" type="text" placeholder="Full Name" required class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
-        <input id="email" type="email" placeholder="Email" required class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
-        <button type="button" class="next-step w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-white">Next →</button>
-      </div>
-
-      <!-- Step 2 -->
-      <div class="step hidden" data-step="1">
-        <input id="highestEducation" type="text" placeholder="Highest Education Level" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
-        <input id="experience" type="text" placeholder="Briefly describe your experience" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
-        <button type="button" class="next-step w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-white">Next →</button>
-      </div>
-
-      <!-- Step 3 -->
-      <div class="step hidden" data-step="2">
-        <label class="text-gray-300">Your Skills:</label>
-        <select id="skills" multiple class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
-          <option>AI</option>
-          <option>Engineering</option>
-          <option>Medical & Biology</option>
-          <option>Space Sciences</option>
-          <option>Entrepreneurship</option>
-        </select>
-        <button type="button" class="next-step w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-white">Next →</button>
-      </div>
-
-      <!-- Step 4 -->
-      <div class="step hidden" data-step="3">
-        <textarea id="motivation" rows="3" placeholder="Why do you want to join?" required class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white"></textarea>
-        <label class="text-gray-400 block">Upload Resume/CV (optional)</label>
-        <input type="file" id="resume-upload" class="text-white w-full">
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-2 rounded text-white">Submit Application ✅</button>
-      </div>
-    </form>
   </div>
-</div>
+  
+  <!-- Blue bar at bottom with countdown -->
+  <div class="bg-blue-600 py-4 w-full">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-center space-x-8 md:space-x-16 lg:space-x-24">
+        <div class="flex flex-col items-center">
+          <span class="text-3xl font-bold text-white" data-countdown="months">08</span>
+          <span class="text-sm text-white">Months</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="text-3xl font-bold text-white" data-countdown="weeks">02</span>
+          <span class="text-sm text-white">Weeks</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="text-3xl font-bold text-white" data-countdown="days">17</span>
+          <span class="text-sm text-white">Days</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="text-3xl font-bold text-white" data-countdown="hours">06</span>
+          <span class="text-sm text-white">Hours</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="text-3xl font-bold text-white" data-countdown="minutes">23</span>
+          <span class="text-sm text-white">Minutes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const applyPopup = document.getElementById('apply-popup');
-  const openPopupBtn = document.querySelector('a[href="#application-process"]');
-  const closePopupBtn = document.getElementById('close-popup');
-  const steps = document.querySelectorAll('.step');
-  const nextBtns = document.querySelectorAll('.next-step');
-  const form = document.getElementById('application-form');
-  let currentStep = 0;
-
-  function showStep(index) {
-    steps.forEach((step, idx) => {
-      step.classList.toggle('hidden', idx !== index);
-    });
-  }
-
-  openPopupBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    applyPopup.classList.remove('hidden');
-    currentStep = 0;
-    showStep(currentStep);
-  });
-
-  closePopupBtn.addEventListener('click', () => {
-    applyPopup.classList.add('hidden');
-  });
-
-  nextBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (currentStep < steps.length - 1) {
-        currentStep++;
-        showStep(currentStep);
-      }
-    });
-  });
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('fullName', document.getElementById('name').value);
-    formData.append('email', document.getElementById('email').value);
-    formData.append('highestEducation', document.getElementById('highestEducation').value);
-    formData.append('experience', document.getElementById('experience').value);
-    formData.append('skills', JSON.stringify(Array.from(document.getElementById('skills').selectedOptions).map(opt => opt.value)));
-    formData.append('motivation', document.getElementById('motivation').value);
+<!-- Final Call to Action - Matched to Figma -->
+<section id="final-cta" class="py-16 bg-black relative">
+  <!-- Building/people background image -->
+  <div class="absolute inset-0 bg-[url('/images/stellatrex-building.jpg')] bg-cover bg-center opacity-40"></div>
+  
+  <div class="container mx-auto px-4 relative z-10">
+    <!-- Space information with checkmarks -->
+    <div class="max-w-3xl mx-auto mb-16">
+      <div class="flex flex-col space-y-4">
+        <div class="flex items-start">
+          <div class="flex-shrink-0 mt-1 mr-3">
+            <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <p class="text-white text-lg">The next wave of space explorers is forming now.</p>
+        </div>
+        <div class="flex items-start">
+          <div class="flex-shrink-0 mt-1 mr-3">
+            <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <p class="text-white text-lg">Every second counts. Your progress determines your readiness for space opportunities.</p>
+        </div>
+        <div class="flex items-start">
+          <div class="flex-shrink-0 mt-1 mr-3">
+            <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <p class="text-white text-lg">If you wait, you could miss out. Others are already training, advancing, and securing their place.</p>
+        </div>
+        <div class="flex items-start">
+          <div class="flex-shrink-0 mt-1 mr-3">
+            <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <p class="text-white text-lg">Don't just dream about space—train for it.</p>
+        </div>
+      </div>
+    </div>
     
-    const resumeUpload = document.getElementById('resume-upload').files[0];
-    if (resumeUpload) formData.append('resume', resumeUpload);
-
-    fetch('/api/applications/submit', {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(result => {
-      if (result.success) {
-        alert('✅ Application submitted successfully!');
-        applyPopup.classList.add('hidden');
-      } else {
-        alert('Error: ' + result.error);
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      alert('Submission failed, please retry.');
-    });
-  });
-
-  function showStep(index) {
-    steps.forEach((step, i) => {
-      step.classList.toggle('hidden', i !== index);
-    });
-  }
-  
-  // Start with step 0
-  showStep(0);
-});
-</script>
-  
-    <!-- FOOTER -->
-    <footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
-      <!-- Animated Floating Particles -->
-      <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
-        <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
-        <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
-      </div>
-      <div class="container mx-auto px-4 relative z-10">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
-          <!-- About -->
-          <div>
-            <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
-            <ul class="space-y-2 mt-4">
-              <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
-              <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">SharedStars Academy</a></li>
-            </ul>
+    <!-- Blue box with CTA -->
+    <div class="max-w-4xl mx-auto">
+      <div class="relative rounded-3xl overflow-hidden">
+        <!-- Stars background -->
+        <div class="absolute inset-0 bg-blue-950 bg-[url('/images/stars-bg.jpg')] bg-cover bg-center opacity-80"></div>
+        
+        <!-- Content -->
+        <div class="relative z-10 px-8 py-12">
+          <!-- Subscribe now button at top -->
+          <div class="text-center mb-8">
+            <a href="/subscribe.html" class="inline-block bg-blue-800/70 hover:bg-blue-700/80 text-blue-400 px-6 py-2 rounded-full font-medium transition-colors border border-blue-500/30 backdrop-blur-sm">
+              Subscribe now
+            </a>
           </div>
-          <!-- Community -->
-          <div>
-            <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
-            <ul class="space-y-2 mt-4">
-              <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
-              <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
-            </ul>
-          </div>
-          <!-- Resources -->
-          <div>
-            <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
-            <ul class="space-y-2 mt-4">
-              <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
-              <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
-            </ul>
-          </div>
-          <!-- Legal -->
-          <div>
-            <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
-            <ul class="space-y-2 mt-4">
-              <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
-              <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
-            </ul>
-          </div>
-        </div>
-        <!-- Bottom section with copyright and social media -->
-        <div class="mt-12 pt-8 border-t border-blue-900/20 flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-500">© <span id="current-year">2025</span> Celestial Technologies, LLC. All rights reserved.</p>
           
-          <!-- All 7 social media links -->
-          <div class="flex space-x-4 mt-4 md:mt-0">
-            <!-- LinkedIn -->
-            <a href="https://www.linkedin.com/company/106241890" class="text-gray-400 hover:text-blue-400" aria-label="LinkedIn">
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-white">Your Space Journey Begins Now!</h2>
+            <h2 class="text-4xl md:text-5xl font-bold text-white mt-2">Are You Ready?</h2>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+            <a href="/signup.html" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold transition-colors text-center">
+              Sign Up for SharedStars Academy
             </a>
-            
-            <!-- Twitter/X -->
-            <a href="https://x.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Twitter">
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-            </a>
-            
-            <!-- Facebook -->
-            <a href="https://www.facebook.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Facebook">
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
-            </a>
-            
-            <!-- Instagram -->
-            <a href="https://www.instagram.com/sharedstarsacademy/" class="text-gray-400 hover:text-blue-400" aria-label="Instagram">
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            </a>
-            
-            <!-- Telegram -->
-            <a href="https://t.me/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Telegram">
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12zm3.224 17.871c.188.133.43.166.646.085.215-.082.374-.253.463-.489.089-.236.089-.498 0-.734l-1.74-4.36 4.4-2.507c.466-.265.466-.934 0-1.199l-9.65-5.514c-.465-.266-1.048.055-1.047.577l.072 12.71c0 .522.583.843 1.048.577l3.293-1.879zm-8.791-7.414l2.083 1.188-.759 1.329-1.324-.755v-1.762zm6.442 7.385l-1.621.925c-.961.548-2.132-.106-2.132-1.186l-.04-6.99 3.793 7.251z"/></svg>
-            </a>
-            
-            <!-- TikTok -->
-            <a href="https://www.tiktok.com/@sharedstarsacademy" class="text-gray-400 hover:text-blue-400" aria-label="TikTok">
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-            </a>
-            
-            <!-- YouTube -->
-            <a href="https://www.youtube.com/@SharedStarsAcademy" class="text-gray-400 hover:text-blue-400" aria-label="YouTube">
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+            <a href="/subscribe.html" class="bg-gray-800/70 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors border border-gray-600/30 text-center">
+              Upgrade My Training Plan
             </a>
           </div>
         </div>
       </div>
-    </footer>
+    </div>
+  </div>
+</section>
+
+<!-- Final Countdown Section -->
+<section id="final-countdown" class="py-20 bg-black relative">
+  <!-- Building image -->
+  <div class="absolute inset-0 bg-[url('/images/stellatrex-building.jpg')] bg-cover bg-bottom opacity-60"></div>
+  
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-bold text-white mb-16 text-center">Time Until Projected Mass Space</h2>
+    </div>
+  </div>
+
+<!-- FOOTER with only available pages -->
+<footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
+  <!-- Animated Floating Particles -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+    <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+    <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
+  </div>
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-2 gap-8 mb-12 text-center md:text-left max-w-2xl mx-auto">
+      <!-- About -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">About</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/about.html" class="hover:text-blue-400 transition-colors">Our Story</a></li>
+          <li><a href="/academy.html" class="hover:text-blue-400 transition-colors">SharedStars Academy</a></li>
+        </ul>
+      </div>
+      <!-- Training -->
+      <div>
+        <h3 class="font-bold text-lg text-blue-400">Training</h3>
+        <ul class="space-y-2 mt-4">
+          <li><a href="/signup.html" class="hover:text-blue-400 transition-colors">Join Academy</a></li>
+          <li><a href="/subscribe.html" class="hover:text-blue-400 transition-colors">Subscription Plans</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- Bottom section with copyright and social media -->
+    <div class="mt-12 pt-8 border-t border-blue-900/20 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-500">© <span id="current-year">2025</span> Celestial Technologies, LLC. All rights reserved.</p>
+      
+      <!-- All 7 social media links -->
+      <div class="flex space-x-4 mt-4 md:mt-0">
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/company/106241890" class="text-gray-400 hover:text-blue-400" aria-label="LinkedIn">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
+        
+        <!-- Twitter/X -->
+        <a href="https://x.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Twitter">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+        </a>
+        
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Facebook">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+        </a>
+        
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/sharedstarsacademy/" class="text-gray-400 hover:text-blue-400" aria-label="Instagram">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        
+        <!-- Telegram -->
+        <a href="https://t.me/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Telegram">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12zm3.224 17.871c.188.133.43.166.646.085.215-.082.374-.253.463-.489.089-.236.089-.498 0-.734l-1.74-4.36 4.4-2.507c.466-.265.466-.934 0-1.199l-9.65-5.514c-.465-.266-1.048.055-1.047.577l.072 12.71c0 .522.583.843 1.048.577l3.293-1.879zm-8.791-7.414l2.083 1.188-.759 1.329-1.324-.755v-1.762zm6.442 7.385l-1.621.925c-.961.548-2.132-.106-2.132-1.186l-.04-6.99 3.793 7.251z"/></svg>
+        </a>
+        
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@sharedstarsacademy" class="text-gray-400 hover:text-blue-400" aria-label="TikTok">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@SharedStarsAcademy" class="text-gray-400 hover:text-blue-400" aria-label="YouTube">
+          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+    <!-- Add this near the end of your body -->
+    <script src="/js/countdown.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
       if (typeof AOS !== 'undefined') {
@@ -1183,53 +1561,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     </script>
-    
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const popup = document.getElementById('apply-popup');
-        const openButtons = document.querySelectorAll('.open-apply-popup');
-        const closeButton = document.getElementById('close-popup');
-        const steps = document.querySelectorAll('#application-form .step');
-        const nextButtons = document.querySelectorAll('#application-form .next-step');
-        let currentStep = 0;
-      
-        const showStep = (index) => {
-          steps.forEach((step, idx) => {
-            step.classList.toggle('hidden', idx !== index);
-          });
-        };
-      
-        // Initially show the first step and hide others
-        steps.forEach((step, idx) => step.classList.toggle('hidden', idx !== 0));
-      
-        openButtons.forEach(button => {
-          button.addEventListener('click', (e) => {
-            e.preventDefault();
-            popup.classList.remove('hidden');
-            currentStep = 0;
-            showStep(currentStep);
-          });
-        });
-      
-        nextButtons.forEach(button => {
-          button.addEventListener('click', () => {
-            if (currentStep < steps.length - 1) {
-              currentStep++;
-              showStep(currentStep);
-            }
-          });
-        });
-      
-        closeButton.addEventListener('click', () => {
-          popup.classList.add('hidden');
-        });
-      
-        // Initially show only first step
-        showStep(currentStep);
-      });
-      </script>
-      
-    
-    </body>
-    </html>
-    
+
+</body>
+</html>

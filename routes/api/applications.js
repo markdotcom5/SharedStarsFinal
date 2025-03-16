@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 const authMiddleware = require('../../middleware/authenticate');
 // At the top of routes/api/applications.js, add:
 const emailService = require('../../services/emailService');
+const multer = require('multer');
 // Initialize OpenAI
 let openai;
 try {
@@ -34,6 +35,76 @@ const applicationLimiter = rateLimit({
   message: { success: false, error: 'Too many applications from this IP, please try again later.' }
 });
 
+// Update your route handler to include this debugging
+router.post('/submit', applicationLimiter, multer().single('resume'), async (req, res) => {
+  try {
+    console.log('Form submission received');
+    console.log('Body:', req.body);
+    
+    // Create new application
+    const newApplication = new Application({
+      // Personal Information
+      firstName: req.body.firstName || '',
+      middleInitial: req.body.middleInitial || '',
+      lastName: req.body.lastName || '',
+      email: req.body.email || '',
+      
+      // Map the motivation field to lifeMissionAlignment
+      lifeMissionAlignment: req.body.lifeMissionAlignment || req.body.motivation || '',
+      spaceMissionChoice: req.body.spaceMissionChoice || '',
+      
+      // Other fields
+      highestEducation: req.body.highestEducation || '',
+      experience: req.body.experience || '',
+      skills: Array.isArray(req.body.skills) ? req.body.skills : [req.body.skills].filter(Boolean),
+      
+      // Add any other required fields
+      metadata: {
+        ipAddress: req.ip || '',
+        userAgent: req.headers['user-agent'] || '',
+        referrer: req.headers.referer || ''
+      }
+    });
+    
+    // Log the application before validation
+    console.log('Application to save:', {
+      firstName: newApplication.firstName,
+      lastName: newApplication.lastName,
+      email: newApplication.email,
+      lifeMissionAlignment: newApplication.lifeMissionAlignment,
+      spaceMissionChoice: newApplication.spaceMissionChoice
+    });
+    
+    // Save application - this will trigger validation
+    try {
+      const savedApplication = await newApplication.save();
+      
+      // Success response
+      return res.status(201).json({
+        success: true,
+        message: 'Application submitted successfully!',
+        applicationId: savedApplication._id
+      });
+    } catch (validationError) {
+      console.error('Validation error:', validationError);
+      // Send back the specific validation errors
+      if (validationError.name === 'ValidationError') {
+        const errorMessages = Object.values(validationError.errors).map(err => err.message);
+        return res.status(400).json({
+          success: false,
+          error: 'Validation failed: ' + errorMessages.join(', ')
+        });
+      }
+      throw validationError;
+    }
+  } catch (error) {
+    console.error('Application submission error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'An error occurred while processing your application.'
+    });
+  }
+});
 /**
  * @route   POST /api/applications/submit
  * @desc    Submit a new application
@@ -133,7 +204,84 @@ router.post('/submit', applicationLimiter, multer().single('resume'), async (req
     });
   }
 });
+// Add this function to your routes/api/applications.js file if needed
 
+// Handle application form submissions
+router.post('/submit', async (req, res) => {
+  try {
+    console.log('Form submission received:', req.body);
+    
+    // Process skills (may come as string or array)
+    let skills = req.body.skills;
+    if (!skills) {
+      skills = [];
+    } else if (!Array.isArray(skills)) {
+      // Convert single skill to array
+      skills = [skills];
+    }
+    
+    // Create new application
+    const newApplication = new Application({
+      // Personal Information
+      firstName: req.body.firstName,
+      middleInitial: req.body.middleInitial,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      linkedInUrl: req.body.linkedInUrl || '',
+      highestEducation: req.body.highestEducation || '',
+      
+      // Background/Experience
+      experience: req.body.experience || '',
+      skills: skills,
+      
+      // Motivation fields
+      lifeMissionAlignment: req.body.motivation || '',  // Mapping motivation field to lifeMissionAlignment
+      spaceMissionChoice: req.body.spaceMissionChoice || '',
+      vrAiExperience: req.body.background || '',  // Storing background info in vrAiExperience field
+      
+      // Metadata
+      metadata: {
+        ipAddress: req.ip || '',
+        userAgent: req.headers['user-agent'] || '',
+        referrer: req.headers.referer || ''
+      }
+    });
+    
+    // Check if email already exists
+    const emailExists = await Application.findOne({ email: req.body.email });
+    if (emailExists) {
+      return res.status(400).json({
+        success: false,
+        error: 'This email address has already been used to submit an application.'
+      });
+    }
+    
+    // Save application
+    const savedApplication = await newApplication.save();
+    
+    res.status(201).json({
+      success: true,
+      message: 'Application submitted successfully!',
+      applicationId: savedApplication._id
+    });
+    
+  } catch (error) {
+    console.error('Application submission error:', error);
+    
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        success: false,
+        error: Object.values(error.errors).map(err => err.message).join(', ')
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: 'An error occurred while processing your application.'
+    });
+  }
+});
 /**
  * @route   POST /api/applications/submit-test
  * @desc    Submit a new application (test version)

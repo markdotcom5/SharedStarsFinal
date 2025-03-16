@@ -1,245 +1,996 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About - SharedStars</title>
-  <!-- Tailwind CSS & DaisyUI -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.0/dist/full.css" rel="stylesheet" />
-  <!-- AOS CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-  <!-- Custom AI Assistant CSS -->
-  <link rel="stylesheet" href="/css/ai-assistant.css" />
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      scroll-behavior: smooth;
-    }
-    /* Optional: custom styling for founder journey section */
-    .founder-bg {
-      background: url('/css/images/founder-bg.jpg') no-repeat center center/cover;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About SharedStars Academy - Learn about our mission, vision, and the team behind making space travel accessible to all">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <title>About Us - SharedStars Academy</title>
+
+    <style>
+        /* Page-specific styles that match your current implementation */
+        /* Clean fixed header CSS - Remove all duplicated styles */
+body {
+    background-color: #0c1017;
+    background-image: url('/images/space-bg.jpg');
+    background-size: cover;
+    font-family: 'Aeonik', sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.site-header {
+    background-color: rgba(12, 16, 23, 0.9);
+    padding: 15px 0;
+    position: relative;
+    z-index: 100;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    margin-left: 60px; /* Add space between logo and menu */
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+    margin: 0 15px; /* Even spacing between nav items */
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+    color: #4a7de9;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-left: auto; /* Pushes header actions to the right */
+}
+
+.language-selector {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.get-started-btn {
+    background-color: #0066FF;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.get-started-btn:hover {
+    background-color: #0055CC;
+}
+
+/* Updated Hero section with video */
+.hero-section {
+    padding: 80px 0 40px;
+    text-align: center;
+    position: relative;
+}
+
+.about-badge {
+    display: inline-block;
+    background-color: rgba(74, 125, 233, 0.2);
+    color: #4a7de9;
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.hero-title {
+    font-size: 56px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 30px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-subtitle {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #d1d5db;
+    max-width: 800px;
+    margin: 0 auto 40px;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+}
+
+.cta-button {
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.cta-button.primary {
+    background: #0066FF;
+    color: white;
+}
+
+.cta-button.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Video container styling */
+.video-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 60px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background-color: #000; /* Fallback background for video */
+}
+
+.video-container video {
+    width: 100%;
+    display: block;
+}
+
+/* Mission and vision section */
+.mission-vision-section {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.mission-vision-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.rocket-emoji {
+    font-size: 42px;
+}
+    </style>
 </head>
-<body class="bg-gray-900 text-white">
-  <!-- HEADER -->
-  <header class="fixed w-full bg-gray-900/90 backdrop-blur-lg z-50 shadow-lg">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <div class="logo">
-        <a href="/index.html" aria-label="SharedStars Homepage">
-          <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-10" />
-        </a>
-      </div>
-      <nav class="hidden md:flex gap-8">
-        <a href="/index.html" class="text-gray-300 hover:text-white font-medium transition-colors">Home</a>
-        <a href="#mission" class="text-gray-300 hover:text-white font-medium transition-colors">Mission</a>
-        <a href="#vision" class="text-gray-300 hover:text-white font-medium transition-colors">Vision</a>
-        <a href="#founder-journey" class="text-gray-300 hover:text-white font-medium transition-colors">Founder Journey</a>
-        <a href="#board-preview" class="text-gray-300 hover:text-white font-medium transition-colors">Advisors</a>
-        <a href="#subscribe" class="text-gray-300 hover:text-white font-medium transition-colors">Subscribe</a>
-      </nav>
-    </div>
-  </header>
+<body>
+    <!-- Header with navigation -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <img src="/images/SharedStars.svg" alt="SharedStars Logo">
+                </a>
+                
+                <nav class="nav-menu">
+                    <a href="/">Home</a>
+                    <a href="/academy.html">Academy</a>
+                    <a href="/about.html" class="active">About</a>
+                    <a href="/leaderboard.html">Leaderboard</a>
+                    <a href="/subscribe.html">Subscribe</a>
+                </nav>
+                
+                <div class="header-actions">
+                    <div class="language-selector">
+                        <img src="/images/flag-english.svg" alt="English" width="24" height="16">
+                        <span>English</span>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 5L6 8L9 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <a href="/signup.html" class="get-started-btn">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </header>
 
-  <!-- HERO SECTION (Video Background) -->
-  <section id="about-hero" class="relative min-h-screen">
-    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-      <source src="/videos/academy11.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
-    <div class="relative z-10 flex flex-col items-center justify-center min-h-screen text-center px-4" data-aos="fade-up">
-      <h1 class="text-5xl md:text-7xl font-extrabold">About SharedStars</h1>
-      <p class="mt-4 text-xl md:text-2xl">Making Space Accessible for Everyone</p>
-    </div>
-  </section>
-  <!-- MISSION SECTION -->
-  <section id="mission" class="py-16 bg-gray-900" data-aos="fade-up">
-    <div class="container mx-auto px-4">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-blue-400 mb-8">Our Mission</h2>
-      <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
-        Our mission is to democratize space travel by equipping individuals with the knowledge, certifications, AR/VR experiences, and our comprehensive 10‑module program.
-      </p>
-      <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto mt-4">
-        SharedStars transforms space travel dreams into reality by building an inclusive community of Subscribing Space Travelers (SSTs) who are united in shaping the future of space exploration.
-      </p>
-    </div>
-  </section>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="about-badge">About Us</div>
+            <h1 class="hero-title">The Gateway to Space Begins Here</h1>
+            <p class="hero-subtitle">
+                At SharedStars, we are transforming space travel from a distant dream to an achievable reality. 
+                Through certifications, immersive training, and a global community of pioneers, we are making 
+                space exploration accessible to all.
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="/signup.html" class="cta-button primary">Join the Future of Space Travel</a>
+                <a href="#board-of-advisors" class="cta-button secondary">Meet Our Board of Advisors</a>
+                <a href="/training.html" class="cta-button secondary">Start Your Space Training</a>
+            </div>
+            
+            <!-- Corrected Video Container with proper file name and path -->
+<!-- Video Container with root path reference -->
+            <div class="video-container">
+                 <video autoplay loop muted playsinline>
+                 <source src="/videos/ai-training.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+              </video>
+            </div>
+        </div>
+    </section>
 
-  <!-- VISION SECTION -->
-  <section id="vision" class="py-16 bg-black" data-aos="fade-up">
-    <div class="container mx-auto px-4">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-purple-400 mb-8">Our Vision</h2>
-      <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
-        To create a world where space travel is inclusive and attainable for all—fostering a global community united by the aspiration to explore beyond Earth.
-      </p>
+    <!-- Mission and Vision Section -->
+<!-- Mission and Vision Section - Perfect Match to Figma -->
+<section class="mission-vision-section">
+    <div class="container">
+        <!-- Reach the space button -->
+        <a href="#" class="reach-space-btn">Reach the space</a>
+        
+        <!-- Replace your current title with this -->
+<h2 class="mission-title">
+    Our mission and<br>vision <span class="rocket-emoji">🚀</span>
+</h2>
+        <!-- Intro text -->
+        <p class="mission-intro">
+            To equip future astronauts with AI-optimized training, real-world 
+            certifications, and a dynamic learning ecosystem that prepares 
+            them for space travel.
+        </p>
+        
+        <!-- Card grid -->
+        <div class="mission-cards">
+            <!-- Mission Card -->
+            <div class="mission-card">
+                <!-- Icon -->
+                <div class="icon-container">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="#0066FF" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="5" stroke="#0066FF" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="1" fill="#0066FF"/>
+                    </svg>
+                </div>
+                
+                <h3 class="card-title">Our Mission</h3>
+                <p class="main-desc">We exist to democratize space travel.</p>
+                <p class="secondary-desc">SharedStars equips individuals with:</p>
+                
+                <ul class="feature-list">
+                    <li>
+                        <div class="checkbox">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <rect width="16" height="16" rx="3" fill="#0066FF" fill-opacity="0.1"/>
+                                <path d="M4 8L7 11L12 5" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>Certifications to qualify for future space missions.</span>
+                    </li>
+                    <li>
+                        <div class="checkbox">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <rect width="16" height="16" rx="3" fill="#0066FF" fill-opacity="0.1"/>
+                                <path d="M4 8L7 11L12 5" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>Immersive AR/VR experiences that simulate real astronaut training.</span>
+                    </li>
+                    <li>
+                        <div class="checkbox">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <rect width="16" height="16" rx="3" fill="#0066FF" fill-opacity="0.1"/>
+                                <path d="M4 8L7 11L12 5" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>A 10-module space readiness program designed by industry experts.</span>
+                    </li>
+                    <li>
+                        <div class="checkbox">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <rect width="16" height="16" rx="3" fill="#0066FF" fill-opacity="0.1"/>
+                                <path d="M4 8L7 11L12 5" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>Leaderboards and gamification to create a competitive but supportive training environment. A vibrant community of Subscribing Space Travelers (SSTs) shaping the future of space exploration.</span>
+                    </li>
+                </ul>
+                
+                <p class="footer-text">
+                    With over 1.17 billion space enthusiasts worldwide, SharedStars bridges the gap between aspiration and accessibility, ensuring every dreamer has a path to space.
+                </p>
+                
+                <p class="footer-text">
+                    A SharedStars certification is your ticket to the fast-growing space travel industry, setting a benchmark similar to OSHA and ISO standards in aerospace and occupational health.
+                </p>
+                
+                <div class="card-decoration"></div>
+            </div>
+            
+            <!-- Vision Card -->
+            <div class="vision-card">
+                <!-- Icon -->
+                <div class="icon-container">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="12" cy="12" r="3" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                
+                <h3 class="card-title">Our Vision</h3>
+                <p class="main-desc">
+                    We envision a world where space travel is inclusive and attainable for all, fostering a global community of pioneers united in the mission to explore beyond Earth.
+                </p>
+                <div class="card-decoration"></div>
+            </div>
+            
+            <!-- Purpose Card -->
+            <div class="purpose-card">
+                <!-- Icon -->
+                <div class="icon-container">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="4" y1="22" x2="4" y2="15" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                
+                <h3 class="card-title">Our Purpose</h3>
+                <p class="main-desc">
+                    To revolutionize space preparation with artificial intelligence, immersive simulations, and a thriving, borderless community of future explorers.
+                </p>
+                <div class="card-decoration"></div>
+            </div>
+        </div>
     </div>
-  </section>
-
-  <!-- FOUNDER JOURNEY SECTION -->
-  <section id="founder-journey" class="py-16 founder-bg bg-fixed bg-center" data-aos="zoom-in">
-    <div class="container mx-auto px-4 bg-black bg-opacity-70 p-8 rounded-lg shadow-2xl">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-yellow-400 mb-6">My Journey</h2>
-      <p class="text-lg text-gray-200 leading-relaxed max-w-3xl mx-auto">
-        I started SharedStars with a vision to empower individuals with the tools and technology to reach for the stars. Combining years of expertise in tech startups, AI, and aerospace, I embarked on a mission to make space travel accessible for everyone. My journey wasn’t easy—it was built on relentless innovation, overcoming challenges, and a steadfast commitment to transforming dreams into reality.
-      </p>
-      <p class="mt-4 text-lg text-gray-200 leading-relaxed max-w-3xl mx-auto">
-        Today, our community continues to grow and evolve, driven by passion, innovation, and the belief that the future of space is for all of us.
-      </p>
-      <div class="mt-8 flex justify-center">
-        <a href="/founder.html" class="btn btn-primary text-white hover:bg-blue-600 transition-all">
-          Read My Full Story
-        </a>
-      </div>
+</section>
+<section class="story-section">
+    <div class="container">
+        <!-- "Our Story" button -->
+        <a href="#" class="our-story-btn">Our Story</a>
+        
+        <!-- Title -->
+        <h2 class="story-title">
+            From an Impossible<br>Dream to a Movement
+        </h2>
+        
+        <div class="story-content">
+            <!-- Left column - story text -->
+            <div class="story-text">
+                <p class="story-paragraph">
+                    At one of the lowest points in my life, I felt that my <strong>dream of space travel was impossible.</strong> The cost of launching into orbit-ranging from hundreds of thousands to millions of dollars-made it seem like a <strong>privilege reserved for the ultra-wealthy.</strong>
+                </p>
+                
+                <p class="story-paragraph">
+                    Tormented with yet another night of Netflix I stumbled upon a new Series, <strong>"Three Body Problem"</strong> and from that moment on my life slowly began to change. After the Series ended my quest for more Sci-fi information remained, so I read and read and read Liu Cixin's trilogy as well.
+                </p>
+                
+                <p class="story-paragraph">
+                    Then, I discovered <strong>The Three-Body Problem</strong> by Liu Cixin. The book's themes of <strong>human resilience, innovation, and the power of collective effort</strong> reignited my determination.
+                </p>
+                
+                <p class="story-callout">
+                    What if space travel didn't have to be reserved for the elite?
+                </p>
+                
+                <p class="story-paragraph">
+                    That moment of inspiration led to <strong>SharedStars.</strong>
+                </p>
+                
+                <p class="story-callout-bold">
+                    This isn't just a training platform-it's a movement.
+                </p>
+                
+                <p class="story-paragraph">
+                    We're dedicated to <strong>making space travel a reality</strong> by providing the education, community, and opportunities needed for <strong>anyone</strong> to prepare for the next frontier.
+                </p>
+                
+                <div class="signature">
+                    <p class="signature-quote">See you in Space,</p>
+                    <p class="signature-text">Founder, Mark Sendo</p>
+                </div>
+            </div>
+            
+            <!-- Right column - founder image with updated styling -->
+            <div class="founder-image-container">
+                <img src="/images/mark1.jpeg" alt="Mark R. Sendo" class="founder-image">
+            </div>
+        </div>
     </div>
-  </section>
-
-<!-- Board of Advisors Section -->
-<section id="board-preview" class="relative min-h-screen bg-black" data-aos="fade-up">
-    <!-- Video Background -->
-    <div class="absolute inset-0">
-      <video autoplay muted loop playsinline class="w-full h-full object-cover">
-        <source src="/videos/BOA1.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
+</section>
+<!-- Board of Advisors Section with All Members Visible -->
+<section id="advisors" class="advisors-section">
+    <!-- Blue button at top -->
+    <div class="advisor-button-container">
+        <a href="#advisors" class="advisor-btn">Board of Advisors (BOA)</a>
     </div>
-    <!-- Content Overlay -->
-    <div class="relative z-10 container mx-auto px-4 py-16">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-blue-400 mb-12">Meet Our Advisors</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Advisor 1 -->
-        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left">
-          <img src="/css/images/drmark.png" alt="Dr. Mark Prele" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
-          <h3 class="text-2xl font-bold text-blue-400 text-center">Dr. Mark Prele</h3>
-          <p class="text-center text-gray-300">Chief Medical Officer & Pilot</p>
-          <p class="text-sm text-center text-gray-300">Expert in NASA Medicine & Flight Safety</p>
+    
+    <div class="container">
+       <!-- Update your HTML title like this -->
+<h2 class="advisors-title" style="text-align: center;">
+    Backed by industry<br>leaders
+</h2>
+        
+        <!-- Intro Text -->
+        <p class="advisors-intro" style="text-align: center; width: 100%; max-width: 900px; margin-left: auto; margin-right: auto;">
+            The SharedStars initiative is supported by a prestigious Board of Advisors, consisting of leading minds in aerospace, AI, commercial spaceflight, and astronaut training. Their guidance ensures that SharedStars stays at the forefront of space innovation and that our training programs align with industry standards for astronaut readiness.
+        </p>
+        
+        <!-- Top Row: 3 Advisors -->
+        <div class="advisors-grid">
+            <!-- Dr. Mark R. Preke -->
+            <div class="advisor-card">
+                <div class="advisor-image-container">
+                    <img src="/images/drmark.png" alt="Dr. Mark R. Preke" class="advisor-image">
+                </div>
+                <h3 class="advisor-name">Dr. Mark R. Preke</h3>
+                <p class="advisor-title">Chief Medical Officer & Flight Surgeon, NASA Armstrong Flight Research Center</p>
+                <div class="advisor-expertise">
+                    <span class="expertise-tag">Space Medicine</span>
+                    <span class="expertise-tag">Flight Safety</span>
+                </div>
+                <p class="advisor-bio">
+                    Dr. Mark Prele is a highly respected leader in aerospace medicine, with decades of experience overseeing medical support for NASA pilots and aircrew at the Armstrong Flight Research Center. His expertise ensures the safety and well-being of flight operations teams, making space travel accessible for all aspiring space travelers.
+                </p>
+            </div>
+            
+            <!-- Travis Talbot -->
+            <div class="advisor-card">
+                <div class="advisor-image-container">
+                    <img src="/images/travis.png" alt="Travis Talbot" class="advisor-image">
+                </div>
+                <h3 class="advisor-name">Travis Talbot</h3>
+                <p class="advisor-title">Senior Manufacturing Engineer, Former SpaceX</p>
+                <div class="advisor-expertise">
+                    <span class="expertise-tag">Propulsion Systems</span>
+                    <span class="expertise-tag">Spacecraft Design</span>
+                </div>
+                <p class="advisor-bio">
+                    Travis Talbot is an expert in spacecraft engineering and propulsion systems. Having worked at SpaceX, Travis helped drive the design and development of cutting-edge spacecraft and propulsion technology. His hands-on experience with the systems that power space travel makes him an invaluable advisor.
+                </p>
+            </div>
+            
+            <!-- Laura Anne Edwards -->
+            <div class="advisor-card">
+                <div class="advisor-image-container">
+                    <img src="/images/laura.png" alt="Laura Anne Edwards" class="advisor-image">
+                </div>
+                <h3 class="advisor-name">Laura Anne Edwards</h3>
+                <p class="advisor-title">Global Innovation Executive, NASA Datanaut</p>
+                <div class="advisor-expertise">
+                    <span class="expertise-tag">Space Tech</span>
+                    <span class="expertise-tag">Innovation</span>
+                </div>
+                <p class="advisor-bio">
+                    Laura Anne Edwards is a global innovation executive with extensive experience in space tech and innovation. As a NASA Datanaut, Laura has worked on numerous projects to advance the role of data and technology in space exploration. Her vision for innovative technology solutions in space has inspired new ways to make space travel more efficient.
+                </p>
+            </div>
         </div>
-        <!-- Advisor 2 -->
-        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left" data-aos-delay="100">
-          <img src="/css/images/travis.png" alt="Travis Talbot" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
-          <h3 class="text-2xl font-bold text-purple-400 text-center">Travis Talbot</h3>
-          <p class="text-center text-gray-300">Senior Manufacturing Engineer</p>
-          <p class="text-sm text-center text-gray-300">Pioneer behind the Raptor Rocket</p>
+        
+        <!-- Bottom Row: 2 Advisors -->
+        <div class="advisors-grid advisors-grid-bottom">
+            <!-- Edward Moalem -->
+            <div class="advisor-card">
+                <div class="advisor-image-container">
+                    <img src="/images/edward.png" alt="Edward Moalem" class="advisor-image">
+                </div>
+                <h3 class="advisor-name">Edward Moalem</h3>
+                <p class="advisor-title">DICE and GDC Investor / Business Advisor</p>
+                <div class="advisor-expertise">
+                    <span class="expertise-tag">Gaming</span>
+                    <span class="expertise-tag">Business Development</span>
+                </div>
+                <p class="advisor-bio">
+                    Edward leads strategic business development and licensing for cutting-edge platforms leveraging blockchain and NFTs to create immersive experiences. With over 25 years in gaming and technology industries, he has generated over $1.8 billion in revenue and value for clients and partners worldwide.
+                </p>
+            </div>
+            
+            <!-- Erich Spangenberg -->
+            <div class="advisor-card">
+                <div class="advisor-image-container">
+                    <img src="/images/erich.png" alt="Erich Spangenberg" class="advisor-image">
+                </div>
+                <h3 class="advisor-name">Erich Spangenberg</h3>
+                <p class="advisor-title">Founder and Managing Director at SIM IP</p>
+                <div class="advisor-expertise">
+                    <span class="expertise-tag">IP</span>
+                    <span class="expertise-tag">Guiding Entrepreneurs</span>
+                </div>
+                <p class="advisor-bio">
+                    Erich is regularly recognized as one of the world's top 50 IP strategists. After an early career that included law firm partner, investment banker and business executive, Erich had a successful 10+ year run as one of the world's leading global "patent trolls," followed by a $1.5 billion-dollar hedge fund partnership.
+                </p>
+            </div>
         </div>
-        <!-- Advisor 3 -->
-        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left" data-aos-delay="200">
-          <img src="/css/images/laura.png" alt="Laura Anne Edwards" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
-          <h3 class="text-2xl font-bold text-green-400 text-center">Laura Anne Edwards</h3>
-          <p class="text-center text-gray-300">Global Innovation Leader</p>
-          <p class="text-sm text-center text-gray-300">NASA Datanaut & NSA Innovator</p>
-        </div>
-        <!-- Advisor 4 -->
-        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left" data-aos-delay="300">
-          <img src="/css/images/edward.png" alt="Edward Moleam" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
-          <h3 class="text-2xl font-bold text-red-400 text-center">Edward Moleam</h3>
-          <p class="text-center text-gray-300">Founder & CEO</p>
-          <p class="text-sm text-center text-gray-300">Aerospace Engineer & Space Systems Expert</p>
-        </div>
-        <!-- Advisor 5 -->
-        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105" data-aos="flip-left" data-aos-delay="400">
-          <img src="/css/images/erich.png" alt="Erich Spangenberg" class="w-32 h-32 object-cover rounded-full mx-auto mb-4" />
-          <h3 class="text-2xl font-bold text-yellow-400 text-center">Erich Spangenberg</h3>
-          <p class="text-center text-gray-300">Chief Innovation Officer</p>
-          <p class="text-sm text-center text-gray-300">Pioneer in Rocket Propulsion Technologies</p>
-        </div>
-      </div>
-      <div class="mt-12 text-center">
-        <a href="/join-boa.html" class="btn btn-primary text-white hover:bg-blue-600 transition">
-          Ask to Join the BOA
-        </a>
-      </div>
     </div>
-  </section>
-  
-  <!-- FOOTER -->
-  <footer class="bg-gray-900 text-white py-12">
-    <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+</section>
+       <!-- What We Offer Section -->
+<section id="what-we-offer" class="offer-section">
+    <!-- Blue button at top -->
+    <div class="unlock-button-container">
+        <a href="#leaderboard" class="unlock-btn">Unlock Leaderboard</a>
+    </div>
+    
+    <div class="container">
+        <!-- Section Title - Centered -->
+        <h2 class="offer-title">
+            What We Offer
+        </h2>
+        
+        <!-- Offer Cards Grid -->
+        <div class="offer-cards">
+            <!-- Card 1: Savings -->
+            <div class="offer-card">
+                <div class="offer-icon-container">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M14.31 8L20.05 17.94" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M9.69 8L3.95 17.94" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M22 12H2" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M12 2V22" stroke="#0066FF" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3 class="offer-card-title">Savings Toward Space Travel</h3>
+                <p class="offer-card-desc">Earn credits toward real-world spaceflight opportunities.</p>
+            </div>
+            
+            <!-- Card 2: AI-Driven Training -->
+            <div class="offer-card">
+                <div class="offer-icon-container">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 15C15.866 15 19 12.3137 19 9C19 5.68629 15.866 3 12 3C8.13401 3 5 5.68629 5 9C5 12.3137 8.13401 15 12 15Z" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M12 15V20" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M9 18H15" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M7 10.8L10 13" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M17 10.8L14 13" stroke="#0066FF" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3 class="offer-card-title">AI-Driven Space Training</h3>
+                <p class="offer-card-desc">Smart coaching adapts to individual learning speeds & training history.</p>
+            </div>
+            
+            <!-- Card 3: Immersive Learning -->
+            <div class="offer-card">
+                <div class="offer-icon-container">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="4" width="16" height="16" rx="2" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M4 8H20" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M8 4V8" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M16 4V8" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M8 12H10" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M14 12H16" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M8 16H10" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M14 16H16" stroke="#0066FF" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3 class="offer-card-title">Immersive Learning Modules</h3>
+                <p class="offer-card-desc">Hands-on astronaut simulations, EVA training, and mission prep.</p>
+            </div>
+            
+            <!-- Card 4: Community -->
+            <div class="offer-card">
+                <div class="offer-icon-container">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="9" cy="7" r="4" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M3 21V19C3 16.7909 4.79086 15 7 15H11C13.2091 15 15 16.7909 15 19V21" stroke="#0066FF" stroke-width="2"/>
+                        <circle cx="17" cy="10" r="3" stroke="#0066FF" stroke-width="2"/>
+                        <path d="M13 21V19C13 16.7909 14.7909 15 17 15H19C21.2091 15 23 16.7909 23 19V21" stroke="#0066FF" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3 class="offer-card-title">Community & Networking</h3>
+                <p class="offer-card-desc">Connect with other space travelers, industry pioneers, and mentors.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Global Impact Section - Only Update This HTML -->
+<section id="global-impact" class="impact-section">
+    <!-- Blue button at top -->
+    <div class="impact-button-container">
+        <a href="#impact" class="impact-btn">Global Impact</a>
+    </div>
+    
+    <div class="container">
+        <!-- Content Box with darker background -->
+        <div class="content-box">
+            <!-- Section Title and Intro - Left aligned -->
+            <div class="impact-header">
+                <h2 class="impact-title">Our Global Impact</h2>
+                <p class="impact-intro">
+                    SharedStars is a global movement. While AI transcends borders, our platform is designed to reach and empower 
+                    aspiring astronauts worldwide.
+                </p>
+            </div>
+            
+            <div class="impact-content">
+                <!-- Left Column - Region info -->
+                <div class="impact-regions">
+                    <!-- English-Speaking Territories with American Flag -->
+                    <div class="region-item">
+                        <div class="region-icon flag">🇺🇸</div>
+                        <div class="region-content">
+                            <h3 class="region-title">English-Speaking Territories</h3>
+                            <p class="region-desc">We provide AI-driven training to future space travelers in the U.S., Canada, Australia, and beyond—where commercial spaceflight is rapidly evolving.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- China -->
+                    <div class="region-item">
+                        <div class="region-icon flag">🇨🇳</div>
+                        <div class="region-content">
+                            <h3 class="region-title">China</h3>
+                            <p class="region-desc">With China's ambitious space programs, we are integrating AI-powered training tailored for Chinese-speaking users.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- South Korea -->
+                    <div class="region-item">
+                        <div class="region-icon flag">🇰🇷</div>
+                        <div class="region-content">
+                            <h3 class="region-title">South Korea</h3>
+                            <p class="region-desc">As a rising force in space technology, South Korea is investing heavily in astronautics. Our AI-enhanced simulations provide the technical edge needed for this growing.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Spanish-Speaking World -->
+                    <div class="region-item">
+                        <div class="region-icon flag">🇪🇸</div>
+                        <div class="region-content">
+                            <h3 class="region-title">Spanish-Speaking World</h3>
+                            <p class="region-desc">With over 480 million Spanish speakers, SharedStars is expanding AI-powered astronaut preparation to Latin America and Spain.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Europe & Beyond -->
+                    <div class="region-item">
+                        <div class="region-icon flag">🇪🇺</div>
+                        <div class="region-content">
+                            <h3 class="region-title">Europe & Beyond</h3>
+                            <p class="region-desc">AI is enabling global accessibility to space readiness programs, and we are integrating multilingual AI-driven training to include participants from across Europe.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column - Robot Image - Keep your current image implementation -->
+                <div class="robot-container">
+                    <img src="/images/aboutus2.png" alt="AI Robot saying Hello" class="robot-image">
+                </div>
+            </div>
+            
+            <!-- Keep your current "Get Ready" button implementation -->
+            <div class="read-more">
+                <a href="#learn-more" class="more-btn">Get Ready</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- News & Industry Impacts Section -->
+<!-- News & Industry Impacts Section -->
+<section id="news-blog" class="news-section">
+    <!-- Blue button at top -->
+    <div class="news-button-container">
+        <a href="#blogs" class="news-btn">Our blogs</a>
+    </div>
+    
+    <div class="container">
+        <div class="news-header">
+            <h2 class="news-title">News & industry impacts</h2>
+            <p class="news-intro">
+                Stay updated with the latest space advancements, breakthroughs, 
+                and industry trends shaping the future of exploration.
+            </p>
+            <div class="view-all-container">
+                <a href="#view-all" class="view-all-btn">View all <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+            </div>
+        </div>
+        
+        <div class="news-cards">
+            <!-- Published Article Card -->
+            <div class="news-card featured-card">
+                <div class="card-image nebula-image"></div>
+                <div class="card-content">
+                    <div class="card-category-date">
+                        <span class="card-category featured">Featured</span>
+                        <span class="card-date">Jan 30, 2025</span>
+                    </div>
+                    <h3 class="card-title">Featured in SpaceNews: "It's time to make space exploration a shared frontier for all"</h3>
+                    <div class="card-author">
+                        <div class="author-image"></div>
+                        <div class="author-info">
+                            <span class="author-name">Mark Sendo</span>
+                            <span class="author-title">SharedStars Founder</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://spacenews.com/its-time-to-make-space-exploration-a-shared-frontier-for-all/" class="card-link" target="_blank" rel="noopener"></a>
+            </div>
+            
+            <!-- Placeholder for Future Blog Posts -->
+            <div class="news-card placeholder-card">
+                <div class="card-content center-content">
+                    <div class="placeholder-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="placeholder-title">Coming Soon</h3>
+                    <p class="placeholder-text">Follow our journey as we build SharedStars and make space exploration accessible to all.</p>
+                </div>
+            </div>
+            
+            <!-- Another Placeholder -->
+            <div class="news-card placeholder-card">
+                <div class="card-content center-content">
+                    <div class="placeholder-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="placeholder-title">Future Blog Post</h3>
+                    <p class="placeholder-text">We'll be sharing our experiences, challenges, and insights from building SharedStars.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation arrows -->
+        <div class="news-navigation">
+            <button class="nav-arrow prev-arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="nav-arrow next-arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+    </div>
+</section>
+<!-- Footer -->
+<footer style="background-color: rgba(13, 18, 30, 0.6); padding: 60px 20px; text-align: center;">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
       <!-- About -->
       <div>
-        <h3 class="font-bold text-lg text-blue-400">About</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/about.html" class="hover:text-blue-400 transition">Our Story</a></li>
-          <li><a href="/academy.html" class="hover:text-blue-400 transition">Space Academy</a></li>
-        </ul>
+          <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;">About</h3>
+          <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+              <li style="margin-bottom: 12px;"><a href="/about.html" style="color: white; text-decoration: none;">Our Story</a></li>
+              <li style="margin-bottom: 12px;"><a href="/academy.html" style="color: white; text-decoration: none;">Academy</a></li>
+              <li style="margin-bottom: 12px;"><a href="/leaderboard.html" style="color: white; text-decoration: none;">Leaderboard</a></li>
+          </ul>
       </div>
-      <!-- Community -->
+      
+      <!-- Join Us -->
       <div>
-        <h3 class="font-bold text-lg text-blue-400">Community</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/events.html" class="hover:text-blue-400 transition">Events</a></li>
-          <li><a href="/forums.html" class="hover:text-blue-400 transition">Forums</a></li>
-        </ul>
+          <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;">Join Us</h3>
+          <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+              <li style="margin-bottom: 12px;"><a href="/apply.html" style="color: white; text-decoration: none;">Apply Now</a></li>
+              <li style="margin-bottom: 12px;"><a href="/subscribe.html" style="color: white; text-decoration: none;">Subscribe</a></li>
+              <li style="margin-bottom: 12px;"><a href="/faq.html" style="color: white; text-decoration: none;">FAQ</a></li>
+          </ul>
       </div>
-      <!-- Resources -->
+      
+      <!-- Contact -->
       <div>
-        <h3 class="font-bold text-lg text-blue-400">Resources</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/faq.html" class="hover:text-blue-400 transition">FAQ</a></li>
-          <li><a href="/support.html" class="hover:text-blue-400 transition">Support</a></li>
-        </ul>
+          <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;">Contact</h3>
+          <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+              <li style="margin-bottom: 12px;"><a href="mailto:info@sharedstars.com" style="color: white; text-decoration: none;">info@sharedstars.com</a></li>
+              <li style="margin-bottom: 12px; color: #888;">Celestial Technologies, LLC</li>
+          </ul>
       </div>
-      <!-- Legal -->
-      <div>
-        <h3 class="font-bold text-lg text-blue-400">Legal</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/terms.html" class="hover:text-blue-400 transition">Terms</a></li>
-          <li><a href="/privacy.html" class="hover:text-blue-400 transition">Privacy</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="mt-12 text-center">
-      <h4 class="text-lg font-bold text-blue-400">Follow Us</h4>
-      <div class="flex justify-center gap-6 mt-4">
-        <a href="#" class="hover:text-blue-400 transition" aria-label="Twitter">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
-          </svg>
-        </a>
-        <a href="#" class="hover:text-blue-400 transition" aria-label="Facebook">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
-          </svg>
-        </a>
-        <a href="#" class="hover:text-blue-400 transition" aria-label="Instagram">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M22 11.077v.82c0 4.842-3.705 10.423-10.423 10.423A10.386 10.386 0 010 18.9c.13.01.261.014.393.014 2.717 0 5.213-.913 7.204-2.449a3.677 3.677 0 01-3.434-2.553c.558.083 1.136.077 1.688-.027A3.675 3.675 0 012.68 9.9v-.047c.492.274 1.048.438 1.643.457a3.674 3.674 0 01-1.633-3.056c0-.014 0-.027.001-.041a3.65 3.65 0 001.667.46 3.671 3.671 0 01-1.144-4.901 10.428 10.428 0 007.571 3.841A3.675 3.675 0 0118.633 5.9a7.353 7.353 0 002.333-.894 3.673 3.673 0 01-1.612 2.025 7.308 7.308 0 002.102-.575A7.396 7.396 0 0122 11.077z"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-    <div class="mt-12 pt-8 border-t border-blue-500/20 text-center">
-      <p class="text-gray-400 text-sm">© 2025 Celestial Technologies, LLC. All Rights Reserved.</p>
-    </div>
-    <!-- Language Selection -->
-    <script src="/js/languageSelection.js"></script>
-  </footer>
+  </div>
+  
+  <!-- Copyright text -->
+  <div style="margin-top: 60px; text-align: center;">
+      <p style="color: #888;">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+  </div>
+  
+  <!-- Social Media Icons Row -->
+  <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
+      <a href="https://www.linkedin.com/company/106241890" style="color: #888;">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+      </a>
+      <a href="https://x.com/SharedStars" style="color: #888;">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/SharedStars" style="color: #888;">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/sharedstarsacademy/" style="color: #888;">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
+      </a>
+      <a href="https://t.me/SharedStars" style="color: #888;">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
+      </a>
+      <a href="https://www.tiktok.com/@sharedstarsacademy" style="color: #888;">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+      </a>
+      <a href="https://www.youtube.com/@SharedStarsAcademy" style="color: #888;">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+      </a>
+  </div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // First, add the BOA button/box at the top if it doesn't exist
+        const advisorsSection = document.getElementById('advisors');
+        
+        // Check if advisorsSection exists before proceeding
+        if (advisorsSection) {
+            const contentCard = advisorsSection.querySelector('.content-card');
+            
+            // Check if contentCard exists before trying to insert
+            if (contentCard) {
+                // Check if BOA button exists, if not create it
+                if (!advisorsSection.querySelector('.boa-button')) {
+                    const boaButton = document.createElement('div');
+                    boaButton.className = 'boa-button';
+                    boaButton.textContent = 'Board of Advisors (BOA)';
+                    
+                    // Insert at the beginning of the content card
+                    contentCard.insertBefore(boaButton, contentCard.firstChild);
+                }
+            }
+            
+            // Create stars overlay
+            const starsOverlay = document.createElement('div');
+            starsOverlay.className = 'stars-overlay';
+            advisorsSection.appendChild(starsOverlay);
+            
+            // Create random stars
+            for (let i = 0; i < 120; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random position
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                
+                // Random size (0.5px to 2px)
+                const size = 0.5 + Math.random() * 1.5;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                // Random opacity
+                star.style.opacity = 0.2 + Math.random() * 0.8;
+                
+                // Add twinkling animation
+                star.style.animation = `twinkle ${3 + Math.random() * 7}s infinite alternate`;
+                star.style.animationDelay = Math.random() * 5 + 's';
+                
+                starsOverlay.appendChild(star);
+            }
+            
+            // Add animation keyframes if they don't exist
+            if (!document.querySelector('style#star-animations')) {
+                const style = document.createElement('style');
+                style.id = 'star-animations';
+                style.textContent = `
+                    @keyframes twinkle {
+                        0%, 100% { opacity: 0.2; }
+                        50% { opacity: 0.7; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+    });
+</script>
 
-  <!-- CORE DEPENDENCIES -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-  
-  <!-- ES Module Imports for Custom JS -->
-<!-- Standard JS Imports (Remove type="module") -->
-<script src="/js/modules/core/index.js"></script>
-<script src="/js/modules/ui/index.js"></script>
-<script src="/js/modules/training/index.js"></script>
-<script src="/js/modules/auth/index.js"></script>
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+  // Fetch latest blog posts
+  fetch('/api/blog/latest')
+    .then(response => response.json())
+    .then(posts => {
+      const newsCards = document.querySelector('.news-cards');
+      
+      if (newsCards) {
+        if (posts && posts.length > 0) {
+          for (let i = 0; i < Math.min(posts.length, 2); i++) {
+            const post = posts[i];
+            const placeholderCards = document.querySelectorAll('.placeholder-card');
+            
+            if (placeholderCards && placeholderCards.length > i) {
+              const placeholderCard = placeholderCards[i];
+              
+              // Replace the placeholder content
+              placeholderCard.innerHTML = `
+                <div class="card-image" style="background-color: #1a1f35;"></div>
+                <div class="card-content">
+                  <div class="card-category-date">
+                    <span class="card-category ${post.category.toLowerCase()}">${post.category}</span>
+                    <span class="card-date">${new Date(post.publishedDate).toLocaleDateString()}</span>
+                  </div>
+                  <h3 class="card-title">${post.title}</h3>
+                  <div class="card-author">
+                    <div class="author-image"></div>
+                    <div class="author-info">
+                      <span class="author-name">${post.author.name}</span>
+                      <span class="author-title">${post.author.title}</span>
+                    </div>
+                  </div>
+                  <div class="blog-full-content" style="display: none; margin-top: 20px; padding: 15px; background: rgba(10,20,40,0.5); border-radius: 8px; line-height: 1.6;">
+                    ${post.content}
+                  </div>
+                  <button class="blog-read-more" style="background: #0066FF; color: white; border: none; border-radius: 5px; padding: 8px 16px; margin-top: 15px; cursor: pointer; font-weight: 600;">Read More</button>
+                </div>
+              `;
+              
+              placeholderCard.classList.remove('placeholder-card');
+              placeholderCard.classList.add('blog-card');
+            }
+          }
+          
+          // Add event listeners to all read more buttons
+          document.querySelectorAll('.blog-read-more').forEach(button => {
+            button.addEventListener('click', function() {
+              // Find the closest full content element
+              const fullContent = this.parentNode.querySelector('.blog-full-content');
+              
+              if (fullContent) {
+                if (fullContent.style.display === 'none') {
+                  fullContent.style.display = 'block';
+                  this.textContent = 'Show Less';
+                  
+                  // Expand the card to fit the content
+                  const card = this.closest('.blog-card');
+                  if (card) {
+                    card.style.height = 'auto';
+                    card.style.maxHeight = 'none';
+                  }
+                } else {
+                  fullContent.style.display = 'none';
+                  this.textContent = 'Read More';
+                  
+                  // Reset the card height
+                  const card = this.closest('.blog-card');
+                  if (card) {
+                    card.style.height = '';
+                    card.style.maxHeight = '';
+                  }
+                }
+              }
+            });
+          });
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching blog posts:', error);
+    });
+});
+</script>
 
-  
-  <!-- Legacy Scripts -->
-  <script src="/js/animations.js" defer></script>
-  <script src="/js/trialFlow.js" defer></script>
-  <script src="/js/leaderboard.js" defer></script>
-  <script src="/js/visualizations/ModuleHighlight.js" defer></script>
-  
-  <!-- Highlight.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
-  
-  <!-- Main Initialization Script -->
-  <script src="/js/main.js"></script>
 </body>
 </html>
