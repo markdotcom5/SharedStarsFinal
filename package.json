@@ -1,6 +1,9 @@
 {
   "name": "steltrek-project",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=18.x"
+  },
   "scripts": {
     "dev": "npx kill-port 3000 && nodemon app.js",
     "start": "npx kill-port 3000 && node app.js",
