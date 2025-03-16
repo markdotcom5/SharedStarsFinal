@@ -431,16 +431,19 @@ app.post('/api/blog/posts', (req, res) => {
 
 app.get('/api/blog/latest', (req, res) => {
   try {
-    const posts = getBlogPosts();
-    // Sort by date descending and take the 3 most recent
-    const latestPosts = posts
-      .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
-      .slice(0, 3);
-    
-    res.json(latestPosts);
+    // Add a small delay to prevent rapid requests
+    setTimeout(() => {
+      const posts = getBlogPosts();
+      // Sort by date descending and take the 3 most recent
+      const latestPosts = posts
+        .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+        .slice(0, 3);
+      
+      res.json(latestPosts); // Changed from blogPosts to latestPosts
+    }, 100);
   } catch (error) {
-    console.error('Error fetching latest posts:', error.message);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error('Error fetching blog posts:', error);
+    res.status(500).json({ error: 'Failed to fetch blog posts' });
   }
 });
 
@@ -575,7 +578,16 @@ app.get('/api/auth/status', (req, res) => {
 app.get('/api/auth/test', (req, res) => {
   res.json({ message: 'Auth routes are available' });
 });
-
+// Get all blog posts
+app.get('/api/blog/posts', (req, res) => {
+  try {
+    const posts = getBlogPosts();
+    res.json(posts);
+  } catch (error) {
+    console.error('Error fetching all posts:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 // ============================
 // 10. WEBSOCKET SETUP
 // ============================

@@ -907,89 +907,111 @@ body {
     });
 </script>
 
-<script>
-   document.addEventListener('DOMContentLoaded', function() {
-  // Fetch latest blog posts
-  fetch('/api/blog/latest')
-    .then(response => response.json())
-    .then(posts => {
-      const newsCards = document.querySelector('.news-cards');
-      
-      if (newsCards) {
-        if (posts && posts.length > 0) {
-          for (let i = 0; i < Math.min(posts.length, 2); i++) {
-            const post = posts[i];
-            const placeholderCards = document.querySelectorAll('.placeholder-card');
-            
-            if (placeholderCards && placeholderCards.length > i) {
-              const placeholderCard = placeholderCards[i];
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch latest blog posts
+    fetch('/api/blog/latest')
+      .then(response => response.json())
+      .then(posts => {
+        const newsCards = document.querySelector('.news-cards');
+        
+        if (newsCards) {
+          if (posts && posts.length > 0) {
+            // Process each post
+            for (let i = 0; i < Math.min(posts.length, 2); i++) {
+              const post = posts[i];
+              const placeholderCards = document.querySelectorAll('.placeholder-card');
               
-              // Replace the placeholder content
-              placeholderCard.innerHTML = `
-                <div class="card-image" style="background-color: #1a1f35;"></div>
-                <div class="card-content">
-                  <div class="card-category-date">
-                    <span class="card-category ${post.category.toLowerCase()}">${post.category}</span>
-                    <span class="card-date">${new Date(post.publishedDate).toLocaleDateString()}</span>
-                  </div>
-                  <h3 class="card-title">${post.title}</h3>
-                  <div class="card-author">
-                    <div class="author-image"></div>
-                    <div class="author-info">
-                      <span class="author-name">${post.author.name}</span>
-                      <span class="author-title">${post.author.title}</span>
+              if (placeholderCards && placeholderCards.length > i) {
+                const placeholderCard = placeholderCards[i];
+                
+                // Replace the placeholder content
+                placeholderCard.innerHTML = `
+                  <div class="card-image" style="background-color: #1a1f35;"></div>
+                  <div class="card-content">
+                    <div class="card-category-date">
+                      <span class="card-category ${post.category.toLowerCase()}">${post.category}</span>
+                      <span class="card-date">${new Date(post.publishedDate).toLocaleDateString()}</span>
                     </div>
+                    <h3 class="card-title">${post.title}</h3>
+                    <div class="card-author">
+                      <div class="author-image"></div>
+                      <div class="author-info">
+                        <span class="author-name">${post.author.name}</span>
+                        <span class="author-title">${post.author.title}</span>
+                      </div>
+                    </div>
+                    <div class="blog-full-content" style="display: none; margin-top: 20px; padding: 15px; background: rgba(10,20,40,0.5); border-radius: 8px; line-height: 1.6;">
+                      ${post.content}
+                    </div>
+                    <button class="blog-read-more" style="background: #0066FF; color: white; border: none; border-radius: 5px; padding: 8px 16px; margin-top: 15px; cursor: pointer; font-weight: 600;">Read More</button>
                   </div>
-                  <div class="blog-full-content" style="display: none; margin-top: 20px; padding: 15px; background: rgba(10,20,40,0.5); border-radius: 8px; line-height: 1.6;">
-                    ${post.content}
-                  </div>
-                  <button class="blog-read-more" style="background: #0066FF; color: white; border: none; border-radius: 5px; padding: 8px 16px; margin-top: 15px; cursor: pointer; font-weight: 600;">Read More</button>
-                </div>
-              `;
-              
-              placeholderCard.classList.remove('placeholder-card');
-              placeholderCard.classList.add('blog-card');
+                  <a href="/blog/post.html?id=${post.id}" class="card-link"></a>
+                `;
+                
+                placeholderCard.classList.remove('placeholder-card');
+                placeholderCard.classList.add('blog-card');
+              }
             }
-          }
-          
-          // Add event listeners to all read more buttons
-          document.querySelectorAll('.blog-read-more').forEach(button => {
-            button.addEventListener('click', function() {
-              // Find the closest full content element
-              const fullContent = this.parentNode.querySelector('.blog-full-content');
-              
-              if (fullContent) {
-                if (fullContent.style.display === 'none') {
-                  fullContent.style.display = 'block';
-                  this.textContent = 'Show Less';
-                  
-                  // Expand the card to fit the content
-                  const card = this.closest('.blog-card');
-                  if (card) {
-                    card.style.height = 'auto';
-                    card.style.maxHeight = 'none';
-                  }
-                } else {
-                  fullContent.style.display = 'none';
-                  this.textContent = 'Read More';
-                  
-                  // Reset the card height
-                  const card = this.closest('.blog-card');
-                  if (card) {
-                    card.style.height = '';
-                    card.style.maxHeight = '';
+            
+            // Add event listeners to all read more buttons
+            document.querySelectorAll('.blog-read-more').forEach(button => {
+              button.addEventListener('click', function() {
+                // Find the closest full content element
+                const fullContent = this.parentNode.querySelector('.blog-full-content');
+                
+                if (fullContent) {
+                  if (fullContent.style.display === 'none') {
+                    fullContent.style.display = 'block';
+                    this.textContent = 'Show Less';
+                    
+                    // Expand the card to fit the content
+                    const card = this.closest('.blog-card');
+                    if (card) {
+                      card.style.height = 'auto';
+                      card.style.maxHeight = 'none';
+                    }
+                  } else {
+                    fullContent.style.display = 'none';
+                    this.textContent = 'Read More';
+                    
+                    // Reset the card height
+                    const card = this.closest('.blog-card');
+                    if (card) {
+                      card.style.height = '';
+                      card.style.maxHeight = '';
+                    }
                   }
                 }
-              }
+              });
             });
-          });
+            
+            // Update the "View all" button to link to the dedicated blog page
+            const viewAllBtn = document.querySelector('.view-all-btn');
+            if (viewAllBtn) {
+              viewAllBtn.href = '/blog/';
+            }
+  
+            // Convert the last placeholder card (if any) to a "Visit Our Blog" card
+            const lastPlaceholder = document.querySelector('.placeholder-card');
+            if (lastPlaceholder) {
+              lastPlaceholder.innerHTML = `
+                <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px;">
+                  <div style="font-size: 80px; color: #0066FF; margin-bottom: 20px;">📝</div>
+                  <h3 style="font-size: 24px; margin-bottom: 15px;">Explore Our Blog</h3>
+                  <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Discover more posts about our journey building SharedStars</p>
+                  <a href="/blog/" style="background: #0066FF; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">Visit Blog</a>
+                </div>
+              `;
+              lastPlaceholder.classList.remove('placeholder-card');
+              lastPlaceholder.classList.add('blog-promo-card');
+            }
+          }
         }
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching blog posts:', error);
-    });
-});
+      })
+      .catch(error => {
+        console.error('Error fetching blog posts:', error);
+      });
+  });
 </script>
 
 </body>

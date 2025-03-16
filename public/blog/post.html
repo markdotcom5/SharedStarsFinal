@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post | SharedStars</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <style>
+        body {
+            background-color: #0A0E1A;
+            color: white;
+            font-family: 'Aeonik', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('/images/stars-bg.png');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        
+        .stars-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+        
+        header.site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: rgba(10, 14, 26, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            height: 40px;
+        }
+        
+        nav.site-nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav.site-nav a:hover {
+            color: #0066FF;
+        }
+        
+        .post-container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: rgba(20, 30, 50, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .post-header {
+            margin-bottom: 40px;
+        }
+        
+        .post-category {
+            display: inline-block;
+            color: #0066FF;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding: 5px 12px;
+            background-color: rgba(0, 102, 255, 0.1);
+            border-radius: 20px;
+        }
+        
+        .post-title {
+            font-size: 42px;
+            font-family: 'Aeonik-Bold', sans-serif;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .post-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .author-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #555;
+            margin-right: 15px;
+            background-image: url('/images/mark-sendo.png');
+            background-size: cover;
+        }
+        
+        .post-author {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .post-author-title {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .post-date {
+            color: rgba(255, 255, 255, 0.6);
+            margin-left: 20px;
+        }
+        
+        .post-content {
+            line-height: 1.8;
+            font-size: 18px;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content h2 {
+            font-size: 28px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #0066FF;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: #0066FF;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.3s;
+        }
+        
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+        
+        .social-share {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .social-share h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        .social-button:hover {
+            background-color: #0066FF;
+            transform: scale(1.1);
+        }
+        
+        .contact-section {
+            margin-top: 60px;
+            padding: 30px;
+            background-color: rgba(0, 102, 255, 0.1);
+            border-radius: 16px;
+        }
+        
+        .contact-section h3 {
+            margin-bottom: 20px;
+        }
+        
+        .contact-form {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: white;
+            font-family: inherit;
+        }
+        
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .contact-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .contact-form button {
+            background-color: #0066FF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .contact-form button:hover {
+            background-color: #0055d4;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: rgba(10, 14, 26, 0.8);
+            margin-top: 60px;
+        }
+        
+        .related-posts {
+            margin-top: 60px;
+        }
+        
+        .related-posts h3 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .related-posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .related-post-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .related-post-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .related-post-image {
+            height: 120px;
+            background-color: #1a2035;
+        }
+        
+        .related-post-content {
+            padding: 15px;
+        }
+        
+        .related-post-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .related-post-date {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .post-title {
+                font-size: 32px;
+            }
+            
+            .post-content {
+                font-size: 16px;
+            }
+            
+            .related-posts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Stars background effect -->
+    <div class="stars-overlay" id="stars-overlay"></div>
+    
+    <!-- Site header -->
+    <header class="site-header">
+        <a href="/">
+            <img src="/images/logo.png" alt="SharedStars" class="logo">
+        </a>
+        <nav class="site-nav">
+            <a href="/">Home</a>
+            <a href="/about.html">About Us</a>
+            <a href="/blog/" class="active">Blog</a>
+            <a href="/contact.html">Contact</a>
+        </nav>
+    </header>
+    
+    <div class="post-container">
+        <div id="post-loading">Loading post...</div>
+        <article id="post-content" style="display: none;">
+            <header class="post-header">
+                <div class="post-category" id="post-category"></div>
+                <h1 class="post-title" id="post-title"></h1>
+                <div class="post-meta">
+                    <div class="author-image"></div>
+                    <div>
+                        <div class="post-author" id="post-author"></div>
+                        <div class="post-author-title" id="post-author-title"></div>
+                    </div>
+                    <div class="post-date" id="post-date"></div>
+                </div>
+            </header>
+            
+            <div class="post-content" id="post-body"></div>
+            
+            <!-- Social sharing -->
+            <div class="social-share">
+                <h3>Share this post</h3>
+                <div class="social-buttons">
+                    <div class="social-button" onclick="shareOnTwitter()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 4.01C21 4.5 20.02 4.69 19 4.82C20.03 4.17 20.85 3.1 21.23 1.8C20.25 2.44 19.11 2.93 17.9 3.21C16.88 2.09 15.42 1.5 14 1.5C11.24 1.5 9 3.74 9 6.5C9 6.91 9.02 7.31 9.11 7.7C5.05 7.5 1.5 5.51 0.09 2.5C-0.06 3.31 -0.11 4.16 0.1 5C0.3 5.84 0.75 6.59 1.39 7.17C0.83 7.16 0.28 7.01 -0.23 6.73V6.77C-0.23 9.08 1.11 11 3.23 11.41C3.5 11.5 3.75 11.5 4 11.5C3.5 11.5 3 11.44 2.5 11.33C3.14 13.19 4.93 14.5 7 14.53C5.33 15.75 3.33 16.5 1.17 16.5C0.78 16.5 0.38 16.48 0 16.43C2.2 17.76 4.76 18.5 7.5 18.5C16.5 18.5 21 11.5 21 5.37C21 5.14 21 4.91 20.97 4.68C22 3.92 22.84 2.93 23.48 1.8H22V4.01Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="social-button" onclick="shareOnLinkedIn()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 3C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19ZM18.5 18.5V13.2C18.5 12.3354 18.1565 11.5062 17.5452 10.8948C16.9338 10.2835 16.1046 9.94 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17C14.6813 12.17 15.0374 12.3175 15.2999 12.5801C15.5625 12.8426 15.71 13.1987 15.71 13.57V18.5H18.5ZM6.88 8.56C7.32556 8.56 7.75288 8.383 8.06794 8.06794C8.383 7.75288 8.56 7.32556 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19C6.43178 5.19 6.00193 5.36805 5.68499 5.68499C5.36805 6.00193 5.19 6.43178 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56ZM8.27 18.5V10.13H5.5V18.5H8.27Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="social-button" onclick="shareByEmail()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Related posts -->
+            <div class="related-posts">
+                <h3>Related Posts</h3>
+                <div class="related-posts-grid" id="related-posts-container">
+                    <!-- Related posts will be inserted here by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Contact form -->
+            <div class="contact-section">
+                <h3>Get in Touch</h3>
+                <form class="contact-form" id="contact-form">
+                    <input type="text" placeholder="Your Name" id="contact-name" required>
+                    <input type="email" placeholder="Your Email" id="contact-email" required>
+                    <textarea placeholder="Your Message" id="contact-message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+            
+            <a href="/blog/" class="back-link">← Back to all posts</a>
+        </article>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 SharedStars. Making space exploration accessible to everyone.</p>
+    </footer>
+    
+    <script>
+        // Create stars background effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const starsOverlay = document.getElementById('stars-overlay');
+            
+            // Create random stars
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random position
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                
+                // Random size (0.5px to 2px)
+                const size = 0.5 + Math.random() * 1.5;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                // Random opacity
+                star.style.opacity = 0.2 + Math.random() * 0.8;
+                
+                // Add twinkling animation
+                star.style.animation = `twinkle ${3 + Math.random() * 7}s infinite alternate`;
+                star.style.animationDelay = Math.random() * 5 + 's';
+                
+                starsOverlay.appendChild(star);
+            }
+            
+            // Add animation keyframes
+            if (!document.querySelector('style#star-animations')) {
+                const style = document.createElement('style');
+                style.id = 'star-animations';
+                style.textContent = `
+                    @keyframes twinkle {
+                        0%, 100% { opacity: 0.2; }
+                        50% { opacity: 0.7; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Get post ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+            
+            if (!postId) {
+                document.getElementById('post-loading').textContent = 'Post not found';
+                return;
+            }
+            
+            // Fetch the post by ID
+            fetch(`/api/blog/posts/${postId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Post not found');
+                    }
+                    return response.json();
+                })
+                .then(post => {
+                    // Set page title
+                    document.title = `${post.title} | SharedStars Blog`;
+                    
+                    // Populate post data
+                    document.getElementById('post-category').textContent = post.category;
+                    document.getElementById('post-title').textContent = post.title;
+                    document.getElementById('post-author').textContent = post.author.name;
+                    document.getElementById('post-author-title').textContent = post.author.title;
+                    document.getElementById('post-date').textContent = new Date(post.publishedDate).toLocaleDateString();
+                    document.getElementById('post-body').innerHTML = post.content;
+                    
+                    // Show post, hide loading
+                    document.getElementById('post-loading').style.display = 'none';
+                    document.getElementById('post-content').style.display = 'block';
+                    
+                    // Fetch related posts
+                    fetchRelatedPosts(post.category, post.id);
+                })
+                .catch(error => {
+                    console.error('Error fetching post:', error);
+                    document.getElementById('post-loading').textContent = 'Error loading post. Please try again later.';
+                });
+            
+            // Handle contact form submission
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('contact-name').value;
+                const email = document.getElementById('contact-email').value;
+                const message = document.getElementById('contact-message').value;
+                
+                // You'll need to implement an endpoint to handle this
+                fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email, message }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Thank you for your message! We\'ll get back to you soon.');
+                    document.getElementById('contact-form').reset();
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    alert('There was an error sending your message. Please try again.');
+                });
+            });
+        });
+        
+        // Fetch related posts
+        function fetchRelatedPosts(category, currentPostId) {
+            fetch('/api/blog/posts')
+                .then(response => response.json())
+                .then(posts => {
+                    // Filter posts by same category and exclude current post
+                    let relatedPosts = posts.filter(post => 
+                        post.category === category && post.id !== currentPostId
+                    );
+                    
+                    // If we don't have enough related posts by category, add some other posts
+                    if (relatedPosts.length < 3) {
+                        const otherPosts = posts.filter(post => 
+                            post.id !== currentPostId && !relatedPosts.some(rp => rp.id === post.id)
+                        );
+                        relatedPosts = [...relatedPosts, ...otherPosts.slice(0, 3 - relatedPosts.length)];
+                    }
+                    
+                    // Display up to 3 related posts
+                    const relatedPostsContainer = document.getElementById('related-posts-container');
+                    relatedPostsContainer.innerHTML = '';
+                    
+                    relatedPosts.slice(0, 3).forEach(post => {
+                        const postCard = document.createElement('a');
+                        postCard.href = `/blog/post.html?id=${post.id}`;
+                        postCard.className = 'related-post-card';
+                        postCard.innerHTML = `
+                            <div class="related-post-image"></div>
+                            <div class="related-post-content">
+                                <div class="related-post-title">${post.title}</div>
+                                <div class="related-post-date">${new Date(post.publishedDate).toLocaleDateString()}</div>
+                            </div>
+                        `;
+                        relatedPostsContainer.appendChild(postCard);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching related posts:', error);
+                });
+        }
+        
+        // Social sharing functions
+        function shareOnTwitter() {
+            const postTitle = document.getElementById('post-title').textContent;
+            const shareUrl = window.location.href;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(postTitle)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+        }
+        
+        function shareOnLinkedIn() {
+            const shareUrl = window.location.href;
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+        }
+        
+        function shareByEmail() {
+            const postTitle = document.getElementById('post-title').textContent;
+            const shareUrl = window.location.href;
+            window.location.href = `mailto:?subject=${encodeURIComponent(postTitle)}&body=${encodeURIComponent(`I thought you might find this interesting: ${shareUrl}`)}`;
+        }
+    </script>
+</body>
+</html>

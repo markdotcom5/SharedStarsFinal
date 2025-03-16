@@ -26,5 +26,19 @@
       "title": "SharedStars Founder",
       "imageUrl": "/images/mark-sendo.png"
     }
+  },
+  {
+    "id": "130cb69c-4e7c-4347-8557-477004edccf3",
+    "title": "tied",
+    "slug": "tied",
+    "category": "Featured",
+    "content": "i've worked already 3 and 1/2 hours today and accomplished 1) fixed one line of code inpackage.json which is preventing vercel deploying project ,lets see if they encounter more errors which im sure they will. also, requested refund from the full stack dev whos'done nothing that helps me.. and created seperate blog url for public publishing. ",
+    "published": true,
+    "publishedDate": "2025-03-16T13:20:41.237Z",
+    "author": {
+      "name": "Mark Sendo",
+      "title": "SharedStars Founder",
+      "imageUrl": "/images/mark-sendo.png"
+    }
   }
 ]
