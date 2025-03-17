@@ -3036,3 +3036,196 @@ body {
     transition: background-color 0.3s;
     font-family: 'Aeonik', sans-serif;
 }
+/* Digital Display Countdown */
+.countdown-section {
+    padding: 80px 0;
+}
+
+.countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.countdown-card {
+    background-color: rgba(20, 24, 38, 0.8);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.countdown-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    color: white;
+}
+
+.digital-countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.digit-box {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    width: 70px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(50, 50, 50, 0.5);
+}
+
+/* Global countdown - orange glow */
+#baseline-countdown .digital-digit {
+    font-family: 'Digital', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    color: #ff8c00;
+    text-shadow: 0 0 10px #ff4500, 0 0 20px #ff4500;
+}
+
+/* Personal countdown - green glow */
+#personal-countdown .digital-digit {
+    font-family: 'Digital', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    color: #10b981;
+    text-shadow: 0 0 10px #0d9868, 0 0 20px #0d9868;
+}
+
+.time-separator {
+    font-size: 48px;
+    font-weight: 700;
+    margin-top: -10px;
+    margin-bottom: 40px;
+    color: #555;
+}
+
+.unit-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #7a7a7a;
+    font-weight: 500;
+}
+
+.countdown-info {
+    margin-top: 20px;
+    color: #10b981;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* Add a digital font for the countdown */
+@font-face {
+    font-family: 'Digital';
+    src: url('/fonts/digital-7.ttf');
+}
+
+/* Fallback if digital font isn't available */
+@supports not (font-family: 'Digital') {
+    .digital-digit {
+        font-family: monospace !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .countdown-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .digit-box {
+        width: 60px;
+        height: 70px;
+    }
+    
+    .digital-digit {
+        font-size: 42px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .digital-countdown {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .time-unit {
+        margin: 0 5px 15px;
+    }
+    
+    .digit-box {
+        width: 50px;
+        height: 60px;
+    }
+    
+    .digital-digit {
+        font-size: 36px !important;
+    }
+    
+    .time-separator {
+        font-size: 36px;
+        margin-top: -8px;
+        margin-bottom: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .digit-box {
+        width: 40px;
+        height: 50px;
+    }
+    
+    .digital-digit {
+        font-size: 28px !important;
+    }
+    
+    .time-separator {
+        font-size: 28px;
+        margin-top: -5px;
+        margin-bottom: 30px;
+    }
+    
+    .unit-label {
+        font-size: 10px;
+    }
+}
+/* Animation for digit changes */
+@keyframes digitFlash {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.digit-changed {
+    animation: digitFlash 0.5s ease-in-out;
+}
+
+/* Highlight effect for personal countdown updates */
+@keyframes highlightCountdown {
+    0% { box-shadow: 0 0 0px rgba(16, 185, 129, 0); }
+    50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.8); }
+    100% { box-shadow: 0 0 0px rgba(16, 185, 129, 0); }
+}
+
+.highlight-update {
+    animation: highlightCountdown 2s ease-in-out;
+}
