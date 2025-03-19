@@ -7,9 +7,17 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ApplicationSchema = new Schema({
-  fullName: {
+  firstName: {
     type: String,
-    required: true,
+    trim: true
+  },
+  middleInitial: {
+    type: String,
+    trim: true,
+    maxlength: 1
+  },
+  lastName: {
+    type: String,
     trim: true
   },
   email: {

@@ -1,0 +1,14 @@
+{
+  "build": {
+    "env": {
+      "NODE_VERSION": "16.x",
+      "NPM_FLAGS": "--prefer-offline --no-audit"
+    }
+  },
+  "functions": {
+    "api/blog/latest.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
+}
