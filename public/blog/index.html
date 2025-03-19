@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharedStars Blog - Space Exploration for Everyone</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <style>
+        body {
+            background-color: #0A0E1A;
+            color: white;
+            font-family: 'Aeonik', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('/images/stars-bg.png');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        
+        .stars-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+        
+        header.site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: rgba(10, 14, 26, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            height: 40px;
+        }
+        
+        nav.site-nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav.site-nav a:hover {
+            color: #0066FF;
+        }
+        
+        .blog-hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(10, 14, 26, 0.8));
+        }
+        
+        .blog-hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #0066FF, #00A3FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        .blog-hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .blog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .blog-filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .category-filters {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .category-filter {
+            padding: 8px 16px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .category-filter:hover, .category-filter.active {
+            background-color: #0066FF;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px 16px;
+        }
+        
+        .search-box input {
+            background: none;
+            border: none;
+            color: white;
+            margin-left: 10px;
+            font-family: inherit;
+            width: 200px;
+        }
+        
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .search-box input:focus {
+            outline: none;
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .blog-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2);
+        }
+        
+        .blog-card-image {
+            height: 200px;
+            background-color: #1a2035;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .blog-card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .blog-card-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .blog-card-category {
+            color: #0066FF;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .blog-card-date {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+        
+        .blog-card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .blog-card-excerpt {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 15px;
+            flex-grow: 1;
+        }
+        
+        .blog-card-link {
+            color: #0066FF;
+            text-decoration: none;
+            font-weight: 500;
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .blog-card-link:hover {
+            text-decoration: underline;
+        }
+        
+        .blog-card-link svg {
+            margin-left: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .blog-card-link:hover svg {
+            transform: translateX(3px);
+        }
+        
+        .featured-post {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background-color: rgba(0, 102, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+        
+        .featured-post-image {
+            height: 100%;
+            background-color: #1a2035;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .featured-post-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .featured-post-label {
+            color: #0066FF;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .featured-post-label svg {
+            margin-right: 5px;
+        }
+        
+        .featured-post-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .featured-post-excerpt {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .featured-post-meta {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .featured-post-author-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #555;
+            margin-right: 15px;
+        }
+        
+        .featured-post-author-name {
+            font-weight: 600;
+        }
+        
+        .featured-post-date {
+            color: rgba(255, 255, 255, 0.5);
+            margin-left: 20px;
+        }
+        
+        .featured-video-section {
+            margin: 60px 0;
+            text-align: center;
+            padding: 30px;
+            background-color: rgba(0, 102, 255, 0.05);
+            border-radius: 16px;
+        }
+        
+        .featured-video-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .featured-video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+        }
+        
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .newsletter-section {
+            text-align: center;
+            padding: 60px 30px;
+            background-color: rgba(0, 102, 255, 0.1);
+            border-radius: 16px;
+            margin: 60px 0;
+        }
+        
+        .newsletter-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .newsletter-section p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .newsletter-form input {
+            flex-grow: 1;
+            padding: 12px 20px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px 0 0 8px;
+            color: white;
+            font-family: inherit;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .newsletter-form button {
+            padding: 12px 20px;
+            background-color: #0066FF;
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .newsletter-form button:hover {
+            background-color: #0055d4;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 60px 0;
+        }
+        
+        .pagination-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .pagination-item:hover, .pagination-item.active {
+            background-color: #0066FF;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: rgba(10, 14, 26, 0.8);
+            margin-top: 60px;
+        }
+        
+        @media (max-width: 992px) {
+            .featured-post {
+                grid-template-columns: 1fr;
+            }
+            
+            .featured-post-image {
+                height: 200px;
+            }
+            
+            .featured-post-content {
+                padding: 20px;
+            }
+            
+            .blog-filters {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .newsletter-form input {
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+            
+            .newsletter-form button {
+                border-radius: 8px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .blog-hero h1 {
+                font-size: 36px;
+            }
+            
+            .blog-hero p {
+                font-size: 16px;
+            }
+            
+            .featured-post-title {
+                font-size: 24px;
+            }
+            
+            .category-filters {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Stars background effect -->
+    <div class="stars-overlay" id="stars-overlay"></div>
+    
+    <!-- Site header -->
+    <header class="site-header">
+        <a href="/">
+            <img src="/images/SharedStars.png" alt="SharedStars" class="logo">
+        </a>
+        <nav class="site-nav">
+            <a href="/">Home</a>
+            <a href="/about.html">About Us</a>
+            <a href="/blog/" class="active">Blog</a>
+            <a href="/contact.html">Contact</a>
+        </nav>
+    </header>
+    
+    <!-- Blog hero section -->
+    <section class="blog-hero">
+        <h1>Space Exploration Insights</h1>
+        <p>Discoveries, breakthroughs, and stories from our journey to democratize space exploration</p>
+    </section>
+    
+    <div class="blog-container">
+        <!-- Featured video welcome message -->
+        <section class="featured-video-section">
+            <h2>Welcome to the SharedStars Blog</h2>
+            <p>Join Mark Sendo on our mission to make space exploration accessible to everyone</p>
+            <div class="featured-video-container">
+                <div class="video-wrapper">
+                    <video controls autoplay muted preload="metadata" poster="/images/video-thumbnail.jpg">
+                        <source src="/videos/subscribe1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Blog filters -->
+        <div class="blog-filters">
+            <div class="category-filters">
+                <div class="category-filter active" data-category="all">All</div>
+                <div class="category-filter" data-category="Featured">Featured</div>
+                <div class="category-filter" data-category="Technology">Technology</div>
+                <div class="category-filter" data-category="Training">Training</div>
+                <div class="category-filter" data-category="Space News">Space News</div>
+            </div>
+            
+            <div class="search-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="white"/>
+                </svg>
+                <input type="text" placeholder="Search posts..." id="search-input">
+            </div>
+        </div>
+        
+        <!-- Featured post -->
+        <div class="featured-post" id="featured-post">
+            <!-- Will be populated by JavaScript -->
+        </div>
+        
+        <!-- Blog posts grid -->
+        <div class="blog-grid" id="blog-grid">
+            <!-- Will be populated by JavaScript -->
+            <div id="loading-indicator">Loading posts...</div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <!-- Will be populated by JavaScript -->
+        </div>
+        
+        <!-- Newsletter signup -->
+        <section class="newsletter-section">
+            <h2>Stay Updated</h2>
+            <p>Subscribe to our newsletter to receive the latest updates on space exploration and our journey building SharedStars.</p>
+            <form class="newsletter-form" id="newsletter-form">
+                <input type="email" placeholder="Your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 SharedStars. Making space exploration accessible to everyone.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create stars background effect
+            const starsOverlay = document.getElementById('stars-overlay');
+            
+            // Create random stars
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random position
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                
+                // Random size (0.5px to 2px)
+                const size = 0.5 + Math.random() * 1.5;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                // Random opacity
+                star.style.opacity = 0.2 + Math.random() * 0.8;
+                
+                // Add twinkling animation
+                star.style.animation = `twinkle ${3 + Math.random() * 7}s infinite alternate`;
+                star.style.animationDelay = Math.random() * 5 + 's';
+                
+                starsOverlay.appendChild(star);
+            }
+            
+            // Add animation keyframes
+            if (!document.querySelector('style#star-animations')) {
+                const style = document.createElement('style');
+                style.id = 'star-animations';
+                style.textContent = `
+                    @keyframes twinkle {
+                        0%, 100% { opacity: 0.2; }
+                        50% { opacity: 0.7; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Blog posts state
+            let allPosts = [];
+            let filteredPosts = [];
+            let currentPage = 1;
+            const postsPerPage = 6;
+            let selectedCategory = 'all';
+            let searchQuery = '';
+            
+            // Fetch all blog posts
+            fetch('/api/blog/posts')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch posts');
+                    }
+                    return response.json();
+                })
+                .then(posts => {
+                    // Sort posts by date (newest first)
+                    allPosts = posts.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+                    
+                    // Set up the featured post (first post)
+                    if (allPosts.length > 0) {
+                        setupFeaturedPost(allPosts[0]);
+                        
+                        // Filter out the featured post from the regular grid
+                        filteredPosts = allPosts.slice(1);
+                        renderPosts();
+                    } else {
+                        document.getElementById('featured-post').style.display = 'none';
+                        document.getElementById('loading-indicator').textContent = 'No posts found';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching posts:', error);
+                    document.getElementById('loading-indicator').textContent = 'Error loading posts. Please try again later.';
+                });
+            
+            // Set up featured post
+            function setupFeaturedPost(post) {
+                const featuredPostElement = document.getElementById('featured-post');
+                featuredPostElement.innerHTML = `
+                    <div class="featured-post-image" style="background-image: url(${post.imageUrl || '/images/default-blog.jpg'})"></div>
+                    <div class="featured-post-content">
+                        <div class="featured-post-label">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 15.4L6 11.4L12 7.4L18 11.4L12 15.4Z" fill="#0066FF"/>
+                                <path d="M4 21V9L12 3L20 9V21H4Z" stroke="#0066FF" stroke-width="2"/>
+                            </svg>
+                            Featured Post
+                        </div>
+                        <h2 class="featured-post-title">${post.title}</h2>
+                        <p class="featured-post-excerpt">${getExcerpt(post.content, 150)}</p>
+                        <a href="/blog/post.html?id=${post.id}" class="blog-card-link">
+                            Read More
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.01 11H4V13H16.01V16L20 12L16.01 8V11Z" fill="#0066FF"/>
+                            </svg>
+                        </a>
+                        <div class="featured-post-meta">
+                            <div class="featured-post-author-image"></div>
+                            <div>
+                                <div class="featured-post-author-name">${post.author.name}</div>
+                                <div class="featured-post-author-title">${post.author.title}</div>
+                            </div>
+                            <div class="featured-post-date">${formatDate(post.publishedDate)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Filter and render posts
+            function filterPosts() {
+                const grid = document.getElementById('blog-grid');
+                grid.innerHTML = '';
+                
+                // Apply category and search filters
+                let filtered = filteredPosts;
+                
+                if (selectedCategory !== 'all') {
+                    filtered = filtered.filter(post => post.category === selectedCategory);
+                }
+                
+                if (searchQuery) {
+                    const query = searchQuery.toLowerCase();
+                    filtered = filtered.filter(post => 
+                        post.title.toLowerCase().includes(query) || 
+                        post.content.toLowerCase().includes(query)
+                    );
+                }
+                
+                // Update pagination
+                const totalPages = Math.ceil(filtered.length / postsPerPage);
+                renderPagination(totalPages);
+                
+                // If no posts match filters
+                if (filtered.length === 0) {
+                    grid.innerHTML = '<div class="no-posts">No posts found matching your criteria</div>';
+                    return;
+                }
+                
+                // Get current page posts
+                const startIndex = (currentPage - 1) * postsPerPage;
+                const endIndex = startIndex + postsPerPage;
+                const currentPagePosts = filtered.slice(startIndex, endIndex);
+                
+                // Render posts
+                currentPagePosts.forEach(post => {
+                    const postCard = document.createElement('div');
+                    postCard.className = 'blog-card';
+                    postCard.innerHTML = `
+                        <div class="blog-card-image" style="background-image: url(${post.imageUrl || '/images/default-blog.jpg'})"></div>
+                        <div class="blog-card-content">
+                            <div class="blog-card-meta">
+                                <div class="blog-card-category">${post.category}</div>
+                                <div class="blog-card-date">${formatDate(post.publishedDate)}</div>
+                            </div>
+                            <h3 class="blog-card-title">${post.title}</h3>
+                            <p class="blog-card-excerpt">${getExcerpt(post.content, 100)}</p>
+                            <a href="/blog/post.html?id=${post.id}" class="blog-card-link">
+                                Read More
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16.01 11H4V13H16.01V16L20 12L16.01 8V11Z" fill="#0066FF"/>
+                                </svg>
+                            </a>
+                        </div>
+                    `;
+                    grid.appendChild(postCard);
+                });
+            }
+            
+            function renderPosts() {
+                currentPage = 1;
+                filterPosts();
+            }
+            
+            // Render pagination
+            function renderPagination(totalPages) {
+                const paginationElement = document.getElementById('pagination');
+                paginationElement.innerHTML = '';
+                
+                if (totalPages <= 1) {
+                    paginationElement.style.display = 'none';
+                    return;
+                }
+                
+                paginationElement.style.display = 'flex';
+                
+                // Previous button
+                if (currentPage > 1) {
+                    const prevButton = document.createElement('div');
+                    prevButton.className = 'pagination-item';
+                    prevButton.innerHTML = '&lt;';
+                    prevButton.addEventListener('click', () => {
+                        currentPage--;
+                        filterPosts();
+                        window.scrollTo(0, document.querySelector('.blog-filters').offsetTop - 100);
+                    });
+                    paginationElement.appendChild(prevButton);
+                }
+                
+                // Page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('div');
+                    pageButton.className = `pagination-item ${i === currentPage ? 'active' : ''}`;
+                    pageButton.textContent = i;
+                    pageButton.addEventListener('click', () => {
+                        currentPage = i;
+                        filterPosts();
+                        window.scrollTo(0, document.querySelector('.blog-filters').offsetTop - 100);
+                    });
+                    paginationElement.appendChild(pageButton);
+                }
+                
+                // Next button
+                if (currentPage < totalPages) {
+                    const nextButton = document.createElement('div');
+                    nextButton.className = 'pagination-item';
+                    nextButton.innerHTML = '&gt;';
+                    nextButton.addEventListener('click', () => {
+                        currentPage++;
+                        filterPosts();
+                        window.scrollTo(0, document.querySelector('.blog-filters').offsetTop - 100);
+                    });
+                    paginationElement.appendChild(nextButton);
+                }
+            }
+            
+            // Helper functions
+            function getExcerpt(text, maxLength) {
+                // Strip HTML tags
+                const strippedText = text.replace(/<[^>]*>/g, '');
+                
+                if (strippedText.length <= maxLength) {
+                    return strippedText;
+                }
+                
+                return strippedText.substring(0, maxLength) + '...';
+            }
+            
+            function formatDate(dateString) {
+                return new Date(dateString).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+            
+            // Set up event listeners
+            document.querySelectorAll('.category-filter').forEach(filter => {
+                filter.addEventListener('click', function() {
+                    document.querySelector('.category-filter.active').classList.remove('active');
+                    this.classList.add('active');
+                    selectedCategory = this.dataset.category;
+                    renderPosts();
+                });
+            });
+            
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', function() {
+                searchQuery = this.value.trim();
+                renderPosts();
+            });
+            
+            // Handle newsletter form submission
+            document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value;
+                
+                // You'll need to implement an endpoint to handle this
+                fetch('/api/newsletter/subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Thank you for subscribing to our newsletter!');
+                    this.reset();
+                })
+                .catch(error => {
+                    console.error('Error subscribing to newsletter:', error);
+                    alert('There was an error subscribing to the newsletter. Please try again.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

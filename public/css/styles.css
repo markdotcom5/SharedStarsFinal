@@ -29,3 +29,27 @@
 }
 
 
+/* Add this at the top of your styles.css file */
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Regular.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Regular.woff') format('woff');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Bold.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Bold.woff') format('woff');
+    font-weight: 700; /* Bold */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Italic.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Italic.woff') format('woff');
+    font-weight: 400; /* Regular */
+    font-style: italic;
+}

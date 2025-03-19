@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Frequently Asked Questions about SharedStars Academy">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>FAQ - SharedStars Academy</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        body {
+            background-color: #0c1017;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: url('/images/stars-bg.png');
+            background-size: cover;
+            overflow-x: hidden;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .video-background video {
+            position: absolute;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            opacity: 0.5;
+        }
+        
+        /* Overlay for better text readability */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 30, 0.7);
+            z-index: -1;
+        }
+        
+        header {
+            background-color: rgba(12, 16, 23, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #4a7de9;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .lang-selector {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .get-started {
+            background: #6b46c1;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .get-started:hover {
+            background: #5a35b0;
+        }
+
+        /* FAQ Specific Styles */
+        .faq-container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .faq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .faq-header h1 {
+            color: #4a7de9;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .faq-header p {
+            color: #ccc;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .faq-categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            background: rgba(13, 18, 30, 0.8);
+            border: 1px solid rgba(74, 125, 233, 0.3);
+            color: white;
+            border-radius: 20px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: #4a7de9;
+            border-color: #4a7de9;
+        }
+        
+        .faq-section {
+            background-color: rgba(13, 18, 30, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 125, 233, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .faq-section h2 {
+            color: #4a7de9;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(74, 125, 233, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .faq-item {
+            margin-bottom: 25px;
+        }
+        
+        .faq-question {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 15px;
+            background-color: rgba(23, 34, 60, 0.7);
+            border-radius: 8px;
+            position: relative;
+            padding-right: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background-color: rgba(33, 44, 70, 0.7);
+        }
+        
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-question.active::after {
+            content: '−';
+        }
+        
+        .faq-answer {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .faq-answer.show {
+            max-height: 1000px;
+            padding: 15px;
+            background-color: rgba(23, 34, 60, 0.3);
+        }
+        
+        .faq-answer p {
+            margin-top: 0;
+            line-height: 1.6;
+        }
+        
+        .faq-answer ul, 
+        .faq-answer ol {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .faq-answer li {
+            margin-bottom: 8px;
+        }
+        
+        .contact-section {
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .contact-section h2 {
+            color: #4a7de9;
+            margin-bottom: 15px;
+        }
+        
+        .contact-btn {
+            display: inline-block;
+            background: #4a7de9;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        .search-container {
+    margin-bottom: 30px;
+}
+
+.search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4a7de9;
+}
+
+#faq-search {
+    width: 100%;
+    padding: 12px 20px 12px 45px;
+    border-radius: 30px;
+    border: 1px solid rgba(74, 125, 233, 0.3);
+    background-color: rgba(13, 18, 30, 0.7);
+    color: white;
+    font-size: 16px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+#faq-search:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 125, 233, 0.5);
+    background-color: rgba(23, 34, 60, 0.7);
+}
+
+#faq-search::placeholder {
+    color: #8c9db5;
+}
+
+.highlight {
+    background-color: rgba(74, 125, 233, 0.3);
+    padding: 2px 0;
+    border-radius: 3px;
+    font-weight: bold;
+}
+        .contact-btn:hover {
+            background: #3a6fd9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    @keyframes float-slow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    @keyframes float-medium {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+
+    @keyframes float-fast {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .animate-float-slow {
+        animation: float-slow 8s ease-in-out infinite;
+    }
+
+    .animate-float-medium {
+        animation: float-medium 6s ease-in-out infinite;
+    }
+
+    .animate-float-fast {
+        animation: float-fast 4s ease-in-out infinite;
+    }
+</style>
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop id="spaceVideo">
+            <source src="/videos/commandctr1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="video-overlay"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="/images/SharedStars.svg" alt="SharedStars Logo" />
+        </div>
+        
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/academy.html">Academy</a>
+            <a href="/about.html">About</a>
+            <a href="/leaderboard.html">Leaderboard</a>
+            <a href="/subscribe.html">Subscribe</a>
+        </div>
+        
+        <div class="nav-right">
+            <div class="lang-selector">
+                <span>🇺🇸</span>
+                <span>English</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6L8 10L12 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <button class="get-started" data-href="/apply.html">Apply Now</button>
+        </div>
+    </header>
+
+    <!-- FAQ Container -->
+    <div class="faq-container">
+        <div class="faq-header">
+            <h1>Frequently Asked Questions</h1>
+            <p>Find answers to the most common questions about SharedStars Academy, our training programs, and application process.</p>
+        </div>
+        
+        <div class="faq-categories">
+            <button class="category-btn active" data-category="all">Popular Questions</button>
+            <button class="category-btn" data-category="application">Application Process</button>
+            <button class="category-btn" data-category="academy">Academy Training</button>
+            <button class="category-btn" data-category="space">Space Missions</button>
+            <button class="category-btn" data-category="technical">Technical</button>
+        </div>
+        <div class="search-container">
+            <div class="search-wrapper">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="faq-search" placeholder="Search questions..." aria-label="Search FAQs">
+            </div>
+        </div>
+        
+        <div id="no-results-message" style="display: none; text-align: center; margin: 40px 0; color: #ccc;">
+            <p>No results found. Please try a different search term.</p>
+        </div>
+        <!-- Application Process Section -->
+        <div class="faq-section" id="application-section">
+            <h2>Application Process</h2>
+            
+            <div class="faq-item" data-category="application">
+                <div class="faq-question">How do I apply to SharedStars Academy?</div>
+                <div class="faq-answer">
+                    <p>Applying to SharedStars Academy is simple:</p>
+                    <ol>
+                        <li>Visit our <a href="/apply.html" style="color: #4a7de9;">application page</a></li>
+                        <li>Fill out the required personal information</li>
+                        <li>Describe your background, skills, and motivation</li>
+                        <li>Choose your preferred space mission pathway</li>
+                        <li>Submit your application</li>
+                    </ol>
+                    <p>Our team, along with STELLA AI, will review your application and notify you of your status within 5-7 business days.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="application">
+                <div class="faq-question">What qualifications do I need to apply?</div>
+                <div class="faq-answer">
+                    <p>SharedStars Academy welcomes applicants from diverse backgrounds. While we don't require specific degrees or certifications, successful applicants typically demonstrate:</p>
+                    <ul>
+                        <li>A genuine passion for space exploration and innovation</li>
+                        <li>Strong problem-solving abilities</li>
+                        <li>Proficiency in one or more relevant fields (science, technology, engineering, medicine, entrepreneurship, etc.)</li>
+                        <li>Willingness to learn and adapt in a fast-paced environment</li>
+                        <li>Collaborative mindset and ability to work in interdisciplinary teams</li>
+                    </ul>
+                    <p>We value diversity of thought and experience, so don't hesitate to apply even if your background is unconventional.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="application">
+                <div class="faq-question">How long does the application review process take?</div>
+                <div class="faq-answer">
+                    <p>Applications are typically reviewed within 5-7 business days. Our review process includes:</p>
+                    <ol>
+                        <li>Initial screening by STELLA AI, our advanced AI system</li>
+                        <li>Comprehensive review by our admissions team</li>
+                        <li>Final decision and notification</li>
+                    </ol>
+                    <p>You'll receive an email notification as soon as a decision is made. You can also check your application status by logging into your account dashboard.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="application">
+                <div class="faq-question">What happens after my application is approved?</div>
+                <div class="faq-answer">
+                    <p>Congratulations on your acceptance! After approval, you'll receive:</p>
+                    <ul>
+                        <li>An official acceptance email with instructions</li>
+                        <li>Access to create your Academy account</li>
+                        <li>Your personalized training pathway recommendation</li>
+                        <li>Information about orientation and first mission assignments</li>
+                        <li>Access to the Presidential Daily Space Briefings</li>
+                    </ul>
+                    <p>We recommend completing your account setup and beginning your training modules as soon as possible after acceptance.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="application">
+                <div class="faq-question">Is there an application fee?</div>
+                <div class="faq-answer">
+                    <p>No, applying to SharedStars Academy is completely free of charge. We believe that financial barriers shouldn't prevent talented individuals from pursuing space careers.</p>
+                    <p>While some advanced training programs may have associated costs after acceptance, we offer scholarships and financial assistance options for qualified candidates.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Academy Training Section -->
+        <div class="faq-section" id="academy-section">
+            <h2>Academy Training</h2>
+            
+            <div class="faq-item" data-category="academy">
+                <div class="faq-question">What kind of training does SharedStars Academy provide?</div>
+                <div class="faq-answer">
+                    <p>SharedStars Academy offers comprehensive, cutting-edge training across multiple space-related disciplines:</p>
+                    <ul>
+                        <li><strong>AI-Powered Personalized Learning:</strong> Our STELLA AI adapts training content to your skills, progress, and goals</li>
+                        <li><strong>Virtual Reality Simulations:</strong> Practice real space mission scenarios in immersive environments</li>
+                        <li><strong>Specialized Pathways:</strong> Focus on areas like Engineering, Space Medicine, Mission Control, or Space Entrepreneurship</li>
+                        <li><strong>Daily Presidential Space Briefings:</strong> Stay informed about the latest developments in space technology and exploration</li>
+                        <li><strong>Hands-on Projects:</strong> Work on actual space-related challenges with industry partners</li>
+                        <li><strong>Mentorship:</strong> Connect with experienced professionals in your field of interest</li>
+                    </ul>
+                    <p>Our training is designed to prepare you for real careers in the expanding space economy, not just theoretical knowledge.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="academy">
+                <div class="faq-question">How long does the Academy training take to complete?</div>
+                <div class="faq-answer">
+                    <p>The duration of your training depends on several factors:</p>
+                    <ul>
+                        <li>Your chosen specialization pathway</li>
+                        <li>Prior experience and skill level</li>
+                        <li>Time commitment (full-time vs. part-time)</li>
+                        <li>Personal learning pace</li>
+                    </ul>
+                    <p>Most core pathways can be completed in 12-24 weeks with consistent effort. However, SharedStars Academy is designed as a continuous learning platform, with new modules and advanced training continuously being added.</p>
+                    <p>Our adaptive learning system allows you to progress at your own pace while ensuring you master each concept before moving forward.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="academy">
+                <div class="faq-question">What makes STELLA AI different from other online learning platforms?</div>
+                <div class="faq-answer">
+                    <p>STELLA (Space Training and Education Learning and Leadership AI) sets SharedStars Academy apart with several unique features:</p>
+                    <ul>
+                        <li><strong>Adaptive Learning:</strong> STELLA analyzes your performance, learning style, and goals to create truly personalized training paths</li>
+                        <li><strong>Real-time Feedback:</strong> Get immediate, constructive feedback on exercises and simulations</li>
+                        <li><strong>Predictive Analysis:</strong> STELLA identifies potential knowledge gaps before they become obstacles</li>
+                        <li><strong>Mission-Relevant Training:</strong> Focus on skills directly applicable to real space missions and projects</li>
+                        <li><strong>Continuous Evolution:</strong> STELLA learns from all Academy members, constantly improving training methods</li>
+                    </ul>
+                    <p>Unlike static online courses, STELLA creates a dynamic learning environment that evolves with you and the rapidly changing space industry.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="academy">
+                <div class="faq-question">Can I access Academy training from anywhere?</div>
+                <div class="faq-answer">
+                    <p>Yes, SharedStars Academy is designed to be accessible globally. Our platform requirements include:</p>
+                    <ul>
+                        <li>A stable internet connection (minimum 5 Mbps recommended)</li>
+                        <li>A modern web browser (Chrome, Firefox, Safari, or Edge)</li>
+                        <li>For VR training modules: compatible VR headset (Oculus Quest 2+, HTC Vive, or similar)</li>
+                    </ul>
+                    <p>All training content is available 24/7, and our servers are distributed globally to ensure good performance regardless of your location. We also offer offline access for selected training materials through our mobile app.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="academy">
+                <div class="faq-question">What are Presidential Daily Space Briefings?</div>
+                <div class="faq-answer">
+                    <p>The Presidential Daily Space Briefings are exclusive intelligence reports delivered to SharedStars Academy members. These briefings provide:</p>
+                    <ul>
+                        <li>Up-to-date information on global space activities and discoveries</li>
+                        <li>Analysis of strategic developments in space technology and policy</li>
+                        <li>Insights into astronomical phenomena and their potential impacts</li>
+                        <li>Technological breakthrough reports from various space agencies and companies</li>
+                        <li>Personalized training directives based on your progress and current space events</li>
+                    </ul>
+                    <p>Briefings are delivered based on your preferences (in-app, email, or both) and include an alert status system (GREEN, AMBER, or RED) to highlight critical developments that may impact space missions and training priorities.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Space Missions Section -->
+        <div class="faq-section" id="space-section">
+            <h2>Space Missions</h2>
+            
+            <div class="faq-item" data-category="space">
+                <div class="faq-question">What space mission pathways does SharedStars Academy offer?</div>
+                <div class="faq-answer">
+                    <p>SharedStars Academy offers several specialized mission pathways to prepare you for various careers in space exploration:</p>
+                    <ul>
+                        <li><strong>Lunar Missions:</strong> Focused on Moon exploration, habitation, and resource utilization</li>
+                        <li><strong>Mars Exploration:</strong> Preparing for human missions to Mars and establishing sustainable presence</li>
+                        <li><strong>Space Station Operations:</strong> Training for work on orbital platforms and space habitats</li>
+                        <li><strong>Zero-G Research:</strong> Specializing in microgravity science and experimentation</li>
+                        <li><strong>Space Mining & Resource Utilization:</strong> Focused on asteroid mining and in-situ resource utilization</li>
+                        <li><strong>Space Tourism:</strong> Preparing for careers in the emerging space tourism industry</li>
+                    </ul>
+                    <p>Each pathway includes specialized training modules, simulations, and projects relevant to that mission type. STELLA AI will recommend a pathway based on your skills and interests, but you can change pathways during your training.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="space">
+                <div class="faq-question">Does SharedStars Academy partner with actual space companies?</div>
+                <div class="faq-answer">
+                    <p>Yes, SharedStars Academy maintains active partnerships with leading organizations in the space industry, including:</p>
+                    <ul>
+                        <li>Commercial space launch providers</li>
+                        <li>Satellite manufacturers and operators</li>
+                        <li>Space habitat and life support systems developers</li>
+                        <li>Space resource utilization companies</li>
+                        <li>Research institutions focused on space science</li>
+                    </ul>
+                    <p>These partnerships provide our members with real-world projects, mentorship opportunities, and potential career pathways. Top-performing Academy graduates often receive internship and job opportunities with our partner organizations.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="space">
+                <div class="faq-question">How realistic are the mission simulations?</div>
+                <div class="faq-answer">
+                    <p>Our mission simulations are designed to be as realistic as possible, incorporating:</p>
+                    <ul>
+                        <li>Physics-accurate zero-gravity and partial gravity environments</li>
+                        <li>Authentic spacecraft and habitat systems based on current designs</li>
+                        <li>Real-time communication delays for interplanetary scenarios</li>
+                        <li>Authentic emergency and contingency scenarios</li>
+                        <li>Psychological and team dynamics challenges</li>
+                    </ul>
+                    <p>Many of our simulation modules are developed in collaboration with space agencies and companies that use similar training tools for actual astronauts and mission specialists. The VR environments provide immersive experiences that closely approximate the challenges of real space missions.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="space">
+                <div class="faq-question">Will completing Academy training qualify me to go to space?</div>
+                <div class="faq-answer">
+                    <p>SharedStars Academy provides high-quality training that aligns with industry standards, but it's important to understand:</p>
+                    <p>Completion of Academy training does not automatically qualify you for spaceflight. However, it does:</p>
+                    <ul>
+                        <li>Provide you with skills and knowledge valued by space companies and agencies</li>
+                        <li>Prepare you for additional specialized training required for specific roles</li>
+                        <li>Give you competitive advantages when applying for space industry positions</li>
+                        <li>Connect you with organizations that may offer spaceflight opportunities</li>
+                    </ul>
+                    <p>For exceptional Academy graduates, we do offer pathways to advanced training programs that can lead to spaceflight opportunities with our commercial partners. Several Academy alumni have gone on to participate in actual space missions in various capacities.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="space">
+                <div class="faq-question">How is SharedStars Academy contributing to the future of space exploration?</div>
+                <div class="faq-answer">
+                    <p>SharedStars Academy is advancing the future of space exploration in several key ways:</p>
+                    <ul>
+                        <li><strong>Talent Development:</strong> Training the next generation of space professionals across multiple disciplines</li>
+                        <li><strong>Democratizing Space Access:</strong> Making space careers accessible to talented individuals regardless of background</li>
+                        <li><strong>Innovation Acceleration:</strong> Through collaborative projects that address real space challenges</li>
+                        <li><strong>Public Engagement:</strong> Increasing awareness and support for space exploration</li>
+                        <li><strong>Industry Partnerships:</strong> Bridging the gap between education and industry needs</li>
+                    </ul>
+                    <p>Our mission is to build the human capacity needed for sustainable space exploration and development. By creating a diverse, well-trained talent pool, we're helping to address one of the most significant bottlenecks in expanding humanity's presence beyond Earth.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technical Section -->
+        <div class="faq-section" id="technical-section">
+            <h2>Technical Questions</h2>
+            
+            <div class="faq-item" data-category="technical">
+                <div class="faq-question">What are the system requirements for the Academy platform?</div>
+                <div class="faq-answer">
+                    <p>For the best experience with SharedStars Academy, we recommend:</p>
+                    <ul>
+                        <li><strong>Web Platform:</strong>
+                            <ul>
+                                <li>Modern web browser (Chrome, Firefox, Safari, Edge - latest versions)</li>
+                                <li>Stable internet connection (5+ Mbps recommended)</li>
+                                <li>Computer with at least 8GB RAM and modern CPU</li>
+                                <li>1080p display or better</li>
+                            </ul>
+                        </li>
+                        <li><strong>VR Training Modules:</strong>
+                            <ul>
+                                <li>Compatible VR headset (Oculus Quest 2+, HTC Vive, Valve Index, or similar)</li>
+                                <li>VR-ready computer for PC-based headsets</li>
+                                <li>Minimum 2m x 2m clear space for room-scale experiences</li>
+                            </ul>
+                        </li>
+                        <li><strong>Mobile App:</strong>
+                            <ul>
+                                <li>iOS 14+ or Android 10+</li>
+                                <li>2GB+ available storage</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p>Most training content is accessible without VR equipment, though some simulation exercises are enhanced with VR capabilities.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="technical">
+                <div class="faq-question">How is my personal data protected?</div>
+                <div class="faq-answer">
+                    <p>SharedStars Academy takes data security and privacy extremely seriously. Our protection measures include:</p>
+                    <ul>
+                        <li>End-to-end encryption for all personal data</li>
+                        <li>Secure, geographically distributed data centers</li>
+                        <li>Regular security audits and penetration testing</li>
+                        <li>Strict access controls for all user information</li>
+                        <li>Compliance with GDPR, CCPA, and other privacy regulations</li>
+                    </ul>
+                    <p>We only collect data necessary for providing and improving our services. Your training performance data is used by STELLA AI to personalize your learning experience but is never shared with third parties without your explicit consent. You can review our complete Privacy Policy <a href="/privacy.html" style="color: #4a7de9;">here</a>.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="technical">
+                <div class="faq-question">Can I access the Academy platform offline?</div>
+                <div class="faq-answer">
+                    <p>While the full SharedStars Academy experience requires an internet connection, we do offer limited offline capabilities:</p>
+                    <ul>
+                        <li>Selected training materials can be downloaded for offline study via our mobile app</li>
+                        <li>Some VR training modules can operate offline after initial download</li>
+                        <li>Daily Space Briefings can be saved for offline reading</li>
+                    </ul>
+                    <p>Your progress in offline mode will sync with our servers when you reconnect to the internet. For the best experience, including real-time feedback from STELLA AI and interactive simulations, an active internet connection is recommended.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="academy">
+                <div class="faq-question">How many phases are there in the SharedStars training program?</div>
+                <div class="faq-answer">
+                    <p>The SharedStars Training Program consists of 5 comprehensive phases, each with multiple training modules:</p>
+                    <ol>
+                        <li><strong>Phase 1: Home-Based AI Training</strong> (5 modules)</li>
+                        <li><strong>Phase 2: AR/VR Immersive Simulations</strong> (5 modules)</li>
+                        <li><strong>Phase 3: Intermediate Spaceflight Training</strong> (5 modules)</li>
+                        <li><strong>Phase 4: Advanced Space Mission Readiness</strong> (3 modules)</li>
+                        <li><strong>Phase 5: Final SharedStars HQ Training</strong> (3 modules)</li>
+                    </ol>
+                    <p>There are 21 total training modules spread across these 5 phases, each offering specialized skills and knowledge for space preparation.</p>
+                </div>
+            </div>
+            <!-- Add these new FAQ items to the Academy Training section -->
+
+<div class="faq-item" data-category="academy">
+    <div class="faq-question">How many phases are there in the SharedStars training program?</div>
+    <div class="faq-answer">
+        <p>The SharedStars Training Program consists of 5 comprehensive phases, each with multiple training modules:</p>
+        <ol>
+            <li><strong>Phase 1: Home-Based AI Training</strong> (5 modules)</li>
+            <li><strong>Phase 2: AR/VR Immersive Simulations</strong> (5 modules)</li>
+            <li><strong>Phase 3: Intermediate Spaceflight Training</strong> (5 modules)</li>
+            <li><strong>Phase 4: Advanced Space Mission Readiness</strong> (3 modules)</li>
+            <li><strong>Phase 5: Final SharedStars HQ Training</strong> (3 modules)</li>
+        </ol>
+        <p>There are 21 total training modules spread across these 5 phases, each offering specialized skills and knowledge for space preparation.</p>
+    </div>
+</div>
+
+<div class="faq-item" data-category="academy">
+    <div class="faq-question">When do trainees earn their first certification?</div>
+    <div class="faq-answer">
+        <p>Trainees earn their first certificate after successfully completing their first training module. Here's how certification works across each phase:</p>
+        <ul>
+            <li><strong>Phase 1 (Home-Based AI Training):</strong> STELLA AI assesses initial performance, customizes the training path, and issues a verified badge upon completion of the first module.</li>
+            <li><strong>Phase 2 (AR/VR Immersive Simulations):</strong> Users unlock additional module-based certifications as they complete more advanced, interactive training.</li>
+            <li><strong>Phase A (Final SharedStars HQ Training):</strong> Trainees earn their final spaceflight certification after passing in-person mission evaluations, followed by graduation and Space Seat assignment.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="faq-item" data-category="academy">
+    <div class="faq-question">How many certifications can trainees earn before Phase 2?</div>
+    <div class="faq-answer">
+        <p>Trainees can earn up to 5 certifications in Phase 1 (Home-Based AI Training) before advancing to Phase 2 (AR/VR Simulations):</p>
+        <ol>
+            <li><strong>Physical Training Certification:</strong> Strength, Endurance, & Zero-G Adaptation</li>
+            <li><strong>Technical Training Certification:</strong> Spacecraft Systems, Navigation, & Diagnostics</li>
+            <li><strong>EVA (Spacewalk) Certification:</strong> Suit Operations, Safety, & Repairs</li>
+            <li><strong>AI-Guided Simulations Certification:</strong> Mission-Based Crisis Decision-Making</li>
+            <li><strong>OSHA-Spaceflight Safety Certification:</strong> Emergency Protocols & Compliance</li>
+        </ol>
+        <p>After completing these 5 certifications, trainees unlock Phase 2: AR/VR Training Simulations for full immersion into advanced modules.</p>
+    </div>
+</div>
+
+<div class="faq-item" data-category="academy">
+    <div class="faq-question">How do trainees move from Phase 1 to Phase 2?</div>
+    <div class="faq-answer">
+        <p>Progression through the training program is flexible and personalized:</p>
+        <ul>
+            <li><strong>Trainees do not need to fully complete a phase before advancing.</strong> They can work on multiple training modules across different phases simultaneously.</li>
+            <li><strong>STELLA AI recommends when they are ready</strong> for AR/VR training based on their progress in Home-Based AI Training.</li>
+            <li><strong>Trainees unlock Phase 2</strong> once they earn at least 3 certifications and meet AI progress benchmarks.</li>
+            <li><strong>AI evaluates readiness</strong> when trainees have completed at least 3-5 module certifications, scored above 80% on AI-readiness evaluations, and achieved a minimum leaderboard rank threshold.</li>
+        </ul>
+        <p>The AI will suggest next training paths, but trainees can choose to continue Phase 1 modules while starting Phase 2.</p>
+    </div>
+</div>
+
+<div class="faq-item" data-category="academy">
+    <div class="faq-question">How many parts does each training module have?</div>
+    <div class="faq-answer">
+        <p>Each module has three levels of training, progressing from home-based learning to in-person astronaut simulations:</p>
+        <ol>
+            <li><strong>Home-Based AI Training (Phase 1-2):</strong> AI-driven theory lessons, self-paced skill-building, and AI feedback with virtual challenges.</li>
+            <li><strong>AR/VR Training (Phase 2-3):</strong> Virtual reality-based hands-on simulations, AI-led mission drills in Zero-G environments, and simulated space navigation & problem-solving.</li>
+            <li><strong>SharedStars HQ Training (Phase 4-5):</strong> In-person astronaut training with real equipment, final EVA spacewalk simulations, and leadership & survival training.</li>
+        </ol>
+        <p>For example, the EVA (Spacewalk) Training module spans all three levels:</p>
+        <ul>
+            <li>Home-Based AI Training: Learn EVA safety, suit operations, and NASA procedures</li>
+            <li>AR/VR Training: Simulated spacewalk missions with haptic feedback</li>
+            <li>SharedStars HQ Training: Full-body EVA suit training & real space habitat exercises</li>
+        </ul>
+    </div>
+</div>
+
+<div class="faq-item" data-category="academy">
+    <div class="faq-question">How long will it take to complete all home-based training?</div>
+    <div class="faq-answer">
+        <p>The estimated time to complete Phase 1 (Home-Based Training) is approximately 6-9 months, though this depends on the trainee's individual pace.</p>
+        <p>STELLA AI evaluates weekly progress and recommends pacing adjustments based on your performance. Trainees who train consistently could finish faster, while others may take longer depending on their schedule and learning style.</p>
+        <p>Our AI system can provide a personalized training timeline estimate for each trainee based on their progress and engagement patterns.</p>
+    </div>
+</div>
+
+<div class="faq-item" data-category="academy">
+    <div class="faq-question">What happens after completing all home-based training?</div>
+    <div class="faq-answer">
+        <p>Once a trainee completes all home-based training modules:</p>
+        <ul>
+            <li>They qualify for AR/VR headset shipment (Meta Quest 3)</li>
+            <li>They unlock Phase 2 (AR/VR Immersive Simulations)</li>
+            <li>STELLA AI adapts training difficulty based on their past performance</li>
+        </ul>
+        <p>To unlock VR Training (Phase 2), trainees must:</p>
+        <ol>
+            <li>Complete all home-based modules</li>
+            <li>Earn at least 6-8 certifications</li>
+            <li>Achieve a minimum leaderboard rank & AI readiness score</li>
+            <li>Pass STELLA's VR Readiness Evaluation</li>
+        </ol>
+    </div>
+</div>
+
+<!-- Fix for closing tags and structure -->
+<div class="faq-item" data-category="academy">
+    <div class="faq-question">Can trainees work on multiple modules at the same time?</div>
+    <div class="faq-answer">
+        <p>Yes! Trainees can work on multiple training modules concurrently. STELLA AI tracks progress in each module separately, and users can train in different modules across multiple phases simultaneously.</p>
+        <p>For example, a trainee might be working on Technical Training in Phase 1 while also doing VR-based EVA Training in Phase 2.</p>
+        <p>This flexible approach allows trainees to focus on areas of interest or challenge while maintaining progress across the entire program.</p>
+    </div>
+</div>
+</div> <!-- This properly closes the academy section div -->
+        
+<div class="contact-section">
+    <h2>Still have questions?</h2>
+    <p>Our support team is always ready to help with any questions not covered in this FAQ.</p>
+    <a href="mailto:info@sharedstars.com" class="contact-btn">Contact Us</a>
+</div>
+</div>
+</div> 
+<!-- FOOTER - With all social media links -->
+<footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
+    <!-- Animated Floating Particles -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+        <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+        <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
+    </div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-8 mb-12 text-center md:text-left">
+            <!-- About -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">About</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/about.html" class="hover:text-blue-400 transition-colors">Our Story</a></li>
+                    <li><a href="/academy.html" class="hover:text-blue-400 transition-colors">Academy</a></li>
+                    <li><a href="/leaderboard.html" class="hover:text-blue-400 transition-colors">Leaderboard</a></li>
+                </ul>
+            </div>
+            
+            <!-- Join Us -->
+            <div>
+                <h3 class="font-bold text-lg text-blue-400">Join Us</h3>
+                <ul class="space-y-2 mt-4">
+                    <li><a href="/apply.html" class="hover:text-blue-400 transition-colors">Apply Now</a></li>
+                    <li><a href="/subscribe.html" class="hover:text-blue-400 transition-colors">Subscribe</a></li>
+                    <li><a href="/faq.html" class="hover:text-blue-400 transition-colors">FAQ</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+<div>
+    <h3 class="font-bold text-lg text-blue-400">Contact</h3>
+    <ul class="space-y-2 mt-4">
+        <li><a href="mailto:info@sharedstars.com" class="hover:text-blue-400 transition-colors">info@sharedstars.com</a></li>
+        <li><span class="text-gray-400">Celestial Technologies, LLC</span></li>
+    </ul>
+</div>
+        </div>
+        
+        <!-- Bottom section with copyright and social media -->
+        <div class="mt-12 pt-8 border-t border-blue-900/20 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-500">© <span id="current-year">2025</span> Celestial Technologies, LLC. All rights reserved.</p>
+            
+            <!-- All 7 social media links -->
+            <div class="flex space-x-4 mt-4 md:mt-0">
+                <!-- LinkedIn -->
+                <a href="https://www.linkedin.com/company/106241890" class="text-gray-400 hover:text-blue-400" aria-label="LinkedIn">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+                
+                <!-- Twitter/X -->
+                <a href="https://x.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Twitter">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                </a>
+                
+                <!-- Facebook -->
+                <a href="https://www.facebook.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Facebook">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                </a>
+                
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/sharedstarsacademy/" class="text-gray-400 hover:text-blue-400" aria-label="Instagram">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                
+                <!-- Telegram -->
+                <a href="https://t.me/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Telegram">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12zm3.224 17.871c.188.133.43.166.646.085.215-.082.374-.253.463-.489.089-.236.089-.498 0-.734l-1.74-4.36 4.4-2.507c.466-.265.466-.934 0-1.199l-9.65-5.514c-.465-.266-1.048.055-1.047.577l.072 12.71c0 .522.583.843 1.048.577l3.293-1.879zm-8.791-7.414l2.083 1.188-.759 1.329-1.324-.755v-1.762zm6.442 7.385l-1.621.925c-.961.548-2.132-.106-2.132-1.186l-.04-6.99 3.793 7.251z"/></svg>
+                </a>
+                
+                <!-- TikTok -->
+                <a href="https://www.tiktok.com/@sharedstarsacademy" class="text-gray-400 hover:text-blue-400" aria-label="TikTok">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                </a>
+                
+                <!-- YouTube -->
+                <a href="https://www.youtube.com/@SharedStarsAcademy" class="text-gray-400 hover:text-blue-400" aria-label="YouTube">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- First load the faq.js file -->
+<script src="/js/faq.js"></script>
+
+<!-- Then add any additional functionality that's not in the file -->
+<script>
+    // This code will run after faq.js has loaded and initialized
+    document.addEventListener('DOMContentLoaded', function() {
+        // Force re-initialize email handling
+        document.querySelectorAll('[data-email]').forEach(link => {
+            // First remove any existing listeners
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+            
+            // Then add the click handler
+            newLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const email = this.getAttribute('data-email');
+                console.log("Clicked email link:", email); // Debug log
+                if (email) {
+                    window.location.href = `mailto:${email}`;
+                }
+            });
+        });
+        
+        // Test that our selector is finding the elements
+        console.log("Found email links:", document.querySelectorAll('[data-email]').length);
+    });
+
+    // Update count function can stay
+    function updateVisibleCount() {
+        const visibleQuestions = Array.from(document.querySelectorAll('.faq-item')).filter(item => 
+            item.style.display !== 'none'
+        ).length;
+        
+        const countElement = document.getElementById('visible-question-count');
+        if (countElement) {
+            countElement.textContent = visibleQuestions;
+        }
+    }
+</script>
+</body>
+</html>

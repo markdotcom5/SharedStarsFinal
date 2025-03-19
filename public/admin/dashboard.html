@@ -235,7 +235,63 @@
       opacity: 0.5;
       cursor: not-allowed;
     }
-    
+  .actions-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .view-btn {
+    background-color: #4a7de9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .status-actions {
+    display: flex;
+    gap: 4px;
+  }
+  
+  .status-btn {
+    flex: 1;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  
+  .status-btn.active {
+    background-color: #10b981;
+    color: white;
+    border-color: #0d9488;
+  }
+  
+  .send-acceptance-email {
+    background-color: #f59e0b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-top: 4px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .send-acceptance-email:hover {
+    background-color: #d97706;
+  }
+  
+  .send-acceptance-email:disabled {
+    background-color: #10b981;
+    cursor: not-allowed;
+  }
     .admin-notes {
       width: 100%;
       height: 100px;
@@ -439,30 +495,49 @@
               <button id="reset-btn" class="action-btn reject-btn">Reset</button>
             </div>
             
-            <!-- Applications Table -->
-            <table class="applications-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Background</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>AI Score</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="applications-list">
-                <!-- Will be populated by JavaScript -->
-              </tbody>
-            </table>
-            
-            <!-- Pagination -->
-            <div class="pagination" id="pagination">
-              <!-- Will be populated by JavaScript -->
-            </div>
-          </div>
-        </section>
+           <!-- Applications Table -->
+<table class="applications-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Background</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>AI Score</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="applications-list">
+    <!-- Will be populated by JavaScript -->
+  </tbody>
+</table>
+
+<!-- Template for application rows -->
+<template id="application-row-template">
+  <tr>
+    <td class="name-cell"></td>
+    <td class="email-cell"></td>
+    <td class="background-cell"></td>
+    <td class="date-cell"></td>
+    <td class="status-cell"></td>
+    <td class="score-cell"></td>
+    <td class="actions-cell">
+      <button class="view-btn" data-application-id="">View</button>
+      <div class="status-actions">
+        <button class="status-btn" data-status="approved" data-application-id="">Approve</button>
+        <button class="status-btn" data-status="rejected" data-application-id="">Reject</button>
+        <button class="status-btn" data-status="waitlisted" data-application-id="">Waitlist</button>
+      </div>
+      <button class="send-acceptance-email" data-application-id="">Send Acceptance Email</button>
+    </td>
+  </tr>
+</template>
+
+<!-- Pagination -->
+<div class="pagination" id="pagination">
+  <!-- Will be populated by JavaScript -->
+</div>
         
         <!-- STELLA Analytics Section -->
         <section id="stella-section" class="hidden">
