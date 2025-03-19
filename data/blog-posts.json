@@ -1,0 +1,44 @@
+[
+  {
+    "id": "6ffb22dd-df04-4aa8-8a8d-2a7e832ecb6f",
+    "title": " day 3 1/2 months",
+    "slug": "-day-3-12-months",
+    "category": "Development",
+    "content": "From Tech Visionary to Coding Founder: My 100-Day Journey\nAfter years as a technology visionary with zero coding experience, I found myself at a crossroads 3½ months ago. When my original partner declined to invest alongside me to hire a developer for SharedStars—someone who had successfully built multiple projects for me before—I faced a familiar chorus from friends and family:\n\"Mark, we don't see anything tangible beyond fancy PowerPoint slides.\"\nThat was the moment I decided: \"Enough is enough.\"\nI committed to learning coding through AI assistance and building our MVP myself. Fast forward to today, and we're approaching completion with sophisticated logic, including our custom STELLA AI system that actually learns from user interactions to provide increasingly effective training and guidance for our astronaut trainees.\nThis journey hasn't been without challenges. I've been largely working solo, aside from collaborating with two developers from India whom I met via Upwork (which, candidly, has been more of a financial drain than expected).\nWhat's remarkable is how much can be accomplished with determination and the right AI tools. I've found Claude AI (by Anthropic) to be exceptionally helpful—far superior to alternatives for my development needs. After seven intensive hours today, I finally completed a properly formatted page that matches our design specifications.\nThis is just the beginning of sharing my founder's journey. I look forward to documenting our progress, challenges, and the innovative ways we're using AI to build SharedStars—making space exploration training accessible to all.\n— Mark Sendo, Founder. PS b/c i spelll horibly, i even used AI to help rewrite this blog post",
+    "published": true,
+    "publishedDate": "2025-03-15T20:33:36.857Z",
+    "author": {
+      "name": "Mark Sendo",
+      "title": "SharedStars Founder",
+      "imageUrl": "/images/mark-sendo.png"
+    }
+  },
+  {
+    "id": "53cf76c5-04fb-4ded-8037-bbeed28f222b",
+    "title": "hours lastr",
+    "slug": "hours-lastr",
+    "category": "Development",
+    "content": "i spent a total of 8 hours creating one html page,  so far today building the SIMPLIST PAGE, the 'AboutUs\", with only a few scripts can u image the other pages  with immense logic conteained wihtin , its gonna take me freakin month, unless someone has a better solution?",
+    "published": true,
+    "publishedDate": "2025-03-15T23:56:35.419Z",
+    "author": {
+      "name": "Mark Sendo",
+      "title": "SharedStars Founder",
+      "imageUrl": "/images/mark-sendo.png"
+    }
+  },
+  {
+    "id": "130cb69c-4e7c-4347-8557-477004edccf3",
+    "title": "tied",
+    "slug": "tied",
+    "category": "Featured",
+    "content": "i've worked already 3 and 1/2 hours today and accomplished 1) fixed one line of code inpackage.json which is preventing vercel deploying project ,lets see if they encounter more errors which im sure they will. also, requested refund from the full stack dev whos'done nothing that helps me.. and created seperate blog url for public publishing. ",
+    "published": true,
+    "publishedDate": "2025-03-16T13:20:41.237Z",
+    "author": {
+      "name": "Mark Sendo",
+      "title": "SharedStars Founder",
+      "imageUrl": "/images/mark-sendo.png"
+    }
+  }
+]

@@ -143,13 +143,107 @@
       border: 1px solid rgba(59, 130, 246, 0.3);
       transition: all 0.3s ease;
     }
-    
+    @media (max-width: 768px) {
+    #mission-vision > div > div {
+        grid-template-columns: 1fr !important;
+    }
+}
     .tier-card:hover {
       transform: translateY(-5px);
       border-color: rgba(59, 130, 246, 0.6);
       box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.4);
     }
+/* Section styling */
+#mission-vision {
+    padding: 60px 0;
+    max-width: 1100px;
+    margin: 0 auto;
+}
 
+/* Pill button */
+.pill-tag {
+    background-color: rgba(74, 125, 233, 0.2);
+    color: #4a7de9;
+    font-size: 14px;
+    padding: 6px 15px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+/* Card styling */
+.mission-card, .vision-card, .purpose-card {
+    background-color: rgba(13, 18, 30, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 30px;
+}
+
+/* Icon container */
+.icon-box {
+    background-color: rgba(14, 26, 63, 0.8);
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Headings */
+.card-title {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Text color */
+.card-text {
+    color: #aaadb2;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Checklist items */
+.check-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.check-icon {
+    background-color: rgba(74, 125, 233, 0.2);
+    min-width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+/* Grid layout */
+.mission-vision-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+    .mission-vision-grid {
+        grid-template-columns: 1fr;
+    }
+}
     .ai-assistant-bubble {
       background-color: rgba(59, 130, 246, 0.15);
       border: 1px solid rgba(59, 130, 246, 0.3);

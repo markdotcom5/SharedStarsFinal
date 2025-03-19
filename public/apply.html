@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Apply to SharedStars Academy">
+    <title>Apply - SharedStars Academy</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        body {
+            background-color: #0c1017;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: url('/images/stars-bg.png');
+            background-size: cover;
+            overflow-x: hidden;
+        }
+        
+        /* Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .video-background video {
+            position: absolute;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            opacity: 0.5;
+        }
+        
+        /* Overlay for better text readability */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 30, 0.7);
+            z-index: -1;
+        }
+        
+        header {
+            background-color: rgba(12, 16, 23, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #4a7de9;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .lang-selector {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .get-started {
+            background: #6b46c1;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .get-started:hover {
+            background: #5a35b0;
+        }
+        
+        .application-container {
+            max-width: 650px;
+            margin: 60px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .application-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: rgba(13, 18, 30, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 125, 233, 0.1);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .rocket-icon {
+            background-color: #1a2536;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(74, 125, 233, 0.5);
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px rgba(74, 125, 233, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(74, 125, 233, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(74, 125, 233, 0.5); }
+        }
+        
+        .rocket-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: #4a7de9;
+        }
+        
+        h1 {
+            color: #4a7de9;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            margin-bottom: 30px;
+            color: #ccc;
+            font-size: 18px;
+        }
+        
+        .form-group {
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            color: #4a7de9;
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #1e2738;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4a7de9;
+            box-shadow: 0 0 0 2px rgba(74, 125, 233, 0.2);
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        button {
+            width: 100%;
+            background-color: #4a7de9;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #3a6fd9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button.secondary {
+            background-color: transparent;
+            border: 1px solid #1e2738;
+        }
+        
+        button.secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 8px;
+        }
+        
+        .step {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #1e2738;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .step.active {
+            background-color: #4a7de9;
+            transform: scale(1.2);
+        }
+        
+        .step-content {
+            width: 100%;
+        }
+        
+        .step-content > div {
+            display: none;
+            animation: fadeStep 0.4s ease-out;
+        }
+        
+        @keyframes fadeStep {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .step-content > div.active {
+            display: block;
+        }
+        
+        .step-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .signup-link {
+            margin-top: 20px;
+            color: white;
+        }
+        
+        .signup-link a {
+            color: #4a7de9;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        .signup-link a:hover {
+            color: #6b95f5;
+            text-decoration: underline;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background-color: #0c1017;
+            border: 1px solid #1e2738;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+            animation: modalopen 0.4s;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        
+        @keyframes modalopen {
+            from {opacity: 0; transform: scale(0.8);}
+            to {opacity: 1; transform: scale(1);}
+        }
+        
+        .close-modal {
+            margin-top: 20px;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            animation: successPulse 2s infinite;
+        }
+        
+        @keyframes successPulse {
+            0% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+        }
+        
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: #10b981;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Custom file upload styling */
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            background-color: rgba(74, 125, 233, 0.1);
+            color: #4a7de9;
+            border: 1px dashed #4a7de9;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+        }
+        
+        .file-upload-label:hover {
+            background-color: rgba(74, 125, 233, 0.2);
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-name {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        /* Loading state for the submit button */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-spinner {
+            animation: spin 1.5s linear infinite;
+            margin-right: 8px;
+        }
+        
+        /* Error message styling */
+        .error-message {
+            color: #ff4d4d;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-field {
+            border-color: #ff4d4d !important;
+        }
+        
+        /* Success message after submit within form */
+        .form-success-message {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            display: none;
+        }
+        
+        .form-success-message svg {
+            width: 20px;
+            height: 20px;
+            fill: #10b981;
+            margin-right: 10px;
+        }
+        
+        /* Form field error shake animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+    .context-banner {
+        background: rgba(13, 18, 30, 0.7);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0 25px;
+        border-left: 3px solid #3b82f6;
+    }
+    
+    .context-banner p {
+        color: #e2e8f0;
+        margin-bottom: 12px;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+    
+    .benefits-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 15px 0;
+    }
+    
+    .benefits-list li {
+        color: #d1d5db;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .benefit-icon {
+        margin-right: 10px;
+        display: inline-block;
+    }
+    
+    .space-limited {
+        color: #f43f5e !important;
+        font-weight: 500;
+        margin-top: 15px;
+    }
+        .shake {
+            animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <!-- Check if this video file exists in your project -->
+        <video autoplay muted loop id="spaceVideo">
+            <source src="/videos/applyssadmy.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!-- You may need to add this file to your project at /videos/space-background.mp4 -->
+    </div>
+    <div class="video-overlay"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="/images/SharedStars.svg" alt="SharedStars Logo" />
+        </div>
+        
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/academy.html">Academy</a>
+            <a href="/about.html">About</a>
+            <a href="/leaderboard.html">Leaderboard</a>
+            <a href="/subscribe.html">Subscribe</a>
+        </div>
+        
+        <div class="nav-right">
+            <div class="lang-selector">
+                <span>🇺🇸</span>
+                <span>English</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6L8 10L12 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <button class="get-started" onclick="location.href='/signup.html'">Get Started</button>
+        </div>
+    </header>
+
+    <!-- Application Container -->
+    <div class="application-container">
+        <div class="application-card">
+            <div class="rocket-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.13,22.19L11.5,18.36C13.07,17.78 14.54,17 15.9,16.09L13.13,22.19M5.64,12.5L1.81,10.87L7.91,8.1C7,9.46 6.22,10.93 5.64,12.5M21.61,2.39C21.61,2.39 16.66,0.269 11,5.93C8.81,8.12 7.5,10.53 6.65,12.64C6.37,13.39 6.56,14.21 7.11,14.77L9.24,16.89C9.79,17.45 10.61,17.63 11.36,17.35C13.5,16.53 15.88,15.19 18.07,13C23.73,7.34 21.61,2.39 21.61,2.39M14.54,9.46C13.76,8.68 13.76,7.41 14.54,6.63C15.32,5.85 16.59,5.85 17.37,6.63C18.14,7.41 18.15,8.68 17.37,9.46C16.59,10.24 15.32,10.24 14.54,9.46Z"/>
+                </svg>
+            </div>
+            
+            <h1>Apply to SharedStars Academy</h1>
+                <p class="subtitle">Take the first step toward your space career</p>
+            
+            <div class="form-success-message" id="formSuccessMessage">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
+                </svg>
+                <span>Processing your application... Please wait.</span>
+            </div>
+            <!-- Adding a compelling context block -->
+        <div class="context-banner">
+     <p>Join an elite community of future space pioneers. SharedStars Academy offers unprecedented access to cutting-edge space training powered by STELLA AI.</p>
+         <ul class="benefits-list">
+        <li><span class="benefit-icon">🚀</span> Access to exclusive space mission simulations</li>
+        <li><span class="benefit-icon">🧠</span> AI-powered personalized training modules</li>
+        <li><span class="benefit-icon">👩‍🚀</span> Connect with industry leaders and astronaut mentors</li>
+        <li><span class="benefit-icon">🌐</span> Be part of humanity's next giant leap into space</li>
+         </ul>
+     <p class="space-limited">Limited spots available for the 2025 cohort — applications closing soon!</p>
+        </div>
+            <div class="step-indicator">
+                <div class="step active" data-step="1"></div>
+                <div class="step" data-step="2"></div>
+                <div class="step" data-step="3"></div>
+                <div class="step" data-step="4"></div>
+            </div>
+            
+            <form id="application-form" style="width: 100%;" enctype="multipart/form-data" method="POST" action="/api/applications/submit">
+                <div class="step-content">
+                    <!-- Step 1: Personal Information -->
+                    <div class="step-1 active">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="Your first name" required>
+                            <div class="error-message" id="firstName-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="middleInitial">Middle Initial</label>
+                            <input type="text" id="middleInitial" name="middleInitial" placeholder="M" maxlength="1">
+                            <div class="error-message" id="middleInitial-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Your last name" required>
+                            <div class="error-message" id="lastName-error"></div>
+                        </div>
+                            
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="Your email address" required>
+                            <div class="error-message" id="email-error"></div>
+                        </div>
+                        
+                        <div class="step-buttons">
+                            <div></div> <!-- Spacer for alignment -->
+                            <button type="button" class="next-step" data-step="1">
+                                Continue
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14 5L21 12M21 12L14 19M21 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Background -->
+                    <div class="step-2">
+                        <div class="form-group">
+                            <label for="highestEducation">Highest Education Level</label>
+                            <input type="text" id="highestEducation" name="highestEducation" placeholder="E.g., Bachelor's in Engineering">
+                            <div class="error-message" id="highestEducation-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="background">Background</label>
+                            <select id="background" name="background" required>
+                                <option value="">Select your background</option>
+                                <option value="engineering">Engineering</option>
+                                <option value="science">Science</option>
+                                <option value="medical">Medical</option>
+                                <option value="military">Military</option>
+                                <option value="aviation">Aviation</option>
+                                <option value="business">Business</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message" id="background-error"></div>
+                        </div>
+                        
+                        <div class="step-buttons">
+                            <button type="button" class="prev-step secondary" data-step="2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 19L3 12M3 12L10 5M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Back
+                            </button>
+                            <button type="button" class="next-step" data-step="2">
+                                Continue
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14 5L21 12M21 12L14 19M21 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Skills -->
+                    <div class="step-3">
+                        <div class="form-group">
+                            <label for="skills">Select Your Skills (hold Ctrl/Cmd for multiple)</label>
+                            <select id="skills" name="skills" multiple size="5">
+                                <option value="AI">AI & Machine Learning</option>
+                                <option value="Engineering">Aerospace Engineering</option>
+                                <option value="Medical">Medical & Biology</option>
+                                <option value="Space Sciences">Space Sciences</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Computer">Computer Science</option>
+                                <option value="Entrepreneurship">Entrepreneurship</option>
+                                <option value="Leadership">Leadership</option>
+                            </select>
+                            <div class="error-message" id="skills-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="experience">Relevant Experience</label>
+                            <textarea id="experience" name="experience" placeholder="Briefly describe your relevant experience" rows="3"></textarea>
+                            <div class="error-message" id="experience-error"></div>
+                        </div>
+                        
+                        <div class="step-buttons">
+                            <button type="button" class="prev-step secondary" data-step="3">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 19L3 12M3 12L10 5M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Back
+                            </button>
+                            <button type="button" class="next-step" data-step="3">
+                                Continue
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14 5L21 12M21 12L14 19M21 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4: Motivation -->
+                    <div class="step-4">
+                        <div class="form-group">
+                            <label for="motivation">Why do you want to join SharedStars Academy?</label>
+                            <textarea id="motivation" name="motivation" placeholder="Tell us about your interest in space and why you want to join..." rows="4" required></textarea>
+                            <div class="error-message" id="motivation-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="spaceMissionChoice">Preferred Space Mission Type</label>
+                            <select id="spaceMissionChoice" name="spaceMissionChoice" required>
+                                <option value="">Select your preferred mission type</option>
+                                <option value="Lunar">Lunar Missions</option>
+                                <option value="Mars">Mars Exploration</option>
+                                <option value="Space Station">Space Station Operations</option>
+                                <option value="Zero-G Research">Zero-G Research</option>
+                                <option value="Space Mining">Space Mining & Resource Utilization</option>
+                                <option value="Space Tourism">Space Tourism</option>
+                                <option value="Any">Any Mission Type</option>
+                            </select>
+                            <div class="error-message" id="spaceMissionChoice-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resume">Upload Resume/CV (optional)</label>
+                            <div class="file-upload">
+                                <label class="file-upload-label">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+                                        <path d="M9 16H15M12 16V8M5 8H19M5 12H19M5 16H9M15 16H19M4 4H20C21.1046 4 22 4.89543 22 6V18C22 19.1046 21.1046 20 20 20H4C2.89543 20 2 19.1046 2 18V6C2 4.89543 2.89543 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Choose File
+                                    <input type="file" id="resume" name="resume" class="file-upload-input" accept=".pdf,.doc,.docx">
+                                </label>
+                                <div class="file-name" id="file-name">No file chosen</div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-buttons">
+                            <button type="button" class="prev-step secondary" data-step="4">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 19L3 12M3 12L10 5M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Back
+                            </button>
+                            <button type="submit" id="submit-application">
+                                Submit Application
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="signup-link">Already have an account? <a href="/login.html">Log in</a></p>
+            </form>
+        </div>
+    </div>
+    
+   <!-- Success Modal (Hidden by default) -->
+<!-- Success Modal (Hidden by default) -->
+<div id="success-modal" class="modal hidden">
+    <div class="modal-content">
+        <div class="success-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z" fill="#10b981"/>
+            </svg>
+        </div>
+        
+        <h2 style="color: #10b981; margin-bottom: 15px;">Application Received!</h2>
+        
+        <p style="color: #d1d5db; margin-bottom: 20px;">Thank you for applying to SharedStars Academy. Your application has been successfully submitted and STELLA AI will review it shortly.</p>
+        
+        <p style="color: #9ca3af; margin-bottom: 15px;">What's next:</p>
+        <ul style="color: #9ca3af; margin-bottom: 25px; text-align: left; padding-left: 20px;">
+            <li>You'll receive a confirmation email within 24 hours</li>
+            <li>STELLA AI will analyze your profile for mission compatibility</li>
+            <li>Our team will reach out with next steps within 5 business days</li>
+        </ul>
+        
+        <p id="application-id" style="color: #6b7280; font-size: 14px; margin-bottom: 30px;"></p>
+        
+        <button class="close-modal">
+            Return to Homepage
+        </button>
+    </div>
+</div>
+<script src="/js/frontend.js"></script>
+<script>
+  // Complete form handling script - replaces all previous scripts
+document.addEventListener('DOMContentLoaded', function() {
+    const applicationForm = document.getElementById('application-form');
+    const stepContents = document.querySelectorAll('.step-content > div');
+    const stepIndicators = document.querySelectorAll('.step-indicator .step');
+    const nextButtons = document.querySelectorAll('.next-step');
+    const prevButtons = document.querySelectorAll('.prev-step');
+    
+    // Initialize - show only first step
+    stepContents.forEach((step, index) => {
+        if (index === 0) {
+            step.classList.add('active');
+            step.style.display = 'block';
+        } else {
+            step.classList.remove('active');
+            step.style.display = 'none';
+        }
+    });
+    
+    // Navigate to next step
+    nextButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const currentStep = parseInt(this.getAttribute('data-step'));
+            const nextStep = currentStep + 1;
+            
+            // Validate current step
+            const isValid = validateStep(currentStep);
+            if (!isValid) return;
+            
+            // Hide current step and show next step
+            document.querySelector(`.step-${currentStep}`).style.display = 'none';
+            document.querySelector(`.step-${nextStep}`).style.display = 'block';
+            document.querySelector(`.step-${nextStep}`).classList.add('active');
+            
+            // Update step indicators
+            stepIndicators.forEach(indicator => indicator.classList.remove('active'));
+            stepIndicators[nextStep - 1].classList.add('active');
+        });
+    });
+    
+    // Navigate to previous step
+    prevButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const currentStep = parseInt(this.getAttribute('data-step'));
+            const prevStep = currentStep - 1;
+            
+            // Hide current step and show previous step
+            document.querySelector(`.step-${currentStep}`).style.display = 'none';
+            document.querySelector(`.step-${prevStep}`).style.display = 'block';
+            
+            // Update step indicators
+            stepIndicators.forEach(indicator => indicator.classList.remove('active'));
+            stepIndicators[prevStep - 1].classList.add('active');
+        });
+    });
+    
+    // Basic form validation by step
+    function validateStep(stepNumber) {
+        let isValid = true;
+        
+        // Get fields to validate based on current step
+        let fieldsToValidate = [];
+        
+        switch(stepNumber) {
+            case 1:
+                fieldsToValidate = ['firstName', 'lastName', 'email'];
+                break;
+            case 2:
+                fieldsToValidate = ['background'];
+                break;
+            case 3:
+                fieldsToValidate = []; // No required fields in step 3
+                break;
+            case 4:
+                fieldsToValidate = ['motivation', 'spaceMissionChoice'];
+                break;
+        }
+        
+        // Validate each field
+        fieldsToValidate.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            const errorDiv = document.getElementById(`${fieldId}-error`);
+            
+            if (field && field.required && !field.value.trim()) {
+                field.classList.add('error-field');
+                if (errorDiv) {
+                    errorDiv.textContent = 'This field is required';
+                    errorDiv.style.display = 'block';
+                }
+                isValid = false;
+                
+                // Add shake animation
+                field.classList.add('shake');
+                setTimeout(() => {
+                    field.classList.remove('shake');
+                }, 600);
+            } else if (field) {
+                field.classList.remove('error-field');
+                if (errorDiv) {
+                    errorDiv.style.display = 'none';
+                }
+            }
+        });
+        
+        return isValid;
+    }
+    
+    // DISABLE THE FRONTEND.JS FORM HANDLING
+    // If we're using frontend.js, we need to disable its form handling
+    if (window.SharedStarsFrontend && window.SharedStarsFrontend.handleFormSubmit) {
+        applicationForm.removeAttribute('data-api-submit');
+    }
+    
+    // Form submission handler
+    applicationForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        // Final validation
+        let isValid = validateStep(4);
+        if (!isValid) return;
+        
+        // Show processing message
+        const formSuccessMessage = document.getElementById('formSuccessMessage');
+        if (formSuccessMessage) {
+            formSuccessMessage.style.display = 'flex';
+        }
+        
+        // Disable submit button to prevent multiple submissions
+        const submitButton = document.getElementById('submit-application');
+        const originalButtonText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <svg class="loading-spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-dasharray="30 30" fill="none" />
+            </svg>
+            Processing...
+        `;
+        
+        try {
+            // Create FormData object
+            const formData = new FormData(applicationForm);
+            
+            // DEBUG: Log all form values
+            console.log("Form Data:");
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+            
+            // Get the skills values from the multiple select
+            const skillsSelect = document.getElementById('skills');
+            if (skillsSelect && skillsSelect.options) {
+                const selectedSkills = Array.from(skillsSelect.selectedOptions).map(option => option.value);
+                
+                // Remove any existing skills entries and add the array
+                formData.delete('skills');
+                selectedSkills.forEach(skill => formData.append('skills', skill));
+            }
+            
+            // Map fields as needed for MongoDB schema compatibility
+            if (!formData.get('lifeMissionAlignment') && formData.get('motivation')) {
+                formData.append('lifeMissionAlignment', formData.get('motivation'));
+            }
+            
+            // Ensure required fields are present
+            if (!formData.get('spaceMissionChoice')) {
+                formData.append('spaceMissionChoice', 'Any'); // Default value
+            }
+            
+            // Submit form with FormData to handle file uploads properly
+            // Make sure we're using the correct endpoint
+            const response = await fetch('/api/applications/submit', {
+                method: 'POST',
+                body: formData
+            });
+            
+            // Parse the JSON response
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.error || 'Application submission failed');
+            }
+            
+            if (result.success) {
+                // Show application ID in the success modal if available
+                if (result.applicationId) {
+                    const applicationIdElement = document.getElementById('application-id');
+                    if (applicationIdElement) {
+                        applicationIdElement.textContent = `Application ID: ${result.applicationId}`;
+                    }
+                }
+                
+                // Hide processing message
+                if (formSuccessMessage) {
+                    formSuccessMessage.style.display = 'none';
+                }
+                
+                // Show success modal
+                const successModal = document.getElementById('success-modal');
+                if (successModal) {
+                    successModal.classList.remove('hidden');
+                    successModal.classList.add('show');
+                }
+                
+                // Reset form
+                applicationForm.reset();
+                const fileNameDisplay = document.getElementById('file-name');
+                if (fileNameDisplay) {
+                    fileNameDisplay.textContent = 'No file chosen';
+                }
+                
+                // Reset to first step
+                stepContents.forEach((step, index) => {
+                    if (index === 0) {
+                        step.style.display = 'block';
+                        step.classList.add('active');
+                    } else {
+                        step.style.display = 'none';
+                        step.classList.remove('active');
+                    }
+                });
+                
+                // Reset step indicators
+                stepIndicators.forEach((indicator, index) => {
+                    if (index === 0) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
+                });
+            } else {
+                throw new Error(result.error || 'Application submission failed');
+            }
+        } catch (error) {
+            // Hide processing message
+            if (formSuccessMessage) {
+                formSuccessMessage.style.display = 'none';
+            }
+            
+            alert(`Error: ${error.message || 'Something went wrong. Please try again.'}`);
+            console.error('Application submission error:', error);
+        } finally {
+            // Reset button state
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonText;
+        }
+    });
+    
+    // File upload handling
+    const resumeInput = document.getElementById('resume');
+    const fileNameDisplay = document.getElementById('file-name');
+    
+    if (resumeInput && fileNameDisplay) {
+        resumeInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                fileNameDisplay.textContent = this.files[0].name;
+            } else {
+                fileNameDisplay.textContent = 'No file chosen';
+            }
+        });
+    }
+    
+    // Close modal when clicking the button
+    const closeModalButton = document.querySelector('.close-modal');
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', function() {
+            const successModal = document.getElementById('success-modal');
+            if (successModal) {
+                successModal.classList.add('hidden');
+                successModal.classList.remove('show');
+                window.location.href = '/';
+            }
+        });
+    }
+});
+        </script>
+</body>
+</html>

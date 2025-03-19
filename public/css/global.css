@@ -1,0 +1,3231 @@
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Regular.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Regular.woff') format('woff');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Bold.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Bold.woff') format('woff');
+    font-weight: 700; /* Bold */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Italic.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Italic.woff') format('woff');
+    font-weight: 400; /* Regular */
+    font-style: italic;
+}
+/* Global Styles */
+body {
+    font-family: 'Aeonik', sans-serif;
+    font-weight: 400; /* Regular */
+    margin: 0;
+    padding: 0;
+    background-color: #0c1017;
+    color: white;
+}
+
+h1, h2, h3 {
+    font-family: 'Aeonik', sans-serif;
+    font-weight: 700; /* Bold */
+}
+
+a {
+    color: #4a7de9;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-family: 'Aeonik', sans-serif;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #4a7de9;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #3a6fd9;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #4a7de9;
+    color: #4a7de9;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(74, 125, 233, 0.1);
+}
+/* Navbar */
+.navbar {
+    background-color: #004AAD;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-logo {
+    font-family: 'Aeonik', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+}
+
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links a {
+    font-family: 'Aeonik', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+    color: #4a7de9;
+}
+
+/* Hero Section */
+.hero {
+    background-color: #0c1017;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #ccc;
+}
+
+/* Mission & Vision Section */
+.mission-vision {
+    padding: 60px 20px;
+    background-color: rgba(13, 18, 30, 0.8);
+}
+
+.mission-vision h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.mission-vision p {
+    font-size: 18px;
+    color: #ccc;
+    line-height: 1.6;
+}
+
+/* Team Section */
+.team {
+    padding: 60px 20px;
+}
+
+.team h2 {
+    font-size: 32px;
+    margin-bottom: 40px;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.team-member {
+    text-align: center;
+}
+
+.team-member img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 16px;
+}
+
+.team-member h3 {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.team-member p {
+    font-size: 16px;
+    color: #ccc;
+}
+
+/* Footer */
+.footer {
+    background-color: rgba(13, 18, 30, 0.8);
+    padding: 20px;
+    text-align: center;
+}
+
+.footer p {
+    font-size: 14px;
+    color: #888;
+}
+
+/* Example: Apply Aeonik to the body */
+body {
+    font-family: 'Aeonik', sans-serif;
+    font-weight: 400; /* Regular */
+}
+
+/* Example: Apply Aeonik to headings */
+h1, h2, h3 {
+    font-family: 'Aeonik', sans-serif;
+    font-weight: 700; /* Bold */
+}
+
+/* Example: Apply Aeonik to paragraphs */
+p {
+    font-family: 'Aeonik', sans-serif;
+    font-weight: 400; /* Regular */
+}
+
+/* Example: Apply Aeonik Italic */
+.italic-text {
+    font-family: 'Aeonik', sans-serif;
+    font-weight: 400; /* Regular */
+    font-style: italic;
+}
+
+        /* Add the Navbar CSS here */
+        .navbar {
+            background-color: #004AAD;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .video-background video {
+            position: absolute;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            opacity: 0.5;
+        }
+        
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 30, 0.7);
+            z-index: -1;
+        }
+        
+        header {
+            background-color: rgba(12, 16, 23, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #4a7de9;
+        }
+        
+        .nav-links a.active {
+            color: #4a7de9;
+            font-weight: 500;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .lang-selector {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .get-started {
+            background: #6b46c1;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .get-started:hover {
+            background: #5a35b0;
+        }
+        
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 60px;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .hero-title {
+            color: #4a7de9;
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(74, 125, 233, 0.3);
+        }
+        
+        .hero-subtitle {
+            color: #ccc;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+        
+        .content-section {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .content-card {
+            background-color: rgba(13, 18, 30, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 125, 233, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            color: #4a7de9;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .section-subtitle {
+            color: #ccc;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        /* Mission & Vision Section Styles */
+#mission-vision {
+    padding: 80px 0;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.mission-vision-container {
+    position: relative;
+}
+
+/* Blue pill button */
+.space-pill {
+    display: inline-block;
+    background-color: rgba(74, 125, 233, 0.15);
+    color: #4a7de9;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+}
+
+/* Heading styles */
+.mv-heading {
+    color: #ffffff;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.rocket-emoji {
+    display: inline-block;
+    font-size: 42px;
+}
+
+/* Subtitle text */
+.mv-subtitle {
+    color: #aaadb2;
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 650px;
+    margin-bottom: 40px;
+}
+
+/* Card grid layout */
+.mv-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+}
+
+/* Right column layout */
+.mv-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Card styling */
+.mv-card {
+    background-color: rgba(13, 18, 30, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 30px;
+    height: fit-content;
+}
+
+/* Icon styling */
+.mv-icon {
+    background-color: rgba(14, 26, 63, 0.8);
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Card titles */
+.mv-card-title {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* Card text */
+.mv-card-text {
+    color: #aaadb2;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Checklist styling */
+.mv-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px 0;
+}
+
+.mv-check-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    color: #aaadb2;
+}
+
+.mv-check-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    background-color: rgba(74, 125, 233, 0.15);
+    border-radius: 5px;
+    margin-right: 14px;
+    margin-top: 3px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .mv-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .mv-heading {
+        font-size: 36px;
+    }
+    
+    .space-pill {
+        margin-bottom: 16px;
+    }
+}
+        .primary-button {
+            background: #4a7de9;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .primary-button:hover {
+            background: #3a6fd9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .secondary-button {
+            background: rgba(74, 125, 233, 0.1);
+            color: #4a7de9;
+            border: 1px solid rgba(74, 125, 233, 0.3);
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .secondary-button:hover {
+            background: rgba(74, 125, 233, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .advisor-card {
+            background-color: rgba(20, 25, 40, 0.8);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(74, 125, 233, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .advisor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border-color: rgba(74, 125, 233, 0.4);
+        }
+        
+        .advisor-name {
+            color: #4a7de9;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .advisor-title {
+            color: #ccc;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        
+        .advisor-expertise {
+            display: inline-block;
+            background-color: rgba(74, 125, 233, 0.15);
+            color: #4a7de9;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .advisor-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 16px;
+            border: 3px solid rgba(74, 125, 233, 0.3);
+        }
+        
+        
+        .mission-card {
+            background-color: rgba(20, 25, 40, 0.7);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4a7de9;
+        }
+        
+        .story-quote {
+            font-style: italic;
+            font-size: 20px;
+            color: #4a7de9;
+            margin: 24px 0;
+            padding-left: 20px;
+            border-left: 3px solid #4a7de9;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .highlight-text {
+            color: #4a7de9;
+            font-weight: 600;
+        }
+        
+        .footer-section {
+            background-color: rgba(13, 18, 30, 0.6);
+            padding: 60px 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-heading {
+            color: #4a7de9;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .footer-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        
+        .footer-list li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-list a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-list a:hover {
+            color: #4a7de9;
+        }
+        
+        .copyright {
+            margin-top: 60px;
+            text-align: center;
+            color: #888;
+        }
+        /* Mission and Vision Section */
+
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.rocket-icon {
+    display: inline-block;
+    transform: rotate(45deg);
+    margin-left: 8px;
+}
+
+.mission-vision-card {
+    background-color: rgba(20, 25, 40, 0.7);
+    border-radius: 16px;
+    padding: 30px;
+    transition: transform 0.3s ease;
+}
+
+.mission-vision-card:hover {
+    transform: translateY(-5px);
+}
+
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(74, 125, 233, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #4a7de9;
+    margin-bottom: 12px;
+}
+
+.card-text {
+    color: #ffffff;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.feature-list {
+    margin: 20px 0;
+}
+
+.feature-item {
+    display: flex;
+    margin-bottom: 12px;
+    align-items: flex-start;
+}
+
+.check-icon {
+    color: #4a7de9;
+    font-weight: bold;
+    min-width: 24px;
+    height: 24px;
+    background-color: rgba(74, 125, 233, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    margin-top: 2px;
+}
+
+.purpose-section {
+    background-color: rgba(20, 25, 40, 0.7);
+    border-radius: 16px;
+    padding: 30px;
+    margin-top: 20px;
+}
+/* Section styling */
+#mission-vision {
+    padding: 60px 0;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Pill button */
+.pill-tag {
+    background-color: rgba(74, 125, 233, 0.2);
+    color: #4a7de9;
+    font-size: 14px;
+    padding: 6px 15px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    color: #ffffff;
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.section-subtitle {
+    color: #aaadb2;
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+
+/* Card styling */
+.mission-card, .vision-card, .purpose-card {
+    background-color: rgba(13, 18, 30, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 30px;
+}
+
+/* Icon container */
+.icon-box {
+    background-color: rgba(14, 26, 63, 0.8);
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Headings */
+.card-title {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Text color */
+.card-text {
+    color: #aaadb2;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Checklist items */
+.check-list {
+    margin-bottom: 20px;
+}
+
+.check-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.check-icon {
+    background-color: rgba(74, 125, 233, 0.2);
+    min-width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+}
+
+.check-item .card-text {
+    margin-bottom: 0;
+}
+
+/* Grid layout */
+.mission-vision-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+    .mission-vision-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-title {
+        font-size: 36px;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .mission-vision-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .mission-vision-container {
+        width: 90%;
+        padding: 20px;
+    }
+}
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .social-link {
+            color: #888;
+        }
+        
+        .social-link:hover {
+            color: #4a7de9;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .nav-right {
+                gap: 10px;
+            }
+            
+            .get-started {
+                padding: 8px 16px;
+            }
+        }
+/* Base styles */
+body {
+    background-color: #0c1017;
+    color: white;
+    font-family: 'Aeonik', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('/images/stars-bg.png');
+    background-size: cover;
+}
+
+/* Container for consistent width */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header and navigation */
+.site-header {
+    background-color: rgba(12, 16, 23, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 15px 0;
+}
+
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.main-nav {
+    display: flex;
+    gap: 30px;
+}
+
+.main-nav a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.main-nav a:hover, 
+.main-nav a.active {
+    color: #4a7de9;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.language-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+/* Button styles */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #6b46c1;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #5a35b0;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: rgba(74, 125, 233, 0.1);
+    color: #4a7de9;
+    border: 1px solid rgba(74, 125, 233, 0.3);
+}
+
+.btn-secondary:hover {
+    background: rgba(74, 125, 233, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Hero section */
+.hero-section {
+    padding: 100px 0 60px;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #aaadb2;
+    max-width: 800px;
+    margin: 0 auto 40px;
+}
+
+.cta-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Text alignment utilities */
+.text-center {
+    text-align: center;
+}
+
+/* Add more global styles as needed */
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Thin.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-ThinItalic.woff2') format('woff2'),
+         url('/fonts2/Aeonik-ThinItalic.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Light.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-LightItalic.woff2') format('woff2'),
+         url('/fonts2/Aeonik-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Regular.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-RegularItalic.woff2') format('woff2'),
+         url('/fonts2/Aeonik-RegularItalic.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Medium.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-MediumItalic.woff2') format('woff2'),
+         url('/fonts2/Aeonik-MediumItalic.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Bold.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-BoldItalic.woff2') format('woff2'),
+         url('/fonts2/Aeonik-BoldItalic.woff') format('woff');
+    font-weight: 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-Black.woff2') format('woff2'),
+         url('/fonts2/Aeonik-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aeonik';
+    src: url('/fonts2/Aeonik-BlackItalic.woff2') format('woff2'),
+         url('/fonts2/Aeonik-BlackItalic.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+}
+/* Mission and Vision Section Styles */
+.mission-vision-section {
+    padding: 80px 0;
+    position: relative;
+    color: white;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Reach the space button */
+.reach-space-btn {
+    display: inline-block;
+    background-color: rgba(74, 125, 233, 0.1);
+    color: #4a7de9;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: all 0.3s;
+}
+
+.reach-space-btn:hover {
+    background-color: rgba(74, 125, 233, 0.2);
+}
+
+/* Section title */
+.mission-vision-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rocket-emoji {
+    height: 40px;
+    width: auto;
+}
+
+/* Mission intro text */
+.mission-intro {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 800px;
+    margin-bottom: 60px;
+}
+
+/* Cards container */
+.mission-cards-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 24px;
+    margin-top: 40px;
+}
+
+/* Make the mission card span two rows */
+.mission-card {
+    grid-row: span 2;
+    background: rgba(18, 24, 38, 0.8);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.vision-card, .purpose-card {
+    background: rgba(18, 24, 38, 0.8);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Card icon */
+.card-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(0, 102, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.mission-icon, .vision-icon, .purpose-icon {
+    width: 32px;
+    height: 32px;
+}
+
+/* Card title */
+.card-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+/* Card text */
+.card-description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #d1d5db;
+}
+
+.card-detail {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+/* Mission list */
+.mission-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px 0;
+}
+
+.mission-list li {
+    display: flex;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.check-icon {
+    width: 20px;
+    height: 20px;
+    background-color: rgba(0, 102, 255, 0.1);
+    border-radius: 4px;
+    margin-right: 12px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.check-icon::before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #0066FF;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Mission footer paragraphs */
+.mission-footer {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #d1d5db;
+    margin-bottom: 16px;
+}
+
+/* Card decoration (blue flow lines in the background) */
+.card-decoration {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background-image: url('/images/flow-decoration.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .mission-cards-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .mission-card {
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .mission-vision-title {
+        font-size: 36px;
+    }
+    
+    .mission-intro {
+        font-size: 16px;
+    }
+    
+    .card-title {
+        font-size: 24px;
+    }
+}
+/* Mission and Vision Section Styles - Perfect Match */
+.mission-vision-section {
+    padding: 80px 0;
+    position: relative;
+    color: white;
+    background-color: transparent; /* Let background image show through */
+}
+
+/* Reach the space button with glass effect */
+.reach-space-wrapper {
+    margin-bottom: 40px;
+    display: inline-block;
+}
+
+.reach-space-btn {
+    display: inline-block;
+    background-color: rgba(0, 102, 255, 0.1);
+    color: #007bff; /* Bright blue */
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.reach-space-btn:hover {
+    background-color: rgba(0, 102, 255, 0.2);
+}
+
+/* Section title - with line break */
+.mission-vision-title {
+    font-size: 56px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: left;
+    line-height: 1.1;
+    color: white;
+}
+
+.rocket-emoji {
+    font-size: 40px;
+    vertical-align: middle;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+/* Mission intro text */
+.mission-intro {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 60px;
+    text-align: left;
+    color: #e0e0e0; /* Slightly off-white */
+}
+
+/* Cards container - matches Figma layout */
+.mission-cards-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 24px;
+    margin-top: 40px;
+}
+
+/* Make the mission card span two rows as in Figma */
+.mission-card {
+    grid-row: span 2;
+    background: rgba(18, 24, 38, 0.7); /* Slightly transparent dark blue */
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vision-card, .purpose-card {
+    background: rgba(18, 24, 38, 0.7); /* Slightly transparent dark blue */
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Card icon with exact styling matching Figma */
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    background: rgba(0, 102, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Card title */
+.card-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: white;
+}
+
+/* Card text */
+.card-description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #d1d5db;
+}
+
+.card-detail {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    color: white;
+}
+
+/* Mission list with exact styling from Figma */
+.mission-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px 0;
+}
+
+.mission-list li {
+    display: flex;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    color: white;
+    font-size: 15px;
+}
+
+.check-icon {
+    margin-right: 12px;
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+/* Blue check box styling */
+.blue-check {
+    width: 16px;
+    height: 16px;
+    background-color: rgba(0, 102, 255, 0.1);
+    border-radius: 2px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.blue-check svg {
+    width: 10px;
+    height: 10px;
+}
+
+/* Mission footer paragraphs with exact styling */
+.mission-footer {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #d1d5db;
+    margin-bottom: 16px;
+}
+
+/* Card decoration (blue flow lines in the background) */
+.card-decoration {
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    opacity: 0.15;
+    pointer-events: none;
+    border: 2px solid #0066FF;
+    border-radius: 50%;
+}
+
+.card-decoration:before {
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    width: 260px;
+    height: 260px;
+    border: 2px solid #0066FF;
+    border-radius: 50%;
+    opacity: 0.1;
+}
+
+.card-decoration:after {
+    content: "";
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 140px;
+    height: 140px;
+    border: 2px solid #0066FF;
+    border-radius: 50%;
+    opacity: 0.2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .mission-cards-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .mission-card {
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .mission-vision-title {
+        font-size: 42px;
+    }
+    
+    .mission-intro {
+        font-size: 16px;
+    }
+    
+    .card-title {
+        font-size: 24px;
+    }
+}
+.mission-vision-section {
+    padding: 80px 0;
+    color: white;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Reach space button */
+.reach-space-btn {
+    display: inline-block;
+    background-color: rgba(0, 102, 255, 0.1);
+    color: #0066FF;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 40px;
+    transition: background-color 0.3s;
+}
+
+.reach-space-btn:hover {
+    background-color: rgba(0, 102, 255, 0.2);
+}
+
+/* Title */
+.mission-title {
+    font-size: 56px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 1.1;
+}
+
+.rocket-emoji {
+    font-size: 40px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Intro text */
+.mission-intro {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #d1d5db;
+    max-width: 600px;
+    margin-bottom: 60px;
+}
+
+/* Cards grid */
+.mission-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+    gap: 24px;
+}
+
+/* All cards */
+.mission-card, .vision-card, .purpose-card {
+    background-color: rgba(18, 24, 38, 0.8);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Mission card spans 2 rows */
+.mission-card {
+    grid-row: span 2;
+}
+
+/* Card icon */
+.icon-container {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(0, 102, 255, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+/* Card titles */
+.card-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: white;
+}
+
+/* Main description */
+.main-desc {
+    color: #d1d5db;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.secondary-desc {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    color: white;
+}
+
+/* Feature list */
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px 0;
+}
+
+.feature-list li {
+    display: flex;
+    margin-bottom: 16px;
+    align-items: flex-start;
+}
+
+.feature-list li span {
+    color: white;
+    line-height: 1.5;
+}
+
+.checkbox {
+    margin-right: 12px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+/* Footer text */
+.footer-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #d1d5db;
+    margin-bottom: 16px;
+}
+
+/* Card decoration */
+.card-decoration {
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    border: 2px solid rgba(0, 102, 255, 0.2);
+    pointer-events: none;
+}
+
+.card-decoration::before {
+    content: "";
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    border-radius: 100%;
+    border: 2px solid rgba(0, 102, 255, 0.1);
+}
+
+.card-decoration::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border-radius: 100%;
+    border: 2px solid rgba(0, 102, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .mission-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .mission-card {
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .mission-title {
+        font-size: 42px;
+    }
+    
+    .mission-intro {
+        font-size: 16px;
+    }
+    
+    .card-title {
+        font-size: 24px;
+    }
+}
+/* Alignment fix for mission-vision section */
+.mission-vision-section {
+    padding: 40px 0 80px; /* Reduced top padding from 80px to 40px */
+    color: white;
+    text-align: left;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: left; /* Force left alignment */
+}
+
+/* Reach space button */
+.reach-space-btn {
+    display: inline-block;
+    background-color: rgba(0, 102, 255, 0.1);
+    color: #0066FF;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 40px;
+    transition: background-color 0.3s;
+    text-align: left;
+}
+
+/* Title with explicit left alignment */
+.mission-title {
+    font-size: 56px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 1.1;
+    text-align: left;
+}
+
+/* Add proper spacing under the reach-space button */
+.reach-space-btn {
+    margin-bottom: 24px; /* Reduced from 40px to 24px */
+}
+/* Fix any potential text-align inheritance issues */
+.mission-vision-section * {
+    text-align: left;
+}
+
+/* Only exception for items that need center alignment */
+.icon-container {
+    text-align: center;
+}
+/* Reduce the top padding to bring everything up */
+.mission-vision-section {
+    padding: 40px 0 80px; /* Reduced top padding from 80px to 40px */
+}
+
+/* Add proper spacing under the reach-space button */
+.reach-space-btn {
+    margin-bottom: 24px; /* Reduced from 40px to 24px */
+}
+/* Further reduce all vertical spacing */
+
+/* Reduce section padding - make top padding much smaller */
+.mission-vision-section {
+    padding: 20px 0 60px; /* Even smaller top padding */
+}
+
+/* Reduce space after the button */
+.reach-space-btn {
+    margin-bottom: 20px; /* Reduced further */
+}
+
+/* Reduce space after the title */
+.mission-title {
+    margin-bottom: 20px; /* Reduced from 30px */
+}
+
+/* Reduce space after the intro text */
+.mission-intro {
+    margin-bottom: 40px; /* Reduced from 60px */
+}
+
+/* Remove any additional top margins that might be adding space */
+.reach-space-btn,
+.mission-title,
+.mission-intro {
+    margin-top: 0;
+}
+
+/* Inspect for any other elements that might have margin/padding */
+.container > * {
+    margin-top: 0; /* Remove any top margins within container */
+}
+/* Final fixes for perfect alignment */
+
+/* Hide the "Reach the space" button if it should not be shown */
+.reach-space-btn {
+    display: none; /* Remove this if you actually want to keep the button */
+}
+
+/* Darker card backgrounds */
+.mission-card, .vision-card, .purpose-card {
+    background-color: rgba(15, 20, 30, 0.9); /* Darker, more solid background */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Fix the grid alignment */
+.mission-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 24px;
+}
+
+/* Make sure the mission card spans exactly 2 rows */
+.mission-card {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+}
+
+/* Explicitly position the vision card */
+.vision-card {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+/* Explicitly position the purpose card */
+.purpose-card {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+/* Additional margin adjustments */
+.mission-vision-section {
+    padding: 0; /* Remove all section padding */
+    margin-top: 40px; /* Add controlled top margin */
+}
+
+/* Ensure title has correct line height */
+.mission-title {
+    line-height: 1;
+    margin-bottom: 24px;
+}
+
+/* Target the title second line to control spacing */
+.mission-title br + span {
+    display: inline-block;
+    margin-top: 8px;
+}
+
+/* Spacing after the intro text */
+.mission-intro {
+    margin-bottom: 32px;
+}
+
+/* Make sure cards have same height in each row */
+.vision-card, .purpose-card {
+    height: calc(100% - 24px); /* Account for the gap */
+    box-sizing: border-box;
+}
+.story-section,
+.story-section .container,
+.story-section h2,
+.story-section p {
+  text-align: left !important;
+}
+/* Make sure your title is explicitly left-aligned */
+.story-title {
+    text-align: left !important;
+  }
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Our Story button */
+.our-story-btn {
+    display: inline-block;
+    background-color: rgba(0, 102, 255, 0.1);
+    color: #0066FF;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    transition: background-color 0.3s;
+}
+
+.our-story-btn:hover {
+    background-color: rgba(0, 102, 255, 0.2);
+}
+
+/* Title */
+.story-title {
+    font-size: 56px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    line-height: 1.1;
+    text-align: left;
+}
+
+/* Content layout */
+.story-content {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* Story text */
+.story-text {
+    max-width: 700px;
+}
+
+.story-paragraph {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    color: #d1d5db;
+}
+
+.story-paragraph strong {
+    color: white;
+    font-weight: 600;
+}
+
+.story-callout {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 32px 0;
+    color: white;
+}
+
+.story-callout-bold {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 32px 0;
+    color: white;
+}
+
+/* Updated Signature */
+.signature {
+    margin-top: 40px;
+}
+
+.signature-quote {
+    font-size: 16px;
+    font-style: italic;
+    margin-bottom: 4px;
+    color: #d1d5db;
+}
+
+.signature-text {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+/* Founder image - adjusted to not be too large */
+.founder-image-container {
+    position: relative;
+    /* Push the image up a bit */
+    margin-top: -40px;
+}
+
+.founder-image {
+    width: 100%;
+    max-height: 500px; /* Control the maximum height */
+    object-fit: cover; /* Keeps aspect ratio while filling container */
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .story-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .founder-image-container {
+        margin-top: 0; /* Reset negative margin on smaller screens */
+    }
+    
+    .founder-image {
+        max-width: 400px;
+        margin: 0 auto;
+        max-height: none; /* Allow natural height on mobile */
+    }
+    
+    .story-title {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 768px) {
+    .story-title {
+        font-size: 36px;
+    }
+    
+    .story-callout, .story-callout-bold {
+        font-size: 20px;
+    }
+}
+/* Board of Advisors Section with Space Background */
+.advisors-section {
+    position: relative;
+    padding: 80px 0;
+    color: white;
+    background-color: #0c1017; /* Dark blue base */
+    overflow: hidden;
+}
+
+/* Create stars effect */
+.advisors-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(white 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.1;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Additionally, make sure your container doesn't have any alignment that could override this */
+.container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    z-index: 1;
+    text-align: center; /* This centers all text within the container */
+}
+
+/* You can then reset alignment for elements that should be left-aligned */
+.advisors-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 1.2;
+    text-align: left; /* Keep this left-aligned if needed */
+}
+
+/* Blue button at top */
+.advisor-button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.advisor-btn {
+    display: inline-block;
+    background-color: rgba(0, 102, 255, 0.2);
+    color: #0066FF;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.advisor-btn:hover {
+    background-color: rgba(0, 102, 255, 0.3);
+}
+
+/* Section Title - Left aligned */
+.advisors-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 1.2;
+    text-align: left;
+}
+
+/* Intro Text */
+.advisors-intro {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #d1d5db;
+    max-width: 900px;
+    margin: 0 auto 40px;
+    text-align: center;
+}
+
+/* Advisors Grid Layout */
+.advisors-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.advisors-grid-bottom {
+    grid-template-columns: repeat(2, 1fr);
+    width: calc(2/3 * 100%);
+    margin: 0 auto;
+}
+
+/* Advisor Card */
+.advisor-card {
+    background: rgba(18, 24, 38, 0.7);
+    border-radius: 16px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    height: 100%;
+}
+
+/* Advisor Image */
+.advisor-image-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(0, 102, 255, 0.3);
+}
+
+.advisor-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Advisor Name */
+.advisor-name {
+    color: #0066FF;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+/* Advisor Title */
+.advisor-title {
+    font-size: 14px;
+    color: #d1d5db;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    font-style: italic;
+}
+
+/* Expertise Tags */
+.advisor-expertise {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.expertise-tag {
+    background-color: rgba(0, 102, 255, 0.1);
+    color: #0066FF;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Advisor Bio */
+.advisor-bio {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #d1d5db;
+    flex-grow: 1;
+}
+/* Create a more natural, scattered stars effect */
+
+/* First, reset the background to just the dark blue base without the grid-based stars */
+.advisors-section {
+    position: relative;
+    padding: 80px 0;
+    color: white;
+    background-color: #0c1017; /* Dark blue base */
+    overflow: hidden;
+}
+
+/* Additional random stars using multiple div elements */
+.stars-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+/* Different twinkling animations with varying timing */
+@keyframes twinkle1 {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes twinkle2 {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.5; }
+}
+/* CSS to add stars background while preserving advisor layout */
+
+/* Add a stars background to the advisors section */
+.content-section#advisors {
+    position: relative;
+    background-color: #0c1017; /* Dark blue base */
+    padding-top: 40px; /* Ensure enough space at top */
+    overflow: hidden; /* Contain the stars */
+}
+
+/* Create the blue starry area that goes from the BOA box upward */
+.content-section#advisors::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 70%; /* Cover approximately top 30% of the section */
+    background-color: rgba(10, 25, 50, 0.3); /* Subtle blue overlay */
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Style the BOA box at the top */
+.boa-button {
+    position: relative;
+    display: inline-block;
+    background-color: rgba(0, 102, 255, 0.2);
+    color: #0066FF;
+    padding: 8px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 30px;
+    z-index: 2; /* Ensure it's above the stars */
+}
+
+/* Create the scattered stars effect */
+.stars-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 50%; /* Stars appear in the top half */
+    z-index: 1;
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+/* Make sure the section title and content are above the stars */
+.content-section#advisors .content-card,
+.content-section#advisors .section-title,
+.content-section#advisors .section-subtitle,
+.content-section#advisors .grid-container {
+    position: relative;
+    z-index: 2;
+}
+/* What We Offer Section Styles */
+.offer-section {
+    position: relative;
+    padding: 80px 0;
+    color: white;
+    background-color: #0c1017; /* Dark blue base */
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Blue button at top - same style as BOA button */
+.unlock-button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.unlock-btn {
+    display: inline-block;
+    background-color: rgba(0, 102, 255, 0.2);
+    color: #0066FF;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.unlock-btn:hover {
+    background-color: rgba(0, 102, 255, 0.3);
+}
+
+/* Section Title - Centered */
+.offer-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 50px;
+    line-height: 1.2;
+    text-align: center;
+}
+
+/* Offer Cards Grid */
+.offer-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin: 0 auto;
+}
+
+/* Offer Card */
+.offer-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Icon container - same style as in your Figma */
+.offer-icon-container {
+    width: 64px;
+    height: 64px;
+    background-color: rgba(18, 24, 38, 0.9);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Card title */
+.offer-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: white;
+}
+
+/* Card description */
+.offer-card-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #d1d5db;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .offer-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .offer-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .offer-title {
+        font-size: 36px;
+    }
+}
+/* Global Impact Section Styling - Add to your global.css */
+
+.impact-section {
+    background-color: #0A0E1A;
+    color: white;
+    padding: 60px 0;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Blue button at top */
+.impact-button-container {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%); /* This centers it properly */
+}
+
+.impact-btn {
+    display: inline-block;
+    background-color: #0066FF;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* Content box with darker background */
+.content-box {
+    background-color: rgba(10, 14, 26, 0.9);
+    border-radius: 20px;
+    padding: 40px;
+    margin-top: 40px;
+}
+
+/* Header styling */
+.impact-header {
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.impact-title {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: white;
+}
+
+.impact-intro {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 800px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Impact content layout */
+.impact-content {
+    display: flex;
+    gap: 40px;
+}
+
+.impact-regions {
+    flex: 1;
+}
+
+.robot-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.robot-image {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Region item styling */
+.region-item {
+    display: flex;
+    margin-bottom: 30px;
+    align-items: flex-start;
+}
+
+.region-icon {
+    margin-right: 15px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(20, 30, 50, 0.8);
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.region-icon.flag {
+    font-size: 24px;
+    background-color: rgba(20, 30, 50, 0.8);
+    border-radius: 10px;
+}
+
+.region-content {
+    flex: 1;
+}
+
+.region-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.region-desc {
+    font-size: 16px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Read more button - keeping your current styling */
+.read-more {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .impact-content {
+        flex-direction: column;
+    }
+    
+    .robot-container {
+        order: -1;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .impact-title {
+        font-size: 32px;
+    }
+    
+    .impact-button-container {
+        position: relative;
+        top: 0;
+        left: 50%;
+        margin-bottom: 20px;
+    }
+    
+    .content-box {
+        padding: 20px;
+    }
+}
+/* News & Blog Section Styling */
+.news-section {
+    background-color: #0A0E1A;
+    color: white;
+    padding: 60px 0;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Blue button at top */
+.news-button-container {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+}
+
+.news-btn {
+    display: inline-block;
+    background-color: #0066FF;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: 'Aeonik', sans-serif;
+}
+
+/* Header styling */
+.news-header {
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.news-title {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: white;
+    font-family: 'Aeonik-Bold', 'Aeonik', sans-serif;
+}
+
+.news-intro {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 700px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 20px;
+    font-family: 'Aeonik', sans-serif;
+}
+
+.view-all-container {
+    position: absolute;
+    right: 0;
+    top: 10px;
+}
+
+.view-all-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    font-family: 'Aeonik', sans-serif;
+}
+
+.view-all-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* News cards container */
+.news-cards {
+    display: flex;
+    gap: 24px;
+    overflow-x: hidden;
+    padding: 10px 0;
+}
+
+/* Individual news card */
+.news-card {
+    flex: 0 0 350px;
+    background-color: rgba(20, 30, 50, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    position: relative;
+    height: 400px; /* Fixed height for all cards */
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Featured card styling */
+.featured-card {
+    position: relative;
+}
+
+.card-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Card image */
+.card-image {
+    height: 200px;
+    background-position: center;
+    background-size: cover;
+}
+
+.nebula-image {
+    background-image: url('/images/nebula.jpg');
+}
+
+/* Card content */
+.card-content {
+    padding: 20px;
+}
+
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    padding: 40px 20px;
+}
+
+.card-category-date {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.card-category {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'Aeonik-Medium', 'Aeonik', sans-serif;
+}
+
+.featured {
+    color: #00BFFF;
+}
+
+.card-date {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Aeonik', sans-serif;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    line-height: 1.4;
+    font-family: 'Aeonik-Bold', 'Aeonik', sans-serif;
+}
+
+/* Author info */
+.card-author {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.author-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 12px;
+    background-color: #555;
+}
+
+.author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name {
+    font-weight: 600;
+    font-size: 14px;
+    font-family: 'Aeonik-Medium', 'Aeonik', sans-serif;
+}
+
+.author-title {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Aeonik', sans-serif;
+}
+
+/* Placeholder styling */
+.placeholder-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(20, 30, 50, 0.2);
+}
+
+.placeholder-icon {
+    margin-bottom: 20px;
+}
+
+.placeholder-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: white;
+    font-family: 'Aeonik-Bold', 'Aeonik', sans-serif;
+}
+
+.placeholder-text {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 250px;
+    line-height: 1.5;
+    font-family: 'Aeonik', sans-serif;
+}
+
+/* Navigation arrows */
+.news-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.nav-arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.nav-arrow:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .news-cards {
+        overflow-x: auto;
+        padding-bottom: 20px;
+    }
+    
+    .view-all-container {
+        position: static;
+        text-align: right;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .news-title {
+        font-size: 32px;
+    }
+    
+    .news-button-container {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin-bottom: 20px;
+    }
+    
+    .news-cards {
+        flex-direction: column;
+    }
+    
+    .news-card {
+        width: 100%;
+        flex: none;
+        height: auto;
+    }
+    
+    .center-content {
+        padding: 30px 20px;
+    }
+}
+/* Fix alignment of title and description */
+.news-header {
+    margin-bottom: 40px;
+    position: relative;
+    text-align: center; /* Center the title and text */
+}
+
+.news-intro {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 800px; /* Increase max-width */
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 20px;
+    font-family: 'Aeonik', sans-serif;
+    margin-left: auto; /* Center the paragraph */
+    margin-right: auto; /* Center the paragraph */
+}
+
+/* Fix blog button styling */
+.news-button-container {
+    position: absolute;
+    top: 40px;
+    left: 50%; /* Center horizontally */
+    transform: translateX(-500px); /* Offset to the left by half the container width */
+}
+
+.news-btn {
+    display: inline-block;
+    background-color: rgba(0, 102, 255, 0.15); /* More subtle background */
+    color: #0066FF; /* Blue text */
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: 'Aeonik', sans-serif;
+}
+
+/* Fix card alignment */
+.news-cards {
+    display: flex;
+    gap: 24px;
+    overflow-x: hidden;
+    padding: 10px 0;
+    justify-content: center; /* Center the cards */
+}
+
+/* Adjust View All button */
+.view-all-container {
+    position: absolute;
+    right: 50%; /* Position from the right */
+    top: 10px;
+    transform: translateX(500px); /* Offset to the right by half the container width */
+}
+
+.view-all-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    font-family: 'Aeonik', sans-serif;
+}
+/* Digital Display Countdown */
+.countdown-section {
+    padding: 80px 0;
+}
+
+.countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.countdown-card {
+    background-color: rgba(20, 24, 38, 0.8);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.countdown-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    color: white;
+}
+
+.digital-countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.digit-box {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    width: 70px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(50, 50, 50, 0.5);
+}
+
+/* Global countdown - orange glow */
+#baseline-countdown .digital-digit {
+    font-family: 'Digital', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    color: #ff8c00;
+    text-shadow: 0 0 10px #ff4500, 0 0 20px #ff4500;
+}
+
+/* Personal countdown - green glow */
+#personal-countdown .digital-digit {
+    font-family: 'Digital', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    color: #10b981;
+    text-shadow: 0 0 10px #0d9868, 0 0 20px #0d9868;
+}
+
+.time-separator {
+    font-size: 48px;
+    font-weight: 700;
+    margin-top: -10px;
+    margin-bottom: 40px;
+    color: #555;
+}
+
+.unit-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #7a7a7a;
+    font-weight: 500;
+}
+
+.countdown-info {
+    margin-top: 20px;
+    color: #10b981;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* Add a digital font for the countdown */
+@font-face {
+    font-family: 'Digital';
+    src: url('/fonts/digital-7.ttf');
+}
+
+/* Fallback if digital font isn't available */
+@supports not (font-family: 'Digital') {
+    .digital-digit {
+        font-family: monospace !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .countdown-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .digit-box {
+        width: 60px;
+        height: 70px;
+    }
+    
+    .digital-digit {
+        font-size: 42px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .digital-countdown {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .time-unit {
+        margin: 0 5px 15px;
+    }
+    
+    .digit-box {
+        width: 50px;
+        height: 60px;
+    }
+    
+    .digital-digit {
+        font-size: 36px !important;
+    }
+    
+    .time-separator {
+        font-size: 36px;
+        margin-top: -8px;
+        margin-bottom: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .digit-box {
+        width: 40px;
+        height: 50px;
+    }
+    
+    .digital-digit {
+        font-size: 28px !important;
+    }
+    
+    .time-separator {
+        font-size: 28px;
+        margin-top: -5px;
+        margin-bottom: 30px;
+    }
+    
+    .unit-label {
+        font-size: 10px;
+    }
+}
+/* Animation for digit changes */
+@keyframes digitFlash {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.digit-changed {
+    animation: digitFlash 0.5s ease-in-out;
+}
+
+/* Highlight effect for personal countdown updates */
+@keyframes highlightCountdown {
+    0% { box-shadow: 0 0 0px rgba(16, 185, 129, 0); }
+    50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.8); }
+    100% { box-shadow: 0 0 0px rgba(16, 185, 129, 0); }
+}
+
+.highlight-update {
+    animation: highlightCountdown 2s ease-in-out;
+}
