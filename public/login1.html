@@ -6,7 +6,8 @@
     <meta name="description" content="Log in to StelTrek Academy">
     <title>Login - StelTrek Academy</title>
     <link href="/css/tailwind.css" rel="stylesheet">
-    <link rel="stylesheet" href="/bhavik-styling/css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- <link rel="stylesheet" href="/bhavik-styling/css/main.css"> -->
     <!-- <link rel="stylesheet" href="/bhavik-styling/css/ai-assistant.css"> -->
 
     <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
@@ -176,11 +177,11 @@
                   const token = data.token;
 
                   // **Store token based on "Remember Me"**
-                  if (rememberMeCheckbox.checked) {
+                  // if (rememberMeCheckbox.checked) {
                     localStorage.setItem("authToken", token); // Persist even after closing browser
-                    } else {
-                    sessionStorage.setItem("authToken", token); // Remove on browser close
-                    }
+                    // } else {
+                    // sessionStorage.setItem("authToken", token); // Remove on browser close
+                    // }
 
                   window.location.href = "/mission-control.html";
               } catch (error) {
