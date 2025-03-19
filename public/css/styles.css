@@ -29,7 +29,3 @@
 }
 
 
-/* Input field */
-input {
-    @apply shadow-fieldShadow placeholder:text-white-300
-}
