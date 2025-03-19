@@ -304,19 +304,30 @@ async function checkAdminAuth() {
       const statusClass = `status-${app.status}`;
       
       row.innerHTML = `
-        <td>${app.name}</td>
-        <td>${app.email}</td>
-        <td>${app.background}</td>
-        <td>${formattedDate}</td>
-        <td><span class="status-badge ${statusClass}">${app.status}</span></td>
-        <td>${app.aiReview?.score?.toFixed(2) || 'N/A'}</td>
-        <td>
-          <button class="view-detail action-btn" data-id="${app._id}">View</button>
-        </td>
-      `;
-      
-      applicationsList.appendChild(row);
-    });
+      <td>${app.name}</td>
+      <td>${app.email}</td>
+      <td>${app.background}</td>
+      <td>${formattedDate}</td>
+      <td><span class="status-badge ${statusClass}">${app.status}</span></td>
+      <td>${app.aiReview?.score?.toFixed(2) || 'N/A'}</td>
+      <td class="actions-cell">
+        <button class="view-detail action-btn" data-id="${app._id}">View</button>
+        <div class="status-actions">
+          <button class="status-btn ${app.status === 'approved' ? 'active' : ''}" data-status="approved" data-application-id="${app._id}">
+            Approve
+          </button>
+          <button class="status-btn ${app.status === 'rejected' ? 'active' : ''}" data-status="rejected" data-application-id="${app._id}">
+            Reject
+          </button>
+          <button class="status-btn ${app.status === 'waitlisted' ? 'active' : ''}" data-status="waitlisted" data-application-id="${app._id}">
+            Waitlist
+          </button>
+        </div>
+        <button class="send-acceptance-email" data-application-id="${app._id}" ${app.emailSent ? 'disabled' : ''}>
+          ${app.emailSent ? '✓ Email Sent' : 'Send Acceptance Email'}
+        </button>
+      </td>
+    `;
     
     // Add event listeners to view buttons
     document.querySelectorAll('.view-detail').forEach(button => {
@@ -325,8 +336,9 @@ async function checkAdminAuth() {
         viewApplicationDetail(applicationId);
       });
     });
-  }
-  
+  // Setup email sending buttons
+  setupEmailButtons();
+
   function updatePagination(pagination) {
     const paginationElement = document.getElementById('pagination');
     if (!paginationElement) return;
@@ -547,8 +559,109 @@ async function checkAdminAuth() {
       console.error('Error:', error);
       alert('Error updating application status. Please try again.');
     }
-  }
+}
+
+/**
+ * Handle sending acceptance email when admin clicks the button
+ */
+function setupEmailButtons() {
+  // Find all email buttons in the application table
+  const sendEmailButtons = document.querySelectorAll('.send-acceptance-email');
   
+  // Add click handler to each button
+  sendEmailButtons.forEach(button => {
+    button.addEventListener('click', async function(event) {
+      event.preventDefault();
+      
+      // Get application ID from button's data attribute
+      const applicationId = this.getAttribute('data-application-id');
+      
+      // Change button state to loading
+      const originalText = this.innerHTML;
+      this.innerHTML = '<span class="spinner"></span> Sending...';
+      this.disabled = true;
+      
+      try {
+        // Call API to send email
+        const response = await fetch(`/api/admin/applications/${applicationId}/send-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Show success message
+          this.innerHTML = '✓ Email Sent';
+          this.classList.add('success');
+          
+          // Add notification
+          showNotification('Email sent successfully!', 'success');
+          
+          // Update status in UI if needed
+          const statusCell = this.closest('tr').querySelector('.status-cell');
+          if (statusCell) {
+            statusCell.innerHTML = '<span class="status approved">Email Sent</span>';
+          }
+        } else {
+          // Show error
+          this.innerHTML = '⚠ Failed';
+          this.classList.add('error');
+          showNotification(`Failed to send email: ${result.error}`, 'error');
+          
+          // Reset button after 3 seconds
+          setTimeout(() => {
+            this.innerHTML = originalText;
+            this.disabled = false;
+            this.classList.remove('error');
+          }, 3000);
+        }
+      } catch (error) {
+        // Handle network errors
+        console.error('Error sending email:', error);
+        this.innerHTML = '⚠ Error';
+        this.classList.add('error');
+        
+        showNotification('Network error while sending email', 'error');
+        
+        // Reset button after 3 seconds
+        setTimeout(() => {
+          this.innerHTML = originalText;
+          this.disabled = false;
+          this.classList.remove('error');
+        }, 3000);
+      }
+    });
+  });
+}
+
+/**
+ * Show a notification message
+ */
+function showNotification(message, type = 'info') {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.innerHTML = message;
+  
+  // Add to page
+  document.body.appendChild(notification);
+  
+  // Animate in
+  setTimeout(() => {
+    notification.classList.add('show');
+  }, 10);
+  
+  // Remove after 5 seconds
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+  }, 5000);
+}
   // STELLA Analytics functions - Include your existing STELLA analytics code here
   async function loadStellaOverview() {
     try {

@@ -83,7 +83,62 @@ router.get('/:id', ...adminAuth, async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to fetch application' });
   }
 });
+// Add this to your routes/admin/applications.js file
 
+/**
+ * Send acceptance email directly (no authentication required for email)
+ * POST /api/admin/applications/:id/send-email
+ */
+router.post('/:id/send-email', ...adminAuth, async (req, res) => {
+  try {
+    // Find the application
+    const application = await Application.findById(req.params.id);
+    
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        error: 'Application not found'
+      });
+    }
+    
+    // Make sure the application is approved
+    if (application.status !== 'approved') {
+      // Automatically approve it
+      application.status = 'approved';
+      await application.save();
+    }
+    
+    // Send the acceptance email
+    try {
+      await emailService.sendApplicationAcceptance(application);
+      
+      // Update application to record that email was sent
+      application.emailSent = true;
+      application.emailSentAt = new Date();
+      await application.save();
+      
+      // Send success response
+      res.json({
+        success: true,
+        message: `Acceptance email sent to ${application.email}`
+      });
+    } catch (emailError) {
+      console.error('Error sending acceptance email:', emailError);
+      
+      // Return error but don't fail completely
+      res.status(500).json({
+        success: false,
+        error: 'Failed to send email. Please try again.'
+      });
+    }
+  } catch (error) {
+    console.error('Error in send-email endpoint:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Server error while processing email request' 
+    });
+  }
+});
 // Update application status
 router.put('/:id/status', ...adminAuth, async (req, res) => {
   try {

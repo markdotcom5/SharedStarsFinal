@@ -1,693 +1,2230 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="StelTrek Academy - Begin Your Journey to Space" />
-    <title data-i18n="subscribe.pageTitle">Sign Up - SharedStars Academy</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Subscribe to SharedStars Academy - Begin your journey to space with personalized training and a path to spaceflight">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <title data-i18n="subscribePageTitle">Subscribe - SharedStars Academy</title>
 
-    <!-- Tailwind CSS & DaisyUI -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
-
-    <!-- Fonts & AOS -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/ai-assistant.css" />
-    <link rel="stylesheet" href="/css/main.css" />
-
-    <!-- Inline styles for Stripe elements -->
-    <style>
-      .StripeElement {
-        background-color: #2A303C;
-        padding: 16px;
-        border-radius: 8px;
-        border: 1px solid #374151;
-      }
-      .StripeElement--focus {
-        border-color: #60A5FA;
-      }
-      body {
-        font-family: 'Inter', sans-serif;
-        scroll-behavior: smooth;
-      }
-    </style>
-
-    <!-- Chart.js -->
+    <!-- Chart.js for price evolution graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <!-- Stripe JS -->
     <script src="https://js.stripe.com/v3/"></script>
-    <script>
-      // Replace 'your_publishable_key' with your actual publishable key
-      const stripe = Stripe('your_publishable_key'); 
-    </script>
+    
+    <style>
+        /* Page-specific styles that match your current about.html implementation */
+        body {
+            background-color: #0c1017;
+            background-image: url('/images/space-bg.jpg');
+            background-size: cover;
+            font-family: 'Aeonik', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
 
-    <!-- Language Selection Script -->
-    <script src="/js/languageSelection.js" defer></script>
-  </head>
-  <body class="min-h-screen bg-base-200">
-    <!-- NAVBAR -->
-    <div class="navbar bg-base-100 fixed top-0 z-50 shadow-lg">
-      <div class="container mx-auto flex items-center justify-between">
-        <div class="flex-1">
-          <a href="/index.html" aria-label="SharedStars Homepage">
-            <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-10" />
-          </a>
-        </div>
-        <nav class="desktop-menu hidden md:flex space-x-6">
-          <a href="/index.html" data-i18n="nav.home" class="text-gray-300 hover:text-white">Home</a>
-          <a href="/academy.html" data-i18n="nav.academy" class="text-gray-300 hover:text-white">Academy</a>
-          <a href="/about.html" data-i18n="nav.about" class="text-gray-300 hover:text-white">About</a>
-          <a href="/mission-control.html" data-i18n="nav.missionControl" class="text-gray-300 hover:text-white">Mission Control</a>
-          <a href="/subscribe.html" data-i18n="nav.subscribe" class="text-gray-300 hover:text-white">Subscribe</a>
-        </nav>
-      </div>
-    </div>
+        .site-header {
+            background-color: rgba(12, 16, 23, 0.9);
+            padding: 15px 0;
+            position: relative;
+            z-index: 100;
+        }
 
-    <!-- HERO SECTION -->
-    <div class="hero min-h-screen" style="background-image: url('/images/space-bg.jpg');">
-      <div class="hero-overlay bg-opacity-60"></div>
-      <div class="hero-content text-center text-neutral-content" data-aos="fade">
-        <div class="max-w-md">
-          <h1 class="mb-5 text-5xl font-bold" data-i18n="subscribe.heroTitle">
-            Chart Your Course to Space
-          </h1>
-          <div class="alert alert-warning shadow-lg mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <span data-i18n="subscribe.seatsWarning">
-              Space Seats are Filling Up Fast!
-            </span>
-          </div>
-          <!-- Stats Cards -->
-          <div class="stats shadow bg-base-200 bg-opacity-80 backdrop-blur">
-            <div class="stat">
-              <div class="stat-title" data-i18n="subscribe.currentPriceTitle">Current Price</div>
-              <div class="stat-value text-primary" data-i18n="subscribe.currentPriceValue">$450k</div>
-              <div class="stat-desc" data-i18n="subscribe.currentPriceDesc">Per space seat</div>
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            margin-left: 60px;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            margin: 0 15px;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #4a7de9;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-left: auto;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+            width: 24px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            opacity: 1;
+        }
+
+        .lang-btn img {
+            width: 24px;
+            height: 16px;
+            object-fit: contain;
+        }
+
+        .get-started-btn {
+            background-color: #0066FF;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .get-started-btn:hover {
+            background-color: #0055CC;
+        }
+
+        /* Hero section */
+        .hero-section {
+            padding: 120px 0 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .subscribe-badge {
+            display: inline-block;
+            background-color: rgba(74, 125, 233, 0.2);
+            color: #4a7de9;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #d1d5db;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        .alert-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #f87171;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .alert-badge svg {
+            margin-right: 8px;
+        }
+
+        .price-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .price-stat {
+            text-align: center;
+        }
+
+        .price-stat-title {
+            color: #9ca3af;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .price-stat-value {
+            color: #0066FF;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .price-stat-desc {
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        /* Plan section */
+        .plans-section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 60px;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .plan-card {
+            background-color: rgba(26, 33, 51, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background-color: rgba(74, 125, 233, 0.2);
+            color: #4a7de9;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .plan-card.featured {
+            border: 2px solid #0066FF;
+        }
+
+        .plan-card.featured .plan-badge {
+            background-color: #0066FF;
+            color: white;
+        }
+
+        .plan-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .plan-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .plan-price {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .price-currency {
+            font-size: 20px;
+            margin-right: 4px;
+        }
+
+        .price-period {
+            font-size: 16px;
+            color: #9ca3af;
+            margin-left: 4px;
+        }
+
+        .price-input {
+            width: 80%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .plan-description {
+            color: #d1d5db;
+            margin-top: 8px;
+        }
+
+        .plan-features {
+            padding: 24px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-item {
+            display: flex;
+            margin-bottom: 16px;
+            color: #d1d5db;
+        }
+
+        .feature-item svg {
+            color: #0066FF;
+            min-width: 20px;
+            margin-right: 12px;
+        }
+
+        .plan-cta {
+            padding: 0 24px 24px;
+        }
+
+        .plan-button {
+            width: 100%;
+            background-color: #0066FF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .plan-button:hover {
+            background-color: #0055CC;
+        }
+
+        .plan-button.outline {
+            background-color: transparent;
+            border: 1px solid #0066FF;
+            color: #0066FF;
+        }
+
+        .plan-button.outline:hover {
+            background-color: rgba(0, 102, 255, 0.1);
+        }
+
+        /* Credit system section */
+        .credit-section {
+            padding: 80px 0;
+            background-color: rgba(12, 16, 23, 0.7);
+        }
+
+        .credit-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .credit-info {
+            flex: 1;
+        }
+
+        .credit-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .credit-description {
+            color: #d1d5db;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .credit-multipliers {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .multiplier-item {
+            display: flex;
+            margin-bottom: 16px;
+        }
+
+        .multiplier-item svg {
+            color: #0066FF;
+            min-width: 20px;
+            margin-right: 12px;
+        }
+
+        .multiplier-text {
+            color: #d1d5db;
+        }
+
+        .multiplier-value {
+            color: #0066FF;
+            font-weight: 700;
+        }
+
+        .credit-graphic {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        /* Graphs section */
+        .graphs-section {
+            padding: 80px 0;
+        }
+
+        .graph-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .graph-subtitle {
+            text-align: center;
+            color: #d1d5db;
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .graph-container {
+            background-color: rgba(26, 33, 51, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 24px;
+            height: 400px;
+            margin-bottom: 60px;
+        }
+
+        /* Countdowns section */
+        .countdown-section {
+            padding: 0 0 80px;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .countdown-card {
+            background-color: rgba(26, 33, 51, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .countdown-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        /* Three Body Problem style countdown */
+        .tbp-countdown {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .tbp-unit {
+            position: relative;
+            width: 120px;
+        }
+
+        .tbp-value {
+            font-family: "MonoLisa", monospace;
+            font-size: 72px;
+            font-weight: 700;
+            text-align: center;
+            color: #0066FF;
+            position: relative;
+            height: 90px;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
+            display: flex;
+            justify-content: center;
+        }
+
+        .tbp-value .digit {
+            position: relative;
+            width: 45px;
+            height: 90px;
+            line-height: 90px;
+        }
+
+        .tbp-value .digit span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .tbp-value .digit .current {
+            transform: translateY(0);
+        }
+
+        .tbp-value .digit .next {
+            transform: translateY(100%);
+        }
+
+        .tbp-value .separator {
+            margin: 0 5px;
+            line-height: 90px;
+        }
+
+        .tbp-label {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #9ca3af;
+            text-transform: uppercase;
+        }
+
+        .tbp-unit:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.5), transparent);
+            top: 45px;
+            z-index: 10;
+        }
+
+        .tbp-value:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.5));
+            bottom: 0;
+        }
+
+        .personal-countdown .tbp-value {
+            color: #10b981; /* Green for personalized countdown */
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .personal-countdown .tbp-unit:before {
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+        }
+
+        .countdown-info {
+            color: #10b981;
+            text-align: center;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+
+        /* Payment section */
+        .payment-section {
+            padding: 80px 0;
+            background-color: rgba(12, 16, 23, 0.7);
+        }
+
+        .payment-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .payment-title {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        #card-element {
+            background-color: rgba(26, 33, 51, 0.7);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        #card-errors {
+            color: #ef4444;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .payment-button {
+            width: 100%;
+            background-color: #0066FF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .payment-button:hover {
+            background-color: #0055CC;
+        }
+
+        /* AI Assistance section */
+        .ai-assistance-section {
+            padding: 40px 0;
+        }
+        
+        .ai-assistance-card {
+            background-color: rgba(26, 33, 51, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .ai-icon {
+            background-color: rgba(0, 102, 255, 0.1);
+            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .ai-content {
+            flex: 1;
+        }
+        
+        .ai-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .ai-description {
+            color: #d1d5db;
+            margin-bottom: 16px;
+        }
+        
+        .ai-button {
+            background-color: #0066FF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .ai-button:hover {
+            background-color: #0055CC;
+        }
+
+        /* Stella Chat Modal */
+        #stellaModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #stellaModal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .stella-modal-content {
+            background-color: #1E2436;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .stella-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .stella-modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0066FF;
+        }
+
+        .stella-close-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 24px;
+            transition: color 0.3s;
+        }
+
+        .stella-close-btn:hover {
+            color: white;
+        }
+
+        .stella-chat-container {
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 16px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .stella-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stella-input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 16px;
+        }
+
+        .stella-send-btn {
+            background-color: #0066FF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stella-send-btn:hover {
+            background-color: #0055CC;
+        }
+
+        /* Chat styling */
+        .stella-message, .user-message {
+            display: flex;
+            margin-bottom: 16px;
+        }
+        
+        .stella-message {
+            align-items: flex-start;
+        }
+        
+        .user-message {
+            justify-content: flex-end;
+        }
+        
+        .stella-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #0066FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        
+        .stella-avatar img {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .stella-content {
+            background-color: #1a2133;
+            border-radius: 12px 12px 12px 0;
+            padding: 12px 16px;
+            max-width: 80%;
+            color: white;
+        }
+        
+        .user-content {
+            background-color: #0066FF;
+            border-radius: 12px 12px 0 12px;
+            padding: 12px 16px;
+            max-width: 80%;
+            color: white;
+        }
+        
+        .thinking-dots {
+            display: flex;
+        }
+        
+        .thinking-dots span {
+            animation: thinking 1.4s infinite;
+            font-size: 24px;
+            line-height: 10px;
+            margin-right: 4px;
+        }
+        
+        .thinking-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .thinking-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes thinking {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Responsive fixes */
+        @media (max-width: 1024px) {
+            .plans-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .credit-container {
+                flex-direction: column;
+            }
+            
+            .countdown-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tbp-unit {
+                width: 90px;
+            }
+
+            .tbp-value {
+                font-size: 56px;
+                height: 70px;
+            }
+
+            .tbp-value .digit {
+                width: 35px;
+                height: 70px;
+                line-height: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+            
+            .price-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .tbp-countdown {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .tbp-unit {
+                width: 80px;
+                margin-bottom: 15px;
+            }
+
+            .tbp-value {
+                font-size: 48px;
+                height: 60px;
+            }
+
+            .tbp-value .digit {
+                width: 30px;
+                height: 60px;
+                line-height: 60px;
+            }
+
+            .ai-assistance-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+/* Digital Display Countdown - Simplified for your current HTML */
+.countdown-section {
+    padding: 40px 0;
+}
+
+.countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.countdown-card {
+    background-color: rgba(20, 24, 38, 0.8);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+}
+
+.countdown-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: white;
+}
+
+/* Target existing structure more directly */
+[data-countdown] {
+    font-family: 'Courier New', monospace;
+    font-size: 42px;
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+/* Global countdown - orange color */
+#baseline-countdown [data-countdown] {
+    color: #ff8c00;
+    text-shadow: 0 0 10px #ff4500;
+}
+
+/* Personal countdown - green color */
+#personal-countdown [data-countdown] {
+    color: #10b981;
+    text-shadow: 0 0 10px #0d9868;
+}
+
+.unit-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #7a7a7a;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.countdown-info {
+    margin-top: 20px;
+    color: #10b981;
+}
+
+/* Animation for digit changes */
+@keyframes digitFlash {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.digit-changed {
+    animation: digitFlash 0.5s ease-in-out;
+}
+        @media (max-width: 640px) {
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+
+            .language-selector {
+                margin-left: auto;
+            }
+        }
+/* Fire effect countdown */
+.fire-countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.countdown-unit {
+    position: relative;
+    text-align: center;
+    margin: 0 5px;
+}
+
+.fire-digit-group {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
+    padding: 5px;
+    overflow: hidden;
+}
+
+.fire-digit {
+    position: relative;
+    font-family: "MonoLisa", monospace;
+    font-size: 42px;
+    font-weight: 700;
+    width: 40px;
+    height: 60px;
+    line-height: 60px;
+    color: #ff8c00;
+    text-shadow: 
+        0 0 5px #ff8c00,
+        0 0 10px #ff4500,
+        0 0 15px #ff0000;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 4px;
+    margin: 0 1px;
+    overflow: hidden;
+    transition: color 0.3s ease-out;
+}
+
+.countdown-separator {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ff8c00;
+    text-shadow: 0 0 5px #ff8c00;
+    margin: 0 2px;
+    align-self: center;
+}
+
+.unit-label {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #9ca3af;
+    text-transform: uppercase;
+}
+
+/* Fire animation effect */
+@keyframes flicker {
+    0% { text-shadow: 0 0 5px #ff8c00, 0 0 10px #ff4500, 0 0 15px #ff0000; }
+    25% { text-shadow: 0 0 5px #ff8c00, 0 0 12px #ff4500, 0 0 18px #ff0000; }
+    50% { text-shadow: 0 0 5px #ff8c00, 0 0 8px #ff4500, 0 0 12px #ff0000; }
+    75% { text-shadow: 0 0 5px #ff8c00, 0 0 14px #ff4500, 0 0 20px #ff0000; }
+    100% { text-shadow: 0 0 5px #ff8c00, 0 0 10px #ff4500, 0 0 15px #ff0000; }
+}
+
+.fire-digit {
+    animation: flicker 3s infinite alternate;
+}
+
+/* Personal countdown styles */
+.personal-countdown .fire-digit {
+    color: #10b981;
+    text-shadow: 
+        0 0 5px #10b981,
+        0 0 10px #0d9868,
+        0 0 15px #088053;
+    animation-name: flickerGreen;
+}
+
+.personal-countdown .countdown-separator {
+    color: #10b981;
+    text-shadow: 0 0 5px #10b981;
+}
+
+@keyframes flickerGreen {
+    0% { text-shadow: 0 0 5px #10b981, 0 0 10px #0d9868, 0 0 15px #088053; }
+    25% { text-shadow: 0 0 5px #10b981, 0 0 12px #0d9868, 0 0 18px #088053; }
+    50% { text-shadow: 0 0 5px #10b981, 0 0 8px #0d9868, 0 0 12px #088053; }
+    75% { text-shadow: 0 0 5px #10b981, 0 0 14px #0d9868, 0 0 20px #088053; }
+    100% { text-shadow: 0 0 5px #10b981, 0 0 10px #0d9868, 0 0 15px #088053; }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .fire-countdown {
+        gap: 3px;
+    }
+    
+    .fire-digit {
+        font-size: 32px;
+        width: 30px;
+        height: 45px;
+        line-height: 45px;
+    }
+    
+    .countdown-separator {
+        font-size: 32px;
+    }
+    
+    .unit-label {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fire-countdown {
+        gap: 2px;
+    }
+    
+    .fire-digit {
+        font-size: 24px;
+        width: 24px;
+        height: 36px;
+        line-height: 36px;
+    }
+    
+    .countdown-separator {
+        font-size: 24px;
+        margin: 0 1px;
+    }
+}
+        /* Mobile menu */
+        .mobile-menu-button {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            margin-left: auto;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-button {
+                display: block;
+            }
+
+            .header-actions {
+                margin-left: 20px;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: #0c1017;
+                flex-direction: column;
+                padding: 20px;
+                z-index: 100;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .nav-menu a {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <img src="/images/SharedStars.svg" alt="SharedStars Logo">
+                </a>
+                
+                <nav class="nav-menu">
+                    <a href="/" data-i18n="home">Home</a>
+                    <a href="/academy.html" data-i18n="academy">Academy</a>
+                    <a href="/about.html" data-i18n="about">About</a>
+                    <a href="/leaderboard.html" data-i18n="leaderboard">Leaderboard</a>
+                    <a href="/subscribe.html" class="active" data-i18n="subscribe">Subscribe</a>
+                </nav>
+                
+                <button class="mobile-menu-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 12H21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M3 6H21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M3 18H21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                
+                <div class="header-actions">
+                    <div class="language-selector">
+                        <button class="lang-btn" data-lang="en">
+                            <img src="/images/flag-english.svg" alt="English">
+                        </button>
+                        <button class="lang-btn" data-lang="es">
+                            <img src="/images/flag-spanish.svg" alt="Español">
+                        </button>
+                        <button class="lang-btn" data-lang="ko">
+                            <img src="/images/flag-korean.svg" alt="한국어">
+                        </button>
+                        <button class="lang-btn" data-lang="zh">
+                            <img src="/images/flag-chinese.svg" alt="中文">
+                        </button>
+                    </div>
+                    <a href="/signup.html" class="get-started-btn" data-i18n="getStarted">Get Started</a>
+                </div>
             </div>
-            <div class="stat">
-              <div class="stat-title" data-i18n="subscribe.targetPriceTitle">Target Price</div>
-              <div class="stat-value text-secondary" data-i18n="subscribe.targetPriceValue">$5k</div>
-              <div class="stat-desc" data-i18n="subscribe.targetPriceDesc">By 2039</div>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
+    </header>
 
-    <!-- PRICE EVOLUTION GRAPH SECTION -->
-    <section class="container mx-auto px-4 py-8" data-aos="fade-up">
-      <div class="card bg-base-100 shadow-xl">
-        <div class="card-body">
-          <h2 class="card-title text-center text-2xl font-bold mb-4" data-i18n="subscribe.pathTitle">
-            Your Path to Space
-          </h2>
-          <div class="relative h-96">
-            <canvas id="priceEvolutionChart"></canvas>
-          </div>
-          <p class="text-center text-sm opacity-70 mt-4" data-i18n="subscribe.pathDesc">
-            *Based on market projections and your subscription plan
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- GRAPHS & COUNTDOWN SECTION -->
-    <section class="container mx-auto p-6 space-y-12" data-aos="fade-up">
-      <!-- Graphs Section -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Baseline Graph Card -->
-        <div class="card bg-gray-800 shadow-xl">
-          <div class="card-body">
-            <h2 class="card-title text-white" data-i18n="subscribe.baselineGraphTitle">
-              Baseline Ticket Price Projection
-            </h2>
-            <div class="w-full h-64 flex items-center justify-center">
-              <canvas id="baselineGraph"></canvas>
-            </div>
-            <p class="mt-4 text-gray-400 text-sm" data-i18n="subscribe.baselineGraphDesc">
-              2022: $750K, 2025: $500K, 2029: $125K, 2034: $60K, 2039: $5K.
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="subscribe-badge" data-i18n="subscribeBadge">Subscribe</div>
+            <h1 class="hero-title" data-i18n="subscribeHeroTitle">Your Path to Space Starts Here</h1>
+            <p class="hero-subtitle" data-i18n="subscribeHeroSubtitle">
+                Train. Earn. Ascend. The only subscription that prepares you for real spaceflight.
+                Every training session, milestone, and credit earned brings you closer to your guaranteed launch assignment.
             </p>
-          </div>
-        </div>
-        <!-- Personalized Graph Card -->
-        <div class="card bg-gray-800 shadow-xl">
-          <div class="card-body">
-            <h2 class="card-title text-white" data-i18n="subscribe.personalGraphTitle">
-              Personalized Credits Projection
-            </h2>
-            <div class="w-full h-64 flex items-center justify-center">
-              <canvas id="personalGraph"></canvas>
+            
+            <div class="alert-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span data-i18n="subscribeSeatAlert">Space Seats are Filling Up Fast!</span>
             </div>
-            <p class="mt-4 text-gray-400 text-sm" data-i18n="subscribe.personalGraphDesc">
-              This graph updates dynamically as you complete training modules and earn credits.
-            </p>
-          </div>
+            
+            <div class="price-stat-title" data-i18n="currentPriceTitle">Current Price</div>
+            <div class="price-stat-value" data-i18n="currentPriceValue">$450K</div>
+            <div class="price-stat-desc" data-i18n="currentPriceDesc">Per space seat</div>
         </div>
-      </div>
+        <div class="price-stat">
+            <div class="price-stat-title" data-i18n="targetPriceTitle">Target Price</div>
+            <div class="price-stat-value" data-i18n="targetPriceValue">$5K</div>
+            <div class="price-stat-desc" data-i18n="targetPriceDesc">By 2039</div>
+        </div>
+    </div>
+</div>
+</section>
 
-      <!-- Countdown Timelines -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16" data-aos="fade-up">
-        <!-- Global Timeline -->
-        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 class="text-2xl font-bold mb-4" data-i18n="subscribe.globalTimelineTitle">
-            Global Space Travel Timeline
-          </h3>
-          <div class="grid grid-cols-6 gap-2">
-            <div class="countdown-unit">
-              <div id="baseline-years" class="text-3xl font-bold">15</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.yearsLabel">Years</div>
-            </div>
-            <div class="countdown-unit">
-              <div id="baseline-months" class="text-3xl font-bold">00</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.monthsLabel">Months</div>
-            </div>
-            <div class="countdown-unit">
-              <div id="baseline-weeks" class="text-3xl font-bold">00</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.weeksLabel">Weeks</div>
-            </div>
-            <div class="countdown-unit">
-              <div id="baseline-days" class="text-3xl font-bold">00</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.daysLabel">Days</div>
-            </div>
-            <div class="countdown-unit">
-              <div id="baseline-hours" class="text-3xl font-bold">00</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.hoursLabel">Hours</div>
-            </div>
-            <div class="countdown-unit">
-              <div id="baseline-minutes" class="text-3xl font-bold">00</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.minutesLabel">Minutes</div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Personalized Timeline -->
-        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 class="text-2xl font-bold mb-4" data-i18n="subscribe.personalTimelineTitle">
-            Your Accelerated Timeline
-          </h3>
-          <div class="grid grid-cols-6 gap-2">
-            <div class="countdown-unit highlight">
-              <div id="personal-years" class="text-3xl font-bold">--</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.yearsLabel">Years</div>
-            </div>
-            <div class="countdown-unit highlight">
-              <div id="personal-months" class="text-3xl font-bold">--</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.monthsLabel">Months</div>
-            </div>
-            <div class="countdown-unit highlight">
-              <div id="personal-weeks" class="text-3xl font-bold">--</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.weeksLabel">Weeks</div>
-            </div>
-            <div class="countdown-unit highlight">
-              <div id="personal-days" class="text-3xl font-bold">--</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.daysLabel">Days</div>
-            </div>
-            <div class="countdown-unit highlight">
-              <div id="personal-hours" class="text-3xl font-bold">--</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.hoursLabel">Hours</div>
-            </div>
-            <div class="countdown-unit highlight">
-              <div id="personal-minutes" class="text-3xl font-bold">--</div>
-              <div class="text-sm opacity-70" data-i18n="subscribe.minutesLabel">Minutes</div>
-            </div>
-          </div>
-          <div class="mt-4 text-green-400" id="credits-display" data-i18n="subscribe.creditsDisplay">
-            Your SharedStars Credits: 0
-          </div>
-        </div>
-      </div>
-    </section>
+<!-- Subscription Plans Section -->
+<section class="plans-section">
+<div class="container">
+    <h2 class="section-title" data-i18n="plansTitle">Membership Tiers: Choose Your Path to Space</h2>
     
-    <!-- PAYMENT ELEMENTS (Stripe) -->
-    <section class="container mx-auto px-4 py-8" data-aos="fade-up">
-      <div class="card bg-base-100 shadow-xl">
-        <div class="card-body">
-          <h2 class="card-title text-center" data-i18n="subscribe.paymentTitle">
-            Secure Your Journey
-          </h2>
-          <div id="card-element" class="p-6 bg-base-200 rounded-lg mt-4"></div>
-          <div id="card-errors" class="text-error text-sm mt-2"></div>
-          <div id="payment-processing" class="hidden">
-            <span class="loading loading-spinner loading-lg"></span>
-          </div>
+    <div class="plans-grid">
+        <!-- Individual Explorer Plan -->
+        <div class="plan-card">
+            <div class="plan-badge" data-i18n="individualBadge">15-Year Journey</div>
+            <div class="plan-header">
+                <h3 class="plan-title" data-i18n="individualTitle">Individual Explorer</h3>
+                <div class="plan-price">
+                    <span class="price-currency">$</span>
+                    <span data-i18n="individualPrice">49.99</span>
+                    <span class="price-period">/mo</span>
+                </div>
+                <p class="plan-description" data-i18n="individualDescription">
+                    Perfect for individuals starting astronaut training.
+                </p>
+            </div>
+            <div class="plan-features">
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="individualFeature1">Personal AI Space Coach</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="individualFeature2">10 Monthly AR/VR Training Hours</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="individualFeature3">100 Space Credits/Month</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="individualFeature4">Standard Certification Path</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="plan-cta">
+                <button class="plan-button" data-plan="individual" data-i18n="individualCta">
+                    Begin Journey
+                </button>
+            </div>
         </div>
+        
+        <!-- Family Pioneer Plan -->
+        <div class="plan-card">
+            <div class="plan-badge" data-i18n="familyBadge">10-Year Journey</div>
+            <div class="plan-header">
+                <h3 class="plan-title" data-i18n="familyTitle">Family Pioneer</h3>
+                <div class="plan-price">
+                    <span class="price-currency">$</span>
+                    <span data-i18n="familyPrice">89.99</span>
+                    <span class="price-period">/mo</span>
+                </div>
+                <p class="plan-description" data-i18n="familyDescription">
+                    Perfect for families training together for space exploration.
+                </p>
+            </div>
+            <div class="plan-features">
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="familyFeature1">4-Member Access</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="familyFeature2">Unlimited VR Training</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="familyFeature3">250 Space Credits/Month</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="familyFeature4">Family Mission Planning</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="plan-cta">
+                <button class="plan-button" data-plan="family" data-i18n="familyCta">
+                    Secure Family Access
+                </button>
+            </div>
+        </div>
+        
+        <!-- Galactic Elite Plan -->
+        <div class="plan-card featured">
+            <div class="plan-badge" data-i18n="eliteBadge">1-Year Journey</div>
+            <div class="plan-header">
+                <h3 class="plan-title" data-i18n="eliteTitle">Galactic Elite</h3>
+                <div class="plan-price">
+                    <span class="price-currency">$</span>
+                    <span data-i18n="elitePrice">2,048</span>
+                    <span class="price-period">/mo</span>
+                </div>
+                <p class="plan-description" data-i18n="eliteDescription">
+                    Perfect for those who want a guaranteed space seat—fast.
+                </p>
+            </div>
+            <div class="plan-features">
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="eliteFeature1">Priority Mission Access</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="eliteFeature2">Private Training Facility</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="eliteFeature3">1000 Space Credits/Month</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="eliteFeature4">Industry Network Access</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="plan-cta">
+                <button class="plan-button" data-plan="elite" data-i18n="eliteCta">
+                    Launch Next Year
+                </button>
+            </div>
+        </div>
+        
+        <!-- Flex Custom Plan -->
+        <div class="plan-card">
+            <div class="plan-badge" data-i18n="customBadge">Flexible Timeline</div>
+            <div class="plan-header">
+                <h3 class="plan-title" data-i18n="customTitle">Flex Spending</h3>
+                <div class="plan-price">
+                    <input type="number" id="customAmount" class="price-input" min="50" value="50">
+                    <span class="price-period">/mo</span>
+                </div>
+                <p class="plan-description" data-i18n="customDescription">
+                    Perfect for those who want full control over their space journey.
+                </p>
+            </div>
+            <div class="plan-features">
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="customFeature1">Custom Monthly Contributions</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="customFeature2">Flexible Training Schedule</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span id="customCredits" data-i18n="customFeature3">100 Space Credits/Month</span>
+                    </li>
+                    <li class="feature-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span data-i18n="customFeature4">Personalized AI Timeline</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="plan-cta">
+                <button class="plan-button" data-plan="custom" data-i18n="customCta">
+                    Start Contributing
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Stella AI Assistance Section -->
+<section class="ai-assistance-section">
+<div class="container">
+    <div class="ai-assistance-card">
+        <div class="ai-icon">
+            <img src="/images/stella-icon.svg" alt="Stella AI" width="48" height="48">
+        </div>
+        <div class="ai-content">
+            <h3 class="ai-title" data-i18n="stellaTitle">
+                Need help choosing the right plan?
+            </h3>
+            <p class="ai-description" data-i18n="stellaDescription">
+                Stella, your personal AI assistant, can analyze your needs and help find the perfect subscription plan for you and your family.
+            </p>
+            <button class="ai-button" id="askStellaBtn" data-i18n="stellaCta">
+                Ask Stella for recommendations
+            </button>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Credit System Section -->
+<section class="credit-section">
+<div class="container">
+    <div class="credit-container">
+        <div class="credit-info">
+            <h2 class="credit-title" data-i18n="creditTitle">Credit System Integration</h2>
+            <p class="credit-description" data-i18n="creditDescription">
+                Every action moves you forward. Train, earn, and accelerate your journey to space.
+                Your credits determine your place in line for future space missions.
+            </p>
+            
+            <ul class="credit-multipliers">
+                <li class="multiplier-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="multiplier-text" data-i18n="creditMultiplier1">
+                        Achievement Bonuses <span class="multiplier-value">(1.5x)</span> — Unlock special mission perks.
+                    </span>
+                </li>
+                <li class="multiplier-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="multiplier-text" data-i18n="creditMultiplier2">
+                        Streak Rewards <span class="multiplier-value">(2x after 90 days)</span> — Consistency pays off.
+                    </span>
+                </li>
+                <li class="multiplier-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="multiplier-text" data-i18n="creditMultiplier3">
+                        Performance Excellence <span class="multiplier-value">(3x)</span> — Earn more credits for top training scores.
+                    </span>
+                </li>
+                <li class="multiplier-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="multiplier-text" data-i18n="creditMultiplier4">
+                        Community Contributions <span class="multiplier-value">(1.25x)</span> — AI awards credits for mentorship & engagement.
+                    </span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="credit-graphic">
+            <div class="credit-graphic-container">
+                <!-- Base Credit Accumulation visual -->
+                <div class="base-credits">
+                    <h3 class="graphic-title" data-i18n="creditBaseTitle">Base Credit Accumulation</h3>
+                    <div class="credit-plan-list">
+                        <div class="credit-plan-item">
+                            <div class="plan-name" data-i18n="individualTitle">Individual Explorer</div>
+                            <div class="plan-credits">100 <span data-i18n="creditsMonth">credits/month</span></div>
+                        </div>
+                        <div class="credit-plan-item">
+                            <div class="plan-name" data-i18n="familyTitle">Family Pioneer</div>
+                            <div class="plan-credits">250 <span data-i18n="creditsMonth">credits/month</span></div>
+                        </div>
+                        <div class="credit-plan-item">
+                            <div class="plan-name" data-i18n="eliteTitle">Galactic Elite</div>
+                            <div class="plan-credits">1000 <span data-i18n="creditsMonth">credits/month</span></div>
+                        </div>
+                        <div class="credit-plan-item">
+                            <div class="plan-name" data-i18n="customTitle">Flex Spending</div>
+                            <div class="plan-credits">2 <span data-i18n="creditsPerDollar">credits per dollar contributed</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+<!-- Countdowns section -->
+<section class="countdown-section">
+  <div class="container">
+      <div class="countdown-grid">
+          <!-- Global Timeline - Digital display countdown -->
+          <div class="countdown-card">
+              <h3 class="countdown-title">General Space Travel Availability:</h3>
+              <div class="digital-countdown" id="baseline-countdown">
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="years">11</div>
+                      </div>
+                      <div class="unit-label">YEARS</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="months">00</div>
+                      </div>
+                      <div class="unit-label">MONTHS</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="days">00</div>
+                      </div>
+                      <div class="unit-label">DAYS</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="hours">00</div>
+                      </div>
+                      <div class="unit-label">HOURS</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="minutes">00</div>
+                      </div>
+                      <div class="unit-label">MINUTES</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="seconds">00</div>
+                      </div>
+                      <div class="unit-label">SECONDS</div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Personalized Timeline - Digital display countdown -->
+          <div class="countdown-card personal-countdown">
+              <h3 class="countdown-title">Your Personal Space Readiness:</h3>
+              <div class="digital-countdown" id="personal-countdown">
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="years">--</div>
+                      </div>
+                      <div class="unit-label">YEARS</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="months">--</div>
+                      </div>
+                      <div class="unit-label">MONTHS</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="days">--</div>
+                      </div>
+                      <div class="unit-label">DAYS</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="hours">--</div>
+                      </div>
+                      <div class="unit-label">HOURS</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="minutes">--</div>
+                      </div>
+                      <div class="unit-label">MINUTES</div>
+                  </div>
+                  <div class="time-separator">:</div>
+                  <div class="time-unit">
+                      <div class="digit-box">
+                          <div class="digital-digit" data-countdown="seconds">--</div>
+                      </div>
+                      <div class="unit-label">SECONDS</div>
+                  </div>
+              </div>
+              <div class="countdown-info" id="credits-display">
+                  Your SharedStars Credits: 0
+              </div>
+          </div>
       </div>
-    </section>
-    
-    <!-- SUBSCRIPTION PLANS -->
-    <section class="container mx-auto px-4 py-8" data-aos="fade-up">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <!-- Individual Explorer -->
-        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-          <div class="card-body relative">
-            <div class="badge badge-primary absolute right-4 top-4" data-i18n="subscribe.plan.individual.badge">
-              15-year track
-            </div>
-            <h3 class="text-2xl font-bold" data-i18n="subscribe.plan.individual.title">
-              Individual Explorer
-            </h3>
-            <div class="text-4xl font-bold mt-4">
-              <span data-i18n="subscribe.plan.individual.price">$49.99</span>
-              <span class="text-lg" data-i18n="subscribe.perMonth">/mo</span>
-            </div>
-            <div class="divider"></div>
-            <ul class="space-y-2">
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.individual.feature1">
-                  Personal AI Coach
-                </span>
-              </li>
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.individual.feature2">
-                  10hrs Monthly VR
-                </span>
-              </li>
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.individual.feature3">
-                  100 Space Credits
-                </span>
-              </li>
-            </ul>
-            <button class="btn btn-primary mt-6 w-full" data-plan="individual" data-i18n="subscribe.plan.individual.cta">
-              Begin Journey
-            </button>
-          </div>
-        </div>
-        <!-- Family Pioneer -->
-        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-          <div class="card-body relative">
-            <div class="badge badge-secondary absolute right-4 top-4" data-i18n="subscribe.plan.family.badge">
-              10-year track
-            </div>
-            <h3 class="text-2xl font-bold" data-i18n="subscribe.plan.family.title">
-              Family Pioneer
-            </h3>
-            <div class="text-4xl font-bold mt-4">
-              <span data-i18n="subscribe.plan.family.price">$89.99</span>
-              <span class="text-lg" data-i18n="subscribe.perMonth">/mo</span>
-            </div>
-            <div class="divider"></div>
-            <ul class="space-y-2">
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.family.feature1">
-                  4 Member Access
-                </span>
-              </li>
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.family.feature2">
-                  Unlimited VR
-                </span>
-              </li>
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.family.feature3">
-                  250 Space Credits
-                </span>
-              </li>
-            </ul>
-            <button class="btn btn-secondary mt-6 w-full" data-plan="family" data-i18n="subscribe.plan.family.cta">
-              Secure Family Access
-            </button>
-          </div>
-        </div>
-        <!-- Galactic Elite -->
-        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-          <div class="card-body relative">
-            <div class="badge badge-accent absolute right-4 top-4" data-i18n="subscribe.plan.elite.badge">
-              1-year track
-            </div>
-            <h3 class="text-2xl font-bold" data-i18n="subscribe.plan.elite.title">
-              Galactic Elite
-            </h3>
-            <div class="text-4xl font-bold mt-4">
-              <span data-i18n="subscribe.plan.elite.price">$2,048</span>
-              <span class="text-lg" data-i18n="subscribe.perMonth">/mo</span>
-            </div>
-            <div class="divider"></div>
-            <ul class="space-y-2">
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.elite.feature1">
-                  Priority Access
-                </span>
-              </li>
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.elite.feature2">
-                  Private Facility
-                </span>
-              </li>
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.elite.feature3">
-                  1000 Space Credits
-                </span>
-              </li>
-            </ul>
-            <button class="btn btn-accent mt-6 w-full" data-plan="elite" data-i18n="subscribe.plan.elite.cta">
-              Launch Next Year
-            </button>
-          </div>
-        </div>
-        <!-- Custom Contributor -->
-        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-          <div class="card-body relative">
-            <div class="badge badge-ghost absolute right-4 top-4" data-i18n="subscribe.plan.custom.badge">
-              Flexible track
-            </div>
-            <h3 class="text-2xl font-bold" data-i18n="subscribe.plan.custom.title">
-              Custom Contributor
-            </h3>
-            <div class="text-4xl font-bold mt-4">
-              <input type="number" 
-                     class="input input-bordered w-full text-2xl" 
-                     placeholder="$ Amount"
-                     id="customAmount"
-                     min="10"
-                     step="1" />
-              <span class="text-lg" data-i18n="subscribe.perMonth">/mo</span>
-            </div>
-            <div class="divider"></div>
-            <ul class="space-y-2">
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span data-i18n="subscribe.plan.custom.feature1">
-                  Flexible Contribution
-                </span>
-              </li>
-              <li class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span id="customCredits" data-i18n="subscribe.plan.custom.feature2">
-                  Credits Based on Contribution
-                </span>
-              </li>
-            </ul>
-            <button class="btn btn-ghost mt-6 w-full" id="customPlanBtn" data-i18n="subscribe.plan.custom.cta">
-              Start Contributing
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- ONBOARDING WIZARD MODAL -->
-    <div id="onboardingModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
-      <div class="bg-gray-800 p-8 rounded-lg shadow-2xl max-w-2xl w-full">
-        <h2 class="text-3xl font-bold text-blue-400 mb-6" data-i18n="onboarding.title">
-          Complete Your Profile
-        </h2>
-        <div id="onboardingContent">
-          <!-- Onboarding step content will be injected here -->
-        </div>
-        <div class="flex justify-between mt-6">
-          <button id="prevStep" class="btn btn-outline" disabled data-i18n="onboarding.prev">Previous</button>
-          <button id="nextStep" class="btn btn-primary" data-i18n="onboarding.next">Next</button>
-        </div>
-      </div>
+  </div>
+</section>
+
+<!-- Payment Section -->
+<section class="payment-section" id="payment-section">
+<div class="container">
+    <div class="payment-container">
+        <h2 class="payment-title" data-i18n="paymentTitle">Secure Your Journey</h2>
+        <div id="card-element"></div>
+        <div id="card-errors"></div>
+        <button class="payment-button" id="submit-payment" data-i18n="paymentButton">
+            Complete Subscription
+        </button>
+    </div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer style="background-color: rgba(13, 18, 30, 0.6); padding: 60px 20px; text-align: center;">
+<div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
+    <!-- About -->
+    <div>
+        <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;" data-i18n="footerAboutTitle">About</h3>
+        <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+            <li style="margin-bottom: 12px;"><a href="/about.html" style="color: white; text-decoration: none;" data-i18n="footerAboutOurStory">Our Story</a></li>
+            <li style="margin-bottom: 12px;"><a href="/academy.html" style="color: white; text-decoration: none;" data-i18n="footerAboutAcademy">Academy</a></li>
+            <li style="margin-bottom: 12px;"><a href="/leaderboard.html" style="color: white; text-decoration: none;" data-i18n="footerAboutLeaderboard">Leaderboard</a></li>
+        </ul>
     </div>
     
-    <!-- FOOTER -->
-    <footer class="footer bg-gray-900 text-white py-12" data-i18n>
-      <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
-        <!-- About -->
-        <div>
-          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
-          <ul class="space-y-2 mt-4">
-            <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
-            <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">Space Academy</a></li>
-            <li><a href="/missions.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.missions">Missions</a></li>
-          </ul>
-        </div>
-        <!-- Community -->
-        <div>
-          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
-          <ul class="space-y-2 mt-4">
-            <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
-            <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
-            <li><a href="/teams.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.teams">Teams</a></li>
-          </ul>
-        </div>
-        <!-- Resources -->
-        <div>
-          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
-          <ul class="space-y-2 mt-4">
-            <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
-            <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
-            <li><a href="/docs.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.docs">Documentation</a></li>
-          </ul>
-        </div>
-        <!-- Legal -->
-        <div>
-          <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
-          <ul class="space-y-2 mt-4">
-            <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
-            <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="mt-12 text-center">
-        <h4 class="text-lg font-bold text-blue-400" data-i18n="footer.followUs">Follow Us</h4>
-        <div class="flex justify-center gap-6 mt-4">
-          <a href="https://twitter.com" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
-            </svg>
-          </a>
-          <a href="https://facebook.com" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
-            </svg>
-          </a>
-          <a href="https://instagram.com" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.5 11h-3.176c.12.272.176.563.176.865 0 .77-.622 1.397-1.4 1.397-.777 0-1.399-.627-1.399-1.397 0-.302.057-.593.176-.865H7.5v5h9v-5zm-4.5-7c.774 0 1.4.627 1.4 1.4s-.626 1.399-1.4 1.399c-.774 0-1.4-.626-1.4-1.399s.626-1.4 1.4-1.4zm5 5.5h-10v7h10v-7z"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-      <div class="mt-12 pt-8 border-t border-blue-500/20 text-center">
-        <p class="text-blue-300 text-sm" data-i18n="footer.copyright">
-          © 2025 Celestial Technologies, LLC. All Rights Reserved.
-        </p>
-      </div>
+    <!-- Join Us -->
+    <div>
+        <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;" data-i18n="footerJoinTitle">Join Us</h3>
+        <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+            <li style="margin-bottom: 12px;"><a href="/apply.html" style="color: white; text-decoration: none;" data-i18n="footerJoinApply">Apply Now</a></li>
+            <li style="margin-bottom: 12px;"><a href="/subscribe.html" style="color: white; text-decoration: none;" data-i18n="footerJoinSubscribe">Subscribe</a></li>
+            <li style="margin-bottom: 12px;"><a href="/faq.html" style="color: white; text-decoration: none;" data-i18n="footerJoinFAQ">FAQ</a></li>
+        </ul>
     </div>
-  </footer>
-  
-  <!-- CORE DEPENDENCIES -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-  
-  <!-- ES Module Imports for Custom JS -->
-  <script src="/js/modules/core/index.js"></script>
-  <script src="/js/modules/ui/index.js"></script>
-  <script src="/js/modules/training/index.js"></script>
-  <script src="/js/modules/auth/index.js"></script>
-  
-  
-  <!-- Legacy Scripts (Deferred) -->
-  <script src="/js/animations.js" defer></script>
-  <script src="/js/trialFlow.js" defer></script>
-  <script src="/js/leaderboard.js" defer></script>
-  <script src="/js/visualizations/ModuleHighlight.js" defer></script>
-  
-  <!-- Highlight.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
-  
-  <!-- Language Selection & Navigation Scripts -->
-  <script src="/js/languageSelection.js"></script>
-  <script src="/js/language-switcher.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      console.log("✅ Language & Navigation Script Loaded");
-      const savedLang = localStorage.getItem("preferredLanguage") || "en";
-      document.documentElement.lang = savedLang;
-      applyTranslations(savedLang);
-      document.querySelectorAll(".language-flag").forEach((flag) => {
-        flag.addEventListener("click", () => {
-          const selectedLang = flag.dataset.lang || "en";
-          localStorage.setItem("preferredLanguage", selectedLang);
-          applyTranslations(selectedLang);
+    
+    <!-- Contact -->
+    <div>
+        <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;" data-i18n="footerContactTitle">Contact</h3>
+        <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+            <li style="margin-bottom: 12px;"><a href="mailto:info@sharedstars.com" style="color: white; text-decoration: none;" data-i18n="footerContactEmail">info@sharedstars.com</a></li>
+            <li style="margin-bottom: 12px; color: #888;" data-i18n="footerContactCompany">Celestial Technologies, LLC</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Copyright text -->
+<div style="margin-top: 60px; text-align: center;">
+    <p style="color: #888;" data-i18n="footerCopyright">© 2025 Celestial Technologies, LLC. All Rights Reserved.</p>
+</div>
+
+<!-- Social Media Icons Row -->
+<div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
+    <a href="https://www.linkedin.com/company/106241890" style="color: #888;">
+      <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+    </a>
+    <a href="https://x.com/SharedStars" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+    <a href="https://www.facebook.com/SharedStars" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/sharedstarsacademy/" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
+    </a>
+    <a href="https://t.me/SharedStars" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
+    </a>
+    <a href="https://www.tiktok.com/@sharedstarsacademy" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+    </a>
+    <a href="https://www.youtube.com/@SharedStarsAcademy" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+    </a>
+</div>
+</footer>
+
+<!-- Stella AI Chat Modal -->
+<div id="stellaModal">
+<div class="stella-modal-content">
+    <div class="stella-modal-header">
+        <h2 class="stella-modal-title" data-i18n="stellaModalTitle">Stella AI Recommendation</h2>
+        <button id="closeStella" class="stella-close-btn">&times;</button>
+    </div>
+    <div id="stellaChat" class="stella-chat-container">
+        <!-- Initial Stella greeting message -->
+        <div class="stella-message">
+            <div class="stella-avatar">
+                <img src="/images/stella-icon.svg" alt="Stella" width="32" height="32">
+            </div>
+            <div class="stella-content" data-i18n="stellaGreeting">
+                Hello! I'm Stella, your AI space travel assistant. I can help you choose the perfect subscription plan for your space journey.
+            </div>
+        </div>
+    </div>
+    <div class="stella-input-container">
+        <input type="text" id="stellaInput" class="stella-input" placeholder="Ask me about subscription plans..." data-i18n-placeholder="stellaInputPlaceholder">
+        <button id="sendToStella" class="stella-send-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    </div>
+</div>
+</div>
+
+<!-- Include your existing language selection script -->
+<script src="/js/languageSelection.js"></script>
+
+<!-- Main script for subscribe functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (mobileMenuButton && navMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
         });
-      });
-      document.querySelectorAll("nav a").forEach((button) => {
-        button.addEventListener("click", function (event) {
-          event.preventDefault();
-          console.log(`✅ Navigating to: ${this.href}`);
-          window.location.href = this.href;
+    }
+    
+    // Initialize price evolution chart
+    initPriceEvolutionChart();
+    
+    // Custom amount handling
+    const customAmount = document.getElementById('customAmount');
+    const customCredits = document.getElementById('customCredits');
+    
+    if (customAmount && customCredits) {
+        customAmount.addEventListener('input', function() {
+            const amount = parseInt(this.value) || 50;
+            const credits = amount * 2;
+            customCredits.textContent = `${credits} Space Credits/Month`;
         });
-      });
+    }
+    
+    // Plan selection handling
+    const planButtons = document.querySelectorAll('.plan-button');
+    planButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const plan = this.getAttribute('data-plan');
+            selectPlan(plan);
+            
+            // Scroll to payment section
+            document.getElementById('payment-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
     });
     
-    function applyTranslations(lang) {
-      const translations = {
-        en: {
-          nav: {
-            home: "Home",
-            why: "Why SharedStars",
-            about: "About",
-            leaderboard: "Leaderboard",
-            login: "Login",
-            "mission-control": "Mission Control",
-            profile: "Profile",
-            signup: "Sign Up",
-            academy: "StelTrek Academy",
-            welcome: "Welcome",
-            subscribe: "Subscribe"
-          },
-          welcome: {
-            videoTagline: "Enough dreaming, let’s take a walk to show how we can get you up to space.",
-            ctaMessage: "Are you ready to begin your space journey?",
-            joinButton: "Join Now",
-            proceedButton: "Proceed",
-            aiStatus: "Initializing AI Coach..."
-          },
-          subscribe: {
-            pageTitle: "Sign Up - SharedStars Academy",
-            heroTitle: "Chart Your Course to Space",
-            seatsWarning: "Space Seats are Filling Up Fast!",
-            currentPriceTitle: "Current Price",
-            currentPriceValue: "$450k",
-            currentPriceDesc: "Per space seat",
-            targetPriceTitle: "Target Price",
-            targetPriceValue: "$5k",
-            targetPriceDesc: "By 2039",
-            pathTitle: "Your Path to Space",
-            pathDesc: "*Based on market projections and your subscription plan",
-            baselineGraphTitle: "Baseline Ticket Price Projection",
-            baselineGraphDesc: "2022: $750K, 2025: $500K, 2029: $125K, 2034: $60K, 2039: $5K.",
-            personalGraphTitle: "Personalized Credits Projection",
-            personalGraphDesc: "This graph updates dynamically as you complete training modules and earn credits.",
-            yearsLabel: "Years",
-            monthsLabel: "Months",
-            weeksLabel: "Weeks",
-            daysLabel: "Days",
-            hoursLabel: "Hours",
-            minutesLabel: "Minutes",
-            personalTimelineTitle: "Your Accelerated Timeline",
-            creditsDisplay: "Your SharedStars Credits: 0",
-            paymentTitle: "Secure Your Journey",
-            perMonth: "/mo",
-            plan: {
-              individual: {
-                badge: "15-year track",
-                title: "Individual Explorer",
-                price: "$49.99",
-                feature1: "Personal AI Coach",
-                feature2: "10hrs Monthly VR",
-                feature3: "100 Space Credits",
-                cta: "Begin Journey"
-              },
-              family: {
-                badge: "10-year track",
-                title: "Family Pioneer",
-                price: "$89.99",
-                feature1: "4 Member Access",
-                feature2: "Unlimited VR",
-                feature3: "250 Space Credits",
-                cta: "Secure Family Access"
-              },
-              elite: {
-                badge: "1-year track",
-                title: "Galactic Elite",
-                price: "$2,048",
-                feature1: "Priority Access",
-                feature2: "Private Facility",
-                feature3: "1000 Space Credits",
-                cta: "Launch Next Year"
-              },
-              custom: {
-                badge: "Flexible track",
-                title: "Custom Contributor",
-                feature1: "Flexible Contribution",
-                feature2: "Credits Based on Contribution",
-                cta: "Start Contributing"
-              }
-            }
-          },
-          footer: {
-            about: {
-              title: "About",
-              ourStory: "Our Story",
-              academy: "Space Academy",
-              missions: "Missions"
-            },
-            community: {
-              title: "Community",
-              forums: "Forums",
-              events: "Events",
-              teams: "Teams"
-            },
-            resources: {
-              title: "Resources",
-              faq: "FAQ",
-              support: "Support",
-              docs: "Documentation"
-            },
-            legal: {
-              title: "Legal",
-              terms: "Terms",
-              privacy: "Privacy"
-            },
-            followUs: "Follow Us",
-            copyright: "© 2025 Celestial Technologies, LLC. All Rights Reserved."
-          }
-        },
-        zh: {
-          // Chinese translations here...
-        }
-        // Additional translations for ko and es as needed...
-      };
+    // Initialize countdown
+    initializeCountdown();
+    
+    // Initialize Stripe Elements
+    initializeStripeElements();
+    
+    // Initialize Stella AI Chat
+    initializeStellaChat();
+});
 
-      document.querySelectorAll("[data-i18n]").forEach((element) => {
-        const key = element.dataset.i18n;
-        const keys = key.split(".");
-        let translation = translations[lang];
-        keys.forEach((k) => {
-          translation = translation ? translation[k] : null;
-        });
-        if (translation) {
-          element.textContent = translation;
+// Initialize the price evolution chart
+function initPriceEvolutionChart() {
+    const ctx = document.getElementById('priceEvolutionChart').getContext('2d');
+    
+    const baselineData = {
+        labels: ['2022', '2025', '2029', '2034', '2039'],
+        datasets: [{
+            label: 'Baseline Price (in thousands $)',
+            data: [750, 500, 125, 60, 5],
+            borderColor: 'rgba(255, 255, 255, 0.7)',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(255, 255, 255, 0.8)',
+            tension: 0.3
+        }]
+    };
+    
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: baselineData.labels,
+            datasets: [baselineData.datasets[0]]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                }
+            }
         }
-      });
+    });
+    
+    // Store chart instance for later updates
+    window.priceChart = chart;
+}
+
+// Initialize Three Body Problem style countdown
+function initializeCountdown() {
+    // Set initial baseline values
+    updateDigit('baseline-years-decade', 1);
+    updateDigit('baseline-years-unit', 5);
+    updateDigit('baseline-months-decade', 0);
+    updateDigit('baseline-months-unit', 0);
+    updateDigit('baseline-days-decade', 0);
+    updateDigit('baseline-days-unit', 0);
+    
+    // Reset personal countdown to dashes
+    document.querySelectorAll('.personal-countdown .digit .current').forEach(el => {
+        el.textContent = '-';
+    });
+}
+
+// Update digit with animation
+function updateDigit(id, newValue) {
+    const digitEl = document.getElementById(id);
+    if (!digitEl) return;
+    
+    const currentSpan = digitEl.closest('.digit').querySelector('.current');
+    const nextSpan = digitEl.closest('.digit').querySelector('.next');
+    
+    if (currentSpan.textContent === String(newValue)) return;
+    
+    // Set up the animation
+    nextSpan.textContent = newValue;
+    
+    // Add animation classes
+    currentSpan.style.transform = 'translateY(-100%)';
+    nextSpan.style.transform = 'translateY(0)';
+    
+    // After animation completes, reset and update actual value
+    setTimeout(() => {
+        currentSpan.style.transition = 'none';
+        nextSpan.style.transition = 'none';
+        
+        currentSpan.style.transform = 'translateY(0)';
+        currentSpan.textContent = newValue;
+        
+        nextSpan.style.transform = 'translateY(100%)';
+        
+        // Re-enable transitions for next animation
+        setTimeout(() => {
+            currentSpan.style.transition = '';
+            nextSpan.style.transition = '';
+        }, 50);
+    }, 500);
+}
+
+// Plan selection
+function selectPlan(plan) {
+    // Clear any previous selections
+    document.querySelectorAll('.plan-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Get selected plan details
+    let years, credits;
+    switch (plan) {
+        case 'individual':
+            years = 15;
+            credits = 100;
+            break;
+        case 'family':
+            years = 10;
+            credits = 250;
+            break;
+        case 'elite':
+            years = 1;
+            credits = 1000;
+            break;
+        case 'custom':
+            const amount = parseInt(document.getElementById('customAmount').value) || 50;
+            years = Math.max(1, Math.round(15 - (amount / 150))); // Approximate conversion
+            credits = amount * 2;
+            break;
     }
-  </script>
-  
-  <!-- Main Initialization Script -->
-  <script src="/js/main.js"></script>
+    
+    // Update personal countdown with animation
+    const yearsDecade = Math.floor(years / 10);
+    const yearsUnit = years % 10;
+    
+    updateDigit('personal-years-decade', yearsDecade);
+    updateDigit('personal-years-unit', yearsUnit);
+    updateDigit('personal-months-decade', 0);
+    updateDigit('personal-months-unit', 0);
+    updateDigit('personal-days-decade', 0);
+    updateDigit('personal-days-unit', 0);
+    
+    // Update credits display
+    document.getElementById('credits-display').textContent = `Your SharedStars Credits: ${credits} per month`;
+    
+    // Update price evolution chart with personal data
+    updatePersonalPriceChart(years);
+    
+    // Store selected plan for payment processing
+    window.selectedPlan = plan;
+}
+
+// Update personal price chart
+function updatePersonalPriceChart(years) {
+    const chart = window.priceChart;
+    if (!chart) return;
+    
+    // Calculate accelerated price drop based on years
+    const baselinePrices = [750, 500, 125, 60, 5];
+    const baselineYears = 15;
+    const accelerationFactor = baselineYears / years;
+    
+    let personalPrices;
+    if (years === 1) {
+        // Elite plan - much faster acceleration
+        personalPrices = [750, 250, 50, 10, 5];
+    } else {
+        // Calculate accelerated prices
+        personalPrices = baselinePrices.map((price, index) => {
+            if (index === 0) return price; // Start at same price
+            if (index === baselinePrices.length - 1) return 5; // End at same price
+            return Math.max(5, Math.round(price * (1 - (accelerationFactor - 1) * 0.3)));
+        });
+    }
+    
+    // Check if personal dataset already exists
+    if (chart.data.datasets.length > 1) {
+        chart.data.datasets[1].data = personalPrices;
+    } else {
+        // Add personal dataset
+        chart.data.datasets.push({
+            label: 'Your Accelerated Timeline (in thousands $)',
+            data: personalPrices,
+            borderColor: 'rgba(16, 185, 129, 0.7)', // Green color
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(16, 185, 129, 0.8)',
+            tension: 0.3
+        });
+    }
+    
+    chart.update();
+}
+
+// Initialize Stripe Elements
+function initializeStripeElements() {
+    // Placeholder for Stripe integration
+    // In a real implementation, you would initialize Stripe here
+    
+    // Simulate Stripe Elements UI
+    const cardElement = document.getElementById('card-element');
+    if (cardElement) {
+        cardElement.innerHTML = `
+            <div class="p-4 bg-gray-700 rounded-lg border border-gray-600">
+                <div class="mb-4">
+                    <label class="block text-gray-400 text-sm mb-2">Card Number</label>
+                    <div class="h-10 bg-gray-800 rounded-md border border-gray-600"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2">Expiration Date</label>
+                        <div class="h-10 bg-gray-800 rounded-md border border-gray-600"></div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2">CVC</label>
+                        <div class="h-10 bg-gray-800 rounded-md border border-gray-600"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Add event listener to payment button
+    const paymentButton = document.getElementById('submit-payment');
+    if (paymentButton) {
+        paymentButton.addEventListener('click', function() {
+            handlePaymentSubmission();
+        });
+    }
+}
+
+// Handle payment submission
+function handlePaymentSubmission() {
+    // Placeholder for payment processing
+    // In a real implementation, you would submit to Stripe here
+    
+    // Show processing state
+    const paymentButton = document.getElementById('submit-payment');
+    const originalText = paymentButton.textContent;
+    paymentButton.textContent = 'Processing...';
+    paymentButton.disabled = true;
+    
+    // Simulate processing
+    setTimeout(() => {
+        // Simulate success
+        alert('Subscription successfully processed! Welcome to SharedStars Academy.');
+        
+        // Reset button
+        paymentButton.textContent = originalText;
+        paymentButton.disabled = false;
+        
+        // Redirect to dashboard in a real implementation
+        // window.location.href = '/dashboard.html';
+    }, 2000);
+}
+
+// Initialize Stella AI Chat
+function initializeStellaChat() {
+    const askStellaBtn = document.getElementById('askStellaBtn');
+    const stellaModal = document.getElementById('stellaModal');
+    const closeStella = document.getElementById('closeStella');
+    const stellaInput = document.getElementById('stellaInput');
+    const sendToStella = document.getElementById('sendToStella');
+    const stellaChat = document.getElementById('stellaChat');
+    
+    // Open Stella modal
+    if (askStellaBtn) {
+        askStellaBtn.addEventListener('click', function() {
+            stellaModal.style.opacity = '1';
+            stellaModal.style.pointerEvents = 'auto';
+        });
+    }
+    
+    // Close Stella modal
+    if (closeStella) {
+        closeStella.addEventListener('click', function() {
+            stellaModal.style.opacity = '0';
+            stellaModal.style.pointerEvents = 'none';
+        });
+    }
+    
+    // Send message to Stella
+    function sendMessage() {
+        const message = stellaInput.value.trim();
+        if (!message) return;
+        
+        // Add user message to chat
+        addMessage('user', message);
+        
+        // Clear input
+        stellaInput.value = '';
+        
+        // Simulate Stella's response
+        stellaThinking();
+        
+        // Process the message and generate a response
+        setTimeout(() => {
+            const response = generateStellaResponse(message);
+            addMessage('stella', response);
+        }, 1500);
+    }
+    
+    // Handle send button click
+    if (sendToStella) {
+        sendToStella.addEventListener('click', sendMessage);
+    }
+    
+    // Handle enter key in input
+    if (stellaInput) {
+        stellaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    }
+    
+    // Add message to chat
+    function addMessage(sender, content) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = sender === 'user' ? 'user-message' : 'stella-message';
+        
+        if (sender === 'stella') {
+            // Remove thinking indicator if present
+            const thinkingIndicator = stellaChat.querySelector('.thinking-indicator');
+            if (thinkingIndicator) {
+                thinkingIndicator.remove();
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="stella-avatar">
+                    <img src="/images/stella-icon.svg" alt="Stella" width="32" height="32">
+                </div>
+                <div class="stella-content">${content}</div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <div class="user-content">${content}</div>
+            `;
+        }
+        
+        stellaChat.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        stellaChat.scrollTop = stellaChat.scrollHeight;
+    }
+    
+    // Show thinking indicator
+    function stellaThinking() {
+        const thinkingDiv = document.createElement('div');
+        thinkingDiv.className = 'stella-message thinking-indicator';
+        thinkingDiv.innerHTML = `
+            <div class="stella-avatar">
+                <img src="/images/stella-icon.svg" alt="Stella" width="32" height="32">
+            </div>
+            <div class="stella-content">
+                <div class="thinking-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                </div>
+            </div>
+        `;
+        
+        stellaChat.appendChild(thinkingDiv);
+        stellaChat.scrollTop = stellaChat.scrollHeight;
+    }
+    
+    // Generate Stella's response based on user input
+    function generateStellaResponse(message) {
+        const messageLower = message.toLowerCase();
+        
+        if (messageLower.includes('family') || messageLower.includes('kid') || messageLower.includes('children')) {
+            return "Based on your interest in family options, I'd recommend the <b>Family Pioneer</b> plan at $89.99/month. It includes access for up to 4 family members, unlimited VR training, and 250 Space Credits per month. This plan reduces your timeline to 10 years and allows your whole family to train together!";
+        }
+        
+        if (messageLower.includes('fast') || messageLower.includes('quick') || messageLower.includes('soon') || messageLower.includes('elite')) {
+            return "If you're looking for the fastest path to space, the <b>Galactic Elite</b> plan at $2,048/month is your best option. It provides priority mission access, a private training facility, and 1000 Space Credits per month, putting you on track for a potential space journey in just 1 year!";
+        }
+        
+        if (messageLower.includes('budget') || messageLower.includes('cheap') || messageLower.includes('afford') || messageLower.includes('cost')) {
+            return "For those mindful of budget, I recommend starting with the <b>Individual Explorer</b> plan at $49.99/month. You'll get a personal AI space coach, 10 monthly VR training hours, and 100 Space Credits per month. As your budget allows, you can always upgrade to accelerate your journey!";
+        }
+        
+        if (messageLower.includes('flex') || messageLower.includes('custom') || messageLower.includes('control')) {
+            return "The <b>Flex Spending</b> plan sounds perfect for you! It gives you complete control over your monthly contribution (minimum $50/month), with each dollar contributing directly to your space credits. This plan adapts to your financial situation while still keeping you on track for space.";
+        }
+        
+        if (messageLower.includes('compare') || messageLower.includes('difference') || messageLower.includes('which')) {
+            return "Here's a quick comparison: <br><br><b>Individual Explorer</b> ($49.99/mo): Personal training, 15-year timeline<br><b>Family Pioneer</b> ($89.99/mo): 4-member access, 10-year timeline<br><b>Galactic Elite</b> ($2,048/mo): Priority access, 1-year timeline<br><b>Flex Spending</b> (Min $50/mo): Customizable timeline based on contribution<br><br>The best choice depends on your priorities: budget, timeline, or family inclusion. What's most important for your journey?";
+        }
+        
+        // Default response
+        return "I'd love to help you find the perfect subscription plan! Are you looking for the fastest path to space, a family option, something budget-friendly, or a flexible plan you can customize? Let me know a bit more about your priorities.";
+    }
+}
+</script>
 </body>
 </html>
-
