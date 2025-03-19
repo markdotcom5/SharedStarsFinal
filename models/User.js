@@ -57,6 +57,9 @@ const UserSchema = new mongoose.Schema({
     badges: [{ name: String, acquired: Date, level: { type: String, enum: ["bronze", "silver", "gold", "platinum"] } }],
     certifications: [{ name: String, issuedDate: Date, expiryDate: Date, creditsEarned: Number }],
     roles: { type: [String], default: ["trainee"] },
+    isVerified: { type: Boolean, default: false },  // ✅ Tracks verified status
+    otp: { type: String, required: false },         // Stores OTP
+    otpExpires: { type: Date, required: false },    // E
     assessmentsCompleted: {
         physical: { type: Boolean, default: false },
         technical: { type: Boolean, default: false },
@@ -70,13 +73,13 @@ UserSchema.index({ "leaderboard.score": -1, _id: 1 });
 UserSchema.index({ "leaderboard.rank": 1 });
 
 // ✅ Password hashing middleware
-UserSchema.pre("save", async function(next) {
-    if (this.isModified("password")) {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-    }
-    next();
-});
+// UserSchema.pre("save", async function(next) {
+//     if (this.isModified("password")) {
+//         const salt = await bcrypt.genSalt(10);
+//         this.password = await bcrypt.hash(this.password, salt);
+//     }
+//     next();
+// });
 
 // ✅ Export User Model
 const User = mongoose.models.User || mongoose.model("User", UserSchema);

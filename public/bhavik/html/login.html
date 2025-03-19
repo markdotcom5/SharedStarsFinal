@@ -1,5 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in to StelTrek Academy">
+  <title>Login - StelTrek Academy</title>
+  <link href="/css/tailwind.css" rel="stylesheet">
+  <link rel="stylesheet" href="/bhavik-styling/css/main.css">
+  <!-- <link rel="stylesheet" href="/bhavik-styling/css/ai-assistant.css"> -->
+
+
+  <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
+  <script src="/js/languageManager.js" defer></script>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-black-100">
+    <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center mb-2 md:mb-0">
+        <a href="/index.html" aria-label="SharedStars Homepage" class="group">
+          <img src="/images/SharedStars.svg" alt="SharedStars Logo"
+            class="w-[200px] h-[40px] transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+        </a>
+      </div>
+      <!-- Navigation Links -->
+      <ul class="flex flex-wrap gap-2">
+        <li><a class="py-6 px-8 inline-block text-body-small-medium text-white-700" href="/index.html"
+            data-i18n="nav.home">Home</a></li>
+        <li><a class="py-6 px-8 inline-block text-body-small-medium text-white-700" href="/academy.html"
+            data-i18n="nav.academy">Academy</a></li>
+        <li><a class="py-6 px-8 inline-block text-body-small-medium text-white-700" href="/about.html"
+            data-i18n="nav.about">About</a></li>
+        <li><a class="py-6 px-8 inline-block text-body-small-medium text-white-700" href="/leaderboard.html"
+            data-i18n="nav.leaderboard">Leaderboard</a></li>
+        <li><a class="py-6 px-8 inline-block text-body-small-medium text-white-700" href="/subscribe.html"
+            data-i18n="nav.subscribe">Subscribe</a></li>
+=======
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,6 +70,7 @@
         <li><a href="/about.html" data-i18n="nav.about">About</a></li>
         <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
         <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
+>>>>>>> origin/main
 
         <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
         <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
@@ -38,6 +79,147 @@
         <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
         <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
       </ul>
+<<<<<<< HEAD
+      <div class="nav-btns flex flex-row items-center gap-4">
+        <div class="relative">
+          <button id="langDropdownBtn"
+            class="dropdown-btn flex items-center gap-2 text-white bg-gray-700 px-4 py-2 rounded-lg">
+            <span id="selectedLangIcon">🇺🇸</span>
+            <span id="selectedLangText">English</span>
+            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <ul id="langDropdownMenu" class="hidden absolute shadow-lg rounded-lg mt-2 py-2 w-40">
+            <li><button class="dropdown-item text-black" data-lang="en" data-flag="🇺🇸"
+                aria-label="Switch to English">🇺🇸 English</button></li>
+            <li><button class="dropdown-item text-black" data-lang="zh" data-flag="🇨🇳"
+                aria-label="Switch to Chinese">🇨🇳 Chinese</button></li>
+            <li><button class="dropdown-item text-black" data-lang="ko" data-flag="🇰🇷"
+                aria-label="Switch to Korean">🇰🇷 Korean</button></li>
+            <li><button class="dropdown-item text-black" data-lang="es" data-flag="🇪🇸"
+                aria-label="Switch to Spanish">🇪🇸 Spanish</button></li>
+          </ul>
+        </div>
+        <button class="primary-btn relative">
+          <span data-i18n="nav.getStarted" class="relative z-1"></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <section
+    class="form-container bg-loginBg min-h-screen bg-no-repeat bg-cover bg-center flex flex-col items-center !pb-0">
+    <div class="py-10 my-auto ">
+      <div class="w-[496px] rounded-3xl bg-black border-white-100 border-2 items-center justify-between">
+        <div class="flex flex-col items-center justify-between bg-formBgImg bg-top-center">
+          <img src="/icons/Vector.png" class="w-[248px] h-[139px]"></img>
+          <image src="/icons/Logo (1).png" class="w-16 h-16"></image>
+        </div>
+        <div class="flex flex-col items-center justify-between px-8 pb-10">
+          <p class="text-heading5 text-white my-8">Welcome back</p>
+
+          <form id="login-form" class="space-y-6 text-white">
+
+            <input type="email" name="email" id="email" placeholder="Email address"
+              class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100"
+              required>
+
+            <input type="password" name="password" id="password" placeholder="Password"
+              class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100"
+              required>
+
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <label for="checkbox" class="flex items-center space-x-2 cursor-pointer">
+                  <input id="checkbox" type="checkbox" class="hidden peer">
+                  <div class="w-6 h-6 border-2 border-blue-500 rounded-md flex items-center justify-center">
+                    <img src="/icons/checker.png" alt="Checked" class="hidden peer-has-checked:visible" />
+                  </div>
+                  <span class="text-white text-body-small-medium transition-all duration-300">Remember me</span>
+                </label>
+              </div>
+              <a href="login.html" class="text-white text-body-small-medium">Forgot Password?</a>
+            </div>
+            <button type="submit" id="login-btn" class="primary-btn w-full">
+              <span class="w-full !py-[13px]">Login</span>
+            </button>
+            <p id="login-error" class="text-red-500 text-sm text-center hidden"></p>
+
+          </form>
+          <div class="flex flex-col items-center justify-between">
+            <div class="flex flex-row gap-[10px] items-center justify-center">
+              <p class="text-white text-body-small-medium my-8">Don't have an account?</p>
+              <a href="/signup.html" class="text-blue-500 text-body-small-semibold">Sign up</a>
+            </div>
+            <div class="flex items-center justify-between gap-3 w-[432px]">
+              <button type="submit" class="secondary-btn w-full min-w-[210px]">
+                <span class="w-full !py-[13px]"><img src="/icons/Google.png" alt="Google Logo" class="w-5 h-5">Continue with Google</span>
+              </button>
+              <button type="submit" class="secondary-btn w-full min-w-[210px]">
+                <span class="w-full !py-[13px]"> <img src="/icons/Apple.png" alt="Google Logo" class="w-5 h-5">Continue with Apple</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+<<<<<<< HEAD:public/bhavik-styling/html/login.html
+  </section>
+  <!-- <footer>
+    <p data-i18n="common.footer">© 2024 StelTrek Academy. All rights reserved.</p>
+  </footer> -->
+=======
+    <footer>
+        <p data-i18n="common.footer">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+    </footer>
+>>>>>>> 3de1857 (Your descriptive message):public/bhavik/html/login.html
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginForm = document.getElementById("login-form");
+      const loginBtn = document.getElementById("login-btn");
+      const loginError = document.getElementById("login-error");
+
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        loginError.classList.add("hidden");
+        loginBtn.textContent = "Logging in...";
+        loginBtn.disabled = true;
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const response = await fetch("http://localhost:3000/bhavik-styling/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          });
+
+          if (!response.ok) {
+            throw new Error("Invalid credentials");
+          }
+
+          window.location.href = "/mission-control.html";
+        } catch (error) {
+          loginError.textContent = error.message || "An error occurred. Please try again.";
+          loginError.classList.remove("hidden");
+          loginBtn.textContent = "Login";
+          loginBtn.disabled = false;
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
+=======
 
       <div class="relative">
         <button id="langDropdownBtn" class="flex items-center gap-2 text-white bg-gray-700 px-4 py-2 rounded-lg">
@@ -159,3 +341,4 @@
           <script type="module" src="/js/academy.js"></script> -->
 </body>
 </html>
+>>>>>>> origin/main
