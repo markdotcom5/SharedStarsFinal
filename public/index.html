@@ -8,9 +8,9 @@
     <!-- ✅ Content Security Policy (Enhanced for Security) -->
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'self'; 
-      script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
-      style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
-      font-src 'self' https://fonts.gstatic.com;
+      script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+      style-src 'self' 'unsafe-inline' data: https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+      font-src 'self' https://fonts.gstatic.com data:;
       img-src 'self' data: https://www.sora.com;
       frame-src 'self' https://www.sora.com;
       child-src 'self' https://www.sora.com;
@@ -21,6 +21,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+<<<<<<< HEAD
     <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/ai-assistant.css" />
   
@@ -30,6 +31,18 @@
     <script type="module" src="/js/HomepageHandler.js"></script>
   </head>
   
+=======
+    <link href="/public/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/main.css" />
+    <link rel="stylesheet" href="/public/css/ai-assistant.css" />
+    
+    <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
+    <!-- <script src="/js/languageSelection.js" defer></script> -->
+    <script src="/js/languageManager.js" defer></script>
+    <script type="module" src="/js/CountdownTimer.js"></script>
+    <script type="module" src="/js/HomepageHandler.js"></script>  
+
+>>>>>>> 535d6c7 (ONboarding Integration 1)
 </head>
 <body class="bg-slate-900 text-white min-h-screen">
   

@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharedStars - Your Journey to Space Begins Here</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        :root {
+            --primary: #0066FF;
+            --primary-dark: #0055CC;
+            --text: #ffffff;
+            --bg-dark: #0c1017;
+            --bg-card: rgba(26, 33, 51, 0.7);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Video background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .video-background video {
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(12, 16, 23, 0.7), rgba(12, 16, 23, 0.9));
+        }
+        
+        /* Header */
+        header {
+            padding: 20px 0;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            height: 40px;
+        }
+        
+        .cta-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #4a7de9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Countdown */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 60px 0;
+            flex-wrap: wrap;
+        }
+        
+        .countdown-unit {
+            background-color: rgba(26, 33, 51, 0.7);
+            border-radius: 8px;
+            padding: 20px;
+            width: 80px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(74, 125, 233, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .countdown-unit:hover {
+            transform: translateY(-5px);
+            border-color: rgba(74, 125, 233, 0.5);
+        }
+        
+        .countdown-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 102, 255, 0.5);
+        }
+        
+        .countdown-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+        
+        /* Training modules section */
+        .training-modules {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .modules-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, #4a7de9, #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .module-card {
+            background-color: rgba(26, 33, 51, 0.7);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: left;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(74, 125, 233, 0.2);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2);
+            border-color: rgba(74, 125, 233, 0.5);
+        }
+        
+        .module-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(74, 125, 233, 0.2);
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .module-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .module-description {
+            font-size: 15px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+        
+        .module-progress {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(to right, #0066FF, #4a7de9);
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+        
+        .module-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* AI assistant */
+        .ai-assistant {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+        }
+
+        .ai-button {
+            background-color: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 102, 255, 0.3);
+            border: none;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s;
+        }
+
+        .ai-button:hover {
+            transform: scale(1.1);
+        }
+
+        .pulse {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(0, 102, 255, 0.4);
+            animation: pulse 2s infinite;
+            z-index: 1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        /* Email signup */
+        .signup-form {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .signup-input {
+            flex: 1;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: border-color 0.3s;
+        }
+        
+        .signup-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .signup-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 80px;
+            position: relative;
+        }
+        
+        .footer-text {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Coming soon overlay */
+        .coming-soon-badge {
+            display: inline-block;
+            background-color: rgba(0, 102, 255, 0.2);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(0, 102, 255, 0.3);
+        }
+        
+        /* Advanced STELLA Interface Styling */
+.stella-interface {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 380px;
+    height: 500px;
+    background-color: rgba(10, 15, 25, 0.85);
+    border-radius: 16px;
+    overflow: hidden;
+    display: none;
+    z-index: 1001;
+    box-shadow: 0 10px 40px rgba(0, 80, 255, 0.4), 
+                0 0 100px rgba(0, 30, 60, 0.2);
+    border: 1px solid rgba(30, 100, 255, 0.3);
+    backdrop-filter: blur(10px);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
+                opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.stella-interface.active {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Sci-Fi Header */
+.stella-header {
+    background: linear-gradient(90deg, rgba(0, 30, 60, 0.8) 0%, rgba(0, 90, 180, 0.8) 100%);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Star Trek LCARS-inspired header elements */
+.stella-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 30% 50%, rgba(60, 140, 255, 0.2) 0%, transparent 70%),
+        radial-gradient(circle at 70% 50%, rgba(30, 90, 255, 0.2) 0%, transparent 70%);
+    opacity: 0.7;
+}
+
+.stella-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(60, 180, 255, 0.7) 0%, transparent 100%);
+    animation: scanline 4s linear infinite;
+}
+
+@keyframes scanline {
+    0% { left: -20px; opacity: 0; }
+    5% { opacity: 0.5; }
+    30% { opacity: 0.5; }
+    35% { opacity: 0; }
+    100% { left: 100%; opacity: 0; }
+}
+
+.stella-header h3 {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.stella-header h3::before {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: #4DFF91;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #4DFF91;
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 8px #4DFF91; opacity: 1; }
+    50% { box-shadow: 0 0 15px #4DFF91; opacity: 0.8; }
+    100% { box-shadow: 0 0 8px #4DFF91; opacity: 1; }
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.header-button {
+    background: none;
+    border: none;
+    color: white;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-button:hover {
+    opacity: 1;
+}
+
+.header-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Chat messages area with sci-fi styling */
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    background-color: rgba(10, 15, 25, 0.5);
+}
+
+.chat-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 30% 30%, rgba(30, 100, 255, 0.03) 0%, transparent 70%),
+        radial-gradient(circle at 70% 70%, rgba(60, 180, 255, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* Grid overlay - TRON/Star Wars inspired */
+.chat-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(0deg, rgba(30, 100, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30, 100, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+}
+
+/* STELLA Avatar/Character Container */
+.stella-avatar-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
+    z-index: 2;
+}
+
+.stella-avatar-container.visible {
+    opacity: 1;
+}
+
+.stella-avatar {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.stella-hologram {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30, 120, 255, 0.3) 0%, transparent 70%);
+    animation: hologram-pulse 3s infinite;
+}
+
+@keyframes hologram-pulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.1); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 0.7; }
+}
+
+.stella-hologram::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/images/SharedStars.svg') center/50% no-repeat;
+    filter: brightness(1.5) contrast(1.2) drop-shadow(0 0 5px rgba(60, 180, 255, 0.8));
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.stella-hologram::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(100, 200, 255, 0.1) 0%, transparent 70%);
+    animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+    from { transform: scale(0.95); opacity: 0.7; }
+    to { transform: scale(1.05); opacity: 0.9; }
+}
+
+/* Message styles with sci-fi theming */
+.message {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    position: relative;
+    z-index: 1;
+}
+
+.user-message {
+    align-self: flex-end;
+    animation: slideInRight 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.stella-message {
+    align-self: flex-start;
+    animation: slideInLeft 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.message-bubble {
+    padding: 14px 16px;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+.user-message .message-bubble {
+    background-color: rgba(30, 90, 255, 0.2);
+    border: 1px solid rgba(30, 90, 255, 0.3);
+    border-bottom-right-radius: 4px;
+}
+
+.stella-message .message-bubble {
+    background-color: rgba(30, 40, 60, 0.4);
+    border: 1px solid rgba(60, 130, 240, 0.3);
+    border-bottom-left-radius: 4px;
+}
+
+/* Advanced effects for STELLA messages */
+.stella-message .message-bubble::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(60, 180, 255, 0.5), transparent);
+    animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.message-content {
+    position: relative;
+    z-index: 1;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.user-message .message-content {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.stella-message .message-content {
+    color: rgba(220, 230, 255, 0.9);
+}
+
+.message-time {
+    font-size: 11px;
+    margin-top: 4px;
+    opacity: 0.6;
+    align-self: flex-end;
+}
+
+.user-message .message-time {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.stella-message .message-time {
+    color: rgba(150, 200, 255, 0.6);
+}
+
+/* Typing indicator with sci-fi animation */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: rgba(30, 40, 60, 0.4);
+    border: 1px solid rgba(60, 130, 240, 0.3);
+    border-radius: 14px;
+    border-bottom-left-radius: 4px;
+    width: fit-content;
+    position: relative;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background-color: rgba(150, 200, 255, 0.6);
+    border-radius: 50%;
+    display: inline-block;
+    animation: blink 1.5s infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0% { transform: scale(1); opacity: 0.6; }
+    20% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.6; }
+}
+
+.typing-indicator::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 30% 50%, rgba(100, 200, 255, 0.1) 0%, transparent 70%);
+    border-radius: 14px;
+    border-bottom-left-radius: 4px;
+}
+
+.typing-indicator::after {
+    content: 'STELLA is analyzing';
+    position: absolute;
+    left: 50px;
+    color: rgba(150, 200, 255, 0.8);
+    font-size: 12px;
+}
+
+/* Chat input area with sci-fi styling */
+.chat-input-container {
+    padding: 15px;
+    background-color: rgba(15, 25, 40, 0.7);
+    border-top: 1px solid rgba(30, 100, 255, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.chat-input-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(60, 180, 255, 0.7), transparent);
+}
+
+.chat-input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: rgba(20, 30, 50, 0.7);
+    border: 1px solid rgba(60, 130, 240, 0.3);
+    transition: border-color 0.3s;
+}
+
+.chat-input-wrapper:focus-within {
+    border-color: rgba(60, 180, 255, 0.6);
+    box-shadow: 0 0 0 2px rgba(60, 180, 255, 0.2);
+}
+
+.chat-input {
+    flex: 1;
+    padding: 12px 15px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+.chat-input:focus {
+    outline: none;
+}
+
+.chat-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.send-button {
+    width: 40px;
+    height: 40px;
+    background-color: #0066FF;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.send-button:hover {
+    background-color: #005AE0;
+}
+
+.send-button svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+}
+
+/* Three Body Problem inspired particle background */
+.particle-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    background-color: rgba(100, 200, 255, 0.5);
+    border-radius: 50%;
+    width: 2px;
+    height: 2px;
+    opacity: 0.3;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+    .stella-interface {
+        width: 90%;
+        right: 5%;
+        left: 5%;
+        height: 70vh;
+        bottom: 80px;
+    }
+}
+.stella-interface {
+    display: none;
+}
+
+.stella-interface.active {
+    display: flex;
+}
+
+        #signup-success {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(0, 255, 0, 0.1);
+            color: #4DFF91;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid rgba(77, 255, 145, 0.3);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .digit-changed {
+            animation: numberChange 0.5s ease-out;
+        }
+        
+        @keyframes numberChange {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); color: #ffffff; }
+            100% { transform: scale(1); }
+        }
+        
+        /* API Test Panel */
+        .api-test-panel {
+            margin-top: 60px;
+            padding: 20px;
+            background-color: rgba(26, 33, 51, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(74, 125, 233, 0.3);
+            text-align: center;
+        }
+        
+        .api-test-panel h3 {
+            margin-top: 0;
+            color: #4a7de9;
+            margin-bottom: 20px;
+        }
+        
+        .api-test-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .api-test-button {
+            background-color: rgba(0, 102, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .api-test-button:hover {
+            background-color: rgba(0, 102, 255, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        #api-test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            color: #aaa;
+            font-family: monospace;
+            text-align: left;
+            height: 150px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .countdown {
+                flex-wrap: wrap;
+            }
+            
+            .countdown-unit {
+                width: 70px;
+                padding: 15px;
+            }
+            
+            .signup-form {
+                flex-direction: column;
+            }
+            
+            .cta-button {
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stella-chat {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay loop muted playsinline>
+            <source src="/videos/academy10.mp4" type="video/mp4">
+            <!-- Fallback for older browsers -->
+            Your browser does not support the video tag.
+        </video>
+        <div class="overlay"></div>
+    </div>
+    
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="logo">
+                <button class="cta-button" id="header-waitlist-btn">Join Waitlist</button>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="coming-soon-badge">Coming Soon</div>
+                    <h1>Train for Space, Powered by STELLA</h1>
+                    <p>Your personalized journey to astronaut readiness starts here. SharedStars is preparing to launch the first AI-driven space training platform accessible to everyone.</p>
+                    
+                    <div class="signup-form">
+                        <input type="email" placeholder="Enter your email for updates" class="signup-input" id="signup-email">
+                        <button class="cta-button" id="early-access-btn">Get Early Access</button>
+                    </div>
+                    
+                    <div id="signup-success">Thank you! You've been added to our early access list.</div>
+                    
+                    <div class="countdown">
+                        <div class="countdown-unit"><div id="years" class="countdown-number" data-countdown="years">00</div><div class="countdown-label">Years</div></div>
+                        <div class="countdown-unit"><div id="months" class="countdown-number" data-countdown="months">00</div><div class="countdown-label">Months</div></div>
+                        <div class="countdown-unit"><div id="weeks" class="countdown-number" data-countdown="weeks">00</div><div class="countdown-label">Weeks</div></div>
+                        <div class="countdown-unit"><div id="days" class="countdown-number" data-countdown="days">00</div><div class="countdown-label">Days</div></div>
+                        <div class="countdown-unit"><div id="hours" class="countdown-number" data-countdown="hours">00</div><div class="countdown-label">Hours</div></div>
+                        <div class="countdown-unit"><div id="minutes" class="countdown-number" data-countdown="minutes">00</div><div class="countdown-label">Minutes</div></div>
+                        <div class="countdown-unit"><div id="seconds" class="countdown-number" data-countdown="seconds">00</div><div class="countdown-label">Seconds</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="training-modules">
+            <div class="container">
+                <h2 class="modules-title">Space Training Modules</h2>
+                <p>Comprehensive astronaut preparation through specialized training modules</p>
+                
+                <div class="modules-grid">
+                    <div class="module-card">
+                        <div class="module-badge">6-8 Months</div>
+                        <h3 class="module-title">Physical Training</h3>
+                        <p class="module-description">Master zero-gravity movement, biometric adaptation, and emergency procedures.</p>
+                        <div class="module-progress">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div class="module-info">
+                            <span>ISO-31000-26 Certification</span>
+                            <span>300 Hours</span>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-badge">4-6 Months</div>
+                        <h3 class="module-title">Technical Systems</h3>
+                        <p class="module-description">Master spacecraft systems, maintenance, and emergency protocols.</p>
+                        <div class="module-progress">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div class="module-info">
+                            <span>OSHA-ST-102 Certification</span>
+                            <span>200 Hours</span>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-badge">3-4 Months</div>
+                        <h3 class="module-title">Mission Simulation</h3>
+                        <p class="module-description">Complete mission scenarios and team coordination exercises.</p>
+                        <div class="module-progress">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div class="module-info">
+                            <span>ISO-SIM-140 Certification</span>
+                            <span>150 Hours</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- API Test Panel -->
+        <div class="container">
+            <div class="api-test-panel">
+                <h3>API Test Panel</h3>
+                <div class="api-test-buttons">
+                    <button id="test-initialize" class="api-test-button">Test Initialize</button>
+                    <button id="test-guidance" class="api-test-button">Test Guidance</button>
+                    <button id="test-connect" class="api-test-button">Test Connect</button>
+                </div>
+                <div id="api-test-results">// API test results will appear here</div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="ai-assistant">
+        <button class="ai-button" id="stellaButton">
+            <img src="/icons/Logo-1.png" alt="SharedStars Logo" class="logo">
+        </button>
+        <div class="pulse"></div>
+    </div>
+    
+    
+    <!-- STELLA Chat Interface -->
+<div id="stella-interface" class="stella-interface">
+    <div class="stella-header">
+        <h3>STELLA AI Space Coach</h3>
+        <div class="header-buttons">
+            <button class="header-button" id="minimize-stella" title="Minimize">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+            <button class="header-button" id="close-stella" title="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <div class="chat-container" id="stella-messages">
+        <!-- Initial STELLA message -->
+        <div class="message stella-message">
+            <div class="message-bubble">
+                <div class="message-content">
+                    Hello! I'm STELLA, your AI Space Coach. How can I assist with your space training journey today?
+                </div>
+            </div>
+            <div class="message-time">Just now</div>
+        </div>
+        
+        <!-- Typing indicator (hidden initially) -->
+        <div class="typing-indicator" id="stella-typing" style="display: none;">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    
+    <!-- STELLA Avatar/Character -->
+    <div class="stella-avatar-container" id="stella-avatar">
+        <div class="stella-avatar">
+            <div class="stella-hologram"></div>
+        </div>
+    </div>
+    
+    <!-- Particle background for Three Body Problem inspired effects -->
+    <div class="particle-background" id="particle-bg"></div>
+    
+    <div class="chat-input-container">
+        <div class="chat-input-wrapper">
+            <input type="text" class="chat-input" id="stella-input" placeholder="Ask STELLA..." autocomplete="off">
+            <button class="send-button" id="send-to-stella">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+    
+     <!-- Footer -->
+<footer style="background-color: rgba(13, 18, 30, 0.6); padding: 60px 20px; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
+        <!-- About -->
+        <div>
+            <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;">About</h3>
+            <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+                <li style="margin-bottom: 12px;"><a href="/about.html" style="color: white; text-decoration: none;">Our Story</a></li>
+                <li style="margin-bottom: 12px;"><a href="/academy.html" style="color: white; text-decoration: none;">Academy</a></li>
+                <li style="margin-bottom: 12px;"><a href="/leaderboard.html" style="color: white; text-decoration: none;">Leaderboard</a></li>
+            </ul>
+        </div>
+        
+        <!-- Join Us -->
+        <div>
+            <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;">Join Us</h3>
+            <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+                <li style="margin-bottom: 12px;"><a href="/apply.html" style="color: white; text-decoration: none;">Apply Now</a></li>
+                <li style="margin-bottom: 12px;"><a href="/subscribe.html" style="color: white; text-decoration: none;">Subscribe</a></li>
+                <li style="margin-bottom: 12px;"><a href="/faq.html" style="color: white; text-decoration: none;">FAQ</a></li>
+            </ul>
+        </div>
+        
+        <!-- Contact -->
+        <div>
+            <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;">Contact</h3>
+            <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+                <li style="margin-bottom: 12px;"><a href="mailto:info@sharedstars.com" style="color: white; text-decoration: none;">info@sharedstars.com</a></li>
+                <li style="margin-bottom: 12px; color: #888;">Celestial Technologies, LLC</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Copyright text -->
+    <div style="margin-top: 60px; text-align: center;">
+        <p style="color: #888;">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+    </div>
+          <!-- Social Media Icons Row -->
+  <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
+    <a href="https://www.linkedin.com/company/106241890" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+    </a>
+    <a href="https://x.com/SharedStars" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+    <a href="https://www.facebook.com/SharedStars" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/sharedstarsacademy/" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
+    </a>
+    <a href="https://t.me/SharedStars" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
+    </a>
+    <a href="https://www.tiktok.com/@sharedstarsacademy" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+    </a>
+    <a href="https://www.youtube.com/@SharedStarsAcademy" style="color: #888;">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+    </a>
+</div>
+      </footer>
+    </main>
+    <!-- Include stella-core.js -->
+<!-- Include stella-core.js -->
+<script src="/js/stella-core.js"></script>
+<script src="/js/countdown.js"></script>
+<script src="/js/soon.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stellaButton = document.getElementById('stellaButton');
+        const chatContainer = document.getElementById('stella-interface');
+        const closeBtn = document.getElementById('close-stella');
+        const minimizeBtn = document.getElementById('minimize-stella');
+        const sendBtn = document.getElementById('send-to-stella');
+        const inputField = document.getElementById('stella-input');
+        const messagesContainer = document.getElementById('stella-messages');
+        const typingIndicator = document.getElementById('stella-typing');
+
+        // Open chat
+        stellaButton.addEventListener('click', () => {
+            chatContainer.style.display = 'block';
+        });
+
+        // Close chat
+        closeBtn.addEventListener('click', () => {
+            chatContainer.style.display = 'none';
+        });
+
+        // Minimize chat
+        minimizeBtn.addEventListener('click', () => {
+            if (messagesContainer.style.display === 'none') {
+                messagesContainer.style.display = 'block';
+            } else {
+                messagesContainer.style.display = 'none';
+            }
+        });
+
+        // Send message
+        const sendMessage = () => {
+            const question = inputField.value.trim();
+            if (!question) return;
+
+            const userMessageHTML = `
+                <div class="message user-message">
+                    <div class="message-bubble">${question}</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            `;
+            messagesContainer.insertAdjacentHTML('beforeend', userMessageHTML);
+            inputField.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            typingIndicator.style.display = 'flex';
+
+            fetch('/api/stella/guidance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: 'guest', question: question })
+            })
+            .then(res => res.json())
+            .then(data => {
+                typingIndicator.style.display = 'none';
+
+                const response = data.guidance.message || 'Sorry, I am unable to answer that right now.';
+                const stellaMessageHTML = `
+                    <div class="message stella-message">
+                        <div class="message-bubble">${response}</div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                `;
+                messagesContainer.insertAdjacentHTML('beforeend', stellaMessageHTML);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            })
+            .catch(err => {
+                console.error(err);
+                typingIndicator.style.display = 'none';
+                const errorMessageHTML = `
+                    <div class="message stella-message">
+                        <div class="message-bubble">Oops! There was a problem connecting. Please try again later.</div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                `;
+                messagesContainer.insertAdjacentHTML('beforeend', errorMessageHTML);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        };
+
+        sendBtn.addEventListener('click', sendMessage);
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    });
+</script>
+
+</body>
+</html>
