@@ -1,0 +1,131 @@
+ app.js                                             |   976 +-
+ babel.config.js                                    |     3 +-
+ controllers/aiController.js                        |   101 +-
+ extras/testOpenAI.js                               |     6 +-
+ filename.html                                      |     0
+ middleware/authenticate.js                         |    12 +-
+ models/Assessment.js                               |   153 +
+ models/Module.js                                   |   292 +-
+ models/PhysicalTraining.js                         |     5 +-
+ models/StellaConversation.js                       |   336 +
+ models/TrainingSession.js                          |   184 +-
+ models/User.js                                     |   102 +-
+ models/UserProgress.js                             |    45 +
+ models/challenge.js                                |     9 +-
+ modules/moduleLoader.js                            |    10 +-
+ package-lock 2.json                                |     6 -
+ package-lock 3.json                                | 14072 -------------------
+ package-lock.json                                  |    58 +-
+ package.json                                       |     4 +-
+ public/academy1.html                               |    48 +-
+ public/admin/js/stella-dashboard.js                |   553 +
+ public/admin/stella-analytics.html                 |   257 +
+ public/css/ai-assistant.css                        |   114 +
+ public/css/countdown.css                           |   139 +
+ public/css/fontawesome-all.min.css                 |     9 +
+ public/css/main.css                                |    46 +-
+ public/css/mission.css                             |    40 +
+ public/css/stella-responsive.css                   |    21 +
+ public/css/tailwind.min.css                        |     1 +
+ public/css/training.css                            |    85 +-
+ public/homepage.html                               |   965 ++
+ public/images/engineering-icon-improved.svg        |    88 +
+ public/images/leadership-icon-improved.svg         |    79 +
+ public/images/mental-fitness-icon.svg              |    99 +
+ public/images/modules/assessment.jpg               |     0
+ public/images/modules/engineering-skills.svg       |     0
+ public/images/modules/eva-training.jpg             |     0
+ public/images/modules/leadershiop.svg              |     0
+ public/images/modules/leadership.jpg               |     0
+ public/images/modules/leadership.svg               |     0
+ public/images/modules/mental-fitness.jpg           |     0
+ public/images/modules/mental-fitness.svg           |     0
+ public/images/modules/physical-training.jpg        |     0
+ public/images/modules/physical-training.svg        |     0
+ public/images/modules/skills.svg                   |     0
+ public/images/modules/technical-skills.jpg         |     0
+ public/images/physical-training-icon.svg           |   111 +
+ public/images/stars-bg.png                         |     0
+ public/index.html                                  |    10 +-
+ public/js/assessment/readiness-assessment.js       |   981 ++
+ public/js/{CountdownTimer.js => countdown.js}      |     0
+ public/js/dashboard.js                             |    24 -
+ public/js/language-switcher.js                     |    32 -
+ public/js/language-switcher.js-backup              |    95 +
+ public/js/languageSelection.js                     |   346 +-
+ public/js/languages.js                             |   181 -
+ public/js/languages.js-backup                      |    95 +
+ public/js/missionControl.js                        |  1169 ++
+ public/js/modules/training/assessments.js          |    90 +
+ public/js/modules/training/mission-framework.js    |   531 +
+ public/js/modules/training/physicalAssessment.js   |    81 +
+ public/js/modules/training/physicalTraining.js     |    76 +
+ public/js/modules/training/progressAssessment.js   |     1 -
+ public/js/modules/training/trainingHandler.js      |     0
+ public/js/progressAssessment.js                    |     2 +-
+ public/js/stella-core.js                           |   261 +-
+ public/js/stella-integration.js                    |   180 +
+ public/js/training/physical/coreBalanceTraining.js |   348 +
+ public/js/training/physical/endurance-tracker.js   |   337 -
+ public/js/training/physical/enduranceTracker.js    |   402 +
+ public/js/training/physical/flexibilityTraining.js |    84 +
+ public/js/training/physical/mission-handler.js     |  2156 +--
+ .../physical/mission-handler.js.new-backup         |  3123 ++--
+ public/js/training/physical/mission-tracker.js     |   790 ++
+ public/js/training/physical/mission1.js            |   269 -
+ public/js/trainingHub.js                           |   281 +
+ public/js/visualizations/ProgressTracker.js        |    85 +-
+ public/leaderboard.html                            |    34 +-
+ public/mission-control.html                        |  1538 +-
+ public/physicalTraining.html                       |   590 +
+ public/training-modules/leadership.html            |     0
+ public/training-modules/mental-fitness.html        |     0
+ public/training-modules/physical/index.html        |    23 +-
+ .../physical/mission1-core-balance.html            |  1216 --
+ .../physical/mission2-endurance.html               |  1010 --
+ .../physical/mission3-strength-training.html       |   531 -
+ .../physical/missions/core-balance.html            |  1263 ++
+ .../physical/missions/endurance.html               |  1030 ++
+ .../physical/missions/flexibility-mobility.html    |  1258 ++
+ public/trainingHub.html                            |  1055 ++
+ routes/admin/stellaAnalytics.js                    |   199 +
+ routes/api/stella-minimal.js                       |    19 +
+ routes/api/stella.js                               |   913 ++
+ routes/api/training-physical.js                    |   154 +-
+ routes/assessments.js                              |   295 +
+ routes/briefings.js                                |    94 +
+ routes/index.js                                    |     5 +-
+ routes/progress.js                                 |    45 +-
+ routes/training.js                                 |   276 +-
+ routes/training.routes.js                          |   653 -
+ routes/training/index.js                           |   126 -
+ routes/training/missions/balance.js                |   346 +
+ routes/training/missions/endurance.js              |   557 +
+ routes/training/missions/flexibility.js            |    17 +
+ routes/training/missions/strength.js               |    17 +
+ routes/training/physical.js                        |    43 +
+ routes/training/physical/index.js                  |   419 -
+ routes/training/physical/mission1.js               |   125 -
+ routes/training/physical/mission2.js               |   186 -
+ routes/training/physical/recommendations.js        |   178 -
+ routes/training/recommendations.js                 |    16 +-
+ scripts/testOpenAI.js                              |    16 +
+ scripts/testStellaConversation.js                  |    55 +
+ services/AIGuidanceSystem.js                       |     4 +-
+ services/AIService.js                              |     5 +-
+ services/CoreAIServices.js                         |   100 +-
+ services/EVAAIService.js                           |     2 +-
+ services/STELLA_AI.js                              |   701 +-
+ services/STELLA_AI/briefingGenerator.js            |     4 +-
+ services/SocialAISystem.js                         |     2 +-
+ services/TrainingLearningSystem.js                 |    66 +-
+ services/UnifiedEVAAIservice.js                    |     2 +-
+ services/aiAssistant.js                            |    12 +-
+ services/aiGuidance.js                             |     5 +-
+ services/openaiService.js                          |    27 +
+ services/stellaAI.js                               |     7 +
+ tempStella.js                                      |    24 +
+ utils/progressUtils.js                             |    46 +
+ views/signup 2.ejs                                 |     2 +-
+ yarn.lock                                          |  6705 ++++++---
+ 130 files changed, 26110 insertions(+), 26965 deletions(-)
