@@ -1,0 +1,31 @@
+<!-- verify.html -->
+<form id="verification-form">
+    <input type="email" id="email" placeholder="Your Email" required />
+    <input type="text" id="verificationCode" placeholder="Verification Code" required />
+    <button type="submit">Verify Account</button>
+  </form>
+  
+  <script>
+    document.getElementById('verification-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const verificationCode = document.getElementById('verificationCode').value;
+  
+      const response = await fetch('/api/verify-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, verificationCode }),
+      });
+  
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        alert("✅ Verification successful! You can now log in.");
+        window.location.href = '/login1.html';
+      } else {
+        alert("⚠️ " + result.error);
+      }
+    });
+  </script>
+  <script src="/js/languageManager.js" defer></script>

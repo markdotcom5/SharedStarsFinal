@@ -2,107 +2,68 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const emailService = require('../services/emailService');
 
 const router = express.Router();
 
-/** ==========================
- *  🔹 User Signup Route (`/join-now`)
- *  ========================== **/
 router.post('/join-now', async (req, res) => {
-    console.log('🚀 Signup endpoint hit');
-    
-    try {
-        const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
-        // 🔹 Validate Request Data
-        if (!name || !email || !password) {
-            return res.status(400).json({
-                success: false,
-                error: 'Name, email, and password are required to sign up.'
-            });
-        }
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(409).json({ success: false, error: 'Email already registered.' });
+  }
 
-        // 🔹 Check for Existing User
-        const existingUser = await User.findOne({ email: email.toLowerCase() });
-        if (existingUser) {
-            return res.status(409).json({
-                success: false,
-                error: 'This email is already registered. Ready to continue your journey to space?'
-            });
-        }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = new User({
+    name,
+    email,
+    password: hashedPassword,
+    verified: true, // immediate verification for MVP
+    createdAt: new Date()
+  });
 
-        // 🔹 Hash Password for Security
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+  await newUser.save();
 
-        // 🔹 Create New User with AI Guidance
-        const newUser = new User({
-            name,
-            email: email.toLowerCase(),
-            password: hashedPassword,
-            aiGuidance: {
-                mode: 'full_guidance',
-                activatedAt: new Date(),
-                personalizedSettings: {
-                    pacePreference: 'balanced',
-                    adaptiveUI: true
-                },
-                context: {
-                    currentPhase: 'onboarding',
-                    nextActions: ['complete_profile']
-                }
-            },
-            settings: {
-                notifications: {
-                    aiSuggestions: true
-                },
-                aiPreferences: {
-                    automationLevel: 'maximum',
-                    interactionStyle: 'proactive',
-                    dataCollection: 'comprehensive'
-                }
-            }
-        });
+  const token = jwt.sign({ userId: newUser._id.toString() }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-        await newUser.save();
-
-        // In auth.js and signup.js, standardize all token generations to:
-const token = jwt.sign(
-    { userId: user._id.toString() },  // Always convert _id to string
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-);
-            process.env.JWT_SECRET || 'default_secret_key',
-            { expiresIn: '7d' }
-        );
-
-        // 🔹 Respond with Success
-        res.status(201).json({
-            success: true,
-            message: 'Welcome aboard! Your AI guide is ready to start your journey to space.',
-            data: {
-                user: {
-                    id: newUser._id,
-                    name: newUser.name,
-                    email: newUser.email,
-                    aiGuidanceMode: newUser.aiGuidance.mode
-                },
-                token
-            }
-        });
-    } catch (error) {
-        console.error('❌ Signup Error Details:', {
-            message: error.message,
-            stack: error.stack,
-            name: error.name
-        });
-    
-        res.status(500).json({
-            success: false,
-            error: 'Houston, we have a problem. Please try again.'
-        });
+  res.status(201).json({
+    success: true,
+    message: 'Signup successful. Welcome aboard!',
+    data: {
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+      },
+      token
     }
-    
-    // Ensure `router` is defined before exporting
-    module.exports = router;
-    
+  });
+});
+
+router.post('/api/verify-account', async (req, res) => {
+  const { email, verificationCode } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found." });
+    }
+
+    if (user.verificationCode !== verificationCode) {
+      return res.status(400).json({ success: false, error: "Invalid verification code." });
+    }
+
+    user.subscription.status = 'active';
+    user.verificationCode = undefined;  // Clear the code once verified
+    await user.save();
+
+    return res.status(200).json({ success: true, message: "Account verified." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, error: "Server error." });
+  }
+});
+
+module.exports = router;
