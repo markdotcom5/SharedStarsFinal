@@ -11,8 +11,9 @@
     <!-- <link rel="stylesheet" href="/bhavik-styling/css/ai-assistant.css"> -->
 
     <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
-    <script src="/js/languageManager.js" defer></script>
-</head>
+    <script src="/js/translations.js"></script>
+    <script src="/js/languageManager.js"></script>
+      </head>
 
 <body>
     <!-- HEADER -->
@@ -37,13 +38,6 @@
               data-i18n="nav.leaderboard">Leaderboard</a></li>
           <li><a class="py-6 px-8 inline-block text-body-small-medium text-white-700" href="/subscribe.html"
               data-i18n="nav.subscribe">Subscribe</a></li>
-  
-          <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
-          <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
-          <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
-          <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
-          <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-          <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
         </ul>
         <div class="nav-btns flex flex-row items-center gap-4">
           <div class="relative">
@@ -73,7 +67,10 @@
         </div>
       </nav>
     </header>
-
+<!-- Add this somewhere near the login form -->
+<div class="mt-4 text-center text-white-300 text-sm">
+  <p>Need help? <span class="text-blue-500 cursor-pointer" id="stella-help">Ask Stella</span></p>
+</div>
     <!-- Main Content -->
     <section
     class="form-container bg-loginBg min-h-screen bg-no-repeat bg-cover bg-center flex flex-col items-center !pb-0">
@@ -85,47 +82,42 @@
         </div>
         <div class="flex flex-col items-center justify-between px-8 pb-10">
           <p class="text-heading5 text-white my-8">Welcome back</p>
-
+        
           <form id="login-form" class="space-y-6 text-white">
-
+        
             <input type="email" name="email" id="email" placeholder="Email address"
               class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100"
-              required>
-
+              required autocomplete="email">
+        
             <input type="password" name="password" id="password" placeholder="Password"
               class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100"
-              required>
-
+              required autocomplete="current-password">
+        
             <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2">
-                <label for="checkbox" class="flex items-center space-x-2 cursor-pointer">
-                  <input id="checkbox" type="checkbox" class="hidden peer">
-                  <div class="w-6 h-6 border-2 border-blue-500 rounded-md flex items-center justify-center">
-                    <img src="/icons/checker.png" alt="Checked" class="hidden peer-has-checked:visible" />
-                  </div>
-                  <span class="text-white text-body-small-medium transition-all duration-300">Remember me</span>
-                </label>
-              </div>
+              <label for="checkbox" class="flex items-center space-x-2 cursor-pointer">
+                <input id="checkbox" type="checkbox" class="hidden peer">
+                <div class="w-6 h-6 border-2 border-blue-500 rounded-md flex items-center justify-center">
+                  <img src="/icons/checker.png" alt="Checked" class="hidden peer-has-checked:visible" />
+                </div>
+                <span class="text-white text-body-small-medium transition-all duration-300">Remember me</span>
+              </label>
               <a href="/reset-password.html" class="text-white text-body-small-medium">Forgot Password?</a>
             </div>
+        
             <button type="submit" id="login-btn" class="primary-btn w-full">
               <span class="w-full !py-[13px]">Login</span>
             </button>
+        
             <p id="login-error" class="text-red-500 text-sm text-center hidden"></p>
-
+        
           </form>
-          <div class="flex flex-col items-center justify-between">
-            <div class="flex flex-row gap-[10px] items-center justify-center">
-              <p class="text-white text-body-small-medium my-8">Don't have an account?</p>
-              <a href="/signup.html" class="text-blue-500 text-body-small-semibold">Sign up</a>
-            </div>
-            <div class="flex items-center justify-between gap-3 w-[432px]">
-              <button type="submit" class="secondary-btn w-full min-w-[210px]">
-                <span class="w-full !py-[13px]"><img src="/icons/Google.png" alt="Google Logo" class="w-5 h-5">Continue with Google</span>
-              </button>
-              <button type="submit" class="secondary-btn w-full min-w-[210px]">
-                <span class="w-full !py-[13px]"> <img src="/icons/Apple.png" alt="Google Logo" class="w-5 h-5">Continue with Apple</span>
-              </button>
+        
+          <div class="flex flex-row gap-[10px] items-center justify-center mt-8">
+            <p class="text-white text-body-small-medium">Don't have an account?</p>
+            <a href="/signup.html" class="text-blue-500 text-body-small-semibold">Sign up</a>
+          </div>
+        </div>
+        
             </div>
           </div>
         </div>
@@ -141,57 +133,92 @@
     </footer>
 
     <!-- JavaScript -->
+    <script src="/js/languageManager.js" defer></script>
+
     <script>
+      document.querySelector('#loginForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const email = document.querySelector('#email').value;
+    const password = document.querySelector('#password').value;
+
+    const response = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Important to include cookies
+        body: JSON.stringify({ email, password })
+    });
+
+    const result = await response.json();
+
+    if (result.success && result.redirectUrl) {
+        window.location.href = result.redirectUrl;
+    } else {
+        alert(result.error || "Login failed");
+    }
+});
+
       document.addEventListener("DOMContentLoaded", () => {
-          const loginForm = document.getElementById("login-form");
-          const loginBtn = document.getElementById("login-btn");
-          const loginError = document.getElementById("login-error");
-          const rememberMeCheckbox = document.getElementById("rememberMe");
+    const loginForm = document.getElementById("login-form");
+    const loginBtn = document.getElementById("login-btn");
+    const loginError = document.getElementById("login-error");
+    const checkbox = document.getElementById("checkbox");
 
-          const savedToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
-            if (savedToken) {
-                window.location.href = "/mission-control.html"; // Redirect to dashboard if logged in
+    // Check for existing token
+    const savedToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    if (savedToken) {
+        window.location.href = "/mission-control.html"; // Redirect to dashboard if logged in
+    }
+
+    loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        console.log("Attempting login with:", email);
+        
+        const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        console.log("Login response status:", response.status);
+        const data = await response.json();
+        console.log("Login response data:", data);
+
+        if (response.ok) {
+            console.log("Login successful, token received");
+            localStorage.setItem("authToken", data.token);
+            console.log("Redirecting to mission control...");
+            window.location.href = "/mission-control.html";
+        } else {
+            console.error("Login failed:", data.error || "Unknown error");
+            alert(data.error || "Login failed. Please check your credentials.");
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        alert("Connection error. Please try again.");
+    }
+});
+    <!-- Add this JavaScript at the end of your script section -->
+document.getElementById("stella-help").addEventListener("click", function() {
+  alert("Stella: Hello! I'm Stella, your AI assistant. For login issues, please check your email for verification or use the 'Forgot Password' link. If you're new, click 'Sign up' to create an account.");
+});
+    // Fix checkbox custom styling
+    if (checkbox) {
+        checkbox.addEventListener('change', function() {
+            const checkedIcon = this.nextElementSibling.querySelector('img');
+            if (this.checked) {
+                checkedIcon.classList.remove('hidden');
+            } else {
+                checkedIcon.classList.add('hidden');
             }
-
-          loginForm.addEventListener("submit", async (e) => {
-              e.preventDefault();
-              loginError.classList.add("hidden");
-              loginBtn.textContent = "Logging in...";
-              loginBtn.disabled = true;
-
-              const email = document.getElementById("email").value;
-              const password = document.getElementById("password").value;
-
-              try {
-                  const response = await fetch("/api/auth/login", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ email, password })
-                  });
-
-                  if (!response.ok) {
-                      throw new Error("Invalid credentials");
-                  }
-
-                  const data = await response.json();
-                  const token = data.token;
-
-                  // **Store token based on "Remember Me"**
-                  // if (rememberMeCheckbox.checked) {
-                    localStorage.setItem("authToken", token); // Persist even after closing browser
-                    // } else {
-                    // sessionStorage.setItem("authToken", token); // Remove on browser close
-                    // }
-
-                  window.location.href = "/mission-control.html";
-              } catch (error) {
-                  loginError.textContent = error.message || "An error occurred. Please try again.";
-                  loginError.classList.remove("hidden");
-                  loginBtn.textContent = "Login";
-                  loginBtn.disabled = false;
-              }
-          });
-      });
+        });
+    }
+});
     </script>
           <!-- <script type="module" src="/js/languages.js"></script>
           <script type="module" src="/js/academy.js"></script> -->

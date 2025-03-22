@@ -33,16 +33,58 @@
             transform: translateY(-2px);
             box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
         }
-    </style>
+/* Better visibility for form inputs */
+.input-bordered {
+        background-color: #374151 !important;
+        color: white !important;
+        border: 1px solid #4B5563 !important;
+    }
+    
+    .input-bordered::placeholder {
+        color: #9CA3AF !important;
+    }
+    dialog[open], 
+    .modal-open {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+    
+    #signup_modal {
+        z-index: 999;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-box {
+        z-index: 1000;
+        background-color: #1e293b !important; /* slate-800 */
+        color: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+    }
+    /* Make dialog visible if using the dialog element */
+    dialog {
+        background-color: transparent;
+        padding: 0;
+        border: none;
+    }
+    /* ADD THIS NOW */
+    dialog[open] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 </head>
 
 <body class="flex flex-col min-h-screen bg-slate-900 font-inter">
-
+    <script src="/js/languageManager.js"></script>
 <!-- 🔹 Header --> 
 <header class="fixed top-0 left-0 w-full bg-gray-900/95 backdrop-blur-lg flex items-center justify-between px-8 py-4 z-50 border-b border-white/10">
     <!-- Logo -->
     <a href="/" class="flex items-center space-x-3 group">
-        <img src="/css/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300">
+        <img src="/images/SharedStars.svg">
     </a>
 
     <!-- Navigation -->
@@ -91,191 +133,180 @@
 </section>
 
 <!-- 🔹 Signup Modal -->
-<dialog id="signup_modal" class="modal modal-bottom sm:modal-middle">
-    <div class="modal-box bg-slate-800 text-white">
-        <h3 class="font-bold text-lg text-center mb-6">Join SharedStars Academy</h3>
-        <form method="POST" id="signup-form" class="space-y-6">
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text text-gray-300">Username</span>
-                </label>
-                <input type="text" name="username" placeholder="Choose a username" class="input input-bordered bg-slate-700" required />
-            </div>
-
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text text-gray-300">Email</span>
-                </label>
-                <input type="email" name="email" placeholder="Enter your email" class="input input-bordered bg-slate-700" required />
-            </div>
-
-            <div class="modal-action flex gap-2">
-                <button type="submit" class="btn btn-primary flex-1">Sign Up</button>
-                <button type="button" class="btn" id="closeSignupModal">Close</button>
-            </div>
-        </form>
+<button id="openSignupModal" class="btn btn-primary btn-lg text-lg" data-i18n="signup.openButton">
+    Sign Up Now
+  </button>
+  
+  <dialog id="signup_modal" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg" data-i18n="signup.title">Join SharedStars Academy</h3>
+      <form method="POST" id="signup-form" class="space-y-6">
+        <div>
+          <label data-i18n="signup.usernameLabel">Username</label>
+          <input name="name" placeholder="Choose a username" data-i18n="signup.usernamePlaceholder" required />
+        </div>
+        <div>
+          <label data-i18n="signup.emailLabel">Email</label>
+          <input name="email" placeholder="Enter your email" data-i18n="signup.emailPlaceholder" required />
+        </div>
+        <div>
+          <label data-i18n="signup.passwordLabel">Password</label>
+          <input type="password" name="password" placeholder="Create a password" data-i18n="signup.passwordPlaceholder" required />
+        </div>
+        <button type="submit" data-i18n="signup.submitButton">Sign Up</button>
+        <button type="button" id="closeSignupModal" data-i18n="signup.closeButton">Close</button>
+      </form>
     </div>
-</dialog>
-<!-- Footer -->
-<footer class="bg-gray-900 text-white py-12">
-    <div class="container mx-auto">
-        <!-- Grid Layout -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+  </dialog>
+  
+     <!-- Footer -->
+     <footer style="background-color: rgba(13, 18, 30, 0.6); padding: 60px 20px; text-align: center;">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
             <!-- About -->
             <div>
-                <h3 class="font-bold text-lg text-blue-400">About</h3>
-                <ul class="space-y-2 mt-4">
-                    <li><a href="/about.html" class="hover:text-blue-400 transition-colors">Our Story</a></li>
-                    <li><a href="/academy.html" class="hover:text-blue-400 transition-colors">Space Academy</a></li>
+                <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;">About</h3>
+                <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+                    <li style="margin-bottom: 12px;"><a href="/about.html" style="color: white; text-decoration: none;">Our Story</a></li>
+                    <li style="margin-bottom: 12px;"><a href="/academy.html" style="color: white; text-decoration: none;">Academy</a></li>
+                    <li style="margin-bottom: 12px;"><a href="/leaderboard.html" style="color: white; text-decoration: none;">Leaderboard</a></li>
                 </ul>
             </div>
-            <!-- Community -->
+            
+            <!-- Join Us -->
             <div>
-                <h3 class="font-bold text-lg text-blue-400">Community</h3>
-                <ul class="space-y-2 mt-4">
-                    <li><a href="/events.html" class="hover:text-blue-400 transition-colors">Events</a></li>
-                    <li><a href="/forums.html" class="hover:text-blue-400 transition-colors">Forums</a></li>
+                <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;">Join Us</h3>
+                <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+                    <li style="margin-bottom: 12px;"><a href="/apply.html" style="color: white; text-decoration: none;">Apply Now</a></li>
+                    <li style="margin-bottom: 12px;"><a href="/subscribe.html" style="color: white; text-decoration: none;">Subscribe</a></li>
+                    <li style="margin-bottom: 12px;"><a href="/faq.html" style="color: white; text-decoration: none;">FAQ</a></li>
                 </ul>
             </div>
-            <!-- Resources -->
+            
+            <!-- Contact -->
             <div>
-                <h3 class="font-bold text-lg text-blue-400">Resources</h3>
-                <ul class="space-y-2 mt-4">
-                    <li><a href="/faq.html" class="hover:text-blue-400 transition-colors">FAQ</a></li>
-                    <li><a href="/support.html" class="hover:text-blue-400 transition-colors">Support</a></li>
-                </ul>
-            </div>
-            <!-- Legal -->
-            <div>
-                <h3 class="font-bold text-lg text-blue-400">Legal</h3>
-                <ul class="space-y-2 mt-4">
-                    <li><a href="/terms.html" class="hover:text-blue-400 transition-colors">Terms</a></li>
-                    <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors">Privacy</a></li>
+                <h3 style="color: #4a7de9; font-size: 1.5rem; margin-bottom: 20px; text-align: left;">Contact</h3>
+                <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+                    <li style="margin-bottom: 12px;"><a href="mailto:info@sharedstars.com" style="color: white; text-decoration: none;">info@sharedstars.com</a></li>
+                    <li style="margin-bottom: 12px; color: #888;">Celestial Technologies, LLC</li>
                 </ul>
             </div>
         </div>
-
-        <!-- Social Media -->
-        <div class="mt-12 text-center">
-            <h4 class="text-lg font-bold text-blue-400">Follow Us</h4>
-            <div class="flex justify-center gap-6 mt-4">
-                <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Twitter">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 4.557a9.995 9.995 0 01-2.827.775 4.932 4.932 0 002.165-2.724c-.957.567-2.016.978-3.127 1.198a4.918 4.918 0 00-8.38 4.482A13.941 13.941 0 011.671 3.149a4.917 4.917 0 001.523 6.573A4.897 4.897 0 01.96 9.3v.062a4.918 4.918 0 003.946 4.827 4.898 4.898 0 01-2.224.084 4.917 4.917 0 004.59 3.415A9.867 9.867 0 010 21.543a13.914 13.914 0 007.548 2.209c9.057 0 14.01-7.496 14.01-13.986 0-.213-.005-.425-.014-.636A10.025 10.025 0 0024 4.557z"/>
-                    </svg>
-                </a>
-                <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Facebook">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.408.593 24 1.325 24H12.81V14.706h-3.141v-3.741h3.141V8.356c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.462.099 2.792.143v3.239l-1.917.001c-1.504 0-1.796.715-1.796 1.763v2.309h3.587l-.467 3.741h-3.12V24h6.116c.729 0 1.324-.592 1.324-1.324V1.325C24 .593 23.408 0 22.675 0z"/>
-                    </svg>
-                </a>
-                <a href="#" class="hover:text-blue-400 transition-colors" aria-label="Instagram">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M22 11.077v.82c0 4.842-3.705 10.423-10.423 10.423A10.386 10.386 0 010 18.9c.13.01.261.014.393.014 2.717 0 5.213-.913 7.204-2.449a3.677 3.677 0 01-3.434-2.553c.558.083 1.136.077 1.688-.027A3.675 3.675 0 012.68 9.9v-.047c.492.274 1.048.438 1.643.457a3.674 3.674 0 01-1.633-3.056c0-.014 0-.027.001-.041a3.65 3.65 0 001.667.46 3.671 3.671 0 01-1.144-4.901 10.428 10.428 0 007.571 3.841A3.675 3.675 0 0118.633 5.9a7.353 7.353 0 002.333-.894 3.673 3.673 0 01-1.612 2.025 7.308 7.308 0 002.102-.575A7.396 7.396 0 0122 11.077z"/>
-                    </svg>
-                </a>
-            </div>
+        
+        <!-- Copyright text -->
+        <div style="margin-top: 60px; text-align: center;">
+            <p style="color: #888;">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
         </div>
-
-        <!-- Copyright -->
-        <div class="text-center mt-8">
-            <p class="text-gray-400 text-sm">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
-        </div>
+              <!-- Social Media Icons Row -->
+      <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
+        <a href="https://www.linkedin.com/company/106241890" style="color: #888;">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
+        <a href="https://x.com/SharedStars" style="color: #888;">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/SharedStars" style="color: #888;">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/sharedstarsacademy/" style="color: #888;">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
+        </a>
+        <a href="https://t.me/SharedStars" style="color: #888;">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@sharedstarsacademy" style="color: #888;">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@SharedStarsAcademy" style="color: #888;">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+        </a>
     </div>
 </footer>
 
-<!-- 🔹 Place Footer Before Closing `</body>` -->
-</body>
-</html>
-<!-- 🔹 JavaScript: Restored Full Functionality -->
+<!-- JavaScript Libraries (AOS, Particles.js) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<!-- 🔹 JavaScript for Video Autoplay, Signup Modal, and Navigation -->
+<script src="/js/languageManager.js" defer></script>
+
+<!-- Consolidated Signup Modal and Form JS -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        console.log("✅ JavaScript Loaded - Ensuring Full Functionality");
-    
-        /** ==========================
-         *  🔹 Fix Hero Video Autoplay
-         *  ========================== **/
-        const heroVideo = document.getElementById("heroVideo");
-        if (heroVideo) {
-            heroVideo.play().catch(error => {
-                console.warn("⚠️ Video autoplay blocked. Muting and retrying...");
-                heroVideo.muted = true;
-                heroVideo.play();
-            });
+document.addEventListener("DOMContentLoaded", () => {
+    const openSignupBtn = document.getElementById("openSignupModal");
+    const closeSignupBtn = document.getElementById("closeSignupModal");
+    const signupModal = document.getElementById("signup_modal");
+    const signupForm = document.getElementById("signup-form");
+
+    // Open modal
+    openSignupBtn?.addEventListener("click", () => {
+        if (signupModal.showModal) {
+            signupModal.showModal();
+        } else {
+            signupModal.classList.add("modal-open");
+            signupModal.style.display = "flex";
         }
-    
-        /** ==========================
-         *  🔹 Fix Signup Modal
-         *  ========================== **/
-        const signupModal = document.getElementById("signup_modal");
-        const openSignupModal = document.getElementById("openSignupModal");
-        const closeSignupModal = document.getElementById("closeSignupModal");
-    
-        if (openSignupModal && signupModal) {
-            openSignupModal.addEventListener("click", () => {
-                console.log("🔹 Opening Signup Modal");
-                signupModal.showModal();
-            });
-        }
-    
-        if (closeSignupModal && signupModal) {
-            closeSignupModal.addEventListener("click", () => {
-                console.log("🔹 Closing Signup Modal");
-                signupModal.close();
-            });
-        }
-    
-        /** ==========================
-         *  🔹 Fix Navigation Buttons
-         *  ========================== **/
-        document.querySelectorAll("nav a").forEach(button => {
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
-                console.log(`✅ Navigating to: ${this.href}`);
-                window.location.href = this.href;
-            });
-        });
-    
-        /** ==========================
-         *  🔹 Fix Mobile Menu
-         *  ========================== **/
-        const mobileMenuBtn = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const closeMobileMenuBtn = document.getElementById('close-mobile-menu');
-    
-        if (mobileMenuBtn && mobileMenu) {
-            let isMenuOpen = false;
-    
-            mobileMenuBtn.addEventListener('click', () => {
-                isMenuOpen = !isMenuOpen;
-                mobileMenu.classList.toggle('hidden');
-                mobileMenuBtn.classList.toggle('rotate-90', isMenuOpen);
-                document.body.style.overflow = isMenuOpen ? 'hidden' : '';
-            });
-    
-            if (closeMobileMenuBtn) {
-                closeMobileMenuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.add('hidden');
-                    isMenuOpen = false;
-                    document.body.style.overflow = '';
-                });
-            }
-    
-            document.addEventListener('click', (e) => {
-                if (isMenuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                    mobileMenu.classList.add('hidden');
-                    isMenuOpen = false;
-                    document.body.style.overflow = '';
-                }
-            });
-        }
-    
     });
-    </script>
-    
+
+    // Close modal
+    closeSignupBtn?.addEventListener("click", () => {
+        if (signupModal.close) {
+            signupModal.close();
+        } else {
+            signupModal.classList.remove("modal-open");
+            signupModal.style.display = "none";
+        }
+    });
+
+    // Close modal when clicking outside
+    signupModal?.addEventListener("click", (event) => {
+        if (event.target === signupModal) {
+            signupModal.close ? signupModal.close() : signupModal.classList.remove("modal-open");
+        }
+    });
+
+    // Signup form submission
+    signupForm?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const name = event.target.name.value;
+        const email = event.target.email.value;
+        const password = event.target.password.value;
+
+        try {
+            const response = await fetch('/join-now', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                alert("✅ Signup successful! Check your email for a verification code.");
+                signupModal.close ? signupModal.close() : signupModal.classList.remove("modal-open");
+                window.location.href = `/verify.html?email=${encodeURIComponent(email)}`;
+            } else if (response.status === 409) {
+                alert("⚠️ Email already registered. Please log in.");
+                window.location.href = "/login1.html";
+            } else {
+                alert("⚠️ Signup failed: " + data.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert("🚨 An unexpected error occurred.");
+        }
+    });
+
+    // Verification message handling on login page (optional)
+    const loginError = document.getElementById("login-error");
+    const urlParams = new URLSearchParams(window.location.search);
+    if (loginError && urlParams.get('verified') === 'pending') {
+        loginError.textContent = "Please check your email for your verification code.";
+        loginError.classList.remove("hidden", "text-red-500");
+        loginError.classList.add("text-green-500");
+        document.getElementById("email").value = urlParams.get('email');
+    }
+});
+</script>
+
+<!-- Close body and html clearly once -->
 </body>
 </html>
-

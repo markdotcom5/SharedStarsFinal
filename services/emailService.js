@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const handlebars = require('handlebars');
 const { DateTime } = require('luxon');
-const config = require('../config');
+const config = require('../config/email');
 const logger = require('../utils/logger');
 const { DailyBriefing } = require('../models/DailyBriefing');
 
@@ -374,7 +374,59 @@ async sendApplicationAcceptance(application) {
     return { success: false, error: error.message };
   }
 }
-  /**
+/**
+ * Send verification email to a new user
+ * @param {string} email - User's email address
+ * @param {string} code - Verification code
+ * @param {string} name - User's name
+ * @returns {Promise<Object>} Send result
+ */
+// Replace the incomplete sendVerificationEmail function at the end of your file with this:
+
+/**
+ * Send verification email to a new user
+ * @param {string} email - User's email address
+ * @param {string} code - Verification code
+ * @param {string} name - User's name
+ */
+async sendVerificationEmail(email, code, name) {
+  try {
+    console.log('Attempting to send verification email to:', email);
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <body style="font-family: Arial, sans-serif; color: #333;">
+        <div style="max-width: 600px; margin: auto; padding: 20px; background-color: #1a2536; color: #fff;">
+          <h2>Welcome to SharedStars Academy, ${name || 'Future Astronaut'}!</h2>
+          <p>Use this verification code to complete your registration:</p>
+          <div style="padding: 15px; font-size: 24px; letter-spacing: 5px; color: #4a7de9;">
+            ${code}
+          </div>
+          <p>This code expires in 24 hours.</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const result = await this.transporter.sendMail({
+      from: `"SharedStars Academy" <${config.email.from}>`,
+      to: email,
+      subject: 'Verify Your SharedStars Academy Account',
+      html,
+      text: `Your verification code is: ${code}. It expires in 24 hours.`
+    });
+
+    console.log('✅ Verification email sent:', result.messageId);
+    return result;
+
+  } catch (error) {
+    console.error('❌ Error sending verification email:', error);
+    throw error;
+  }
+}
+
+/**
    * Process the delivery queue
    * @private
    */
@@ -421,7 +473,136 @@ async sendApplicationAcceptance(application) {
       }
     }
   }
-  
+  // Add these methods to your emailService.js file
+
+/**
+ * Send welcome email to new user after signup
+ * @param {Object} user - User data
+ * @returns {Promise<Object>} Send result
+ */
+async sendSignupWelcomeEmail(user) {
+  try {
+    // Prepare template data
+    const data = {
+      baseUrl: config.baseUrl,
+      name: user.name || 'Space Explorer',
+      currentYear: new Date().getFullYear()
+    };
+    
+    // Load and compile the template
+    const template = await this.loadTemplate('welcome-email');
+    const html = template(data);
+    
+    // Send the email
+    const result = await this.transporter.sendMail({
+      from: `"SharedStars Academy" <${config.email.from}>`,
+      to: user.email,
+      subject: '🚀 Welcome to SharedStars Academy!',
+      html,
+      text: `Welcome to SharedStars Academy, ${data.name}! We're excited to have you join our community of future space explorers. Visit ${config.baseUrl}/dashboard to get started on your journey.`
+    });
+    
+    logger.info('Sent welcome email', { to: user.email, messageId: result.messageId });
+    
+    return result;
+  } catch (error) {
+    logger.error('Error sending welcome email', {
+      to: user.email,
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+/**
+ * Send assessment completion email
+ * @param {Object} user - User data
+ * @param {Object} assessment - Assessment data
+ * @returns {Promise<Object>} Send result
+ */
+async sendAssessmentCompletionEmail(user, assessment) {
+  try {
+    // Prepare template data
+    const data = {
+      baseUrl: config.baseUrl,
+      name: user.name || 'Academy Candidate',
+      assessmentScore: assessment.score,
+      recommendations: assessment.recommendations || [],
+      nextSteps: assessment.nextSteps || 'Continue with your training program',
+      currentYear: new Date().getFullYear()
+    };
+    
+    // Load and compile the template
+    const template = await this.loadTemplate('assessment-completion');
+    const html = template(data);
+    
+    // Send the email
+    const result = await this.transporter.sendMail({
+      from: `"SharedStars Academy" <${config.email.from}>`,
+      to: user.email,
+      subject: '🔍 Your SharedStars Assessment Results',
+      html,
+      text: `Congratulations on completing your assessment, ${data.name}! Your score: ${data.assessmentScore}. Visit ${config.baseUrl}/assessments to view your detailed results and personalized recommendations.`
+    });
+    
+    logger.info('Sent assessment completion email', { to: user.email, messageId: result.messageId });
+    
+    return result;
+  } catch (error) {
+    logger.error('Error sending assessment completion email', {
+      to: user.email,
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+/**
+ * Send application confirmation to applicant
+ * @param {Object} application - Application data
+ * @returns {Promise<Object>} Send result
+ */
+async sendApplicationConfirmationToApplicant(application) {
+  try {
+    const name = application.fullName || application.name || 'Academy Applicant';
+    
+    // Prepare template data
+    const data = {
+      baseUrl: config.baseUrl,
+      name: name,
+      applicationId: application._id,
+      currentYear: new Date().getFullYear()
+    };
+    
+    // Load and compile the template
+    const template = await this.loadTemplate('application-confirmation');
+    const html = template(data);
+    
+    // Send the email
+    const result = await this.transporter.sendMail({
+      from: `"SharedStars Academy" <${config.email.from}>`,
+      to: application.email,
+      subject: '📝 Your SharedStars Academy Application Received',
+      html,
+      text: `Thank you for applying to SharedStars Academy, ${name}! Your application (ID: ${application._id}) has been received and is under review. We'll notify you of your application status within 7-10 business days. Visit ${config.baseUrl}/applications/status to check your application status.`
+    });
+    
+    logger.info('Sent application confirmation to applicant', { 
+      to: application.email, 
+      applicationId: application._id,
+      messageId: result.messageId 
+    });
+    
+    return result;
+  } catch (error) {
+    logger.error('Error sending application confirmation', {
+      to: application.email,
+      applicationId: application._id,
+      error: error.message
+    });
+    throw error;
+  }
+}
   /**
    * Generate plain text version of email for clients that don't support HTML
    * @param {Object} data - Email template data

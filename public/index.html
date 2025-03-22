@@ -26,183 +26,285 @@
     <link rel="stylesheet" href="/public/css/ai-assistant.css" />
     
     <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
-    <!-- <script src="/js/languageSelection.js" defer></script> -->
     <script src="/js/languageManager.js" defer></script>
-    <script type="module" src="/js/CountdownTimer.js"></script>
-    <script type="module" src="/js/HomepageHandler.js"></script>  
-
-</head>
-
-<body class="bg-slate-900 text-white min-h-screen">
-  <!-- HEADER -->
-  <header class="site-header bg-gray-900/90 backdrop-blur-lg fixed top-0 left-0 w-full z-50 shadow-lg py-4">
-    <nav class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-4">
-      <!-- Logo -->
-      <div class="flex items-center mb-2 md:mb-0">
-        <a href="/index.html" aria-label="SharedStars Homepage" class="group">
-          <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="h-16 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
-        </a>
-      </div>
-      <!-- Navigation Links -->
-      <ul class="flex flex-wrap gap-4">
-        <li><a href="/index.html" data-i18n="nav.home">Home</a></li>
-        <li><a href="/academy.html" data-i18n="nav.academy">Academy</a></li>
-        <li><a href="/about.html" data-i18n="nav.about">About</a></li>
-        <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
-        <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
-
-        <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
-        <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
-        <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
-        <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
-        <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-        <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
-      </ul>
-
-      <div class="relative">
-        <button id="langDropdownBtn" class="flex items-center gap-2 text-white bg-gray-700 px-4 py-2 rounded-lg">
-          <span id="selectedLangIcon">🇺🇸</span>
-          <span id="selectedLangText">English</span>
-          <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <ul id="langDropdownMenu" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 py-2 w-40">
-          <li><button class="dropdown-item" data-lang="en" data-flag="🇺🇸" aria-label="Switch to English">🇺🇸 English</button></li>
-          <li><button class="dropdown-item" data-lang="zh" data-flag="🇨🇳" aria-label="Switch to Chinese">🇨🇳 Chinese</button></li>
-          <li><button class="dropdown-item" data-lang="ko" data-flag="🇰🇷" aria-label="Switch to Korean">🇰🇷 Korean</button></li>
-          <li><button class="dropdown-item" data-lang="es" data-flag="🇪🇸" aria-label="Switch to Spanish">🇪🇸 Spanish</button></li>
+    <script src="/js/countdown.js"></script>
+    <script type="module" src="/js/HomepageHandler.js"></script>
+  </head>
+  
+<body class="bg-black text-white min-h-screen font-inter">
+    <!-- HEADER -->
+    <header class="fixed top-0 w-full bg-black/90 backdrop-blur-lg z-50 shadow-lg">
+      <nav class="container mx-auto flex justify-between items-center px-4 py-3">
+        <div class="flex-shrink-0">
+          <img src="./images/SharedStars.svg" alt="SharedStars" class="h-12" style="margin-left: 0;">
+        </div>
+        <ul class="flex gap-6">
+          <li><a href="/homepage.html" class="hover:text-blue-400" data-i18n="nav.home">Home</a></li>
+          <li><a href="/academy.html" class="text-blue-400 font-bold" data-i18n="academy">Academy</a></li>
+          <li><a href="/about.html" class="hover:text-blue-400" data-i18n="about">About</a></li>
+          <li><a href="/leaderboard.html" class="hover:text-blue-400" data-i18n="leaderboard">Leaderboard</a></li>
+          <li><a href="/subscribe.html" class="hover:text-blue-400" data-i18n="subscribe">Subscribe</a></li>
         </ul>
-      </div>
-      <button data-i18n="nav.getStarted" class="bg-gradient-to-r from-purple-500 to-blue-500 text-black px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition">
-      </button>
-    </nav>      
-  </header>
+        <div class="flex gap-3 items-center">
+          <!-- Language Selector Dropdown -->
+          <div class="relative inline-block text-left mr-2">
+            <button id="language-dropdown-btn" class="flex items-center text-gray-300 hover:text-white">
+              <span id="current-language">🇺🇸 EN</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-40 bg-gray-800 rounded-md shadow-lg z-50">
+              <div class="py-1">
+                <button class="lang-btn w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 flex items-center" data-lang="en">
+                  <span class="mr-2">🇺🇸</span> English
+                </button>
+                <button class="lang-btn w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 flex items-center" data-lang="es">
+                  <span class="mr-2">🇪🇸</span> Español
+                </button>
+                <button class="lang-btn w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 flex items-center" data-lang="ko">
+                  <span class="mr-2">🇰🇷</span> 한국어
+                </button>
+                <button class="lang-btn w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 flex items-center" data-lang="zh">
+                  <span class="mr-2">🇨🇳</span> 中文
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <a href="/login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all" data-i18n="login.submit">Login</a>
+          <a href="/signup.html" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all" data-i18n="signup.openButton">Sign Up</a>
+        </div>
+      </nav>
+    </header>
   
   <!-- HERO SECTION -->
-  <section id="hero" class="relative min-h-screen flex items-center justify-center text-center pt-20">
-    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-      <source src="/videos/academy10.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-transparent"></div>
-    <div class="relative z-10 px-4">
-      <h1 data-i18n="hero.title" class="hero-text text-white mb-4"></h1>
-      <p data-i18n="hero.subtitle" class="text-xl text-white mb-4"></p>
-      <a data-i18n="hero.startTraining" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
-      <a data-i18n="hero.seeCountdown" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
-      <a data-i18n="hero.exploreMembership" href="/signup" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-2 rounded-full hover:from-purple-600 hover:to-blue-600 transition"></a>
+  <section id="hero" class="min-h-screen flex items-center justify-center relative">
+    <div class="absolute inset-0">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover">
+          <source src="./videos/academy10.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-black/40"></div>
+      </div>
+  
+    <div class="relative z-10 text-center max-w-5xl mx-auto px-4">
+      <div data-aos="fade-up">
+        <p class="text-blue-400 mb-2 uppercase tracking-wider font-semibold" data-i18n="hero.poweredBy">Powered by STELLA AI</p>
+        <h1 class="hero-text font-extrabold mb-6" data-i18n="hero.title">The Future Belongs to Those Who Prepare Today</h1>
+        <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto" data-i18n="hero.description">
+          While everyone else is dreaming about space, you'll be training for it. Gain exclusive access to 21 comprehensive training modules with your personal AI coach STELLA guiding you every step of the way.
+        </p>
+        <div class="mt-8 flex justify-center gap-4">
+          <a href="#stella-ai" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-500 transition cosmic-hover" data-i18n="hero.meetStella">
+            Meet STELLA
+          </a>
+          <a href="/signup.html" class="inline-block bg-red-600 hover:bg-red-500 text-white px-8 py-4 rounded-lg font-bold transition-colors cosmic-hover text-xl animate-pulse" data-i18n="signup.openButton">
+            SIGN UP NOW
+          </a>
+        </div>
+      </div>
     </div>
   </section>
-
-  <!-- Include any additional page scripts -->
-  <script src="/js/modules/main.js" type="module"></script>
-  <script src="/js/ai-companion.js" defer></script>
 
   <!-- COUNTDOWN & PRICE EVOLUTION SECTION -->
-  <section id="countdown-price" class="relative min-h-screen py-16 text-white text-center">
-  <!-- Background gradient overlay -->
+<section id="countdown-price" class="relative flex flex-col min-h-screen py-16 text-white text-center">
+  <p>Progress</p>
+  <div class="flex justify-center items-center gap-4">
+    <div class="flex flex-col">
+      <p>Your Path to Success</p>
+      <p>In 36 months, humanity splits into two groups: Those who have prepared for space and those who watch from Earth.</p>
+    </div>
+    <button>Subscribe Now!</button>
+  </div>
+  <div class="flex justify-center items-center gap-4 mt-8 pb-5">
+    <!-- Countdown Cards -->
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-years" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Years</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-months" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Months</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-days" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Days</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-hours" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Hours</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-minutes" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Minutes</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-seconds" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400">Seconds</div>
+    </div>
+  </div>
+  <hr>
+</div>
+
+</section>
+
+<!-- MISSION CONTROL SECTION -->
+<section id="mission-control" class="relative min-h-screen py-16 text-white">
+  <!-- Video Background (optional) -->
+  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+    <source src="/videos/space-progress.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
   <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-black/80 to-black/90"></div>
 
-  <!-- Main Content Container -->
+  <!-- Main Mission Control Content -->
   <div class="relative z-10 container mx-auto px-4">
-    
-    <!-- Problem Statement -->
-    <div class="mb-12">
-      <h2 data-i18n="countdown.problemStatement.title" class="text-4xl font-bold mb-6">
-        Current Space Travel Reality
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 data-i18n="countdown.problemStatement.limitedAccess.title" class="text-xl font-bold mb-3">
-            Limited Access
-          </h3>
-          <p data-i18n="countdown.problemStatement.limitedAccess.description">
-            Currently restricted to ultra-wealthy individuals and elite astronauts
-          </p>
-        </div>
-        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 data-i18n="countdown.problemStatement.highBarriers.title" class="text-xl font-bold mb-3">
-            High Barriers
-          </h3>
-          <p data-i18n="countdown.problemStatement.highBarriers.description">
-            Prohibitively expensive with limited pathways for public participation
-          </p>
-        </div>
-        <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 data-i18n="countdown.problemStatement.growingDemand.title" class="text-xl font-bold mb-3">
-            Growing Demand
-          </h3>
-          <p data-i18n="countdown.problemStatement.growingDemand.description">
-            Increasing interest but insufficient options for space enthusiasts
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Stakes Section -->
-    <div class="mb-16">
-      <h2 data-i18n="countdown.stakes.title" class="text-5xl font-bold mb-6">
-        What's at Stake?
-      </h2>
-      <p data-i18n="countdown.stakes.subtitle" class="text-2xl mb-8">
-        Your Future. Your Family's Future. Humanity's Future.
-      </p>
-    </div>
-
-    <!-- Countdowns Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-      <!-- Global Countdown Timer -->
+    <!-- Credit Display Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <!-- Total Credits Card -->
       <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 class="text-2xl font-bold mb-4">Global Space Travel Timeline</h3>
-          <div id="globalCountdown" class="text-4xl font-bold text-white">Loading...</div>
-      </div>
-      
-      <!-- Personalized Countdown Timer -->
-      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-          <h3 class="text-2xl font-bold mb-4">Your Accelerated Timeline</h3>
-          <div id="personalCountdown" class="text-4xl font-bold text-green-400">Loading...</div>
-          <p class="mt-4 text-green-400">Your SharedStars Credits: 500</p>
-      </div>
-  </div>  
-      
-      <!-- Personal Timeline -->
-      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
-        <h3 data-i18n="countdown.personalTimeline.title" class="text-2xl font-bold mb-4">
-          Your Accelerated Timeline
+        <h3 data-i18n="missionControl.totalCreditsTitle" class="text-2xl font-bold text-green-400 mb-2">
+          Total Credits
         </h3>
-        <div id="personalCountdown" class="flex flex-wrap justify-center gap-4">
-          <div class="countdown-box bg-gray-800/50 p-4 rounded-lg">
-            <div class="value text-3xl font-bold" id="personalized-years">13</div>
-            <div class="label text-sm" data-i18n="countdown.years">Years</div>
-          </div>
-          <div class="countdown-box bg-gray-800/50 p-4 rounded-lg">
-            <div class="value text-3xl font-bold" id="personalized-months">6</div>
-            <div class="label text-sm" data-i18n="countdown.months">Months</div>
-          </div>
-          <div class="countdown-box bg-gray-800/50 p-4 rounded-lg">
-            <div class="value text-3xl font-bold" id="personalized-days">15</div>
-            <div class="label text-sm" data-i18n="countdown.days">Days</div>
-          </div>
+        <div class="text-4xl font-bold" id="total-credits">0</div>
+        <div class="text-sm text-gray-400 mt-2">
+          <span data-i18n="missionControl.nextMilestone">Next milestone:</span>
+          <span id="next-milestone">1000</span>
         </div>
-        <p class="mt-4 text-green-400" data-i18n="countdown.personalCredits">
-          Your SharedStars Credits: 500
-        </p>
+      </div>
+
+      <!-- Launch Timeline Card -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="missionControl.launchTimelineTitle" class="text-2xl font-bold text-blue-400 mb-2">
+          Launch Timeline
+        </h3>
+        <div class="text-4xl font-bold" id="years-to-launch">15</div>
+        <div id="timeline-acceleration" data-i18n="missionControl.launchTimelineSubtitle" class="text-sm text-gray-400 mt-2">
+          Years to launch
+        </div>
+      </div>
+
+      <!-- Achievements Card -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="missionControl.achievementsTitle" class="text-2xl font-bold text-purple-400 mb-2">
+          Achievements
+        </h3>
+        <div class="text-4xl font-bold" id="achievement-count">0</div>
+        <div data-i18n="missionControl.achievementsSubtitle" class="text-sm text-gray-400 mt-2">
+          Unlocked
+        </div>
       </div>
     </div>
 
-    <!-- Price Evolution Chart -->
-    <div class="bg-black/50 backdrop-blur-md p-8 rounded-lg">
-      <h3 data-i18n="countdown.priceEvolution.title" class="text-3xl font-bold mb-6">
-        Price Evolution Timeline
-      </h3>
-      <div class="w-full max-w-4xl mx-auto h-96">
-        <canvas id="priceChart"></canvas>
+    <!-- Detailed Mission Control Progress -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Credit Breakdown -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="missionControl.creditBreakdownTitle" class="text-xl font-bold mb-4">
+          Credit Breakdown
+        </h3>
+        <div id="credit-breakdown" class="space-y-4">
+          <!-- Module Credits -->
+          <div class="flex justify-between items-center">
+            <span data-i18n="missionControl.moduleCreditsLabel" class="text-gray-400">
+              Module Credits
+            </span>
+            <span class="text-green-400" id="module-credits">0</span>
+          </div>
+          <!-- Achievement Bonus -->
+          <div class="flex justify-between items-center">
+            <span data-i18n="missionControl.achievementBonusLabel" class="text-gray-400">
+              Achievement Bonus
+            </span>
+            <span class="text-green-400" id="achievement-credits">0</span>
+          </div>
+          <!-- Streak Bonus -->
+          <div class="flex justify-between items-center">
+            <span data-i18n="missionControl.streakBonusLabel" class="text-gray-400">
+              Streak Bonus
+            </span>
+            <span class="text-green-400" id="streak-bonus">0%</span>
+          </div>
+          <!-- Subscription Bonus -->
+          <div class="flex justify-between items-center">
+            <span data-i18n="missionControl.subscriptionBonusLabel" class="text-gray-400">
+              Subscription Bonus
+            </span>
+            <span class="text-green-400" id="subscription-bonus">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Journey Timeline Graph -->
+      <div class="bg-black/50 backdrop-blur-md p-6 rounded-lg">
+        <h3 data-i18n="missionControl.yourJourneyTimelineTitle" class="text-xl font-bold mb-4">
+          Your Journey Timeline
+        </h3>
+        <div class="h-64">
+          <canvas id="timeline-chart"></canvas>
+        </div>
       </div>
     </div>
-    
+
+    <!-- Recent Achievements -->
+    <div class="mt-8">
+      <h3 data-i18n="missionControl.recentAchievementsTitle" class="text-2xl font-bold mb-4">
+        Recent Achievements
+      </h3>
+      <div id="recent-achievements" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Achievement cards will be dynamically inserted here -->
+      </div>
+    </div>
   </div>
-  </section>
+
+  <!-- Achievement Notification Toast (Hidden by default) -->
+  <div id="achievement-toast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform -translate-y-full transition-transform duration-300 hidden">
+    <div class="flex items-center space-x-3">
+      <div id="achievement-icon" class="text-2xl"></div>
+      <div>
+        <div id="achievement-title" class="font-bold"></div>
+        <div id="achievement-credits-toast" class="text-sm"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- COUNTDOWN & PRICE EVOLUTION SECTION -->
+<section id="countdown-price" class="relative flex flex-col min-h-screen py-16 text-white text-center">
+  <p data-i18n="countdown.progress">Progress</p>
+  <div class="flex justify-center items-center gap-4">
+    <div class="flex flex-col">
+      <p data-i18n="countdown.pathTitle">Your Path to Success</p>
+      <p data-i18n="countdown.splitDescription">In 36 months, humanity splits into two groups: Those who have prepared for space and those who watch from Earth.</p>
+    </div>
+    <button data-i18n="countdown.subscribeButton">Subscribe Now!</button>
+  </div>
+  <div class="flex justify-center items-center gap-4 mt-8 pb-5">
+    <!-- Countdown Cards -->
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-years" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400" data-i18n="countdown.years">Years</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-months" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400" data-i18n="countdown.months">Months</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-days" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400" data-i18n="countdown.days">Days</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-hours" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400" data-i18n="countdown.hours">Hours</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-minutes" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400" data-i18n="countdown.minutes">Minutes</div>
+    </div>
+    <div class="countdown-card bg-gray-800 p-4 rounded-lg">
+      <div id="countdown-seconds" class="text-4xl font-bold">0</div>
+      <div class="text-sm text-gray-400" data-i18n="countdown.seconds">Seconds</div>
+    </div>
+  </div>
+  <hr>
+</section>
 
 <!-- MISSION CONTROL SECTION -->
 <section id="mission-control" class="relative min-h-screen py-16 text-white">
@@ -325,7 +427,7 @@
   </div>
 </section>
 
-<!-- TRAINING MODULE PREVIEW SECTION (Existing) -->
+<!-- TRAINING MODULE PREVIEW SECTION -->
 <section id="training-preview" class="py-16 bg-gray-900 text-white text-center">
   <div class="container mx-auto px-4">
     <header class="mb-12" data-aos="fade-up">
@@ -339,22 +441,22 @@
       <div class="card glass hover:-translate-y-2 transition-all duration-300">
         <div class="card-body">
           <div class="absolute top-4 right-4">
-            <div class="badge badge-primary">6-8 Months</div>
+            <div class="badge badge-primary" data-i18n="training.physicalDuration">6-8 Months</div>
           </div>
-          <h3 class="card-title text-2xl text-blue-400 mb-4">Physical Training</h3>
+          <h3 class="card-title text-2xl text-blue-400 mb-4" data-i18n="physicalTraining">Physical Training</h3>
           <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
             <span class="text-2xl text-white">0%</span>
           </div>
           <div class="certification-badge mb-4">
-            <span class="text-xs text-blue-300">ISO-31000-ZG Certification</span>
+            <span class="text-xs text-blue-300" data-i18n="training.physicalCert">ISO-31000-ZG Certification</span>
           </div>
-          <p class="text-blue-100">Master zero-gravity movement, biometric adaptation, and emergency procedures</p>
+          <p class="text-blue-100" data-i18n="training.physicalDesc">Master zero-gravity movement, biometric adaptation, and emergency procedures</p>
           <div class="requirements text-xs text-gray-400 mt-2">
-            <p>Required: Medical Clearance, Basic Physics</p>
+            <p data-i18n="training.physicalReq">Required: Medical Clearance, Basic Physics</p>
           </div>
           <div class="card-actions justify-between items-center mt-4">
-            <span class="text-sm text-blue-300">300 Training Hours Required</span>
-            <button class="btn btn-primary" data-module="physical">Begin Assessment</button>
+            <span class="text-sm text-blue-300" data-i18n="training.physicalHours">300 Training Hours Required</span>
+            <button class="btn btn-primary" data-module="physical" data-i18n="training.beginAssessment">Begin Assessment</button>
           </div>
         </div>
       </div>
@@ -362,22 +464,22 @@
       <div class="card glass hover:-translate-y-2 transition-all duration-300">
         <div class="card-body">
           <div class="absolute top-4 right-4">
-            <div class="badge badge-secondary">4-6 Months</div>
+            <div class="badge badge-secondary" data-i18n="training.technicalDuration">4-6 Months</div>
           </div>
-          <h3 class="card-title text-2xl text-purple-400 mb-4">Technical Systems</h3>
+          <h3 class="card-title text-2xl text-purple-400 mb-4" data-i18n="technicalTraining">Technical Systems</h3>
           <div class="radial-progress text-purple-500 mx-auto my-6" style="--value:0; --size:8rem;">
             <span class="text-2xl text-white">0%</span>
           </div>
           <div class="certification-badge mb-4">
-            <span class="text-xs text-purple-300">OSHA-ST-102 Certification</span>
+            <span class="text-xs text-purple-300" data-i18n="training.technicalCert">OSHA-ST-102 Certification</span>
           </div>
-          <p class="text-blue-100">Master spacecraft systems, maintenance, and emergency protocols</p>
+          <p class="text-blue-100" data-i18n="training.technicalDesc">Master spacecraft systems, maintenance, and emergency protocols</p>
           <div class="requirements text-xs text-gray-400 mt-2">
-            <p>Required: Physical Training Completion</p>
+            <p data-i18n="training.technicalReq">Required: Physical Training Completion</p>
           </div>
           <div class="card-actions justify-between items-center mt-4">
-            <span class="text-sm text-blue-300">200 Simulation Hours Required</span>
-            <button class="btn btn-primary" data-module="technical">Begin Assessment</button>
+            <span class="text-sm text-blue-300" data-i18n="training.technicalHours">200 Simulation Hours Required</span>
+            <button class="btn btn-primary" data-module="technical" data-i18n="training.beginAssessment">Begin Assessment</button>
           </div>
         </div>
       </div>
@@ -385,22 +487,22 @@
       <div class="card glass hover:-translate-y-2 transition-all duration-300">
         <div class="card-body">
           <div class="absolute top-4 right-4">
-            <div class="badge badge-accent">3-4 Months</div>
+            <div class="badge badge-accent" data-i18n="training.simulationDuration">3-4 Months</div>
           </div>
-          <h3 class="card-title text-2xl text-blue-400 mb-4">Mission Simulation</h3>
+          <h3 class="card-title text-2xl text-blue-400 mb-4" data-i18n="training.simulationTitle">Mission Simulation</h3>
           <div class="radial-progress text-blue-500 mx-auto my-6" style="--value:0; --size:8rem;">
             <span class="text-2xl text-white">0%</span>
           </div>
           <div class="certification-badge mb-4">
-            <span class="text-xs text-blue-300">ISO-31010-MO Certification</span>
+            <span class="text-xs text-blue-300" data-i18n="training.simulationCert">ISO-31010-MO Certification</span>
           </div>
-          <p class="text-blue-100">Complete mission scenarios and team coordination exercises</p>
+          <p class="text-blue-100" data-i18n="training.simulationDesc">Complete mission scenarios and team coordination exercises</p>
           <div class="requirements text-xs text-gray-400 mt-2">
-            <p>Required: Technical Systems Completion</p>
+            <p data-i18n="training.simulationReq">Required: Technical Systems Completion</p>
           </div>
           <div class="card-actions justify-between items-center mt-4">
-            <span class="text-sm text-blue-300">100 Mission Hours Required</span>
-            <button class="btn btn-primary" data-module="simulation">Begin Assessment</button>
+            <span class="text-sm text-blue-300" data-i18n="training.simulationHours">100 Mission Hours Required</span>
+            <button class="btn btn-primary" data-module="simulation" data-i18n="training.beginAssessment">Begin Assessment</button>
           </div>
         </div>
       </div>
@@ -529,7 +631,6 @@
   </div>
 </section>
 
-
 <!-- ORIGIN STORY PREVIEW SECTION -->
 <section id="origin-preview" class="py-16 bg-gray-900 text-white text-center">
   <div class="container mx-auto px-4">
@@ -564,11 +665,11 @@
       <div class="mission-stats mt-4 flex justify-center gap-8">
         <div class="stat">
           <span data-i18n="origin.activeTrainees" class="text-3xl font-bold text-blue-300">2,500+</span>
-          <span class="block text-blue-200">Active Trainees</span>
+          <span class="block text-blue-200" data-i18n="origin.activeTraineesLabel">Active Trainees</span>
         </div>
         <div class="stat">
           <span data-i18n="origin.startingRate" class="text-3xl font-bold text-blue-300">$49.99</span>
-          <span class="block text-blue-200">Starting Monthly</span>
+          <span class="block text-blue-200" data-i18n="origin.startingRateLabel">Starting Monthly</span>
         </div>
       </div>
     </div>
@@ -667,22 +768,21 @@
       </a>
     </div>
   </div>
-</section>
-
-  <!-- CREDENTIALS SUMMARY -->
+</section
+<!-- CREDENTIALS SUMMARY -->
   <section class="credentials-bar bg-gray-800 py-4">
     <div class="container mx-auto flex justify-around text-white">
       <div class="text-center">
         <span class="text-2xl font-bold">50+</span>
-        <p class="text-sm">Years Combined Experience</p>
+        <p class="text-sm" data-i18n="credentials.experience">Years Combined Experience</p>
       </div>
       <div class="text-center">
         <span class="text-2xl font-bold">3</span>
-        <p class="text-sm">Space Organizations</p>
+        <p class="text-sm" data-i18n="credentials.organizations">Space Organizations</p>
       </div>
       <div class="text-center">
         <span class="text-2xl font-bold">12</span>
-        <p class="text-sm">Industry Patents</p>
+        <p class="text-sm" data-i18n="credentials.patents">Industry Patents</p>
       </div>
     </div>
   </section>
@@ -816,170 +916,62 @@
         </a>
       </div>
     </div>
-    <script>
-      // Update current year dynamically if needed
-      document.getElementById("current-year") &&
-        (document.getElementById("current-year").textContent = new Date().getFullYear());
-    </script>
+    <div class="text-center mt-8 text-gray-400">
+      <p data-i18n="footer.copyright">&copy; <span id="current-year">2025</span> SharedStars Academy. All rights reserved.</p>
+    </div>
   </div>
-</div>
 </footer>
 
-  <!-- Scripts -->
+<!-- Scripts -->
+<!-- Core scripts (required) -->
+<script src="/js/languageManager.js" defer></script>
+<script src="/js/languageDropdown.js" defer></script>
+<script src="/js/countdown.js" defer></script>
+
+<!-- Animation libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-<!-- <script src="/public/js/language-switcher.js"></script> -->
-<!-- <script>
-  // Basic language initialization
-  document.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('preferredLanguage') || 'en';
-    document.documentElement.lang = savedLang;
-    applyTranslations(savedLang);
 
-    document.querySelectorAll('.language-flag').forEach(flag => {
-      flag.addEventListener('click', () => {
-        const selectedLang = flag.dataset.lang || 'en';
-        localStorage.setItem('preferredLanguage', selectedLang);
-        applyTranslations(selectedLang);
-      });
-    });
-  });
-
-  function applyTranslations(lang) {
-    const translations = {
-      en: {
-        news: {
-          headline: "Latest News & Insights",
-          subtitle: "Stay updated with the latest op-eds, articles, and insights in space exploration.",
-          oped: {
-            title: "It's Time to Make Space Exploration a Shared Frontier for All",
-            published: "Published in",
-            excerpt: "Discover how space exploration can be democratized and made accessible for everyone willing to reach for the stars.",
-            cta: "Read Full Article"
-          }
-        },
-        footer: {
-          copyright: "© 2024 SharedStars Academy. All rights reserved."
-        }
-        // Add additional keys for other sections as needed...
-      },
-      zh: {
-        // Chinese translations
-      },
-      ko: {
-        // Korean translations
-      },
-      es: {
-        // Spanish translations
-      }
-    };
-
-    document.querySelectorAll("[data-i18n]").forEach(element => {
-      const key = element.dataset.i18n;
-      const keys = key.split(".");
-      let translation = translations[lang];
-      keys.forEach(k => {
-        translation = translation ? translation[k] : null;
-      });
-      if (translation) {
-        element.textContent = translation;
-      }
-    });
-  }
-</script> -->
-
-<!-- Module Scripts -->
-</script>
-<script src="/public/js/modules/training/fsdTraining.js"></script>
-<script src="/public/js/modules/training/AIHandler.js"></script>
-<script src="/public/js/modules/training/aiGuidanceSystem.js"></script>
-<script src="/public/js/modules/training/progressAssessment.js"></script>
-
+<!-- Page specific scripts -->
 <script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    try {
-      // Initialize core modules
-      await initModules();
-      const wsConnection = await setupWebSocket();
-
-      // Initialize AI systems
-      const aiGuidance = new AIGuidanceSystem(SpaceTrainingFSD);
-      const progressAssessment = new ProgressAssessment(SpaceTrainingFSD, aiGuidance);
-
-      // Setup WebSocket event listeners
-      wsConnection.addEventListener('message', (event) => {
-        const data = JSON.parse(event.data);
-        handleWebSocketMessages(data, {
-          updateGuidance: updateGuidanceDisplay,
-          showAchievement: showAchievementToast,
-          updateProgress: updateProgressDisplay
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS animations
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out',
+      once: true
+    });
+    
+    // Update copyright year
+    const currentYearEl = document.getElementById("current-year");
+    if (currentYearEl) {
+      currentYearEl.textContent = new Date().getFullYear();
+    }
+    
+    // Initialize any page-specific functionality
+    setupModuleCards();
+    initializeCountdown();
+  });
+  
+  function setupModuleCards() {
+    // Add event listeners to training module cards
+    const moduleButtons = document.querySelectorAll('[data-module]');
+    if (moduleButtons) {
+      moduleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const moduleType = this.getAttribute('data-module');
+          // Handle module button click - can be translated/localized later
+          console.log(`Module ${moduleType} selected`);
+          // You can add additional functionality here
         });
       });
-
-      // Update AI status to active
-      document.getElementById('ai-status').innerHTML = `
-        <div class="flex items-center space-x-2">
-          <span class="w-2 h-2 rounded-full bg-green-500"></span>
-          <span>AI Coach Active</span>
-        </div>
-      `;
-
-      // Initialize AOS animations
-      AOS.init({
-        duration: 800,
-        easing: 'ease-out',
-        once: true
-      });
-
-      // Load initial module content
-      loadInitialModule();
-    } catch (error) {
-      console.error('Initialization error:', error);
     }
-  });
-
-  function updateGuidanceDisplay(guidance) {
-    const guidanceContent = document.getElementById('guidance-content');
-    guidanceContent.innerHTML = `
-      <p class="text-gray-300">${guidance.message}</p>
-      ${guidance.nextSteps.map(step => `
-        <div class="flex items-center space-x-2 text-sm">
-          <span class="text-blue-400">•</span>
-          <span>${step.action}</span>
-        </div>
-      `).join('')}
-    `;
   }
-
-  function showAchievementToast(achievement) {
-    const toast = document.getElementById('achievement-toast');
-    document.getElementById('achievement-title').textContent = achievement.title;
-    document.getElementById('achievement-description').textContent = achievement.description;
-    toast.classList.remove('translate-y-full', 'opacity-0');
-    setTimeout(() => {
-      toast.classList.add('translate-y-full', 'opacity-0');
-    }, 5000);
-  }
-
-  function updateProgressDisplay(progress) {
-    document.getElementById('progress-percentage').textContent = `${progress.overall}%`;
-    document.getElementById('focus-score').textContent = progress.focusScore;
-    // Update progress chart if implemented
-    updateProgressChart(progress.details);
-  }
-
-  async function loadInitialModule() {
-    const moduleContent = document.getElementById('module-content');
-    moduleContent.innerHTML = `
-      <div class="space-y-6">
-        <h2 class="text-2xl font-bold" data-i18n="training.gettingStartedTitle">Getting Started</h2>
-        <p data-i18n="training.gettingStartedSubtitle">
-          Welcome to your personalized space training program. Your AI coach will guide you through each step of your journey.
-        </p>
-        <button class="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-lg" onclick="startTraining()" data-i18n="training.beginTrainingButton">
-          Begin Training
-        </button>
-      </div>
-    `;
+  
+  function initializeCountdown() {
+    // Basic countdown functionality
+    // The detailed countdown logic is in countdown.js
+    console.log('Countdown initialized');
+    // This is just a placeholder - your countdown.js handles the actual logic
   }
 </script>
 
@@ -1021,3 +1013,5 @@
     background: rgba(59, 130, 246, 0.7);
   }
 </style>
+</body>
+</html>
