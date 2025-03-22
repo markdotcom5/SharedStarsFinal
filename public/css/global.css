@@ -25,9 +25,9 @@
 body {
     font-family: 'Aeonik', sans-serif;
     font-weight: 400; /* Regular */
-    margin: 0;
+    margin-left: 120px;
+    margin-right: 120px;
     padding: 0;
-    background-color: #0c1017;
     color: white;
 }
 
@@ -81,7 +81,6 @@ a:hover {
 }
 /* Navbar */
 .navbar {
-    background-color: #004AAD;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;

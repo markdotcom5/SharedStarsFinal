@@ -48,13 +48,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     const langDropdownMenu = document.getElementById("langDropdownMenu");
     const langItems = document.querySelectorAll(".dropdown-item");
     const selectedLangIcon = document.getElementById("selectedLangIcon");
-    const selectedLangText = document.getElementById("selectedLangText");
     const contentElements = document.querySelectorAll("[data-i18n]");
 
     console.log("📌 Language Manager Initialized");
 
+    const flagMap = {
+        en: "/images/USflag.png",
+        zh: "/images/ChinaFlag.png",
+        ko: "/images/KoreaFlag.png",
+        es: "/images/ChinaFlag.png"
+    };
+
     // Get saved language or default to English
     const savedLang = getCookie("preferredLanguage") || "en";
+
+    const updateLanguageUI = (lang) => {
+        selectedLangIcon.src = flagMap[lang] || flagMap["en"]; // Set flag based on lang
+        document.documentElement.lang = lang;
+    };
 
     const initLanguage = async () => {
         const translations = await fetchTranslations();
@@ -83,19 +94,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     };
 
-    // Function to update UI with selected language
-    const updateLanguageUI = (lang) => {
-        const flagMap = {
-            en: "🇺🇸",
-            zh: "🇨🇳",
-            ko: "🇰🇷",
-            es: "🇪🇸"
-        };
-        
-        selectedLangIcon.textContent = flagMap[lang] || "🇺🇸";
-        selectedLangText.textContent = lang.toUpperCase();
-        document.documentElement.lang = lang;
-    };
+    document.querySelectorAll(".dropdown-item").forEach(item => {
+        item.addEventListener("click", function () {
+          const flagSrc = this.getAttribute("data-flag");
+          selectedLangIcon.src = flagSrc;
+          langDropdownMenu.classList.add("hidden"); // Close the dropdown
+        });
+      });
 
     // Show/Hide dropdown menu
     langDropdownBtn.addEventListener("click", () => {

@@ -83,7 +83,6 @@ body {
   color: white;
 }
 video {
-  border: 3px solid red !important;
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;

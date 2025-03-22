@@ -18,6 +18,162 @@
         "banner": {
             "title": "36 MONTHS TO SPACE:",
             "subtitle": "Complete Training & Get Approved for Space Flight"
+        },
+        "progress": {
+            "tag": "progress",
+            "title": "Your path to space",
+            "subtitle": "In 36 months, humanity splits into two groups: Those who prepare for space and those who watch from Earth.",
+            "subscribeNow": "Subscribe now",
+            "Years": "Years",
+            "Months": "Months",
+            "Weeks": "Weeks",
+            "Days": "Days",
+            "Hours": "Hours",
+            "Minutes": "Minutes",
+            "Seconds": "Seconds",
+            "videoText": "Learn how you can accelerate their journey?",
+            "learnMore": "Learn More"
+        },
+        "personalAICoach": {
+            "tag": "Your personal AI Space Coach",
+            "title": "Your personal AI astronaut trainer",
+            "subtitle": "astronaut training by and list some facts about what our AI does",
+            "goTo": "Go to academy",
+            "feature1": {
+                "title": "STELLA AI dynamically adapts training in Real-Time",
+                "description": "AI dynamically adjusts training in real-time, optimizing learning based on performance and user needs."
+            },
+            "feature2": {
+                "title": "Adaptive AI: Tracks, Predicts & Coaches",
+                "description": "Tracks learning progress, predicts user weak spots, and offers adaptive coaching."
+            },
+            "feature3": {
+                "title": "Mission Feedback, Tech Evaluation & Risk analysis",
+                "description": "Provides mission simulation feedback, technical evaluations, and risk assessments."
+            },
+            "line1": "Every astronaut must master spacecraft systems, mission protocols, and emergency response - your AI assistant ensures you do."
+        },
+        "coreValue": {
+            "tag": "Core value",
+            "title": "Core value propositions",
+            "description": "Unique benefits: real-time tracking, AI training, guaranteed space path.",
+            "section1": {
+                "title": "Space Isn’t Waiting",
+                "description": "Every day without training is another seat claimed. Every hour you wait is another opportunity lost. The space revolution needs pioneers—not dreamers who waited too long.",
+                "seatsLeft": "Seats left",
+                "line1": "Seats are filling up fast! Secure your space now.",
+                "button": "Join the Space Revolution"
+            },
+            "section2": {
+                "title": "Training Like Never Before",
+                "description": "Our AI-powered space coach adapts in real-time, ensuring you master the skills you need for space."
+            },
+            "section3": {
+                "title": "Your Countdown Has Started",
+                "subtitle": "Unlike traditional astronaut programs with a 0.1% acceptance rate, SharedStars guarantees a space seat, if you’re willing to earn it. Every certification, credit, and milestone gets you closer.",
+                "Years": "Yesrs",
+                "Months": "Months",
+                "Days": "Days",
+                "Hours": "Hours",
+                "Minutes": "Minutes",
+                "Seconds": "Seconds"
+            }
+        },
+        "socialProof": {
+            "title": "Social proof & technology innovation",
+            "join": "Join now",
+            "videoTitle": "AI Leadership Statement",
+            "videoDescription": "Just as Tesla leads autonomous driving, SharedStars leads autonomous space training. Our AI system doesn’t just guide you—it evolves with you, adapting training protocols in real-time for optimal space readiness",
+            "section1": {
+                "title": "Industry Validation Panel",
+                "subtitle": "The AI Revolution in Space Training, First platform integrating autonomous AI guidance for astronaut training.",
+                "li1": "Real-time biometric monitoring & performance adaptation.",
+                "li2": "NASA-inspired training protocols enhanced by machine learning.",
+                "li3": "Predictive analytics for mission readiness assessment."
+            },
+            "section2": {
+                "title": "Dynamic Progress Visualization",
+                "subtitle": "Your AI-Tracked Journey to Space",
+                "li1": "Real-time Personal Readiness Score",
+                "li2": "Certification Progress",
+                "li3": "Time to Space Qualification",
+                "li4": "Credit Accumulation Rate"
+            }
+        },
+        "timeline": {
+            "tag": "Space timeline",
+            "title": "Space access timeline",
+            "subtitle": "Traditional Space Tourism vs. Your SharedStars Timeline",
+            "t1": {
+                "year": "2022",
+                "title": "$750,000+ Per seat",
+                "subtitle": "Space travel is highly exclusive and expensive, reserved for the ultra-wealthy."
+            },
+            "t2": {
+                "year": "2029",
+                "title": "$750,000+ Per seat",
+                "subtitle": "Space travel is highly exclusive and expensive, reserved for the ultra-wealthy."
+            },
+            "t3": {
+                "year": "2039",
+                "title": "$5,000 - Mass Market Accessibility Reached!",
+                "subtitle": "Costs decrease as technology evolves, but still out of reach for most people."
+            }
+        },
+        "testimonials": {
+            "tag": "Testimonials & Training Experience",
+            "title": "Hear from Our Trainees!",
+            "review1": {
+                "review": "The AI-powered training modules were a game-changer! The personalized roadmap helped me adapt to Zero-G conditions quickly. The countdown timers kept me motivated, and I felt fully prepared for my final evaluation!",
+                "author": "Alex carry"
+            },
+            "review2": {
+                "review": "The structured training approach, combined with real-time progress tracking, made learning seamless. The leaderboard rankings pushed me to improve, and earning my OSHA certification felt like a huge milestone!",
+                "author": "Oliver Smith"
+            }
+        },
+        "redirections": {
+            "r1": {
+                "title": "Leads to Academy page with currently available training modules.",
+                "buttonText": "Start Training Now"
+            },
+            "r2": {
+                "title": "Adjusts based on subscription tier & credits earned.",
+                "buttonText": "See Your Personalized Countdown"
+            },
+            "r3": {
+                "title": "Takes users to Mission Control, where AI guides their first training steps.",
+                "buttonText": "Explore AI-Assisted Training"
+            },
+            "r4": {
+                "title": "Redirects to active pricing & credit system breakdown.",
+                "buttonText": "See Subscription Plans"
+            },
+            "r5": {
+                "title": "AI assigns a starting pathway based on user profile.",
+                "buttonText": "Join the Space Pioneers"
+            }
+        },
+        "footer": {
+            "description": "At Shared Stars, we're turning space travel into reality through certifications, immersive training, and a global community of pioneers, making space exploration accessible to all.",
+            "quicklinks": {
+                "tag": "Quick Links",
+                "l1": "Home",
+                "l2": "About",
+                "l3": "Leaderboard",
+                "l4": "Academy",
+                "l5": "Training Hub"
+            },
+            "company": {
+                "tag": "Comapany",
+                "l1": "Privacy Policy",
+                "l2": "Terms & COnditions"
+            },
+            "newsletter": {
+                "tag": "Newsletter",
+                "placeholder": "Enter your mail",
+                "buttonText": "Subscribe"
+            }
         }
     },
     "zh": {
@@ -39,6 +195,162 @@
         "banner": {
             "title": "36个月到太空：",
             "subtitle": "完成训练并获得太空飞行批准"
+        },
+        "progress": {
+            "tag": "progress",
+            "title": "你的太空之路",
+            "subtitle": "在 36 个月内，人类将分为两类：那些为太空做好准备的人，以及那些仍留在地球上的人。",
+            "subscribeNow": "立即订阅",
+            "Years": "年",
+            "Months": "个月",
+            "Weeks": "周",
+            "Days": "天",
+            "Hours": "小时",
+            "Minutes": "分钟",
+            "Seconds": "秒",
+            "videoText": "了解如何加速他们的旅程？",
+            "learnMore": "了解更多"
+        },
+        "personalAICoach": {
+            "tag": "您的专属 AI 太空教练",
+            "title": "您的个人 AI 宇航员训练师",
+            "subtitle": "通过宇航员训练，并列出一些我们的 AI 所做的事情",
+            "goTo": "前往学院",
+            "feature1": {
+                "title": "STELLA AI 实时动态调整训练",
+                "description": "AI 能够实时动态调整训练，根据表现和用户需求优化学习过程。"
+            },
+            "feature2": {
+                "title": "自适应 AI：跟踪、预测和指导",
+                "description": "跟踪学习进度，预测用户的薄弱点，并提供自适应指导。"
+            },
+            "feature3": {
+                "title": "任务反馈、技术评估和风险分析",
+                "description": "提供任务模拟反馈、技术评估和风险分析。"
+            },
+            "line1": "每位宇航员都必须掌握航天器系统、任务协议和应急响应——您的 AI 助手确保您能做到。"
+        },
+        "coreValue": {
+            "tag": "核心价值",
+            "title": "核心价值主张",
+            "description": "独特优势：实时追踪、AI 训练、保证太空之路。",
+            "section1": {
+                "title": "太空不会等待",
+                "description": "没有训练的每一天，都是一个座位被占据的机会。你等待的每一个小时，都是一个错失的机会。太空革命需要先锋，而不是等待太久的梦想家。",
+                "seatsLeft": "剩余座位",
+                "line1": "座位正在快速填满！立即预订您的太空之旅。",
+                "button": "加入太空革命"
+            },
+            "section2": {
+                "title": "前所未有的训练",
+                "description": "我们的 AI 驱动太空教练实时适应，确保您掌握前往太空所需的技能。"
+            },
+            "section3": {
+                "title": "您的倒计时已开始",
+                "subtitle": "不同于传统的宇航员项目仅有 0.1% 的录取率，SharedStars 保证您的太空席位，只要您愿意努力争取。每张证书、每个学分和每个里程碑都会让您更接近目标。",
+                "Years": "年",
+                "Months": "个月",
+                "Days": "天",
+                "Hours": "小时",
+                "Minutes": "分钟",
+                "Seconds": "秒"
+            }
+        },
+        "socialProof": {
+            "title": "社会证明与技术创新",
+            "join": "立即加入",
+            "videoTitle": "AI 领导声明",
+            "videoDescription": "就像特斯拉引领自动驾驶一样，SharedStars 引领自动化太空训练。我们的 AI 系统不仅仅是指导您——它会随着您的进步而发展，实时调整训练协议，以实现最佳的太空准备。",
+            "section1": {
+                "title": "行业验证小组",
+                "subtitle": "AI 在太空训练的革命，首个整合自动 AI 指导的宇航员训练平台。",
+                "li1": "实时生物监测与性能调整。",
+                "li2": "受 NASA 启发的训练协议，结合机器学习增强。",
+                "li3": "任务准备评估的预测分析。"
+            },
+            "section2": {
+                "title": "动态进度可视化",
+                "subtitle": "您的 AI 追踪太空旅程",
+                "li1": "实时个人准备评分",
+                "li2": "认证进度",
+                "li3": "太空资格倒计时",
+                "li4": "学分累积率"
+            }
+        },
+        "timeline": {
+            "tag": "太空时间线",
+            "title": "太空准入时间线",
+            "subtitle": "传统太空旅游 vs. 你的 SharedStars 之旅",
+            "t1": {
+                "year": "2022",
+                "title": "$750,000+ 每个座位",
+                "subtitle": "太空旅行高度排他且昂贵，仅限超高净值人群。"
+            },
+            "t2": {
+                "year": "2029",
+                "title": "$750,000+ 每个座位",
+                "subtitle": "太空旅行仍然昂贵，仅限富裕人士参与。"
+            },
+            "t3": {
+                "year": "2039",
+                "title": "$5,000 - 大众市场可及性已达成！",
+                "subtitle": "随着技术的发展，成本降低，但仍然超出大多数人的承受范围。"
+            }
+        },
+        "testimonials": {
+            "tag": "学员评价与培训体验",
+            "title": "听听我们的学员怎么说！",
+            "review1": {
+                "review": "AI 驱动的培训模块改变了游戏规则！个性化的路线图帮助我迅速适应零重力环境。倒计时计时器让我保持动力，我感觉自己已做好充分准备迎接最终考核！",
+                "author": "Alex Carry"
+            },
+            "review2": {
+                "review": "结构化的培训方法结合实时进度追踪，让学习变得无缝流畅。排行榜推动我不断提升，而获得 OSHA 认证对我来说是一个重要的里程碑！",
+                "author": "Oliver Smith"
+            }
+        },
+        "redirections": {
+            "r1": {
+                "title": "跳转到学院页面，查看当前可用的培训模块。",
+                "buttonText": "立即开始训练"
+            },
+            "r2": {
+                "title": "根据订阅等级和已获得学分进行调整。",
+                "buttonText": "查看您的个性化倒计时"
+            },
+            "r3": {
+                "title": "前往任务控制中心，AI 将引导您的首次训练步骤。",
+                "buttonText": "探索 AI 辅助训练"
+            },
+            "r4": {
+                "title": "跳转到最新的定价和学分系统介绍。",
+            "buttonText": "查看订阅计划"
+            },
+            "r5": {
+                "title": "AI 根据用户个人资料分配起始路径。",
+                "buttonText": "加入太空先锋"
+            }
+        },
+        "footer": {
+            "description": "在 Shared Stars，我们通过认证、沉浸式培训和全球先锋社区，将太空旅行变为现实，让太空探索触手可及。",
+            "quicklinks": {
+                "tag": "快速链接",
+                "l1": "首页",
+                "l2": "关于我们",
+                "l3": "排行榜",
+                "l4": "学院",
+                "l5": "训练中心"
+            },
+            "company": {
+                "tag": "公司",
+                "l1": "隐私政策",
+                "l2": "条款与条件"
+            },
+            "newsletter": {
+                "tag": "新闻通讯",
+            "placeholder": "输入您的邮箱",
+            "buttonText": "订阅"
+            }
         }
     },
     "ko": {
@@ -60,6 +372,162 @@
         "banner": {
             "title": "우주까지 36개월:",
             "subtitle": "훈련을 완료하고 우주 비행 승인 받기"
+        },
+        "progress": {
+            "tag": "progress",
+            "title": "우주로 가는 길",
+            "subtitle": "36개월 후, 인류는 두 그룹으로 나뉩니다: 우주를 준비한 사람들과 지구에서 지켜보는 사람들.",
+            "subscribeNow": "지금 구독하기",
+            "Years": "년",
+            "Months": "개월",
+            "Weeks": "주",
+            "Days": "일",
+            "Hours": "시간",
+            "Minutes": "분",
+            "Seconds": "초",
+            "videoText": "그들의 여정을 어떻게 가속화할 수 있는지 알아보세요?",
+            "learnMore": "더 알아보기"
+        },
+        "personalAICoach": {
+            "tag": "당신의 개인 AI 우주 코치",
+            "title": "당신의 개인 AI 우주비행사 트레이너",
+            "subtitle": "우주비행사 훈련과 AI가 수행하는 기능을 소개합니다.",
+            "goTo": "아카데미로 이동",
+            "feature1": {
+                "title": "STELLA AI는 실시간으로 훈련을 동적으로 조정",
+                "description": "AI는 실시간으로 훈련을 조정하여 성과 및 사용자 요구에 따라 학습을 최적화합니다."
+            },
+            "feature2": {
+                "title": "적응형 AI: 추적, 예측 및 코칭",
+                "description": "학습 진행 상황을 추적하고, 약점을 예측하며, 맞춤형 코칭을 제공합니다."
+            },
+            "feature3": {
+                "title": "임무 피드백, 기술 평가 및 위험 분석",
+                "description": "임무 시뮬레이션 피드백, 기술 평가 및 위험 분석을 제공합니다."
+            },
+            "line1": "모든 우주비행사는 우주선 시스템, 임무 프로토콜 및 비상 대응을 숙달해야 합니다 - 당신의 AI 어시스턴트가 이를 보장합니다."
+        },
+        "coreValue": {
+            "tag": "핵심 가치",
+            "title": "핵심 가치 제안",
+            "description": "독특한 혜택: 실시간 추적, AI 훈련, 보장된 우주 탐사 경로.",
+            "section1": {
+                "title": "우주는 기다려주지 않는다",
+                "description": "훈련하지 않는 하루가 지나갈 때마다 또 하나의 좌석이 사라집니다. 기다리는 매 순간이 기회를 잃는 순간입니다. 우주 혁명은 기다리는 꿈꾸는 사람이 아니라 선구자가 필요합니다.",
+                "seatsLeft": "남은 좌석",
+                "line1": "좌석이 빠르게 채워지고 있습니다! 지금 바로 예약하세요.",
+                "button": "우주 혁명에 참여하세요"
+            },
+            "section2": {
+                "title": "이전과는 다른 혁신적인 훈련",
+                "description": "우리의 AI 기반 우주 코치는 실시간으로 적응하여 우주에 필요한 기술을 완벽하게 익힐 수 있도록 돕습니다."
+            },
+            "section3": {
+                "title": "당신의 카운트다운이 시작되었습니다",
+                "subtitle": "전통적인 우주비행사 프로그램의 합격률이 0.1%에 불과한 반면, SharedStars는 당신이 노력한다면 우주 좌석을 보장합니다. 모든 인증서, 학점, 그리고 이정표가 당신을 우주로 한 걸음 더 가깝게 만듭니다.",
+                "Years": "년",
+                "Months": "개월",
+                "Days": "일",
+                "Hours": "시간",
+                "Minutes": "분",
+                "Seconds": "초"
+            }
+        },
+        "socialProof": {
+            "title": "사회적 증명 및 기술 혁신",
+            "join": "지금 가입하기",
+            "videoTitle": "AI 리더십 성명서",
+            "videoDescription": "테슬라가 자율 주행을 선도하듯이, SharedStars는 자율 우주 훈련을 선도합니다. 우리의 AI 시스템은 단순한 가이드가 아니라, 사용자의 진행에 맞춰 발전하며 최적의 우주 준비를 위해 실시간으로 훈련 프로토콜을 조정합니다.",
+            "section1": {
+                "title": "산업 검증 패널",
+                "subtitle": "우주 훈련의 AI 혁명, 최초로 AI 자율 가이드를 통합한 우주비행사 훈련 플랫폼.",
+                "li1": "실시간 생체 데이터 모니터링 및 성과 조정.",
+                "li2": "NASA에서 영감을 받은 훈련 프로토콜, 머신러닝으로 강화.",
+                "li3": "임무 준비 평가를 위한 예측 분석."
+            },
+            "section2": {
+                "title": "동적 진행 시각화",
+                "subtitle": "AI가 추적하는 당신의 우주 여정",
+                "li1": "실시간 개인 준비 점수",
+                "li2": "자격 인증 진행 상황",
+                "li3": "우주 자격 획득까지 남은 시간",
+                "li4": "학점 적립률"
+            }
+        },
+        "timeline": {
+            "tag": "우주 타임라인",
+            "title": "우주 접근 타임라인",
+            "subtitle": "전통적인 우주 관광 vs. SharedStars의 여정",
+            "t1": {
+                "year": "2022",
+                "title": "$750,000+ 좌석당",
+                "subtitle": "우주 여행은 극소수의 부유층을 위한 독점적이며 고가의 서비스입니다."
+            },
+            "t2": {
+                "year": "2029",
+                "title": "$750,000+ 좌석당",
+                "subtitle": "우주 여행은 여전히 고가이며, 부유층만 이용할 수 있습니다."
+            },
+            "t3": {
+                "year": "2039",
+                "title": "$5,000 - 대중 시장 접근 가능!",
+                "subtitle": "기술이 발전하면서 비용이 낮아졌지만 여전히 대부분의 사람들에게는 부담됩니다."
+            }
+        },
+        "testimonials": {
+            "tag": "수강생 후기 및 훈련 경험",
+            "title": "우리 훈련생들의 이야기를 들어보세요!",
+            "review1": {
+                "review": "AI 기반 훈련 모듈이 완전히 새로운 변화를 가져왔어요! 개인 맞춤형 로드맵 덕분에 무중력 환경에 빠르게 적응할 수 있었습니다. 카운트다운 타이머가 저를 더욱 동기부여 시켰고, 최종 평가를 완벽하게 준비할 수 있었습니다!",
+                "author": "Alex Carry"
+            },
+            "review2": {
+                "review": "체계적인 훈련 방식과 실시간 진행 상황 추적이 결합되어 학습이 매우 매끄러웠어요. 리더보드 랭킹이 저를 더욱 성장하게 만들었고, OSHA 인증을 획득한 것이 큰 성취감으로 다가왔습니다!",
+                "author": "Oliver Smith"
+            }
+        },
+        "redirections": {
+            "r1": {
+                "title": "현재 이용 가능한 훈련 모듈이 있는 아카데미 페이지로 이동합니다.",
+                "buttonText": "지금 훈련 시작하기"
+            },
+            "r2": {
+                "title": "구독 등급 및 적립된 크레딧에 따라 조정됩니다.",
+                "buttonText": "개인 맞춤형 카운트다운 보기"
+            },
+            "r3": {
+                "title": "AI가 초기 훈련 단계를 안내하는 미션 컨트롤로 이동합니다.",
+                "buttonText": "AI 기반 훈련 탐색"
+            },
+            "r4": {
+            "title": "최신 가격 및 크레딧 시스템 개요 페이지로 이동합니다.",
+            "buttonText": "구독 계획 보기"
+            },
+            "r5": {
+                "title": "AI가 사용자 프로필을 기반으로 시작 경로를 할당합니다.",
+                "buttonText": "우주 개척자 합류하기"
+            }
+        },
+        "footer": {
+            "description": "Shared Stars는 인증, 몰입형 훈련 및 글로벌 커뮤니티를 통해 우주 여행을 현실로 만들고, 모든 사람이 우주 탐사에 접근할 수 있도록 돕습니다.",
+            "quicklinks": {
+                "tag": "빠른 링크",
+                "l1": "홈",
+                "l2": "소개",
+                "l3": "리더보드",
+                "l4": "아카데미",
+                "l5": "훈련 허브"
+            },
+            "company": {
+                "tag": "회사",
+                "l1": "개인정보 보호정책",
+                "l2": "이용 약관"
+            },
+            "newsletter": {
+                "tag": "뉴스레터",
+                "placeholder": "이메일을 입력하세요",
+                "buttonText": "구독하기"
+            }
         }
     },
     "es": {
@@ -81,6 +549,162 @@
         "banner": {
             "title": "36 MESES AL ESPACIO:",
             "subtitle": "Completa el entrenamiento y obtén la aprobación para el vuelo espacial"
+        },
+        "progress": {
+            "tag": "progress",
+            "title": "Tu camino al espacio",
+            "subtitle": "En 36 meses, la humanidad se divide en dos grupos: aquellos que se preparan para el espacio y aquellos que observan desde la Tierra.",
+            "subscribeNow": "Suscríbete ahora",
+            "Years": "Años",
+            "Months": "Meses",
+            "Weeks": "Semanas",
+            "Days": "Días",
+            "Hours": "Horas",
+            "Minutes": "Minutos",
+            "Seconds": "Segundos",
+            "videoText": "¿Aprende cómo puedes acelerar su viaje?",
+            "learnMore": "Aprender más"
+        },
+        "personalAICoach": {
+            "tag": "Tu entrenador personal de IA espacial",
+            "title": "Tu entrenador personal de astronautas con IA",
+            "subtitle": "Entrenamiento de astronautas y algunos datos sobre lo que hace nuestra IA",
+            "goTo": "Ir a la academia",
+            "feature1": {
+                "title": "STELLA AI adapta dinámicamente el entrenamiento en tiempo real",
+                "description": "La IA ajusta dinámicamente el entrenamiento en tiempo real, optimizando el aprendizaje según el rendimiento y las necesidades del usuario."
+            },
+            "feature2": {
+                "title": "IA adaptativa: rastrea, predice y entrena",
+                "description": "Rastrea el progreso del aprendizaje, predice las debilidades del usuario y ofrece entrenamiento adaptativo."
+            },
+            "feature3": {
+                "title": "Retroalimentación de misión, evaluación técnica y análisis de riesgos",
+                "description": "Proporciona retroalimentación de simulación de misión, evaluaciones técnicas y análisis de riesgos."
+            },
+            "line1": "Todo astronauta debe dominar los sistemas de la nave, los protocolos de misión y la respuesta ante emergencias; tu asistente de IA se asegurará de que lo hagas."
+        },
+        "coreValue": {
+            "tag": "Valor central",
+            "title": "Propuestas de valor central",
+            "description": "Beneficios únicos: seguimiento en tiempo real, entrenamiento con IA, camino garantizado al espacio.",
+            "section1": {
+                "title": "El espacio no espera",
+                "description": "Cada día sin entrenamiento es un asiento más que se pierde. Cada hora que esperas es una oportunidad menos. La revolución espacial necesita pioneros, no soñadores que esperaron demasiado.",
+                "seatsLeft": "Asientos disponibles",
+                "line1": "¡Los asientos se están llenando rápidamente! Asegura tu lugar ahora.",
+                "button": "Únete a la revolución espacial"
+            },
+            "section2": {
+                "title": "Entrenamiento como nunca antes",
+                "description": "Nuestro entrenador espacial impulsado por IA se adapta en tiempo real, asegurando que domines las habilidades necesarias para el espacio."
+            },
+            "section3": {
+                "title": "Tu cuenta regresiva ha comenzado",
+                "subtitle": "A diferencia de los programas tradicionales de astronautas con una tasa de aceptación del 0.1%, SharedStars garantiza un asiento en el espacio si estás dispuesto a ganártelo. Cada certificación, crédito y logro te acerca más.",
+                "Years": "Años",
+                "Months": "Meses",
+                "Days": "Días",
+                "Hours": "Horas",
+                "Minutes": "Minutos",
+                "Seconds": "Segundos"
+            }
+        },
+        "socialProof": {
+            "title": "Prueba social e innovación tecnológica",
+            "join": "Únete ahora",
+            "videoTitle": "Declaración de liderazgo en IA",
+            "videoDescription": "Así como Tesla lidera la conducción autónoma, SharedStars lidera el entrenamiento espacial autónomo. Nuestro sistema de IA no solo te guía, sino que evoluciona contigo, adaptando los protocolos de entrenamiento en tiempo real para una preparación óptima en el espacio.",
+            "section1": {
+                "title": "Panel de Validación de la Industria",
+                "subtitle": "La revolución de la IA en el entrenamiento espacial, la primera plataforma que integra orientación autónoma de IA para astronautas.",
+                "li1": "Monitoreo biométrico en tiempo real y adaptación del rendimiento.",
+                "li2": "Protocolos de entrenamiento inspirados en la NASA mejorados con aprendizaje automático.",
+                "li3": "Análisis predictivo para la evaluación de preparación de misiones."
+            },
+            "section2": {
+                "title": "Visualización Dinámica del Progreso",
+                "subtitle": "Tu viaje al espacio rastreado por IA",
+                "li1": "Puntuación de preparación personal en tiempo real",
+                "li2": "Progreso de certificación",
+                "li3": "Tiempo hasta la calificación espacial",
+                "li4": "Tasa de acumulación de créditos"
+            }
+        },
+        "timeline": {
+            "tag": "Línea de tiempo espacial",
+            "title": "Línea de tiempo de acceso al espacio",
+            "subtitle": "Turismo espacial tradicional vs. Tu línea de tiempo con SharedStars",
+            "t1": {
+                "year": "2022",
+                "title": "$750,000+ por asiento",
+                "subtitle": "Los viajes espaciales son altamente exclusivos y costosos, reservados para los más ricos."
+            },
+            "t2": {
+                "year": "2029",
+                "title": "$750,000+ por asiento",
+                "subtitle": "Los viajes espaciales siguen siendo costosos y solo accesibles para personas adineradas."
+            },
+            "t3": {
+                "year": "2039",
+                "title": "$5,000 - ¡Accesibilidad masiva alcanzada!",
+                "subtitle": "Los costos disminuyen a medida que la tecnología avanza, pero aún están fuera del alcance de la mayoría."
+            }
+        },
+        "testimonials": {
+            "tag": "Testimonios y experiencia de formación",
+            "title": "¡Escucha a nuestros alumnos!",
+            "review1": {
+                "review": "¡Los módulos de entrenamiento impulsados por IA cambiaron el juego! El plan de estudios personalizado me ayudó a adaptarme rápidamente a las condiciones de ingravidez. Los temporizadores de cuenta regresiva me mantuvieron motivado y me sentí completamente preparado para mi evaluación final.",
+                "author": "Alex Carry"
+            },
+            "review2": {
+                "review": "El enfoque estructurado de la formación, combinado con el seguimiento del progreso en tiempo real, hizo que el aprendizaje fuera fluido. La clasificación en el tablero de líderes me motivó a mejorar, y obtener mi certificación OSHA fue un gran logro.",
+                "author": "Oliver Smith"
+            }
+        },
+        "redirections": {
+            "r1": {
+                "title": "Lleva a la página de la academia con los módulos de entrenamiento actualmente disponibles.",
+                "buttonText": "Comienza el entrenamiento ahora"
+            },
+            "r2": {
+                "title": "Se ajusta según el nivel de suscripción y los créditos obtenidos.",
+                "buttonText": "Mira tu cuenta regresiva personalizada"
+            },
+            "r3": {
+                "title": "Lleva a los usuarios a Mission Control, donde la IA guía sus primeros pasos de entrenamiento.",
+                "buttonText": "Explora el entrenamiento asistido por IA"
+            },
+            "r4": {
+                "title": "Redirige al desglose activo del sistema de precios y créditos.",
+                "buttonText": "Ver planes de suscripción"
+            },
+            "r5": {
+                "title": "La IA asigna un camino inicial basado en el perfil del usuario.",
+                "buttonText": "Únete a los pioneros del espacio"
+            }
+        },
+        "footer": {
+            "description": "En Shared Stars, estamos haciendo realidad los viajes espaciales a través de certificaciones, entrenamientos inmersivos y una comunidad global de pioneros, haciendo que la exploración espacial sea accesible para todos.",
+            "quicklinks": {
+                "tag": "Enlaces rápidos",
+                "l1": "Inicio",
+                "l2": "Acerca de",
+                "l3": "Clasificación",
+                "l4": "Academia",
+                "l5": "Centro de entrenamiento"
+            },
+            "company": {
+                "tag": "Empresa",
+                "l1": "Política de privacidad",
+                "l2": "Términos y condiciones"
+            },
+            "newsletter": {
+                "tag": "Boletín informativo",
+                "placeholder": "Introduce tu correo electrónico",
+                "buttonText": "Suscribirse"
+            }
         }
     }
 }

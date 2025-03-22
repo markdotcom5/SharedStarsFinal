@@ -21,7 +21,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
         <link href="/css/tailwind.css" rel="stylesheet">
-        <!-- <link rel="stylesheet" href="/css/global.css"> -->
+        <!-- <link rel="stylesheet" href="/css/main.css"> -->
         <link rel="stylesheet" href="/css/ai-assistant.css" />
         
         <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
@@ -32,9 +32,9 @@
     
     </head>  
     
-    <body class="bg-black">
+    <body class="bg-black px-[120px]">
     <!-- Header (Navigation & Language Selector) -->
-    <header class="site-header absolute w-full flex items-center justify-between z-50 px-[120px]">
+    <header class="w-full flex items-center justify-between z-50">
 
         <!-- Logo -->
         <div class="py-8">
@@ -108,26 +108,145 @@
     </header>
 
     <!-- Hero Section -->
-   
-    <section id="hero" class="relative min-h-screen flex items-start justify-center text-center pt-24">
-      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-        <source src="/videos/academy10.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-  
-      <div class="absolute inset-0 w-full h-full bg-black pointer-events-none bg-opacity-75"></div>
-
-      <div class="relative flex flex-col mt-28 items-center justify-start max-w-5xl px-4 z-20">
-        <h1 data-i18n="hero.title" class="hero-text font-aeonik text-heading1 text-white px-20 mb-6">World's Largest AI- Powered Space Training Platform<h1>
-        <p data-i18n="hero.subtitle" class="text-body-medium-medium max-w-2xl text-white mb-8">
-          In 36 months, humanity splits into two groups: Those who have prepared for space and those who watch from Earth.
-        </p>
-        <div class="w-full space-x-4 text-body-2xsmall-semibold">
-          <a data-i18n="hero.startTraining" href="/signup" class="bg-black text-white px-6 py-3 z-30 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start Training Now</a>
-          <a data-i18n="hero.seeCountdown" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">See Your Countdown to Space</a>
-          <a data-i18n="hero.exploreMembership" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Explore Membership Plans</a>
+     <section class="pt-[88px] pb-[120px]">
+        <div class="flex flex-col items-center justify-between text-center">
+            <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                About Us
+            </span>
+            <p class="text-white text-heading1 font-aeonik max-w-xl py-5">
+                The Gateway to Space Begins Here
+            </p>
+            <p class="text-body-medium-medium text-white-800 max-w-4xl px-8">
+                At Shared Stars, we are transforming space travel from a distant dream to an achievable reality. Through certifications, immersive training, and a global community of pioneers, we are making <br> space exploration accessible to all. 
+            </p>
+            <div class="w-full space-x-4 text-body-2xsmall-semibold py-6">
+                <a data-i18n="hero.startTraining" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Join the Future of Space Travel</a>
+                <a data-i18n="hero.seeCountdown" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Meet Our Board of Advisors</a>
+                <a data-i18n="hero.exploreMembership" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start Your Space Training</a>
+            </div>
+            <div class=" w-full rounded-xl p-3 bg-black border-2 border-white-200 overflow-hidden mt-9">
+                <!-- Video Element -->
+                  <video id="videoPlayer" class="w-full h-full object-cover rounded-md" autoplay loop muted playsinline>
+                    <source src="/videos/space1.mp4" type="video/mp4">
+                      Your browser does not support the video tag.
+                  </video>
+              </div>
         </div>
-      </div>
+    </section>
+
+    <section class="min-h-screen pb-[120px]">
+        <div class="bg-black text-white">
+          <span
+            class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+            Reach the space
+          </span>
+
+          <div class="flex justify-between">
+            <div class="w-1/2">
+              <h2 class="text-heading2 text-white font-aeonik mt-5">Our mission and <br> vision 🚀</h2>
+              <p class="text-white-800 mt-5">
+                To equip future astronauts with AI-optimized training, real-world <br> certifications, and a dynamic learning ecosystem that prepares <br> them for space travel.</p>
+            </div>
+          </div>
+
+          <div class="flex mt-14 space-x-6">
+            <!-- Our Mission Section -->
+            <div class="border border-white-300 p-8 rounded-lg relative overflow-hidden">
+                <img src="/icons/glow.png" alt="Background" class="absolute inset-0 object-left ">
+                <img src="/icons/aboutUs1Bg.png" alt="Goal" class="absolute object-right object-fit w-64 bottom-0 right-0">
+                <div class="relative">
+                    <div class="relative w-12 h-12 flex items-center justify-center">
+                        <img src="/icons/iconBg.png" alt="Icon Background" class="absolute w-full h-full">
+                        <img src="/icons/aboutUsIcon1.png" alt="Icon" class="relative w-6 h-6">
+                    </div>
+                    <h3 class="text-heading5 font-aeonik mt-6">Our Mission</h3>
+                    <p class="text-body-base font-white-800 mt-4">We exist to democratize space travel.</p>
+                    <p class="text-body-base font-white mt-3">SharedStars equips individuals with:</p>
+                    <ul class="mt-4 space-y-2 text-white ">
+                        <li class="flex items-start gap-2">
+                            <img src="/icons/checklist.png" class="w-5 h-5" alt="Check Icon">
+                            Certifications to qualify for future space missions.
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <img src="/icons/checklist.png" class="w-5 h-5" alt="Check Icon">
+                            Immersive AR/VR experiences that simulate real astronaut training.
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <img src="/icons/checklist.png" class="w-5 h-5" alt="Check Icon">
+                            A 10-module space readiness program designed by industry experts.
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <img src="/icons/checklist.png" class="w-5 h-5" alt="Check Icon">
+                            Leaderboards and gamification to create a competitive but supportive training environment. A vibrant community of Subscribing Space Travelers (SSTs) shaping the future of space exploration.                        </li>
+                    </ul>
+                    <p class="text-gray-400 mt-4">
+                        With over 1.17 billion space enthusiasts worldwide, SharedStars bridges the gap between aspiration and accessibility, ensuring every dreamer has a path to space.
+                    </p>
+                    <p class="text-gray-400 mt-4">
+                        A SharedStars certification is your ticket to the fast-growing space travel industry, setting a benchmark similar to OSHA and ISO standards in aerospace and occupational health.                    </p>
+                </div>
+            </div>
+            
+            <!-- Our Purpose Section -->
+            <div class="p-6 rounded-lg relative overflow-hidden shadow-lg border border-white-300">
+                <img src="/icons/glow.png" alt="Background" class="absolute inset-0 object-left">
+                <img src="/icons/aboutUs2Bg.png" alt="Goal" class="absolute object-right object-fit w-52 bottom-0 right-0">                <div class="relative">
+                    <div class="relative w-12 h-12 flex items-center justify-center">
+                        <img src="/icons/iconBg.png" alt="Icon Background" class="absolute w-full h-full">
+                        <img src="/icons/aboutUsIcon1.png" alt="Icon" class="relative w-6 h-6">
+                    </div>
+                    <h3 class="text-xl font-bold mt-4">Our Purpose</h3>
+                    <p class="text-gray-400 mt-2">
+                        To revolutionize space preparation with artificial intelligence, immersive simulations, and a thriving, borderless community of future explorers.
+                    </p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section class="flex items-center w-full">
+            <!-- Left Content -->
+            <div class="w-1/2">
+                <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                    Our Story
+                </span>
+                <h2 class="text-heading2 mt-5 text-white">From an Impossible <br> Dream to a Movement</h2>
+                <p class="mt-4 text-body-medium text-white-800">
+                    At one of the lowest points in my life, I felt that my <span class="text-body-medium-semibold text-white">dream of space travel was impossible.</span>
+                    The cost of launching into orbit—from hundreds of thousands to millions of dollars—made it seem like a
+                    <span class="text-body-medium-semibold text-white">privilege reserved for the ultra-wealthy.</span>
+                </p>
+                <p class="mt-4 text-body-medium text-white-800">
+                    Tormented with yet another night of Netflix, I stumbled upon a new Series, <span class="text-body-medium-semibold text-white">"Three Body Problem"</span>
+                    and from that moment on, my life slowly began to change. After the series ended, my quest for more Sci-fi information remained,
+                    so I read and read Liu Cixin's trilogy as well.
+                </p>
+                <p class="mt-4 text-body-medium text-white-800">
+                    Then, I discovered <span class="text-body-medium-semibold text-white">The Three-Body Problem</span> by Liu Cixin. The book’s themes of
+                    <span class="text-body-medium-semibold text-white">human resilience, innovation, and the power of collective effort</span>
+                    reignited my determination.
+                </p>
+                <p class="mt-4 text-body-medium-semibold text-white">What if space travel didn’t have to be reserved for the elite?</p>
+                <p class="text-body-medium text-white-800">That moment of inspiration led to <span class="text-body-medium-semibold text-white">SharedStars.</span></p>
+                <p class="mt-4 text-body-medium-semibold text-white">This isn’t just a training platform—it’s a movement.</p>
+                <p class="text-body-medium text-white-800">
+                    We’re dedicated to <span class="text-body-medium-semibold text-white">making space travel a reality</span> by providing the education, community,
+                    and opportunities needed for <span class="text-body-medium-semibold text-white">anyone</span> to prepare for the next frontier.
+                </p>
+                <img src="/icons/MarkSignature.png" alt="Background" class="w-48 mt-5 mb-2">
+                <p class="text-body-base text-white-800">Founder, SharedStars</p>
+            </div>
+
+            <!-- Right Image Section -->
+            <div class="relative w-1/2">
+                <div class="w-full max-w-md mx-auto rounded-lg overflow-hidden relative">
+                    <!-- Background Image -->
+                    <img src="/path-to-background.jpg" alt="Background" class="absolute inset-0 w-full h-full object-cover">
+                    <!-- Foreground Person Image -->
+                    <img src="/images/mark1.jpeg" alt="Person" class="relative w-full h-1/2">
+                </div>
+            </div>
     </section>
 
     <!-- Progress Section -->
@@ -214,7 +333,7 @@
               <div class=" w-[160px] h-[90px] rounded-lg p-1 bg-black border-2 border-white-200 overflow-hidden">
                 <!-- Video Element -->
                   <video id="videoPlayer" class="rounded-md">
-                    <source src="/videos/space1.mp4" type="video/mp4">
+                    <source src="/videos//space1.mp4" type="video/mp4">
                       Your browser does not support the video tag.
                   </video>
               </div>
@@ -307,159 +426,7 @@
 
 
     <!-- Core value propositions -->
-    <section class="min-h-screen px-[120px] pt-[100px] pb-[120px]">
-        <div class="bg-black text-white">
-          <span
-            class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-            Core value
-          </span>
-
-          <div class="flex justify-between">
-            <div class="w-1/2">
-              <h2 class="text-heading2 text-white font-aeonik mt-5">Core value <br>propositions</h2>
-              <p class="text-white-800 mt-5">
-                Unique benefits: real-time tracking, AI training, guaranteed space path.
-              </p>
-            </div>
-          </div>
-
-          <div>
-
-          </div>
-          <div class="flex mx-auto gap-4 mt-14">
-            <div class="p-6 flex flex-col border rounded-2xl">
-              <div class="flex gap-4">
-                <span class="text-white-400 text-body-medium-semibold">01.</span>
-
-                <div class="text-start">
-                  <h1 class="text-body-large-semibold text-white text-white-1000">Space Isn't Waiting</h1>
-                  <p class="mt-4 text-body-small text-white-800">
-                    Every day without training is another seat claimed. Every hour you wait is
-                    another opportunity lost. The space revolution needs pioneers—not
-                    dreamers who waited too long.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Seat Counter -->
-              <div class="mt-10 self-center w-1/4 relative">
-                <div class="relative flex flex-col p-4 bg-black rounded-lg gap-6 text-center justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                  
-                  <!-- Fading Diagonal Line -->
-                  <span class="absolute top-4 right-0 w-[50px] h-[8px] bg-white rotate-45 blur-[16px] "></span>
-                  
-                  <span class="text-heading2 py-2 px-2">243</span> 
-                  <span class="relative h-[2px] w-full bg-gradient-to-r from-transparent via-[#0060FF] to-transparent"></span>
-                  <p class="text-body-base text-white">Seats Left</p>
-              
-                </div>
-              </div>
-
-
-              <!-- Warning Message -->
-              <div class="mt-6 flex justify-center">
-                <div class="rounded-lg relative" style=" border: 2px solid rgba(210, 103, 219, 0.8)">
-                  <div class="px-6 py-3 rounded-lg text-center"
-                    style="background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1), rgba(112, 55, 117, 0.6),rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));">
-                    <p class="text-white text-body-small-semibold">
-                      Seats are filling up fast! Secure your space now.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- CTA Button -->
-              <button class="relative w-1/2 mt-6 self-center bg-brand-700 text-white text-body-2xsmall-semibold px-5 py-3 rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4)]">
-                Join the Space Revolution
-              </button>
-            </div>
-
-            <div class="flex flex-col gap-4">
-              <div class="flex bg-black text-white p-6 rounded-2xl border">
-                <!-- Left Content -->
-                <div class="flex gap-4">
-                  <div class="">
-                    <span class="text-white-400 text-body-medium-semibold">02.</span>
-                  </div>
-
-                  <div class="text-start">
-                    <h1 class="text-body-large-semibold text-white text-white-1000">Training Like Never Before</h1>
-                    <p class="mt-4 text-body-small text-white-800">
-                      Our AI-powered space coach adapts in real- <br> time, ensuring you master the skills you need
-                      for
-                      space.
-                    </p>
-                  </div>
-                </div>
-
-                <!-- Right Image -->
-                <div class="flex items-center justify-center">
-                  <img src="/images/robot.png" alt="AI Training" class="w-40 h-full object-cover">
-                </div>
-              </div>
-
-              <div class="flex flex-col bg-black text-white p-6 rounded-2xl border">
-                <!-- Left Content -->
-                <div class="flex gap-x-4">
-                <span class="text-white-400 text-body-medium-semibold">03.</span>
-                <div class="text-start">
-                  <h1 class="text-body-large-semibold text-white text-white-1000">Your Countdown Has Started</h1>
-                  <p class="mt-4 text-body-small text-white-800">
-                      Unlike traditional astronaut programs with a 0.1% acceptance rate, SharedStars
-                      guarantees a space seat, if you’re willing to earn it. Every certification, credit, and
-                      milestone gets you closer.
-                  </p>
-                </div>
-                </div>
-                <div class="grid grid-cols-6 gap-3 text-center mt-6">
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-aeonik" data-countdown="years">13</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class="text-body-base">Years</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="months">08</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>         
-                    <p class=" text-[16px]">Months</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="days">17</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Days</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="hours">06</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Hours</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="minutes">23</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Minutes</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="seconds">45</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Seconds</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    </section>
+   
 
     <!-- Social proof & Technolody innovation -->
     <section class="flex items-center w-full px-[120px] pt-[104px] pb-[120px]">
