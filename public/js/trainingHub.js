@@ -8,9 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Find and attach listeners to all training buttons
     initializeTrainingButtons();
     
-    // ===== STELLA AI Integration =====
-    // Initialize the AI assistant if it exists
-    initializeStellaAI();
     
     // ===== Performance Tracking =====
     // Only run if we're on a post-training page
@@ -79,65 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.warn(`Button not found: ${selector}`);
     }
   }
-  
-  // Initialize STELLA AI assistant integration
-  function initializeStellaAI() {
-    const stellaFeedback = document.getElementById('stella-feedback');
-    const stellaInput = document.getElementById('stella-question');
-    const stellaButton = document.getElementById('send-to-stella');
-    
-    if (stellaFeedback && stellaInput && stellaButton) {
-      console.log('STELLA AI interface detected');
-      
-      stellaButton.addEventListener('click', () => {
-        const question = stellaInput.value.trim();
-        if (question) {
-          askStella(question);
-          stellaInput.value = '';
-        }
-      });
-      
-      stellaInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          const question = stellaInput.value.trim();
-          if (question) {
-            askStella(question);
-            stellaInput.value = '';
-          }
-        }
-      });
-    }
-  }
-  
-  // Ask a question to STELLA AI
-  async function askStella(question) {
-    const feedback = document.getElementById('stella-feedback');
-    feedback.innerHTML = "Thinking...";
-    
-    try {
-      const response = await fetch('/api/stella/guidance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId, question })
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        stellaFeedback.innerHTML = `<p>${data.guidance.message}</p>`;
-        data.guidance.actionItems.forEach(item => {
-          stellaFeedback.innerHTML += `<li>${item}</li>`;
-        });
-      } else {
-        stellaFeedback.innerHTML = `<p>Oops! ${data.error || 'Something went wrong.'}</p>`;
-      }
-      
-    } catch (error) {
-      console.error('Error calling STELLA:', error);
-      stellaFeedback.innerHTML = '<p>STELLA is currently offline. Try again soon.</p>';
-    }
-  }
-  
+
   // Track user performance for completed training
   function trackPerformance() {
     const moduleId = document.body.getAttribute('data-module-id') || 'physical';

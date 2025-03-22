@@ -357,521 +357,137 @@
             border: 1px solid rgba(0, 102, 255, 0.3);
         }
         
-        /* Advanced STELLA Interface Styling */
-.stella-interface {
-    position: fixed;
-    bottom: 100px;
-    right: 30px;
-    width: 380px;
-    height: 500px;
-    background-color: rgba(10, 15, 25, 0.85);
-    border-radius: 16px;
-    overflow: hidden;
-    display: none;
-    z-index: 1001;
-    box-shadow: 0 10px 40px rgba(0, 80, 255, 0.4), 
-                0 0 100px rgba(0, 30, 60, 0.2);
-    border: 1px solid rgba(30, 100, 255, 0.3);
-    backdrop-filter: blur(10px);
-    transform: translateY(20px);
-    opacity: 0;
-    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), 
-                opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.stella-interface.active {
-    display: flex;
-    flex-direction: column;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Sci-Fi Header */
-.stella-header {
-    background: linear-gradient(90deg, rgba(0, 30, 60, 0.8) 0%, rgba(0, 90, 180, 0.8) 100%);
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Star Trek LCARS-inspired header elements */
-.stella-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 30% 50%, rgba(60, 140, 255, 0.2) 0%, transparent 70%),
-        radial-gradient(circle at 70% 50%, rgba(30, 90, 255, 0.2) 0%, transparent 70%);
-    opacity: 0.7;
-}
-
-.stella-header::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 100%;
-    background: linear-gradient(90deg, rgba(60, 180, 255, 0.7) 0%, transparent 100%);
-    animation: scanline 4s linear infinite;
-}
-
-@keyframes scanline {
-    0% { left: -20px; opacity: 0; }
-    5% { opacity: 0.5; }
-    30% { opacity: 0.5; }
-    35% { opacity: 0; }
-    100% { left: 100%; opacity: 0; }
-}
-
-.stella-header h3 {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-    z-index: 1;
-}
-
-.stella-header h3::before {
-    content: '';
-    display: block;
-    width: 10px;
-    height: 10px;
-    background-color: #4DFF91;
-    border-radius: 50%;
-    box-shadow: 0 0 8px #4DFF91;
-    animation: pulse-glow 2s infinite;
-}
-
-@keyframes pulse-glow {
-    0% { box-shadow: 0 0 8px #4DFF91; opacity: 1; }
-    50% { box-shadow: 0 0 15px #4DFF91; opacity: 0.8; }
-    100% { box-shadow: 0 0 8px #4DFF91; opacity: 1; }
-}
-
-.header-buttons {
-    display: flex;
-    gap: 10px;
-    position: relative;
-    z-index: 1;
-}
-
-.header-button {
-    background: none;
-    border: none;
-    color: white;
-    opacity: 0.7;
-    cursor: pointer;
-    transition: opacity 0.3s;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.header-button:hover {
-    opacity: 1;
-}
-
-.header-button svg {
-    width: 16px;
-    height: 16px;
-}
-
-/* Chat messages area with sci-fi styling */
-.chat-container {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    position: relative;
-    background-color: rgba(10, 15, 25, 0.5);
-}
-
-.chat-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 30% 30%, rgba(30, 100, 255, 0.03) 0%, transparent 70%),
-        radial-gradient(circle at 70% 70%, rgba(60, 180, 255, 0.03) 0%, transparent 70%);
-    pointer-events: none;
-}
-
-/* Grid overlay - TRON/Star Wars inspired */
-.chat-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        linear-gradient(0deg, rgba(30, 100, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(30, 100, 255, 0.03) 1px, transparent 1px);
-    background-size: 20px 20px;
-    pointer-events: none;
-}
-
-/* STELLA Avatar/Character Container */
-.stella-avatar-container {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 100px;
-    height: 100px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s;
-    z-index: 2;
-}
-
-.stella-avatar-container.visible {
-    opacity: 1;
-}
-
-.stella-avatar {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.stella-hologram {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(30, 120, 255, 0.3) 0%, transparent 70%);
-    animation: hologram-pulse 3s infinite;
-}
-
-@keyframes hologram-pulse {
-    0% { transform: scale(1); opacity: 0.7; }
-    50% { transform: scale(1.1); opacity: 0.5; }
-    100% { transform: scale(1); opacity: 0.7; }
-}
-
-.stella-hologram::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('/images/SharedStars.svg') center/50% no-repeat;
-    filter: brightness(1.5) contrast(1.2) drop-shadow(0 0 5px rgba(60, 180, 255, 0.8));
-    animation: rotate 10s linear infinite;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.stella-hologram::after {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(100, 200, 255, 0.1) 0%, transparent 70%);
-    animation: pulse 2s infinite alternate;
-}
-
-@keyframes pulse {
-    from { transform: scale(0.95); opacity: 0.7; }
-    to { transform: scale(1.05); opacity: 0.9; }
-}
-
-/* Message styles with sci-fi theming */
-.message {
-    display: flex;
-    flex-direction: column;
-    max-width: 85%;
-    position: relative;
-    z-index: 1;
-}
-
-.user-message {
-    align-self: flex-end;
-    animation: slideInRight 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.stella-message {
-    align-self: flex-start;
-    animation: slideInLeft 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-@keyframes slideInRight {
-    from { transform: translateX(20px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slideInLeft {
-    from { transform: translateX(-20px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-.message-bubble {
-    padding: 14px 16px;
-    border-radius: 14px;
-    position: relative;
-    overflow: hidden;
-}
-
-.user-message .message-bubble {
-    background-color: rgba(30, 90, 255, 0.2);
-    border: 1px solid rgba(30, 90, 255, 0.3);
-    border-bottom-right-radius: 4px;
-}
-
-.stella-message .message-bubble {
-    background-color: rgba(30, 40, 60, 0.4);
-    border: 1px solid rgba(60, 130, 240, 0.3);
-    border-bottom-left-radius: 4px;
-}
-
-/* Advanced effects for STELLA messages */
-.stella-message .message-bubble::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(60, 180, 255, 0.5), transparent);
-    animation: scan 2s linear infinite;
-}
-
-@keyframes scan {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-.message-content {
-    position: relative;
-    z-index: 1;
-    color: rgba(255, 255, 255, 0.9);
-    line-height: 1.5;
-    word-wrap: break-word;
-}
-
-.user-message .message-content {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.stella-message .message-content {
-    color: rgba(220, 230, 255, 0.9);
-}
-
-.message-time {
-    font-size: 11px;
-    margin-top: 4px;
-    opacity: 0.6;
-    align-self: flex-end;
-}
-
-.user-message .message-time {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.stella-message .message-time {
-    color: rgba(150, 200, 255, 0.6);
-}
-
-/* Typing indicator with sci-fi animation */
-.typing-indicator {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    background-color: rgba(30, 40, 60, 0.4);
-    border: 1px solid rgba(60, 130, 240, 0.3);
-    border-radius: 14px;
-    border-bottom-left-radius: 4px;
-    width: fit-content;
-    position: relative;
-}
-
-.typing-indicator span {
-    width: 8px;
-    height: 8px;
-    margin: 0 2px;
-    background-color: rgba(150, 200, 255, 0.6);
-    border-radius: 50%;
-    display: inline-block;
-    animation: blink 1.5s infinite;
-}
-
-.typing-indicator span:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.typing-indicator span:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-@keyframes blink {
-    0% { transform: scale(1); opacity: 0.6; }
-    20% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 0.6; }
-}
-
-.typing-indicator::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 30% 50%, rgba(100, 200, 255, 0.1) 0%, transparent 70%);
-    border-radius: 14px;
-    border-bottom-left-radius: 4px;
-}
-
-.typing-indicator::after {
-    content: 'STELLA is analyzing';
-    position: absolute;
-    left: 50px;
-    color: rgba(150, 200, 255, 0.8);
-    font-size: 12px;
-}
-
-/* Chat input area with sci-fi styling */
-.chat-input-container {
-    padding: 15px;
-    background-color: rgba(15, 25, 40, 0.7);
-    border-top: 1px solid rgba(30, 100, 255, 0.3);
-    position: relative;
-    z-index: 1;
-}
-
-.chat-input-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(60, 180, 255, 0.7), transparent);
-}
-
-.chat-input-wrapper {
-    display: flex;
-    align-items: center;
-    position: relative;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: rgba(20, 30, 50, 0.7);
-    border: 1px solid rgba(60, 130, 240, 0.3);
-    transition: border-color 0.3s;
-}
-
-.chat-input-wrapper:focus-within {
-    border-color: rgba(60, 180, 255, 0.6);
-    box-shadow: 0 0 0 2px rgba(60, 180, 255, 0.2);
-}
-
-.chat-input {
-    flex: 1;
-    padding: 12px 15px;
-    background: transparent;
-    border: none;
-    color: white;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-}
-
-.chat-input:focus {
-    outline: none;
-}
-
-.chat-input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
-}
-
-.send-button {
-    width: 40px;
-    height: 40px;
-    background-color: #0066FF;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.send-button:hover {
-    background-color: #005AE0;
-}
-
-.send-button svg {
-    width: 18px;
-    height: 18px;
-    fill: white;
-}
-
-/* Three Body Problem inspired particle background */
-.particle-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 0;
-}
-
-.particle {
-    position: absolute;
-    background-color: rgba(100, 200, 255, 0.5);
-    border-radius: 50%;
-    width: 2px;
-    height: 2px;
-    opacity: 0.3;
-}
-
-/* Responsive styles */
-@media (max-width: 480px) {
-    .stella-interface {
-        width: 90%;
-        right: 5%;
-        left: 5%;
-        height: 70vh;
-        bottom: 80px;
-    }
-}
-.stella-interface {
-    display: none;
-}
-
-.stella-interface.active {
-    display: flex;
-}
+        /* STELLA Chat Styles */
+        .stella-chat {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 450px;
+            background-color: rgba(26, 33, 51, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            display: none;
+            border: 1px solid rgba(74, 125, 233, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .stella-header {
+            padding: 15px;
+            background: linear-gradient(to right, #0066FF, #4a7de9);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stella-header h3 {
+            margin: 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stella-header h3::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 8px;
+            background-color: #4DFF91;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        #close-stella {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: rgba(12, 16, 23, 0.5);
+        }
+        
+        .stella-message {
+            background-color: rgba(0, 102, 255, 0.2);
+            padding: 12px 15px;
+            border-radius: 12px 12px 12px 0;
+            align-self: flex-start;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .user-message {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            border-radius: 12px 12px 0 12px;
+            align-self: flex-end;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message-content {
+            color: white;
+            line-height: 1.5;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        #stella-input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px 0 0 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        #stella-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        #send-to-stella {
+            padding: 12px 15px;
+            background-color: #0066FF;
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #send-to-stella:hover {
+            background-color: #0055CC;
+        }
 
         #signup-success {
             display: none;
@@ -985,18 +601,18 @@
 </head>
 <body>
     <div class="video-background">
-        <video autoplay loop muted playsinline>
-            <source src="/videos/academy10.mp4" type="video/mp4">
-            <!-- Fallback for older browsers -->
-            Your browser does not support the video tag.
-        </video>
+        <!-- Background Video -->
+    <video class="absolute inset-0 w-full h-full object-cover opacity-70" autoplay muted loop playsinline>
+        <source src="/videos/training1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
         <div class="overlay"></div>
     </div>
-    
+
     <header>
         <div class="container">
             <div class="header-content">
-                <img src="/images/SharedStars.svg" alt="SharedStars Logo" class="logo">
+                <img src="/public/icons/Logo (1).png" alt="SharedStars Logo" class="logo">
                 <button class="cta-button" id="header-waitlist-btn">Join Waitlist</button>
             </div>
         </div>
@@ -1100,66 +716,12 @@
     </div>
     
     
-    <!-- STELLA Chat Interface -->
-<div id="stella-interface" class="stella-interface">
-    <div class="stella-header">
-        <h3>STELLA AI Space Coach</h3>
-        <div class="header-buttons">
-            <button class="header-button" id="minimize-stella" title="Minimize">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-            </button>
-            <button class="header-button" id="close-stella" title="Close">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
+    <div class="stella-conversation"></div>
+    <div class="flex mt-4">
+      <input id="stella-question" placeholder="Ask STELLA..." class="input-class">
+      <button id="send-to-stella" class="button-class">Send</button>
     </div>
     
-    <div class="chat-container" id="stella-messages">
-        <!-- Initial STELLA message -->
-        <div class="message stella-message">
-            <div class="message-bubble">
-                <div class="message-content">
-                    Hello! I'm STELLA, your AI Space Coach. How can I assist with your space training journey today?
-                </div>
-            </div>
-            <div class="message-time">Just now</div>
-        </div>
-        
-        <!-- Typing indicator (hidden initially) -->
-        <div class="typing-indicator" id="stella-typing" style="display: none;">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-    
-    <!-- STELLA Avatar/Character -->
-    <div class="stella-avatar-container" id="stella-avatar">
-        <div class="stella-avatar">
-            <div class="stella-hologram"></div>
-        </div>
-    </div>
-    
-    <!-- Particle background for Three Body Problem inspired effects -->
-    <div class="particle-background" id="particle-bg"></div>
-    
-    <div class="chat-input-container">
-        <div class="chat-input-wrapper">
-            <input type="text" class="chat-input" id="stella-input" placeholder="Ask STELLA..." autocomplete="off">
-            <button class="send-button" id="send-to-stella">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-            </button>
-        </div>
-    </div>
-</div>
     
      <!-- Footer -->
 <footer style="background-color: rgba(13, 18, 30, 0.6); padding: 60px 20px; text-align: center;">
@@ -1222,99 +784,77 @@
         <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
     </a>
 </div>
-      </footer>
+  </footer>
     </main>
     <!-- Include stella-core.js -->
 <!-- Include stella-core.js -->
+<script src="/js/stella-integration.js"></script>
 <script src="/js/stella-core.js"></script>
 <script src="/js/countdown.js"></script>
-<script src="/js/soon.js"></script>
+<script src="/js/languageManager.js" defer></script>
+<script src="/js/progressAssessment.js"></script>
+<script src="/js/progressChart.js"></script>
+<script src="/js/visualizations/ProgressTracker.js"></script>  
+
+<!-- Minimal, Reliable STELLA Integration -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const stellaButton = document.getElementById('stellaButton');
-        const chatContainer = document.getElementById('stella-interface');
-        const closeBtn = document.getElementById('close-stella');
-        const minimizeBtn = document.getElementById('minimize-stella');
-        const sendBtn = document.getElementById('send-to-stella');
-        const inputField = document.getElementById('stella-input');
-        const messagesContainer = document.getElementById('stella-messages');
-        const typingIndicator = document.getElementById('stella-typing');
-
-        // Open chat
-        stellaButton.addEventListener('click', () => {
-            chatContainer.style.display = 'block';
-        });
-
-        // Close chat
-        closeBtn.addEventListener('click', () => {
-            chatContainer.style.display = 'none';
-        });
-
-        // Minimize chat
-        minimizeBtn.addEventListener('click', () => {
-            if (messagesContainer.style.display === 'none') {
-                messagesContainer.style.display = 'block';
-            } else {
-                messagesContainer.style.display = 'none';
-            }
-        });
-
-        // Send message
-        const sendMessage = () => {
-            const question = inputField.value.trim();
-            if (!question) return;
-
-            const userMessageHTML = `
-                <div class="message user-message">
-                    <div class="message-bubble">${question}</div>
-                    <div class="message-time">Just now</div>
-                </div>
-            `;
-            messagesContainer.insertAdjacentHTML('beforeend', userMessageHTML);
-            inputField.value = '';
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            typingIndicator.style.display = 'flex';
-
-            fetch('/api/stella/guidance', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: 'guest', question: question })
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('stella-question');
+      const button = document.getElementById('send-to-stella');
+      const conversation = document.querySelector('.stella-conversation');
+    
+      async function sendQuestion() {
+        const question = input.value.trim();
+        if (!question) return;
+    
+        // Show user's question immediately
+        conversation.innerHTML += `
+          <div style="text-align:right; margin-bottom:10px;">
+            <strong>You:</strong> ${question}
+          </div>
+        `;
+    
+        input.value = '';
+    
+        try {
+          const response = await fetch('/api/stella/guidance', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userId: localStorage.getItem('userId') || '65f8d9a1bfa7c5a1a3b1c4d2',
+                question
             })
-            .then(res => res.json())
-            .then(data => {
-                typingIndicator.style.display = 'none';
-
-                const response = data.guidance.message || 'Sorry, I am unable to answer that right now.';
-                const stellaMessageHTML = `
-                    <div class="message stella-message">
-                        <div class="message-bubble">${response}</div>
-                        <div class="message-time">Just now</div>
-                    </div>
-                `;
-                messagesContainer.insertAdjacentHTML('beforeend', stellaMessageHTML);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            })
-            .catch(err => {
-                console.error(err);
-                typingIndicator.style.display = 'none';
-                const errorMessageHTML = `
-                    <div class="message stella-message">
-                        <div class="message-bubble">Oops! There was a problem connecting. Please try again later.</div>
-                        <div class="message-time">Just now</div>
-                    </div>
-                `;
-                messagesContainer.insertAdjacentHTML('beforeend', errorMessageHTML);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            });
-        };
-
-        sendBtn.addEventListener('click', sendMessage);
-        inputField.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
+          });
+    
+          const data = await response.json();
+          console.log('✅ API Response:', data);
+    
+          // Show STELLA's response clearly
+          conversation.innerHTML += `
+            <div style="margin-bottom:10px;">
+              <strong>STELLA:</strong> ${data.guidance.message}
+              <ul>${data.guidance.actionItems.map(item => `<li>${item}</li>`).join('')}</ul>
+            </div>
+          `;
+        } catch (error) {
+          console.error('❌ API call failed:', error);
+          conversation.innerHTML += `
+            <div style="margin-bottom:10px; color:red;">
+              <strong>Error:</strong> Couldn't connect to STELLA.
+            </div>
+          `;
+        }
+    
+        // Scroll conversation to bottom
+        conversation.scrollTop = conversation.scrollHeight;
+      }
+    
+      button.addEventListener('click', sendQuestion);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendQuestion();
+      });
     });
-</script>
-
+    </script>
+    
 </body>
 </html>

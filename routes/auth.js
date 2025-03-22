@@ -72,7 +72,6 @@ async function validatePassword(enteredPassword, storedHashedPassword) {
     return await bcrypt.compare(enteredPassword, storedHashedPassword);
 }
 
-// Inside your login route
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -88,21 +87,28 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: "Authentication failed" });
         }
 
-        // Generate JWT Token
+        // Generate JWT Token (good!)
         const token = jwt.sign(
-            { id: user._id, email: user.email },
+            { userId: user._id.toString(), email: user.email },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '7d' }
         );
 
-        res.json({ success: true, token });
+        // ✅ Clearly set cookie (establishes session)
+        res.cookie('token', token, {
+            httpOnly: true, // Important for security
+            secure: false, // set to true in production with HTTPS
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
+        // ✅ Redirect user to mission-control clearly after login
+        res.json({ success: true, redirectUrl: '/mission-control' });
 
     } catch (error) {
         console.error("❌ Login Error:", error);
         res.status(500).json({ error: "Server error" });
     }
 });
-
 
 // Register Route
 router.post("/register", async (req, res) => {

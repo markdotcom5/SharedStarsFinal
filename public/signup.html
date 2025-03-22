@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="StelTrek Academy - Begin Your Journey to Space" />
     <title data-i18n="subscribe.pageTitle">Subscribe - SharedStars Academy</title>
-    
+    Content-Security-Policy: script-src 'self' 'unsafe-inline' https://js.stripe.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+
     <!-- Tailwind CSS & DaisyUI -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.6.0/dist/full.css" rel="stylesheet" />
@@ -52,7 +53,10 @@
     </script>
     
     <!-- Language Selection Script -->
-    <script src="/js/languageSelection.js" defer></script>
+    <script src="/js/translations.js"></script>
+    <script src="/js/languageManager.js"></script>
+    
+    <script type="module" src="trainingHandler.js"></script>
   </head>
   <body class="min-h-screen bg-base-200 flex flex-col">
     <!-- NAVBAR -->
@@ -410,10 +414,10 @@
       }
     </script>
     
-    <script src="/js/main.js"></script> <!-- Core functionality -->
-    <script src="/js/frontend.js"></script> <!-- UI functionality -->
-    <script src="/js/trainingHandler.js"></script> <!-- Training functionality -->
-    <script src="/js/stella-integration.js"></script> <!-- Auth functionality -->
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/frontend.js"></script>
+    <script type="module" src="/js/trainingHandler.js"></script>
+    <script type="module" src="/js/stella-integration.js"></script>    
 
     
     <!-- Legacy Scripts (Deferred) -->

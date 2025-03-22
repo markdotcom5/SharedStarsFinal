@@ -879,7 +879,7 @@
 <script src="/js/stella-core.js"></script>
 <script src="/js/stella-integration.js"></script>
 <script src="/js/countdown.js"></script>
-<script src="/js/languageSelection.js"></script>
+<script src="/js/languageManager.js" defer></script>
 <!-- Add these before your closing body tag if not already present -->
 <script src="/js/progressAssessment.js"></script>
 <script src="/js/progressChart.js"></script>
@@ -903,6 +903,41 @@
         console.error('STELLA API Error:', error);
       });
   });
+  // Add this to your mission-control.html or any protected page
+document.addEventListener('DOMContentLoaded', function() {
+  const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+  
+  if (!token) {
+    // No token found, redirect to login
+    window.location.href = '/login1.html?reason=unauthorized';
+    return;
+  }
+  
+  // Optional: Verify token with backend
+  fetch('/api/auth/verify-token', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Invalid token');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('User authenticated:', data);
+    // Continue loading the protected page
+  })
+  .catch(error => {
+    console.error('Authentication error:', error);
+    // Clear invalid token
+    localStorage.removeItem('authToken');
+    sessionStorage.removeItem('authToken');
+    // Redirect to login
+    window.location.href = '/login1.html?reason=session-expired';
+  });
+});
 </script>
 
 <!-- STELLA AI Integration for Mission Control -->
