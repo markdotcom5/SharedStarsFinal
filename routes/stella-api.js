@@ -21,4 +21,9 @@ router.post('/connect', (req, res) => {
   });
 });
 
+// 🚫 Removed simplified guidance route to prevent conflicts
+// router.post('/guidance', async (req, res) => { ... });
+
+module.exports = router;
+
 module.exports = router;

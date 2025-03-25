@@ -46,7 +46,7 @@ const StellaConversationSchema = new Schema({
         // Enhanced with learning-specific fields
         questionType: {
             type: String,
-            enum: ['informational', 'help', 'guidance', 'feedback', 'technical', 'assessment', 'other'],
+            enum: ['informational', 'help', 'guidance', 'feedback', 'technical', 'assessment', 'other', 'critical'],
             default: 'other'
         },
         keyEntities: [String],  // Key entities mentioned in the question (e.g., "core balance", "mission 2")

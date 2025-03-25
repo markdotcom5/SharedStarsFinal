@@ -16,6 +16,7 @@
     "watch-css": "postcss public/css/styles.css -o public/css/tailwind.css --watch"
   },
   "dependencies": {
+    "@langchain/openai": "^0.4.7",
     "abbrev": "^3.0.0",
     "aframe": "^1.7.0",
     "axios": "^1.7.9",
@@ -46,6 +47,7 @@
     "ipaddr.js": "^2.2.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.19",
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",
     "micromatch": "^4.0.8",
