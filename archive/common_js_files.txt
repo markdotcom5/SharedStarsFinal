@@ -14137,7 +14137,7 @@ rten-rgb.js
 ./services/AIOrchestrator.js
 ./services/UnifiedEVAAIservice.js
 ./services/ProgressTracker.js
-./services/aiGuidance.js
+./services/AIGuidanceSystem
 ./services/AIIntegrationServices.js
 ./services/AdvancedVRFeatures.js
 ./services/CommunityHubServices.js

@@ -6,15 +6,10 @@
 const express = require('express');
 const router = express.Router();
 const { OpenAI } = require('openai');
-const mongoose = require('mongoose');
+const StellaConversation = require('../../models/StellaConversation'); // Adjust path as needed
+const UserProgress = require('../../models/UserProgress'); // Adjust path as needed
 
-const UserProgress = require('../../models/UserProgress');
-const StellaConversation = require('../../models/StellaConversation');
-const { safeGetUserProgress } = require('../../utils/progressUtils');
-const trainingSystem = require('../../services/TrainingLearningSystem');
-const StellaKnowledge = require('../../models/StellaKnowledge');
-
-// Enhanced OpenAI system prompt with detailed context
+// System prompt definition
 const systemPrompt = `You are STELLA (Space Training Enhancement through Learning & Leadership Adaptation), 
 an advanced AI training assistant for astronauts and space professionals at SharedStars. 
 
@@ -52,6 +47,7 @@ try {
 } catch (error) {
   console.error('❌ OpenAI Initialization Error in STELLA Routes:', error);
 }
+
 // Performance optimization with batch processing
 const pendingConversations = [];
 let processingBatch = false;
@@ -74,6 +70,7 @@ async function processPendingConversations() {
     }
   }
 }
+
 // Performance optimization: Add a simple in-memory cache
 const responseCache = new Map();
 const CACHE_TTL = 3600000; // 1 hour in milliseconds
@@ -113,6 +110,7 @@ const applyRateLimit = (req, res, next) => {
   userLimit.count++;
   next();
 };
+
 async function generateEmbedding(text) {
   const response = await openai.embeddings.create({
     input: text,
@@ -120,7 +118,10 @@ async function generateEmbedding(text) {
   });
   return response.data[0].embedding;
 }
-// Add at top of file with other imports
+
+// Temporarily comment out this section if you don't have langchain installed
+// Uncomment after installing required packages
+/*
 const { OpenAIEmbeddings } = require('@langchain/openai');
 const embeddings = new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY });
 
@@ -151,6 +152,8 @@ async function getSemanticSimilarity(questionText, storedQuestionText) {
     return 0;
   }
 }
+*/
+
 // Context management
 const MAX_CONVERSATION_TOKENS = 2000;
 const MAX_USER_CONTEXT_TOKENS = 1000;
@@ -228,7 +231,7 @@ async function analyzeQuestion(question) {
   // Enhanced critical question detection
   if (lowerQuestion.includes('seat on a space flight') || 
       lowerQuestion.includes('secure me a seat') ||
-      lowerQuestion.includes('guarantee') && lowerQuestion.includes('space') ||
+      (lowerQuestion.includes('guarantee') && lowerQuestion.includes('space')) ||
       lowerQuestion.includes('flight opportunity') ||
       lowerQuestion.includes('actual flight') ||
       lowerQuestion.includes('select me for')) {
@@ -278,6 +281,84 @@ async function analyzeQuestion(question) {
   };
 }
 
+// Define trainingSystem if needed or set to null
+const trainingSystem = null;
+
+/**
+ * Generate direct OpenAI response for critical or complex questions
+ */
+async function getOpenAIResponse(question, userId, userProfile = null) {
+  if (!openai) {
+    throw new Error("OpenAI service is not available");
+  }
+
+  const messages = [{ role: 'system', content: systemPrompt }];
+
+  // Add user context if available
+  if (userProfile) {
+    const contextMessage = `User Information:
+    - Progress: ${JSON.stringify(userProfile.progress || {})}
+    - Recent conversations: ${userProfile.recentConversations?.length || 0} recent interactions`;
+    
+    messages.push({ role: 'system', content: contextMessage });
+  }
+
+  messages.push({ role: 'user', content: question });
+
+  const openaiRes = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    messages: messages,
+    temperature: 0.7,
+    max_tokens: 500,
+  });
+
+  return openaiRes.choices[0].message.content;
+}
+
+/**
+ * Generate User Profile
+ */
+async function generateUserProfile(userId) {
+  try {
+    const progress = await safeGetUserProgress(userId);
+    const recentConversations = await StellaConversation.find({ userId })
+      .sort({ timestamp: -1 }).limit(5).lean();
+
+    return {
+      progress,
+      recentConversations
+    };
+  } catch (error) {
+    console.error('Error generating user profile:', error);
+    return { progress: null, recentConversations: [] };
+  }
+}
+
+/**
+ * Safe getter for user progress
+ */
+async function safeGetUserProgress(userId) {
+  try {
+    return await UserProgress.findOne({ userId }).lean() || {};
+  } catch (error) {
+    console.error('Error getting user progress:', error);
+    return {};
+  }
+}
+
+// Simple test endpoint
+router.get('/test', (req, res) => {
+  res.json({ message: "STELLA API is working" });
+});
+
+// Initialize STELLA endpoint
+router.get('/initialize', (req, res) => {
+  res.json({
+    success: true,
+    message: "STELLA initialized successfully",
+    version: "1.0"
+  });
+});
 /**
  * Improved similarity check using more robust matching
  */

@@ -1,5 +1,5 @@
 const AIAssistant = require('../services/aiAssistant');
-const aiGuidance = require('../services/aiGuidance');
+const aiGuidance = require('../services/AIGuidanceSystem');
 const aiServices = require('../services/CoreAIServices');
 const cache = require('../utils/cache');
 const logger = require('../utils/logger');

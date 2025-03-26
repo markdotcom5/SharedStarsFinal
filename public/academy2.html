@@ -433,21 +433,28 @@
       }
     }
   </style>
+ <title>SharedStars - Train for Space with S.T.E.L.L.A. AI</title>
+    
+ <!-- JavaScript Files (Defer & Modules for Performance) -->
+ <script src="/js/languageManager.js" defer></script>
+ <script src="/js/countdown.js"></script>
+ <script type="module" src="/js/HomepageHandler.js"></script>
 </head>
+
 <body class="bg-black text-white min-h-screen font-inter">
-    <!-- HEADER -->
-    <header class="fixed top-0 w-full bg-black/90 backdrop-blur-lg z-50 shadow-lg">
-      <nav class="container mx-auto flex justify-between items-center px-4 py-3">
-        <div class="flex-shrink-0">
-          <img src="./images/SSLOGO.png" alt="SharedStars" class="h-12" style="margin-left: 0;">
-        </div>
-        <ul class="flex gap-6">
-          <li><a href="/homepage.html" class="hover:text-blue-400">Home</a></li>
-          <li><a href="/academy.html" class="text-blue-400 font-bold">Academy</a></li>
-          <li><a href="/about.html" class="hover:text-blue-400">About</a></li>
-          <li><a href="/leaderboard.html" class="hover:text-blue-400">Leaderboard</a></li>
-          <li><a href="/subscribe.html" class="hover:text-blue-400">Subscribe</a></li>
-        </ul>
+<!-- HEADER with Proper Language Dropdown Implementation -->
+<header class="fixed top-0 w-full bg-black/90 backdrop-blur-lg z-50 shadow-lg">
+ <nav class="container mx-auto flex justify-between items-center px-4 py-3">
+   <div class="flex-shrink-0">
+     <img src="./images/SharedStars.svg" alt="SharedStars" class="h-12" style="margin-left: 0;">
+   </div>
+   <ul class="flex gap-6">
+     <li><a href="/" class="text-blue-400 font-bold" data-i18n="nav.home">Home</a></li>
+     <li><a href="/academy2.html" class="hover:text-blue-400" data-i18n="academy">Academy</a></li>
+     <li><a href="/about.html" class="hover:text-blue-400" data-i18n="about">About</a></li>
+     <li><a href="/leaderboard.html" class="hover:text-blue-400" data-i18n="leaderboard">Leaderboard</a></li>
+     <li><a href="/subscribe.html" class="hover:text-blue-400" data-i18n="subscribe">Subscribe</a></li>
+   </ul>
         <div class="flex gap-3">
           <a href="/login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all">Login</a>
           <a href="/signup.html" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all">Sign Up</a>

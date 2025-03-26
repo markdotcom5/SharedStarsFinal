@@ -8,7 +8,7 @@ const WebSocket = require('ws');
 // 🔹 Services & AI Modules
 const ServiceIntegrator = require('../services/ServiceIntegrator');
 const AIGuidanceSystem = require('../services/AIGuidanceSystem');
-const aiGuidance = require('../services/aiGuidance');
+const aiGuidance = require('../services/AIGuidanceSystem');
 const aiAssistant = require('../services/aiAssistant');
 const aiCoachInstance = require('../services/AISpaceCoach');
 const STELLA_AI = require('../services/STELLA_AI');

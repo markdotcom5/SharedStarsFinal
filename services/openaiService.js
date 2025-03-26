@@ -1,27 +1,30 @@
-// services/openaiService.js
-const { OpenAI } = require('openai');
+const { OpenAI } = require('openai');  // Note the { } around OpenAI
+const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Create a configured OpenAI instance with proper error handling
-let openai;
-try {
-  openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+async function getOpenAIResponse(question, context) {
+  const prompt = `
+    You are STELLA, an advanced AI training assistant for astronauts.
+    
+    User Profile:
+    Name: ${context.profile.name}
+    Subscription Level: ${context.profile.subscription}
+    Experience Level: ${context.profile.experienceLevel}
+    
+    Current Training Module: ${context.currentModule}
+    Module Progress: ${JSON.stringify(context.moduleProgress)}
+    Assessment Results: ${JSON.stringify(context.assessmentResults)}
+    
+    User Question: ${question}
+    
+    Provide a personalized, helpful response based on the above context.
+  `;
+
+  const completion = await openaiClient.chat.completions.create({
+    model: 'gpt-4o',
+    messages: [{ role: 'system', content: prompt }]
   });
-  console.log('✅ OpenAI client initialized successfully');
-} catch (error) {
-  console.error('❌ OpenAI initialization error:', error.message);
-  // Provide a fallback to prevent crashes
-  openai = {
-    chat: {
-      completions: {
-        create: async () => ({ choices: [{ message: { content: "OpenAI service unavailable" } }] })
-      }
-    }
-  };
+
+  return completion.choices[0].message.content.trim();
 }
 
-// Export both the configured instance and the class
-module.exports = {
-  openai,
-  OpenAI
-};
+module.exports = getOpenAIResponse;

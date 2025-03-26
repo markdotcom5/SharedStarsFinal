@@ -754,6 +754,7 @@
 <!-- Core STELLA AI -->
 <script src="/js/stella-core.js"></script>
 <script src="/js/stella-integration.js"></script>
+<script src="/js/stella-minimal.js"></script>
 
 <!-- Language Management -->
 <script src="/js/languageManager.js" defer></script>
@@ -763,130 +764,152 @@
 <script src="/js/progressAssessment.js"></script>
 <script src="/js/progressChart.js"></script>
 <script src="/js/visualizations/ProgressTracker.js"></script>
-
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function() {
+    // Select core elements
     const stellaInput = document.getElementById('stella-question');
     const stellaButton = document.getElementById('send-to-stella');
     const stellaConversation = document.querySelector('.stella-conversation');
-  
-    stellaButton.addEventListener('click', handleStellaMessage);
-    stellaInput.addEventListener('keydown', (e) => {
+
+    // Verify elements exist
+    if (!stellaInput || !stellaButton || !stellaConversation) {
+      console.error('⚠️ STELLA: Missing UI elements.');
+      return;
+    }
+
+    // Event listener for send button
+    stellaButton.addEventListener('click', function(event) {
+    console.log("🚩 STELLA Button Clicked!");
+    handleStellaMessage(event);
+});
+
+    // Allow pressing Enter to send message
+    stellaInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') handleStellaMessage();
     });
-  
-    async function handleStellaMessage() {
-  const question = stellaInput.value.trim();
-  if (!question) return;
 
-  addUserMessage(question);
-  showLoadingIndicator();
-
-  const lowerQ = question.toLowerCase();
-
-  // More precise date checking
-  const dateKeywords = ["today's date", "what is today's date", "date today", "what day is it today"];
-  const isDateQuestion = dateKeywords.some(keyword => lowerQ.includes(keyword));
-
-  if (isDateQuestion) {
-    removeLoadingIndicator();
-    const fallback = getIntelligentResponse(question);
-    addStellaMessage(fallback.message, fallback.actionItems);
-  } else {
-    try {
-      const res = await fetch('/api/stella/guidance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: "test-user", question }),
+    // Quick action buttons functionality
+    document.querySelectorAll('.stella-action-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        stellaInput.value = this.getAttribute('data-question');
+        handleStellaMessage();
       });
+    });
 
-      const data = await res.json();
-      const message = data.guidance?.message || "I'm not sure how to answer that right now.";
-
-      removeLoadingIndicator();
-      addStellaMessage(message);
-    } catch (err) {
-      console.error("❌ Error:", err);
-      removeLoadingIndicator();
-      const fallback = getIntelligentResponse(question);
-      addStellaMessage(fallback.message, fallback.actionItems);
+    // Initial STELLA welcome message
+    if (stellaConversation.children.length === 0) {
+      addStellaMessage("I'm here to assist with your space training. How can I help today?", [
+        "Begin Training Assessment",
+        "Explore Mission Simulations"
+      ]);
     }
-  }
 
-  stellaInput.value = '';
-  stellaConversation.scrollTop = stellaConversation.scrollHeight;
+    async function handleStellaMessage() {
+      const question = stellaInput.value.trim();
+      if (!question) return;
+
+      addUserMessage(question);
+      stellaInput.value = '';
+      showLoadingIndicator();
+
+      // Temporarily using default userId
+      const userId = 'temp-user';
+
+      try {
+  const res = await fetch('/api/stella/guidance', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, question }), 
+  });
+
+  const data = await res.json();
+  removeLoadingIndicator(); // ✅ Add this line
+
+  if (res.ok) {
+    addStellaMessage(data.guidance.message);
+  } else {
+    throw new Error(data.message || "Server Error");
+  }
+  
+} catch (err) {
+  console.error(err);
+  removeLoadingIndicator(); // ✅ Add this line too
+  addStellaMessage("I'm currently experiencing connectivity issues. Please try again or review your dashboard.");
 }
 
-  
+
+
+      stellaConversation.scrollTop = stellaConversation.scrollHeight;
+    }
+
     function addUserMessage(msg) {
       stellaConversation.innerHTML += `
         <div class="mb-4 flex justify-end">
-          <div class="inline-block bg-blue-600 px-3 py-2 rounded-lg max-w-xs">
-            <p>${msg}</p>
-          </div>
+          <div class="bg-blue-600 text-white px-3 py-2 rounded-lg max-w-xs">${msg}</div>
         </div>`;
     }
-  
+
     function addStellaMessage(msg, actions = []) {
       stellaConversation.innerHTML += `
         <div class="mb-4">
-          <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
+          <div class="bg-gray-700 text-white px-3 py-2 rounded-lg max-w-xs">
             <p>${msg}</p>
-            ${actions.length ? `<ul>${actions.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
+            ${actions.length ? 
+              `<ul class="mt-2">${actions.map(item => 
+                `<li class="text-blue-300 cursor-pointer stella-action-btn" data-question="${item}">${item}</li>`).join('')}</ul>` : ''}
           </div>
         </div>`;
+
+      // Reattach action listeners
+      document.querySelectorAll('.stella-action-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          stellaInput.value = this.getAttribute('data-question');
+          handleStellaMessage();
+        });
+      });
     }
-  
+
     function showLoadingIndicator() {
       stellaConversation.innerHTML += `
         <div id="stella-loading" class="mb-4">
-          <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-            <p>Thinking...</p>
+          <div class="bg-gray-700 text-white px-3 py-2 rounded-lg">
+            <span class="animate-pulse">Thinking...</span>
           </div>
         </div>`;
     }
-  
+
     function removeLoadingIndicator() {
       document.getElementById('stella-loading')?.remove();
     }
+
+    function getIntelligentResponse(question) {
+      const lowerQ = question.toLowerCase();
+      const date = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+      if (lowerQ.includes("date") || lowerQ.includes("today")) {
+        return { message: `Today's date is ${date}. How else can I assist you?`, actionItems: [] };
+      }
+
+      if (lowerQ.includes("physical")) {
+        return {
+          message: "Physical training is vital for space travel. Shall we start with Core & Balance or Strength & Endurance?",
+          actionItems: ["Start Core & Balance", "Begin Strength & Endurance"]
+        };
+      }
+
+      if (lowerQ.includes("assessment")) {
+        return {
+          message: "Your assessment helps us tailor your training effectively.",
+          actionItems: ["Start Full Assessment", "Take Quick Evaluation"]
+        };
+      }
+
+      return {
+        message: "Let me guide you. Would you prefer to explore physical readiness, mental resilience, or technical skills?",
+        actionItems: ["View Training Modules", "Begin Assessment"]
+      };
+    }
   });
-
-  // THESE FUNCTIONS MUST BE OUTSIDE DOMContentLoaded
-  function getTodaysDateFormatted() {
-    const date = new Date();
-    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-    return date.toLocaleDateString('en-US', options);
-  }
-
-  function getIntelligentResponse(question) {
-    const lowerQ = question.toLowerCase();
-
-    if (lowerQ.includes("date") || lowerQ.includes("today's date") || lowerQ.includes("what day")) {
-      return {
-        message: `Today's date is ${getTodaysDateFormatted()}. How else can I assist you today?`,
-        actionItems: []
-      };
-    }
-
-    if (lowerQ.includes("physical")) {
-      return {
-        message: "Physical training is crucial for space readiness. Start with Core & Balance and progress to Strength & Endurance.",
-        actionItems: ["Start Core & Balance mission", "Check your dashboard"]
-      };
-    }
-
-    if (lowerQ.includes("mental")) {
-      return {
-        message: "Mental fitness training helps develop cognitive resilience for space travel.",
-        actionItems: ["Try Stress Management", "Explore Space Adaptation"]
-      };
-    }
-
-    return {
-      message: "I'm currently unable to access detailed systems. Try starting with a physical or mental training module.",
-      actionItems: ["Check training modules", "Start beginner exercises"]
-    };
-  }
 </script>
 
 </body>

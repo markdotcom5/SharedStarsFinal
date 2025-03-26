@@ -210,8 +210,8 @@ moduleSchema.methods.getSummary = function () {
 
 moduleSchema.methods.generateAIContent = async function (prompt) {
     try {
-        const openai = require('../services/openaiService'); // ✅ adjust path accordingly
-        const openaiClient = new openai.OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        const { OpenAI } = require('openai');
+        const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
         const response = await openaiClient.chat.completions.create({
             model: "gpt-4",

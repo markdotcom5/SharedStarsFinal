@@ -26,7 +26,7 @@ try {
 }
 
 try {
-  aiGuidance = require('../services/aiGuidance');
+  aiGuidance = require('./services/AIGuidanceSystem');
 } catch (e) {
   console.error("❌ Error importing aiGuidance:", e.message);
   aiGuidance = { getGuidanceData: async () => ({}) };

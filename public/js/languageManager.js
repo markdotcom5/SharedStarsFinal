@@ -36,8 +36,6 @@ class LanguageManager {
     return lang;
   }
 
-  // Your other methods here...
-}
   /**
    * Initialize the language manager
    */

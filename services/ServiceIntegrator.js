@@ -1,7 +1,7 @@
 const { EventEmitter } = require('events');
 const AISpaceCoach = require('./AISpaceCoach');
 const AIGuidanceSystem = require('./AIGuidanceSystem');
-const aiGuidance = require('./aiGuidance');
+const aiGuidance = require('../services/AIGuidanceSystem');
 const aiAssistant = require('./aiAssistant');
 const User = require('../models/User');
 

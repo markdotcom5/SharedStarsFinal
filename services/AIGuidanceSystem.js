@@ -2,9 +2,17 @@ const { openai, OpenAI } = require('./openaiService');
 const User = require("../models/User.js");
 const TrainingSession = require("../models/TrainingSession.js");
 const Intervention = require("../models/Intervention.js");
-const UserProgress = require("../models/UserProgress.js");
 const Achievement = require("../models/Achievement.js");
 const { EventEmitter } = require('events'); 
+fetch('/api/stella/user-progress', {
+    method: 'GET',
+    credentials: 'include'  // if using cookies/sessions
+  })
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(progress) {
+    console.log("✅ User Progress:", progress);
 
 class AIGuidanceSystem extends EventEmitter {
     constructor() {

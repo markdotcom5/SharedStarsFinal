@@ -1,0 +1,9 @@
+<svg viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#fff" d="M0 0h640v480H0z"/>
+  <g transform="matrix(4.3 0 0 4.3 320 240)">
+    <path fill="#0047a0" d="M-30-32v64h60v-64z"/>
+    <path fill="#fff" d="M0 0c8.3 0 15-6.7 15-15s-6.7-15-15-15-15 6.7-15 15 6.7 15 15 15"/>
+    <path fill="#c60c30" d="M0 0c7.5 0 13.5-6 13.5-13.5S7.5-27 0-27s-13.5 6-13.5 13.5S-7.5 0 0 0"/>
+    <path fill="#0047a0" d="M-15 15 35-35M-15-15 35 35"/>
+  </g>
+</svg>

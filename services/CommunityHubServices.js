@@ -1,7 +1,7 @@
 const { EventEmitter } = require('events');
 const { StudyGroup, TrainingSession, Challenge, Discussion, PeerMatch } = require('../models/CommunityModels');
 const ServiceIntegrator = require('./ServiceIntegrator');
-const aiGuidance = require('./aiGuidance');
+const aiGuidance = require('../services/AIGuidanceSystem');
 
 class CommunityHub extends EventEmitter {
     constructor() {
