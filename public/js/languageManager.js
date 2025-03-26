@@ -1,45 +1,177 @@
-// Cookie Helper Functions
-const getCookie = (name) => {
+/**
+ * SharedStars Language Manager
+ * Enhanced version with better integration for the Sophon UI
+ */
+
+class LanguageManager {
+  constructor() {
+    // FIRST, initialize translations completely
+    this.translations = {
+      en: { /* Your English translations here */ },
+      es: { /* Your Spanish translations here */ },
+      ko: { /* Your Korean translations here */ },
+      zh: { /* Your Chinese translations here */ }
+    };
+
+    // THEN, set your current language after translations are initialized
+    this.currentLang = this.getPreferredLanguage();
+
+    // Last, call initialization functions
+    this.langButtons = document.querySelectorAll('.lang-btn, .language-option');
+    this.initialize();
+  }
+
+  getPreferredLanguage() {
+    const cookieLang = this.getCookie('language');
+    const storageLang = localStorage.getItem('userLanguage');
+    const browserLang = (navigator.language || '').split('-')[0];
+
+    let lang = cookieLang || storageLang || browserLang || 'en';
+
+    if (!this.translations[lang]) {
+      console.warn(`Language "${lang}" is not supported. Defaulting to English.`);
+      lang = 'en';
+    }
+
+    return lang;
+  }
+
+  // Your other methods here...
+}
+  /**
+   * Initialize the language manager
+   */
+  initialize() {
+    this.setupEventListeners();
+    this.setLanguage(this.currentLang);
+    
+    // Handle the new dropdown selector if it exists
+    this.setupLanguageDropdown();
+    
+    // Optional: load additional translations from server
+    // Uncomment this if you want to load translations from your Express backend
+    // this.fetchTranslationsFromServer(this.currentLang);
+  }
+  
+  /**
+   * Set up the new dropdown language selector
+   */
+  setupLanguageDropdown() {
+    // Find language dropdown elements
+    const dropdownBtn = document.getElementById('language-dropdown-btn');
+    const dropdown = document.getElementById('language-dropdown');
+    const languageOptions = document.querySelectorAll('.language-option');
+    
+    // If we have the new dropdown structure
+    if (dropdownBtn && dropdown) {
+      // Initialize the selected language in the dropdown
+      this.updateDropdownUI(this.currentLang);
+      
+      // Add event listeners for language options
+      languageOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          const lang = option.getAttribute('data-lang');
+          this.setLanguage(lang);
+          
+          // Close the dropdown
+          dropdown.classList.add('hidden');
+        });
+      });
+    }
+  }
+  
+  /**
+   * Update the dropdown UI to show the current language
+   * @param {string} lang - Language code
+   */
+  updateDropdownUI(lang) {
+    const selectedLangText = document.getElementById('selected-language-text');
+    const selectedLangFlag = document.getElementById('selected-language-flag');
+    
+    if (selectedLangText) {
+      selectedLangText.textContent = this.languageNames[lang] || this.languageNames['en'];
+    }
+    
+    if (selectedLangFlag) {
+      selectedLangFlag.innerHTML = this.languageFlags[lang] || this.languageFlags['en'];
+    }
+  }
+  
+  /**
+   * Set up event listeners for language buttons
+   */
+  setupEventListeners() {
+    if (this.langButtons.length) {
+      this.langButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lang = btn.getAttribute('data-lang');
+          this.setLanguage(lang);
+        });
+      });
+    }
+  }
+  
+  /**
+   * Get a cookie by name
+   * @param {string} name - Cookie name to retrieve
+   * @returns {string|null} Cookie value or null if not found
+   */
+  getCookie(name) {
     const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
     return match ? match[2] : null;
-};
-
-const setCookie = (name, value, days) => {
-    const date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = `${name}=${value}; path=/; expires=${date.toUTCString()}`;
-};
-
-// Fetch translations dynamically
-const fetchTranslations = async () => {
-    try {
-        const response = await fetch('/js/translations.json');
-        if (!response.ok) throw new Error("Failed to fetch translations");
-        return await response.json();
-    } catch (error) {
-        console.error("⚠️ Failed to load translations:", error);
-        return null; // Return null instead of an empty object
-    }
-};
-
-// Detects user language based on IP (optional feature)
-const detectUserLanguage = async () => {
-    try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        const country = data.country_name;
-
-        const languageMap = {
-            'United States': 'en',
-            'China': 'zh',
-            'Korea': 'ko',
-            'Spain': 'es',
-        };
-
-        return languageMap[country] || 'en'; // Default to English
-    } catch (error) {
-        console.error("⚠️ Geolocation failed:", error);
-        return 'en';
+  }
+  
+  /**
+   * Set a cookie
+   * @param {string} name - Cookie name
+   * @param {string} value - Cookie value
+   * @param {number} days - Cookie expiration in days
+   */
+  setCookie(name, value, days = 365) {
+    const maxAge = days * 24 * 60 * 60;
+    document.cookie = `${name}=${value}; path=/; max-age=${maxAge}`;
+  }
+  
+  /**
+   * Apply translations to all elements with data-i18n attribute
+   * @param {string} lang - Language code (en, es, ko, zh)
+   */
+  applyTranslations(lang) {
+    // Get all elements with data-i18n attribute (refreshes to include dynamically added elements)
+    const contentElements = document.querySelectorAll('[data-i18n]');
+    
+    contentElements.forEach((el) => {
+      const key = el.dataset.i18n;
+      
+      if (this.translations[lang] && this.translations[lang][key]) {
+        el.textContent = this.translations[lang][key];
+      } else if (this.translations.en[key]) {
+        // Fallback to English
+        el.textContent = this.translations.en[key];
+        console.warn(`Missing translation for key: ${key} in ${lang}, defaulted to English.`);
+      } else {
+        console.error(`Translation completely missing for key: ${key}`);
+      }
+      
+      // For input elements, also set placeholder if it has data-i18n-placeholder
+      if (el.hasAttribute('data-i18n-placeholder')) {
+        const placeholderKey = el.getAttribute('data-i18n-placeholder');
+        if (this.translations[lang] && this.translations[lang][placeholderKey]) {
+          el.placeholder = this.translations[lang][placeholderKey];
+        }
+      }
+    });
+  }
+  
+  /**
+   * Set the active language and apply translations
+   * @param {string} lang - Language code (en, es, ko, zh)
+   */
+  setLanguage(lang) {
+    // Validate language is supported
+    if (!this.translations[lang]) {
+      console.error(`Language ${lang} is not supported. Defaulting to English.`);
+      lang = 'en';
     }
 };
 

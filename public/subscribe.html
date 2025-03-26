@@ -1182,7 +1182,7 @@
         <div class="container">
             <div class="header-content">
                 <a href="/" class="logo">
-                    <img src="/images/SharedStars.svg" alt="SharedStars Logo">
+                    <img src="/images/SSLOGO.png" alt="SharedStars Logo">
                 </a>
                 
                 <nav class="nav-menu">
@@ -1770,7 +1770,7 @@
 </div>
 
 <!-- Include your existing language selection script -->
-<script src="/js/languageSelection.js"></script>
+<script src="/js/languageManager.js" defer></script>
 
 <!-- Main script for subscribe functionality -->
 <script>
@@ -1984,47 +1984,91 @@ function selectPlan(plan) {
     window.selectedPlan = plan;
 }
 
-// Update personal price chart
-function updatePersonalPriceChart(years) {
-    const chart = window.priceChart;
-    if (!chart) return;
-    
-    // Calculate accelerated price drop based on years
-    const baselinePrices = [750, 500, 125, 60, 5];
-    const baselineYears = 15;
-    const accelerationFactor = baselineYears / years;
-    
-    let personalPrices;
-    if (years === 1) {
-        // Elite plan - much faster acceleration
-        personalPrices = [750, 250, 50, 10, 5];
-    } else {
-        // Calculate accelerated prices
-        personalPrices = baselinePrices.map((price, index) => {
-            if (index === 0) return price; // Start at same price
-            if (index === baselinePrices.length - 1) return 5; // End at same price
-            return Math.max(5, Math.round(price * (1 - (accelerationFactor - 1) * 0.3)));
-        });
+    // Price Evolution Chart
+    try {
+        const ctx = document.getElementById('priceEvolutionChart');
+        if (ctx) {
+            console.log('Initializing price evolution chart...');
+            new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['2022', '2024', '2029', '2034', '2039'], // Updated to 2039
+                    datasets: [{
+                        label: 'Maximum Price ($)',
+                        data: [1000000, 250000, 100000, 25000, 5000],
+                        borderColor: '#00FFFF',
+                        backgroundColor: 'rgba(0, 255, 255, 0.1)',
+                        fill: true
+                    },
+                    {
+                        label: 'Minimum Price ($)',
+                        data: [450000, 250000, 50000, 10000, 5000],
+                        borderColor: '#FFA500',
+                        backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: 'Price ($)',
+                                color: '#FFFFFF'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#FFFFFF',
+                                callback: function(value) {
+                                    if (value === 0) return '0';
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#FFFFFF'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#FFFFFF'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#00FFFF',
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        } else {
+            console.error('Price evolution chart canvas not found');
+        }
+    } catch (error) {
+        console.error('Error initializing chart:', error);
     }
-    
-    // Check if personal dataset already exists
-    if (chart.data.datasets.length > 1) {
-        chart.data.datasets[1].data = personalPrices;
-    } else {
-        // Add personal dataset
-        chart.data.datasets.push({
-            label: 'Your Accelerated Timeline (in thousands $)',
-            data: personalPrices,
-            borderColor: 'rgba(16, 185, 129, 0.7)', // Green color
-            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-            borderWidth: 2,
-            pointBackgroundColor: 'rgba(16, 185, 129, 0.8)',
-            tension: 0.3
-        });
-    }
-    
-    chart.update();
-}
+
 
 // Initialize Stripe Elements
 function initializeStripeElements() {

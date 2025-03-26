@@ -1,3 +1,26 @@
+.glass-effect {
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.training-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.training-card {
+  transition: transform 0.3s ease;
+}
+
+.training-card:hover {
+  transform: translateY(-10px);
+}
+
+
+
 :root {
     /* Colors */
     --primary: #00FFFF;

@@ -67,6 +67,8 @@ const schedule = require('node-schedule');
 const { getPhysicalTrainingProgress } = require('./services/progressServices');
 const stellaAnalyticsRoutes = require('./routes/admin/stellaAnalytics');
 const { v4: uuidv4 } = require('uuid');
+const signupRouter = require('./routes/signup');
+const translationsRoutes = require('./routes/translations');
 
 // ============================
 // 0. SESSION STORE SETUP
@@ -183,6 +185,13 @@ app.use((req, res, next) => {
   }
   next();
 });
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "script-src 'self' 'unsafe-inline' https://js.stripe.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net"
+  );
+  next();
+});
 
 // Rate limiting
 const apiLimiter = rateLimit({
@@ -281,6 +290,7 @@ applicationsRoutes = safeRequire("./routes/api/applications", "applicationsRoute
 // 7. TEST ROUTES
 // ============================
 // Simple test routes
+
 app.get('/api/test-direct', (req, res) => {
   res.json({ message: 'Direct test route is working' });
 });
@@ -341,7 +351,46 @@ if (typeof adminAuthRoutes === 'function') {
 }
 app.use('/api/admin/stella-analytics', stellaAnalyticsRoutes)
 app.use('/api/applications', require('./routes/api/applications'));
+app.use('/api/stella', stellaRoutes);
+app.use('/', signupRouter);
+app.use('/api/translations', translationsRoutes);
 
+// Add this to your app.js to test email functionality
+// Add this to your app.js to test email functionality
+app.get('/api/test-email', async (req, res) => {
+  try {
+    const emailService = require('./services/emailService');
+    const config = require('./config');  // Add this line to import config
+    
+    console.log('Testing email service with config:', {
+      host: config.email.host,
+      port: config.email.port,
+      secure: config.email.secure,
+      auth: {
+        user: config.email.auth.user,
+        // Don't log the password
+      }
+    });
+    
+    const result = await emailService.sendVerificationEmail(
+      'test@example.com', 
+      '123456', 
+      'Test User'
+    );
+    
+    res.json({ 
+      success: true, 
+      message: 'Email test initiated', 
+      result: result 
+    });
+  } catch (error) {
+    console.error('Email test failed:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
 // ============================
 // BLOG FUNCTIONALITY
 // ============================

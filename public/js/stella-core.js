@@ -250,13 +250,9 @@ if (!window.StellaCore) {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({ 
-                question,
-                context: {
-                  module: this.currentModuleType,
-                  mission: this.currentMission,
-                  metrics: this.sessionMetrics
-                }
-              })
+                userId: "default-user", 
+                question 
+              })              
             });
             
             if (!response.ok) {

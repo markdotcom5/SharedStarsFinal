@@ -96,14 +96,6 @@
               <span id="progress-percentage">0%</span>
             </div>
           </div>
-          <!-- Secondary Language Selector (Optional) -->
-          <div class="language-selector flex gap-2">
-            <button class="language-flag" data-lang="en" aria-label="English">🇺🇸</button>
-            <button class="language-flag" data-lang="zh" aria-label="Chinese">🇨🇳</button>
-            <button class="language-flag" data-lang="ko" aria-label="Korean">🇰🇷</button>
-            <button class="language-flag" data-lang="es" aria-label="Spanish">🇪🇸</button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -270,8 +262,7 @@
   <script src="/js/visualizations/ModuleHighlight.js" defer></script>
   
   <!-- Language Selection & Navigation Scripts -->
-  <script src="/js/languageSelection.js"></script>
-  <script src="/js/language-switcher.js"></script>
+  <script src="/js/languageManager.js" defer></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       console.log("✅ Language & Navigation Script Loaded");

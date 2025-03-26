@@ -1,0 +1,240 @@
+/* stella-sophon-visuals.css - Visual enhancements for STELLA */
+
+/* ======= Background Effects ======= */
+/* Sophon-inspired background overlay */
+.sophon-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  
+  /* Red background effect */
+  .sophon-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #350000, #8B0000, #FF4500);
+    opacity: 0.85;
+    z-index: -2;
+    animation: background-shift 20s ease infinite;
+    background-size: 400% 400%;
+  }
+  
+  @keyframes background-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Particle effects */
+  .sophon-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, rgba(255, 200, 0, 0.8), rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 40px 70px, rgba(255, 100, 0, 0.8), rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 90px 40px, rgba(255, 150, 0, 0.8), rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 120px 120px, rgba(255, 200, 50, 0.8), rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 150px 90px, rgba(255, 100, 0, 0.8), rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 400px 400px;
+    animation: particles-float 60s linear infinite;
+    opacity: 0.6;
+    z-index: -1;
+  }
+  
+  @keyframes particles-float {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-400px) rotate(10deg); }
+  }
+  
+  /* Heat distortion effect */
+  .heat-distortion {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    opacity: 0.4;
+    background: transparent;
+    pointer-events: none;
+    animation: heat-wave 10s infinite;
+  }
+  
+  @keyframes heat-wave {
+    0% { filter: blur(0px); }
+    25% { filter: blur(1px); }
+    50% { filter: blur(0px); }
+    75% { filter: blur(1px); }
+    100% { filter: blur(0px); }
+  }
+  
+  /* ======= Sophon Avatar ======= */
+  .sophon-avatar-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px auto;
+    z-index: 10;
+  }
+  
+  .sophon-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 20px rgba(255, 100, 0, 0.6);
+    animation: avatar-pulse 4s infinite alternate;
+  }
+  
+  @keyframes avatar-pulse {
+    0% { box-shadow: 0 0 10px rgba(255, 100, 0, 0.4); transform: scale(1); }
+    100% { box-shadow: 0 0 30px rgba(255, 100, 0, 0.8); transform: scale(1.05); }
+  }
+  
+  /* ======= Sword Animation ======= */
+  .sophon-sword {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 4px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+    transform-origin: left center;
+    z-index: 100;
+    opacity: 0;
+    box-shadow: 0 0 15px rgba(255, 200, 200, 0.8), 0 0 5px rgba(255, 100, 100, 0.4);
+    animation: sword-appear 8s infinite;
+  }
+  
+  @keyframes sword-appear {
+    0%, 85%, 100% { 
+      opacity: 0;
+    }
+    86% { 
+      opacity: 1;
+      transform: rotate(45deg) translateX(-50px); 
+      width: 0;
+    }
+    87% {
+      opacity: 1;
+      width: 200px;
+    }
+    88%, 89% { 
+      opacity: 1;
+      transform: rotate(45deg) translateX(-50px); 
+    }
+    92% { 
+      opacity: 1;
+      transform: rotate(-60deg) translateX(-50px);
+      width: 200px;
+    }
+    94% { 
+      opacity: 0;
+      transform: rotate(-60deg) translateX(50px);
+      width: 0;
+    }
+  }
+  
+  /* Flash effect for sword */
+  .flash-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 0, 0, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    animation: flash-effect 8s infinite;
+  }
+  
+  @keyframes flash-effect {
+    0%, 85%, 100% { opacity: 0; }
+    89% { opacity: 0.8; }
+    94% { opacity: 0; }
+  }
+  
+  /* ======= Message Visual Enhancement ======= */
+  /* Add some glowing effects to STELLA's container */
+  #stella-ai .bg-gray-900\/70 {
+    background-color: rgba(20, 10, 5, 0.7) !important;
+    border: 1px solid rgba(255, 100, 0, 0.4) !important;
+    box-shadow: 0 0 30px rgba(255, 80, 0, 0.3) !important;
+  }
+  
+  /* Enhance the chat bubble */
+  .stella-bubble {
+    position: relative;
+    background: rgba(50, 10, 0, 0.7) !important;
+    border-left: 3px solid rgba(255, 120, 0, 0.8) !important;
+    animation: message-glow 3s infinite alternate !important;
+  }
+  
+  @keyframes message-glow {
+    0% { box-shadow: 0 0 10px rgba(255, 100, 0, 0.1); }
+    100% { box-shadow: 0 0 20px rgba(255, 120, 0, 0.3); }
+  }
+  
+  /* Change button colors */
+  .stella-action-btn {
+    background: linear-gradient(to bottom, rgba(255, 80, 0, 0.8), rgba(200, 40, 0, 0.8)) !important;
+    border: 1px solid rgba(255, 120, 0, 0.4) !important;
+    color: white !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .stella-action-btn:hover {
+    background: linear-gradient(to bottom, rgba(255, 100, 0, 0.9), rgba(220, 60, 0, 0.9)) !important;
+    transform: translateY(-2px) !important;
+  }
+  
+  /* Style the "Ask" button */
+  #send-to-stella {
+    background: linear-gradient(to bottom, rgba(255, 80, 0, 0.8), rgba(200, 40, 0, 0.8)) !important;
+    border: 1px solid rgba(255, 120, 0, 0.4) !important;
+    color: white !important;
+  }
+  
+  #send-to-stella:hover {
+    background: linear-gradient(to bottom, rgba(255, 100, 0, 0.9), rgba(220, 60, 0, 0.9)) !important;
+  }
+  
+  /* Style the input */
+  #stella-question {
+    background: rgba(40, 10, 5, 0.8) !important;
+    border: 1px solid rgba(255, 100, 0, 0.3) !important;
+    color: white !important;
+  }
+  
+  #stella-question:focus {
+    outline: none;
+    border-color: rgba(255, 150, 0, 0.6) !important;
+  }
+  
+  /* Style messages in conversation */
+  .stella-conversation .message-bubble,
+  .stella-conversation .bg-blue-600,
+  .stella-conversation .bg-gray-700 {
+    border: 1px solid rgba(255, 100, 0, 0.3) !important;
+  }
+  
+  .stella-conversation .bg-blue-600 {
+    background-color: rgba(255, 60, 0, 0.6) !important;
+  }
+  
+  .stella-conversation .bg-gray-700 {
+    background-color: rgba(40, 10, 5, 0.8) !important;
+  }

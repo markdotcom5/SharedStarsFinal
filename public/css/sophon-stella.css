@@ -1,0 +1,331 @@
+/* sophon-stella.css - Enhanced STELLA AI Sophon Theme with Animations */
+
+/* Sophon-inspired background with lava-like animation */
+.sophon-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #350000, #8B0000, #FF4500);
+    opacity: 0.8;
+    z-index: -2;
+    animation: background-shift 20s ease infinite;
+  }
+  
+  @keyframes background-shift {
+    0% { background-position: 0% 50%; filter: hue-rotate(0deg); }
+    50% { background-position: 100% 50%; filter: hue-rotate(10deg); }
+    100% { background-position: 0% 50%; filter: hue-rotate(0deg); }
+  }
+  
+  /* Dynamic floating particles effect */
+  .sophon-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, rgba(255, 200, 0, 0.8), rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 40px 70px, rgba(255, 100, 0, 0.8), rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 90px 40px, rgba(255, 150, 0, 0.8), rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 120px 120px, rgba(255, 200, 50, 0.8), rgba(0,0,0,0)),
+      radial-gradient(1px 1px at 150px 90px, rgba(255, 100, 0, 0.8), rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 400px 400px;
+    animation: particles-float 60s linear infinite;
+    opacity: 0.6;
+    z-index: -1;
+  }
+  
+  @keyframes particles-float {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-400px) rotate(10deg); }
+  }
+  
+  /* Enhanced STELLA container styling */
+  .stella-container.sophon-theme {
+    border: 1px solid rgba(255, 100, 0, 0.4) !important;
+    box-shadow: 0 0 30px rgba(255, 80, 0, 0.3), inset 0 0 20px rgba(255, 60, 0, 0.1) !important;
+    background: rgba(20, 10, 5, 0.7) !important;
+    backdrop-filter: blur(8px) !important;
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stella-container.sophon-theme:hover {
+    box-shadow: 0 0 40px rgba(255, 100, 0, 0.4), inset 0 0 25px rgba(255, 80, 0, 0.2) !important;
+  }
+  
+  /* Sophon-inspired message bubbles */
+  .stella-bubble {
+    background: rgba(50, 10, 0, 0.7) !important;
+    border-left: 3px solid rgba(255, 120, 0, 0.8) !important;
+    box-shadow: 0 0 15px rgba(255, 100, 0, 0.2) !important;
+    transition: all 0.3s ease;
+    animation: message-glow 3s infinite alternate;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  
+  @keyframes message-glow {
+    0% { box-shadow: 0 0 10px rgba(255, 100, 0, 0.1); }
+    100% { box-shadow: 0 0 20px rgba(255, 120, 0, 0.3); }
+  }
+  
+  /* Sophon-inspired input styling */
+  #stella-question {
+    background: rgba(40, 10, 5, 0.8) !important;
+    border: 1px solid rgba(255, 100, 0, 0.3) !important;
+    color: #fff !important;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5) !important;
+  }
+  
+  #stella-question:focus {
+    border-color: rgba(255, 150, 0, 0.6) !important;
+    box-shadow: 0 0 0 2px rgba(255, 120, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.5) !important;
+    outline: none;
+  }
+  
+  /* Sophon-inspired buttons */
+  #send-to-stella, 
+  .stella-action-btn {
+    background: linear-gradient(to bottom, rgba(255, 80, 0, 0.8), rgba(200, 40, 0, 0.8)) !important;
+    border: 1px solid rgba(255, 120, 0, 0.4) !important;
+    box-shadow: 0 0 15px rgba(255, 100, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
+    color: white !important;
+  }
+  
+  #send-to-stella:hover,
+  .stella-action-btn:hover {
+    background: linear-gradient(to bottom, rgba(255, 100, 0, 0.9), rgba(220, 60, 0, 0.9)) !important;
+    box-shadow: 0 0 20px rgba(255, 120, 0, 0.4) !important;
+    transform: translateY(-2px) !important;
+  }
+  
+  /* Sophon Avatar with sword */
+  .sophon-avatar {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px auto;
+    box-shadow: 0 0 30px rgba(255, 100, 0, 0.6);
+  }
+  
+  .sophon-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: all 0.3s ease;
+  }
+  
+  /* Sophon's sword animation */
+  .sophon-sword {
+    position: absolute;
+    top: 0;
+    right: -100px; /* Hidden initially */
+    width: 150px;
+    height: 4px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+    border-radius: 4px;
+    transform-origin: left center;
+    z-index: 100;
+    opacity: 0;
+    box-shadow: 0 0 15px rgba(255, 200, 200, 0.8), 0 0 5px rgba(255, 100, 100, 0.4);
+  }
+  
+  /* Sword slash animation */
+  @keyframes swordSlash {
+    0% { 
+      transform: rotate(45deg) translateX(-50px); 
+      opacity: 0;
+      width: 0;
+    }
+    10% {
+      opacity: 1;
+      width: 150px;
+    }
+    35% { 
+      transform: rotate(45deg) translateX(-50px); 
+    }
+    60% { 
+      transform: rotate(-60deg) translateX(-50px); 
+      opacity: 1;
+      width: 150px;
+    }
+    100% { 
+      transform: rotate(-60deg) translateX(50px); 
+      opacity: 0;
+      width: 0;
+    }
+  }
+  
+  /* Slash impact effect */
+  @keyframes slashImpact {
+    0% { 
+      clip-path: inset(0 0 0 0);
+      transform: translateX(0);
+    }
+    15% { 
+      clip-path: inset(0 0 0 0);
+      transform: translateX(5px) translateY(-2px);
+    }
+    30% { 
+      clip-path: inset(0 0 0 0); 
+      transform: translateX(-5px) translateY(2px);
+    }
+    45% { 
+      clip-path: inset(0 0 0 0);
+      transform: translateX(3px) translateY(-1px);
+    }
+    60% { 
+      clip-path: inset(0 100% 0 0); 
+      transform: translateX(0);
+    }
+    100% { 
+      clip-path: inset(0 0 0 0);
+      transform: translateX(0);
+    }
+  }
+  
+  /* Create the cut effect using pseudo-elements */
+  .sliced-question {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .sliced-question::before,
+  .sliced-question::after {
+    content: attr(data-content);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    color: inherit;
+    padding: inherit;
+    margin: 0;
+    pointer-events: none;
+  }
+  
+  .sliced-question::before {
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+    animation: slice-top 1s forwards;
+  }
+  
+  .sliced-question::after {
+    clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+    animation: slice-bottom 1s forwards;
+  }
+  
+  @keyframes slice-top {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-10px) translateY(-5px) rotate(-2deg); }
+  }
+  
+  @keyframes slice-bottom {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(10px) translateY(5px) rotate(2deg); }
+  }
+  
+  /* Conversation styling */
+  .stella-conversation {
+    background-color: rgba(50, 10, 0, 0.3) !important;
+    border: 1px solid rgba(255, 100, 0, 0.2) !important;
+  }
+  
+  .stella-conversation .user-message .message-bubble {
+    background-color: rgba(255, 80, 0, 0.7) !important;
+    color: white !important;
+    border-top-right-radius: 0.25rem;
+  }
+  
+  .stella-conversation .stella-message .message-bubble {
+    background-color: rgba(40, 10, 0, 0.8) !important;
+    color: white !important;
+    border-top-left-radius: 0.25rem;
+    border: 1px solid rgba(255, 100, 0, 0.3) !important;
+  }
+  
+  /* Fix for the section background */
+  #stella-ai {
+    background: transparent !important;
+  }
+  
+  /* Heat distortion effect */
+  .heat-distortion {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.8;
+    background: transparent;
+    pointer-events: none;
+    animation: heat-wave 10s infinite;
+  }
+  
+  @keyframes heat-wave {
+    0% { transform: scale(1.01) translate(-0.5%, -0.5%); filter: blur(0px); }
+    25% { transform: scale(1.02) translate(0.5%, 0.5%); filter: blur(1px); }
+    50% { transform: scale(1.01) translate(0.5%, -0.5%); filter: blur(0px); }
+    75% { transform: scale(1.02) translate(-0.5%, 0.5%); filter: blur(1px); }
+    100% { transform: scale(1.01) translate(-0.5%, -0.5%); filter: blur(0px); }
+  }
+  
+  /* Red glow flash for the sword slash */
+  .flash-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 0, 0, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+  
+  @keyframes flash {
+    0% { opacity: 0; }
+    10% { opacity: 0.8; }
+    100% { opacity: 0; }
+  }
+  
+  /* Enhanced online indicator */
+  .online-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .online-indicator .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff4500;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+    animation: pulse-online 2s infinite;
+  }
+  
+  .online-indicator .status-text {
+    color: #ff4500;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  @keyframes pulse-online {
+    0% { box-shadow: 0 0 5px rgba(255, 69, 0, 0.5); }
+    50% { box-shadow: 0 0 15px rgba(255, 69, 0, 0.8); }
+    100% { box-shadow: 0 0 5px rgba(255, 69, 0, 0.5); }
+  }

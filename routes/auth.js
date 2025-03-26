@@ -83,75 +83,6 @@ async function validatePassword(enteredPassword, storedHashedPassword) {
     return await bcrypt.compare(enteredPassword, storedHashedPassword);
 }
 
-router.post("/verify-otp", async (req, res) => {
-    try {
-        const { email, otp } = req.body;
-        const user = await User.findOne({ email });
-
-        if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
-            return res.status(400).json({ error: "Invalid or expired OTP" });
-        }
-
-        // ✅ Mark user as verified
-        user.isVerified = true;
-        user.otp = null; // Clear OTP
-        user.otpExpires = null;
-        await user.save();
-
-        // ✅ Auto-login user by generating JWT
-        const token = jwt.sign(
-            { id: user._id, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
-        );
-
-        // ✅ Set HTTP-only cookie for security
-        res.cookie("authToken", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "Strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        });
-
-        res.json({ success: true, message: "OTP verified! Logging in...", redirectTo: "/congratulations.html" });
-
-    } catch (error) {
-        console.error("Error in verify-otp:", error);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
-router.post("/resend-otp", async (req, res) => {
-    try {
-        const { email } = req.body;
-        const user = await User.findOne({ email });
-
-        if (!user) {
-            return res.status(400).json({ error: "User not found" });
-        }
-
-        if (user.isVerified) {
-            return res.status(400).json({ error: "User is already verified." });
-        }
-
-        // Generate new OTP
-        const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-        user.otp = newOtp;
-        user.otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
-        await user.save();
-
-        // Send OTP email
-        await emailService.sendOTPEmail(email, newOtp);
-
-        res.json({ message: "New OTP sent to your email." });
-
-    } catch (error) {
-        console.error("Error in resend-otp:", error);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
-// Inside your login route
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -167,21 +98,28 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: "Authentication failed" });
         }
 
-        // Generate JWT Token
+        // Generate JWT Token (good!)
         const token = jwt.sign(
-            { id: user._id, email: user.email },
+            { userId: user._id.toString(), email: user.email },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '7d' }
         );
 
-        res.json({ success: true, token });
+        // ✅ Clearly set cookie (establishes session)
+        res.cookie('token', token, {
+            httpOnly: true, // Important for security
+            secure: false, // set to true in production with HTTPS
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
+        // ✅ Redirect user to mission-control clearly after login
+        res.json({ success: true, redirectUrl: '/mission-control' });
 
     } catch (error) {
         console.error("❌ Login Error:", error);
         res.status(500).json({ error: "Server error" });
     }
 });
-
 
 // Register Route
 router.post("/register", async (req, res) => {
