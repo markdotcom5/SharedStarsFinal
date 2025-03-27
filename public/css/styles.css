@@ -27,9 +27,3 @@
 .secondary-btn span {
     @apply rounded-full flex items-center justify-center gap-2 backdrop-blur-[43px] px-[14px] py-[8px] min-w-[110px] bg-[#0d0d0d] font-body text-body-2xsmall-semibold transition-all
 }
-
-
-/* Input field */
-input {
-    @apply shadow-fieldShadow placeholder:text-white-300
-}

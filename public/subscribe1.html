@@ -118,117 +118,314 @@
       <div class="absolute inset-0 w-full h-full bg-black pointer-events-none bg-opacity-75"></div>
 
       <div class="relative flex flex-col mt-28 items-center justify-start max-w-5xl px-4 z-20">
-        <h1 data-i18n="hero.title" class="hero-text font-aeonik text-heading1 text-white px-20 mb-6">World's Largest AI- Powered Space Training Platform<h1>
-        <p data-i18n="hero.subtitle" class="text-body-medium-medium max-w-2xl text-white mb-8">
-          In 36 months, humanity splits into two groups: Those who have prepared for space and those who watch from Earth.
+        <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+            Train. Earn. Ascend.
+        </span>
+        <h1 data-i18n="" class="hero-text font-aeonik text-heading1 text-white px-20 mb-6">Your Path to Space <br>Starts Here.<h1>
+        <p data-i18n="" class="text-body-medium-medium max-w-2xl text-white-800 mb-8">
+            The only subscription that prepares you for real spaceflight.
+            Every training session, milestone, and credit earned brings you closer to your guaranteed launch assignment.
         </p>
         <div class="w-full space-x-4 text-body-2xsmall-semibold">
-          <a data-i18n="hero.startTraining" href="/signup" class="bg-black text-white px-6 py-3 z-30 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start Training Now</a>
-          <a data-i18n="hero.seeCountdown" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">See Your Countdown to Space</a>
-          <a data-i18n="hero.exploreMembership" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Explore Membership Plans</a>
+          <a data-i18n="" href="/signup" class="bg-black text-white px-6 py-3 z-30 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start Your Mission Now</a>
         </div>
       </div>
     </section>
 
     <!-- Progress Section -->
-    <section class="min-h-screen px-[120px] pt-[120px] pb-[88px]">
-        <div class="bg-black text-white">
-            <!-- Progress Label -->
-            <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-                Progress
-            </span>
-    
-            <div class="flex justify-between">
-              <div class="w-1/2">
-                <h2 class="text-heading2 text-white font-aeonik mt-5" data-i18n="progress.title">Your path to space</h2>
-                <p class="text-white-800 mt-5 pr-36">
-                  In 36 months, humanity splits into two groups: Those who prepare for space and those who watch from
-                  Earth.
-                </p>
-              </div>
-              <div class="flex items-end">
-                <button class="px-6 py-3 text-white bg-black text-body-2xsmall-semibold rounded-full 
-                shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)]">
-                  Subscribe now →
-                </button>
-              </div>
-            </div>    
-    
-            <!-- Countdown Timer -->
-            <div class="grid grid-cols-7 gap-6 text-center mt-14">
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading1 font-aeonik" data-countdown="years">13</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class="text-body-base">Years</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="months">08</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>         
-                    <p class=" text-[16px]">Months</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="weeks">02</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Weeks</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="days">17</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Days</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="hours">06</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Hours</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="minutes">23</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Minutes</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="seconds">45</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Seconds</p>
+    <section class="bg-black text-white pt-[120px] pb-20 md:px-[120px] flex flex-col h-full">
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-heading2 font-aeonik">Membership tiers</h2>
+            <p class="mt-4 text-body-base text-white-800">Each plan accelerates your journey based on training participation, leaderboard <br> progression, and credit accumulation.</p>
+        </div>
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto">
+            <!-- Individual Explorer -->
+            <div class="p-5 rounded-lg shadow-lg border border-white-300">
+                <h3 class="text-body-base-semibold">Individual Explorer</h3>
+                <p class="text-heading6 mt-3">$49.99 <span class="text-body-2xsmall">/month | 15-Year Journey</span></p>
+                <p class="text-body-2xsmall mt-4 text-white-800">Individuals starting their astronaut <br> training journey.</p>
+                <div class="w-full text-body-2xsmall-semibold mt-8 text-center">
+                    <a data-i18n="" href="/signup" class="bg-blue-700 text-white mt-4 px-[76px] py-3 rounded-full hover:bg-blue shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Subscribe Now</a>
+                </div>                
+                <ul class="space-y-4 mt-8 flex-grow">
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-body-x-small-semibold">Personal AI Space Coach</p>
+                            <p class="text-body-2x-small text-white-800">AI-driven training tailored to your progress.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">10 Monthly AR/VR Training Hours</p>
+                            <p class="text-gray-300 text-sm">Experience AI-simulated astronaut missions.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">100 Space Credits/Month</p>
+                            <p class="text-gray-300 text-sm">Earn credits to secure your mission seat.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">Standard Certification Path</p>
+                            <p class="text-gray-300 text-sm">Gain space safety & technical certifications.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="border border-white-300 rounded-lg mt-8 p-3">
+                    <p class="text-body-base-semibold">FOMO Trigger</p>
+                    <p class="text-body-2xsmall text-white-800 mt-2">Every month delayed is another seat claimed by someone else.</p>
                 </div>
             </div>
-    
-            <span class="flex w-full mt-14 border-b border-white-200"></span>
-    
-            <div class="flex items-center justify-start bg-black gap-8 mt-14">
-              <!-- Video Container -->
-              <div class=" w-[160px] h-[90px] rounded-lg p-1 bg-black border-2 border-white-200 overflow-hidden">
-                <!-- Video Element -->
-                  <video id="videoPlayer" class="rounded-md">
-                    <source src="/videos/space1.mp4" type="video/mp4">
-                      Your browser does not support the video tag.
-                  </video>
-              </div>
             
-              <div class="flex flex-col items-start justify-between space-y-6">
-                  <p class="text-body-base-semibold max-w-64 tetx-white ">Learn how you can accelerate their journey?</p>
-                  <a href="https://example.com" class="text-brand-700 hover:underline text-body-2xsmall-semibold font-medium">
-                      Learn More →
-                  </a>
-              </div>
+            <!-- Family Pioneer -->
+            <div class="p-5 rounded-lg shadow-lg border border-white-300 flex flex-col h-full">
+                <h3 class="text-body-base-semibold">Family Pioneer</h3>
+                <p class="text-heading6 mt-3">$129.99 <span class="text-body-2xsmall">/month | 15-Year Journey</span></p>
+                <p class="text-body-2xsmall mt-4 text-white-800">Families training together for space exploration.</p>
+                <div class="w-full text-body-2xsmall-semibold mt-8 text-center">
+                    <a data-i18n="" href="/signup" class="bg-blue-700 text-white mt-4 px-[76px] py-3 rounded-full hover:bg-blue shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Subscribe Now</a>
+                </div>                
+                <ul class="space-y-4 mt-8 flex-grow">
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-body-x-small-semibold">4-Member Access</p>
+                            <p class="text-body-2x-small text-white-800">Family members train & earn credits together.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">Unlimited VR Training</p>
+                            <p class="text-gray-300 text-sm">No limits on AI-assisted learning modules.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">250 Space Credits/Month</p>
+                            <p class="text-gray-300 text-sm">Accelerated progress for space seats.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">Family Mission Planning</p>
+                            <p class="text-gray-300 text-sm">Group space training & family simulations.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="border border-white-300 rounded-lg mt-8 p-3">
+                    <p class="text-body-base-semibold">FOMO Trigger</p>
+                    <p class="text-body-2xsmall text-white-800 mt-2">Train together, reach space together. Limited family slots available.</p>
+                </div>
+            </div>
+            
+            <!-- Galactic Elite -->
+            <div class="p-5 rounded-lg shadow-lg border border-white-300 flex flex-col h-full">
+                <h3 class="text-body-base-semibold">Individual Explorer</h3>
+                <p class="text-heading6 mt-3">$2048 <span class="text-body-2xsmall">/month | 15-Year Journey</span></p>
+                <p class="text-body-2xsmall mt-4 text-white-800">Those who want a guaranteed space seat fast.</p>
+                <div class="w-full text-body-2xsmall-semibold mt-8 text-center">
+                    <a data-i18n="" href="/signup" class="bg-blue-700 text-white mt-4 px-[76px] py-3 rounded-full hover:bg-blue shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Subscribe Now</a>
+                </div>                
+                <ul class="space-y-4 mt-8 flex-grow">
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-body-x-small-semibold">Priority Mission Access</p>
+                            <p class="text-body-2x-small text-white-800">Top candidates for early commercial spaceflight.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">Private Training Facility</p>
+                            <p class="text-gray-300 text-sm">Elite astronaut training with 1-on-1 coaching.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">1000 Space Credits/Month</p>
+                            <p class="text-gray-300 text-sm">Near-instant eligibility for a seat.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">Industry Network Access</p>
+                            <p class="text-gray-300 text-sm">Exclusive invitations to aerospace events.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="border border-white-300 rounded-lg mt-8 p-3">
+                    <p class="text-body-base-semibold">FOMO Trigger</p>
+                    <p class="text-body-2xsmall text-white-800 mt-2">For those who know waiting isn't an option.</p>
+                </div>
+            </div>
+            
+            <!-- Flex Spending -->
+            <div class="p-5 rounded-lg shadow-lg border border-white-300 flex flex-col h-full">
+                <h3 class="text-body-base-semibold">Flex Spending</h3>
+                <p class="text-body-2xsmall text-white-800 mt-3">Starting From.</p>
+                <p class="text-heading6 mt-3">$50 <span class="text-body-2xsmall">/ month / User</span></p>
+                <div class="w-full text-body-2xsmall-semibold mt-14 text-center">
+                    <a data-i18n="" href="/signup" class="bg-blue-700 text-white mt-4 px-[76px] py-3 rounded-full hover:bg-blue shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Subscribe Now</a>
+                </div>                
+                <ul class="space-y-4 mt-8 flex-grow">
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-body-x-small-semibold">Custom Monthly Contributions</p>
+                            <p class="text-body-2x-small text-white-800">Define how fast you progress</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">Flexible Training Schedule</p>
+                            <p class="text-gray-300 text-sm">Adjust training intensity as needed.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">Credit Earning Based on Contribution</p>
+                            <p class="text-gray-300 text-sm">More you invest, faster you advance.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                        <div>
+                            <p class="font-semibold">Personalized AI Timeline</p>
+                            <p class="text-gray-300 text-sm">AI dynamically adjusts your space seat countdown.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="border border-white-300 rounded-lg mt-8 p-3">
+                    <p class="text-body-base-semibold">FOMO Trigger</p>
+                    <p class="text-body-2xsmall text-white-800 mt-2">Every extra dollar accelerates your journey to space.</p>
+                </div>
             </div>
         </div>
     </section>
 
+    <section class="bg-black text-white py-16 px-[120px]">
+        <div class="mx-auto">
+            <!-- Credit Multipliers Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div>
+                    <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                        Credit System Integration.
+                    </span>                    
+                    <h2 class="text-heading2 font-white mt-5">Credit multipliers</h2>
+                    <ul class="mt-6 space-y-4">
+                        <li class="flex items-start space-x-3">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                            <div>
+                                <p class="text-body-base-semibold">Achievement Bonuses (1.5×) <span class="text-body-2xsmall text-white-800">Unlock special mission perks.</span></p>                            
+                            </div>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                            <div>
+                                <p class="font-semibold">Streak Rewards (2× after 90 days)</p>
+                                <p class="text-gray-400 text-sm">Consistency pays off.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                            <div>
+                                <p class="font-semibold">Performance Excellence (3×)</p>
+                                <p class="text-gray-400 text-sm">Earn more credits for top training scores.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                        <img src="/icons/checklist.png" class="w-5 h-5" alt="Check">
+                            <div>
+                                <p class="font-semibold">Community Contributions (1.25×)</p>
+                                <p class="text-gray-400 text-sm">AI awards credits for mentorship & engagement.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+    
+                <!-- Base Credit Accumulation Card -->
+                <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-lg font-semibold">Base Credit Accumulation</h3>
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <p class="text-sm text-gray-400">Individual</p>
+                            <p class="text-xl font-bold">100</p>
+                            <p class="text-sm text-gray-400">credits/month</p>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <p class="text-sm text-gray-400">Family</p>
+                            <p class="text-xl font-bold">250</p>
+                            <p class="text-sm text-gray-400">credits/month</p>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <p class="text-sm text-gray-400">Galactic</p>
+                            <p class="text-xl font-bold">1000</p>
+                            <p class="text-sm text-gray-400">credits/month</p>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <p class="text-sm text-gray-400">Flex</p>
+                            <p class="text-xl font-bold">02</p>
+                            <p class="text-sm text-gray-400">credits per $</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Why Start Space Training Section -->
+            <div class="text-center mt-16">
+                <span class="text-xs bg-blue-700 text-white px-3 py-1 rounded-full">The Stakes</span>
+                <h2 class="text-3xl font-bold mt-4">Why start space training now?</h2>
+            </div>
+    
+            <!-- Three Info Cards -->
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-blue-500 text-xl">🚀</span>
+                        <h3 class="font-semibold">Economic Opportunity</h3>
+                    </div>
+                    <p class="text-gray-400 mt-2 text-sm">Space industry job creation is accelerating—trained professionals will be in demand.</p>
+                    <p class="text-gray-400 mt-2 text-sm">Those unprepared will miss out on historic opportunities in the growing space economy.</p>
+                </div>
+    
+                <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-blue-500 text-xl">🌍</span>
+                        <h3 class="font-semibold">Humanity’s Survival</h3>
+                    </div>
+                    <p class="text-gray-400 mt-2 text-sm">Space colonization is inevitable—trained individuals will lead this new era.</p>
+                    <p class="text-gray-400 mt-2 text-sm">Your descendants will depend on today’s pioneers—training today prepares for tomorrow’s realities.</p>
+                </div>
+    
+                <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-blue-500 text-xl">🔬</span>
+                        <h3 class="font-semibold">Scientific Discovery</h3>
+                    </div>
+                    <p class="text-gray-400 mt-2 text-sm">Humanity’s greatest discoveries will happen beyond Earth.</p>
+                    <p class="text-gray-400 mt-2 text-sm">Don’t be a spectator—SharedStars trains pioneers, not bystanders.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Your personal astronaut trainer -->
     <section class="min-h-screen flex items-center px-[120px] pt-[104px] pb-[120px]">
@@ -574,6 +771,38 @@
         </div>
       </div>
     </section>
+
+    <section class="flex items-center justify-center border-2 border-red-600 py-20">
+      <div class="flex flex-col items-center justify-center text-white">
+        <span
+          class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+          Social proof
+        </span>
+
+        <p class="text-heading2 mt-5">Space access timeline</p>
+        <p class="text-body-base mt-20">Traditional Space Tourism vs. Your SharedStars Timeline</p>
+
+        <div class="mt-14">
+          <div class="flex items-center justify-center">
+            <div class="self-start mx-5">
+              <span
+                class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                Social proof
+              </span>
+            </div>
+            <div class="relative border-l border-1 px-6 border-white-700">
+              <div class="absolute -left-[9px] top-0 w-[18px] h-[18px] rounded-full border-2 border-transparent bg-blue-500 
+                bg-gradient-to-tr from-black to-white p-[2px]">
+                  <div class="w-full h-full bg-blue-500 rounded-full"></div>
+              </div>
+
+              <p class="text-body-medium-semibold">$750,000+ Per seat</p>
+              <p class="text-body-small text-white-800">Space travel is highly exclusive and expensive, reserved for the ultra-wealthy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     
     <!-- Training Dashboard (Hidden by Default) -->
     <!-- <section id="training-dashboard" class="py-16 bg-gray-900 hidden">
@@ -619,29 +848,6 @@
         const currentLang = localStorage.getItem('preferredLanguage') || 'en';
         document.documentElement.setAttribute('lang', currentLang);
       });
-    </script>
-    <script type="module">
-      const carousel = document.getElementById("carousel");
-      const prevBtn = document.getElementById("prevBtn");
-      const nextBtn = document.getElementById("nextBtn");
-
-      console.log("COming Here::)))")
-
-      let index = 0;
-
-      nextBtn.addEventListener("click", () => {
-          index = (index + 1) % 2; // Total 2 testimonials
-          updateCarousel();
-      });
-
-      prevBtn.addEventListener("click", () => {
-          index = (index - 1 + 2) % 2;
-          updateCarousel();
-      });
-
-      function updateCarousel() {
-          carousel.style.transform = `translateX(-${index * 100}%)`;
-      }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script type="module" src="/js/modules/core/index.js"></script>

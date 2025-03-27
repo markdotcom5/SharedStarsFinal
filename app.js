@@ -351,7 +351,7 @@ if (typeof adminAuthRoutes === 'function') {
 }
 app.use('/api/admin/stella-analytics', stellaAnalyticsRoutes)
 app.use('/api/applications', require('./routes/api/applications'));
-app.use('/api/stella', stellaRoutes);
+// app.use('/api/stella', stellaRoutes);
 app.use('/', signupRouter);
 app.use('/api/translations', translationsRoutes);
 
