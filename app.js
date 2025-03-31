@@ -1,25 +1,32 @@
-// Console output optimizations
+// Debug function to check router objects
+function debugRouter(name, router) {
+  console.log(`Debug ${name} router: typeof=${typeof router}, isFunction=${typeof router === 'function'}, hasStack=${router && router.stack ? 'yes' : 'no'}`);
+}
+
 const consoleLogOriginal = console.log;
 console.log = function() {
-  // Completely block large data arrays and objects
+  // Skip training module data completely
   if (arguments.length > 0) {
-    // Block arrays
-    if (Array.isArray(arguments[0]) && arguments[0].length > 3) {
-      return consoleLogOriginal(`[Array with ${arguments[0].length} items - hidden]`);
+    // If it's an object with training module properties, skip it
+    if (typeof arguments[0] === 'object' && arguments[0] !== null) {
+      if (arguments[0].metrics || arguments[0].difficulty || 
+          arguments[0].category || arguments[0].exercises) {
+        return; // Don't log it at all
+      }
     }
     
-    // Block large objects
-    if (typeof arguments[0] === 'object' && !Array.isArray(arguments[0]) && arguments[0] !== null) {
-      return consoleLogOriginal(`[Object with ${Object.keys(arguments[0]).length} keys - hidden]`);
-    }
-    
-    // Block long strings
-    if (typeof arguments[0] === 'string' && arguments[0].length > 300) {
-      return consoleLogOriginal(`${arguments[0].substring(0, 50)}... [truncated]`);
+    // If it's a string that looks like module data, skip it
+    if (typeof arguments[0] === 'string') {
+      if (arguments[0].includes('metrics:') || 
+          arguments[0].includes('difficulty:') || 
+          arguments[0].includes('category:') ||
+          arguments[0].includes('exercises:')) {
+        return; // Don't log it at all
+      }
     }
   }
   
-  // Only allow through specific patterns
+  // Only show emoji logs and important messages
   if (arguments.length > 0 && typeof arguments[0] === 'string') {
     const message = arguments[0];
     if (message.startsWith('✅') || 
@@ -29,20 +36,39 @@ console.log = function() {
         message.startsWith('❌') ||
         message.includes('Connected') ||
         message.includes('initialized') ||
-        message.includes('Server running')) {
+        message.includes('Server running') ||
+        message.includes('routes mounted')) {
       return consoleLogOriginal.apply(this, arguments);
     }
   }
   
-  // Uncomment for debugging
-  // return consoleLogOriginal.apply(this, arguments);
+  // Let debug/important messages through
+  return consoleLogOriginal.apply(this, arguments);
 };
-
 // ============================
 // CORE DEPENDENCIES
 // ============================
 const dotenv = require('dotenv');
 dotenv.config();
+
+// Ensure MongoDB URI compatibility
+if (!process.env.MONGO_URI && process.env.MONGODB_URI) {
+  process.env.MONGO_URI = process.env.MONGODB_URI;
+  console.log("✅ Added MONGO_URI alias for MONGODB_URI");
+}
+
+// ============================
+// OpenAI INITIALIZATION
+// ============================
+const OpenAI = require('openai');
+const openai = new OpenAI({ 
+  apiKey: process.env.OPENAI_API_KEY 
+});
+console.log("✅ OpenAI SDK initialized");
+
+// ============================
+// OTHER DEPENDENCIES
+// ============================
 const http = require("http");
 const path = require("path");
 const fs = require('fs');
@@ -51,7 +77,7 @@ const net = require("net");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const express = require("express");
-const cors = require("cors");
+const cors = require('./cors');
 const helmet = require("helmet");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
@@ -69,6 +95,11 @@ const stellaAnalyticsRoutes = require('./routes/admin/stellaAnalytics');
 const { v4: uuidv4 } = require('uuid');
 const signupRouter = require('./routes/signup');
 const translationsRoutes = require('./routes/translations');
+const STELLA_AI = require('./services/STELLA_AI');
+const stellaQARoutes = require('./routes/api/stella-qa');
+const stellaFixedRoutes = require('./routes/api/stella-fixed');
+const { authenticate } = require('./middleware/auth');
+const { getPersonalizedTemplate, enhanceResponseWithPersonality } = require('./services/personalityService');
 
 // ============================
 // 0. SESSION STORE SETUP
@@ -122,44 +153,56 @@ class MemoryStore extends EventEmitter {
 // ============================
 // 1. MONGOOSE SETUP
 // ============================
-const mongoose = require("mongoose");
-
+const mongoose = require('mongoose');
+mongoose.set('debug', false);
 // Disable Mongoose debug mode to reduce console spam
 mongoose.set('debug', false);
 mongoose.set('autoIndex', false);
-
 // Connect to MongoDB with reduced logging
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI)
     .then(() => console.log("✅ MongoDB Connected"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err.message));
 
-// Add Schema.Types property to Schema constructor
-mongoose.Schema.Types = mongoose.Schema.Types || {
-  ObjectId: mongoose.Types.ObjectId,
-  String: String,
-  Number: Number,
-  Boolean: Boolean,
-  Date: Date,
-  Mixed: mongoose.Schema.Types.Mixed || Object,
-  Array: Array,
-  Buffer: Buffer
+// Replace the simple disable with this more selective version
+const originalLog = console.log;
+console.log = function() {
+  // Always show error messages
+  if (arguments.length > 0 && typeof arguments[0] === 'string' && 
+     (arguments[0].includes('❌') || arguments[0].includes('Error'))) {
+    return originalLog.apply(console, arguments);
+  }
+  
+  // Show initialization messages
+  if (arguments.length > 0 && typeof arguments[0] === 'string' && 
+     (arguments[0].includes('✅') || arguments[0].includes('🔄') || 
+      arguments[0].includes('initialized') || arguments[0].includes('Connected'))) {
+    return originalLog.apply(console, arguments);
+  }
+  
+  // Hide everything else
+  if (typeof arguments[0] === 'object' || 
+     (typeof arguments[0] === 'string' && !arguments[0].includes('❌'))) {
+    return;
+  }
+  
+  return originalLog.apply(console, arguments);
 };
-
 // ============================
 // 2. EXPRESS APP SETUP
 // ============================
 const app = express();
 const server = http.createServer(app);
-
+// After creating the server
+if (typeof upgradeConnection === 'function') {
+  upgradeConnection(server);
+}
 // ============================
 // 3. MIDDLEWARE SETUP
 // ============================
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({
-  origin: ['http://localhost', 'http://localhost:3000', 'http://127.0.0.1:3000'],
-  credentials: true
-}));
+app.use(cors());
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -247,7 +290,6 @@ const safeRequire = (path, routeName) => {
     return null;
   }
 };
-
 // Admin routes
 applicationRoutes = safeRequire('./routes/api/applications', 'Application routes');
 applicationAdminRoutes = safeRequire('./routes/admin/applications', 'Admin application routes');
@@ -285,20 +327,22 @@ balanceRoutes = safeRequire('./routes/training/missions/balance.js', "balanceRou
 enduranceRoutes = safeRequire('./routes/training/missions/endurance.js', "enduranceRoutes");
 flexibilityRoutes = safeRequire('./routes/training/missions/flexibility.js', "flexibilityRoutes");
 strengthRoutes = safeRequire('./routes/training/missions/strength.js', "strengthRoutes");
-stellaRoutes = safeRequire("./routes/api/stella-minimal", "stellaRoutes");
 applicationsRoutes = safeRequire("./routes/api/applications", "applicationsRoutes");
-// 7. TEST ROUTES
+stellaRoutes = safeRequire("./routes/api/stella-fixed", "stellaRoutes");
+// Comment out this line to avoid conflicts
+// stellaMainRoutes = safeRequire("./routes/api/stella", "stellaMainRoutes");
 // ============================
 // Simple test routes
-
 app.get('/api/test-direct', (req, res) => {
   res.json({ message: 'Direct test route is working' });
 });
+
 const testRouter = express.Router();
 testRouter.get('/test', (req, res) => {
   res.json({ message: 'Test router is working' });
 });
 app.use('/api/test-router', testRouter);
+
 // ============================
 // 8. ROUTES MOUNTING
 // ============================
@@ -325,49 +369,82 @@ if (balanceRoutes) app.use('/training/physical/mission/balance', balanceRoutes);
 if (enduranceRoutes) app.use('/training/physical/mission/endurance', enduranceRoutes);
 if (flexibilityRoutes) app.use('/training/physical/mission/flexibility', flexibilityRoutes);
 if (strengthRoutes) app.use('/training/physical/mission/strength', strengthRoutes);
-if (applicationsRoutes) app.use("/api/applications", applicationsRoutes);
+
 // Mount STELLA routes
 if (stellaRoutes) {
   app.use("/api/stella", stellaRoutes);
-  console.log("✅ STELLA routes mounted at /api/stella");
+  console.log("✅ Enhanced STELLA routes mounted at /api/stella");
 } else {
-  console.error("❌ STELLA routes failed to load - please check routes/api/stella-minimal.js");
+  console.error("❌ STELLA routes failed to load - please check routes/api/stella-fixed.js");
 }
 
-if (applicationsRoutes) {
-  app.use("/api/applications", applicationsRoutes);
+// Add debugging for all route objects
+debugRouter('applicationAdminRoutes', applicationAdminRoutes);
+debugRouter('translationsRoutes', translationsRoutes);
+debugRouter('stellaQARoutes', stellaQARoutes);
+debugRouter('stellaAnalyticsRoutes', stellaAnalyticsRoutes);
+debugRouter('applicationsRoutes', applicationsRoutes);
+
+console.log("About to mount routes in sequence...");
+
+// Application routes
+if (applicationsRoutes && typeof applicationsRoutes === 'function') {
+  app.use('/api/applications', applicationsRoutes);
   console.log("✅ Application routes mounted at /api/applications");
+} else {
+  console.error("❌ Applications routes failed to load properly");
 }
 
-// Mount admin routes if they exist
-if (typeof applicationAdminRoutes === 'function') {
+// REMOVED DUPLICATE STELLA ROUTES MOUNT
+// app.use('/api/stella', stellaFixedRoutes);
+// console.log("✅ Enhanced STELLA routes mounted at /api/stella");
+
+// STELLA Analytics routes
+if (stellaAnalyticsRoutes && typeof stellaAnalyticsRoutes === 'function') {
+  app.use('/api/admin/stella-analytics', stellaAnalyticsRoutes);
+  console.log("✅ STELLA Analytics routes mounted at /api/admin/stella-analytics");
+} else if (stellaAnalyticsRoutes && stellaAnalyticsRoutes.router && typeof stellaAnalyticsRoutes.router === 'function') {
+  app.use('/api/admin/stella-analytics', stellaAnalyticsRoutes.router);
+  console.log("✅ STELLA Analytics routes mounted at /api/admin/stella-analytics");
+} else {
+  console.error("❌ STELLA Analytics routes failed to load properly");
+}
+
+// Admin routes
+if (applicationAdminRoutes && typeof applicationAdminRoutes === 'function') {
   app.use('/api/admin/applications', applicationAdminRoutes);
   console.log("✅ Admin applications routes mounted");
+} else {
+  console.error("❌ Admin applications routes failed to load properly");
 }
 
-if (typeof adminAuthRoutes === 'function') {
-  app.use('/api/admin/auth', adminAuthRoutes);
-  console.log("✅ Admin auth routes mounted");
+// Translations routes
+if (translationsRoutes && typeof translationsRoutes === 'function') {
+  app.use('/api/translations', translationsRoutes);
+  console.log("✅ Translations routes mounted at /api/translations");
+} else {
+  console.error("❌ Translations routes failed to load properly");
 }
-app.use('/api/admin/stella-analytics', stellaAnalyticsRoutes)
 
-app.use('/api/translations', translationsRoutes);
+// STELLA Q&A routes
+if (stellaQARoutes && typeof stellaQARoutes === 'function') {
+  app.use('/api/stella/qa', stellaQARoutes);
+  console.log("✅ STELLA Q&A routes mounted at /api/stella/qa");
+} else {
+  console.error("❌ STELLA Q&A routes failed to load properly");
+}
 
-// Add this to your app.js to test email functionality
 // Add this to your app.js to test email functionality
 app.get('/api/test-email', async (req, res) => {
   try {
     const emailService = require('./services/emailService');
-    const config = require('./config');  // Add this line to import config
+    const config = require('./config');
     
     console.log('Testing email service with config:', {
       host: config.email.host,
       port: config.email.port,
       secure: config.email.secure,
-      auth: {
-        user: config.email.auth.user,
-        // Don't log the password
-      }
+      auth: { user: config.email.auth.user }
     });
     
     const result = await emailService.sendVerificationEmail(
@@ -383,10 +460,7 @@ app.get('/api/test-email', async (req, res) => {
     });
   } catch (error) {
     console.error('Email test failed:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: error.message 
-    });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 // ============================
@@ -430,7 +504,6 @@ function saveBlogPosts(posts) {
   }
 }
 
-// Generate a slug from title
 function generateSlug(title) {
   return title
     .toLowerCase()
@@ -478,15 +551,13 @@ app.post('/api/blog/posts', (req, res) => {
 
 app.get('/api/blog/latest', (req, res) => {
   try {
-    // Add a small delay to prevent rapid requests
     setTimeout(() => {
       const posts = getBlogPosts();
-      // Sort by date descending and take the 3 most recent
       const latestPosts = posts
         .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
         .slice(0, 3);
       
-      res.json(latestPosts); // Changed from blogPosts to latestPosts
+      res.json(latestPosts);
     }, 100);
   } catch (error) {
     console.error('Error fetching blog posts:', error);
@@ -541,9 +612,11 @@ app.delete('/api/blog/posts/:id', (req, res) => {
 });
 
 console.log("✅ Blog functionality setup complete");
+
 // ============================
 // 9. ADDITIONAL API ENDPOINTS
 // ============================
+
 // Physical training progress endpoint
 app.get('/api/training/physical', async (req, res) => {
   try {
@@ -554,12 +627,10 @@ app.get('/api/training/physical', async (req, res) => {
   }
 });
 
-// Training progress data endpoint - resolves 404 errors with progressChart.js
+// Training progress data endpoint
 app.post('/api/training/progress', (req, res) => {
-  // Get userId from session or request body
   const userId = req.session.user?.id || req.body.userId || 'anonymous';
   
-  // Mock data - in production, you'd get this from a database
   res.json({
     success: true,
     userId: userId,
@@ -577,12 +648,13 @@ app.post('/api/training/progress', (req, res) => {
     ]
   });
 });
-
+app.get('/api/auth/verify-token', authenticate, (req, res) => {
+  res.json({ valid: true, userId: req.user._id });
+});
 // Assessment status endpoint
 app.get('/api/assessment/status/:userId', (req, res) => {
   const { userId } = req.params;
   
-  // Mock data - in production, you'd check this in a database
   res.json({
     success: true,
     userId: userId,
@@ -599,7 +671,6 @@ app.get('/api/assessment/status/:userId', (req, res) => {
 app.post('/api/assessment/complete', (req, res) => {
   const { userId, assessmentType, results } = req.body;
   
-  // In production, you'd save this to a database
   console.log(`Assessment completed for user ${userId}, type: ${assessmentType}`);
   
   res.json({
@@ -617,7 +688,7 @@ app.post('/api/assessment/complete', (req, res) => {
   });
 });
 
-// Auth status endpoint - fixed Copyapp typo
+// Auth status endpoint
 app.get('/api/auth/status', (req, res) => {
   res.json({ status: req.session.user ? 'authenticated' : 'unauthenticated' });
 });
@@ -625,16 +696,7 @@ app.get('/api/auth/status', (req, res) => {
 app.get('/api/auth/test', (req, res) => {
   res.json({ message: 'Auth routes are available' });
 });
-// Get all blog posts
-app.get('/api/blog/posts', (req, res) => {
-  try {
-    const posts = getBlogPosts();
-    res.json(posts);
-  } catch (error) {
-    console.error('Error fetching all posts:', error.message);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
+
 // ============================
 // 10. WEBSOCKET SETUP
 // ============================

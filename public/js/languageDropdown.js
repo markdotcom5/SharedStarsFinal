@@ -1,6 +1,7 @@
 /**
  * Enhanced Language Dropdown Handler
  * Controls the language dropdown in the header with improved visuals and functionality
+ * Integrates with the LanguageManager class for seamless translation
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -154,27 +155,45 @@ document.addEventListener('DOMContentLoaded', function() {
       selectedLangFlag.innerHTML = languages[langCode].flagSvg;
     }
     
-    // Update document language attribute (important for accessibility)
-    document.documentElement.setAttribute('lang', langCode);
+    // If LanguageManager exists, use it (primary method)
+    if (window.languageManager) {
+      window.languageManager.setLanguage(langCode);
+    } else {
+      // Fallback translation methods
+      
+      // Update document language attribute for accessibility
+      document.documentElement.setAttribute('lang', langCode);
+      
+      // Save preference
+      saveLanguagePreference(langCode);
+      
+      // Trigger translation event for any other components
+      const event = new CustomEvent('languageChanged', {
+        detail: { language: langCode }
+      });
+      document.dispatchEvent(event);
+      
+      // If standalone translation function exists, call it
+      if (typeof translatePage === 'function') {
+        translatePage(langCode);
+      } else {
+        console.warn('No translation mechanism available. Please include languageManager.js or implement translatePage()');
+      }
+    }
     
-    // Save preference
-    saveLanguagePreference(langCode);
-    
-    // Trigger translation event
-    const event = new CustomEvent('languageChanged', {
-      detail: { language: langCode }
-    });
-    document.dispatchEvent(event);
-    
-    // If you have a translation function, call it
-    if (typeof translatePage === 'function') {
-      translatePage(langCode);
+    // Update the select dropdown if it exists (for the simplified version)
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+      languageSelect.value = langCode;
     }
     
     // Close dropdown
     if (dropdown) {
       dropdown.classList.add('hidden');
     }
+    
+    // Log for debugging
+    console.log(`🌐 Language set to ${langCode} (${languages[langCode].name})`);
   }
   
   // Set up language option buttons
@@ -194,16 +213,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const storageLang = getLanguageFromStorage();
     const browserLang = getBrowserLanguage();
     
+    // Debug info
+    console.log('🔍 Language detection:');
+    console.log(`- Cookie: ${cookieLang || 'not set'}`);
+    console.log(`- LocalStorage: ${storageLang || 'not set'}`);
+    console.log(`- Browser: ${browserLang || 'not detected'}`);
+    
     let preferredLang = cookieLang || storageLang || browserLang;
     
     // Only use if we support this language
     if (!languages[preferredLang]) {
+      console.log(`⚠️ Language "${preferredLang}" not supported, defaulting to English`);
       preferredLang = 'en';
     }
     
     setLanguage(preferredLang);
   }
   
+  // Handle simple dropdown select (for the select element version)
+  const languageSelect = document.getElementById('language-select');
+  if (languageSelect) {
+    languageSelect.addEventListener('change', function() {
+      setLanguage(this.value);
+    });
+  }
+  
   // Initialize once DOM is loaded
   initializeLanguage();
+  
+  // Create event to notify other scripts that language dropdown is ready
+  document.dispatchEvent(new CustomEvent('languageDropdownReady'));
+  
+  // Export functions to window for potential use by other scripts
+  window.languageDropdown = {
+    setLanguage,
+    getLanguageFromCookie,
+    getLanguageFromStorage,
+    getBrowserLanguage,
+    languages
+  };
 });

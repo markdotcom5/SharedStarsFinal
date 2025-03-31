@@ -2,11 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/authenticate');
 const subscriptionController = require('../controllers/subscriptionController');
-const { validateCreateSubscription, validateUpdatePaymentStatus } = require('../validators/subscriptionValidator'); // Import validators
-
-// ========================
-// Subscription Routes
-// ========================
+const User = require('../models/User'); // Add this line to import User model
+const { validateCreateSubscription, validateUpdatePaymentStatus } = require('../validators/subscriptionValidator');
 
 // Create a New Subscription
 router.post('/create', authenticate, validateCreateSubscription, async (req, res, next) => {
@@ -36,7 +33,8 @@ router.get('/status', authenticate, async (req, res, next) => {
         console.error('Error in /status:', error.message);
         res.status(500).json({ error: 'Failed to fetch subscription status' });
     }
-});
+}); 
+
 // routes/subscription.js
 router.post('/update-tier', authenticate, async (req, res) => {
     try {
@@ -50,7 +48,8 @@ router.post('/update-tier', authenticate, async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-});
+}); // Add this closing bracket
+
 // Additional Routes (Optional)
 router.post('/cancel', authenticate, async (req, res, next) => {
     try {

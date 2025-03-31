@@ -5,12 +5,18 @@
 
 const express = require('express');
 const router = express.Router();
-const { OpenAI } = require('openai');
-const StellaConversation = require('../../models/StellaConversation'); // Adjust path as needed
-const UserProgress = require('../../models/UserProgress'); // Adjust path as needed
+const OpenAI = require('openai');
+const StellaConversation = require('../../models/StellaConversation'); 
+const UserProgress = require('../../models/UserProgress'); 
+const aiController = require('../../controllers/AIController');
+const authenticate = require('../../middleware/authenticate'); 
+const { buildUserContext } = require('../../services/contextBuilder');
+const rateLimit = require('express-rate-limit');
+const { applyRateLimit } = require('../../middleware/rateLimiter');
+
 
 // System prompt definition
-const systemPrompt = `You are STELLA (Space Training Enhancement through Learning & Leadership Adaptation), 
+const systemPrompt = `You are STELLA... (Space Training Enhancement through Learning & Leadership Adaptation), 
 an advanced AI training assistant for astronauts and space professionals at SharedStars. 
 
 About SharedStars: A comprehensive space training platform that democratizes astronaut preparation, 
@@ -38,6 +44,226 @@ let openai;
 
 try {
   openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "MISSING_KEY" });
+
+
+/**
+ * Get most commonly asked questions
+ */
+router.get('/common-questions', applyRateLimit, async (req, res) => {
+  try {
+    const commonQuestions = await StellaConversation.getMostCommonQuestions(10);
+    
+    res.json({
+      success: true,
+      questions: commonQuestions.map(q => ({
+        id: q._id,
+        question: q.content,
+        frequency: q.frequencyData?.similarQuestionCount || 1,
+        lastAsked: q.frequencyData?.lastAsked
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching common questions:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to fetch common questions: ' + error.message
+    });
+  }
+});
+
+/**
+ * Get conversation statistics for a user
+ */
+router.get('/statistics/:userId', applyRateLimit, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!userId || userId === 'undefined') {
+      return res.status(400).json({
+        success: false,
+        error: 'Valid userId is required'
+      });
+    }
+    
+    // Get statistics using the model method
+    const stats = await StellaConversation.getStats(userId);
+    
+    res.json({
+      success: true,
+      statistics: stats
+    });
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to fetch statistics: ' + error.message
+    });
+  }
+});
+
+/**
+ * Clear conversation history for a user
+ */
+router.delete('/conversations/:userId', applyRateLimit, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!userId || userId === 'undefined') {
+      return res.status(400).json({
+        success: false,
+        error: 'Valid userId is required'
+      });
+    }
+    
+   // Clear history using the model method
+   await StellaConversation.clearHistory(userId);
+    
+   res.json({
+     success: true,
+     message: 'Conversation history cleared successfully'
+   });
+ } catch (error) {
+   console.error('Error clearing conversation history:', error);
+   res.status(500).json({ 
+     success: false, 
+     error: 'Failed to clear conversation history: ' + error.message
+   });
+ }
+});
+
+/**
+* STELLA system status
+*/
+router.get('/status', (req, res) => {
+ const isOpenAIAvailable = !!openai && process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== "MISSING_KEY";
+ 
+ res.json({
+   success: true,
+   status: {
+     online: true,
+     openai: isOpenAIAvailable ? 'available' : 'unavailable',
+     version: '1.0',
+     timestamp: new Date().toISOString()
+   }
+ });
+});
+
+/**
+* Get training recommendations for a specific user
+*/
+router.get('/recommendations/:userId', applyRateLimit, async (req, res) => {
+ try {
+   const { userId } = req.params;
+   
+   if (!userId || userId === 'undefined') {
+     return res.status(400).json({
+       success: false,
+       error: 'Valid userId is required'
+     });
+   }
+   
+   // If training system is available, use it for recommendations
+   if (trainingSystem) {
+     try {
+       const recommendedModules = await trainingSystem.getRecommendedModules(userId);
+       
+       return res.json({
+         success: true,
+         recommendations: recommendedModules.map(module => ({
+           moduleId: module.moduleId,
+           title: module.title,
+           category: module.category,
+           reason: module.aiRecommendation || 'Based on your progress',
+           difficulty: module.difficulty
+         }))
+       });
+     } catch (err) {
+       console.error('Error getting recommendations from training system:', err);
+       // Continue to fallback
+     }
+   }
+   
+   // Fallback recommendations based on conversation history
+   const userConversations = await StellaConversation.find({ userId, fromUser: true })
+     .sort({ timestamp: -1 })
+     .limit(10)
+     .lean();
+   
+   // Extract topics of interest from conversations
+   const topics = userConversations.flatMap(conv => 
+     conv.aiAnalysis?.topics || []
+   );
+   
+   // Count topic frequencies
+   const topicCounts = {};
+   topics.forEach(topic => {
+     topicCounts[topic] = (topicCounts[topic] || 0) + 1;
+   });
+   
+   // Generate recommendations based on most frequent topics
+   const recommendations = [];
+   
+   if (topicCounts['physical training'] > 0 || Object.keys(topicCounts).length === 0) {
+     recommendations.push({
+       moduleId: 'physical-core',
+       title: 'Core & Balance Foundation',
+       category: 'Physical Training',
+       reason: 'Recommended starting point for all astronaut candidates',
+       difficulty: 'beginner'
+     });
+   }
+   
+   if (topicCounts['mental preparation'] > 0) {
+     recommendations.push({
+       moduleId: 'mental-resilience',
+       title: 'Cognitive Resilience',
+       category: 'Mental Fitness',
+       reason: 'Based on your interest in mental preparation',
+       difficulty: 'intermediate'
+     });
+   }
+   
+   if (topicCounts['technical skills'] > 0) {
+     recommendations.push({
+       moduleId: 'tech-systems',
+       title: 'Spacecraft Systems',
+       category: 'Technical Training',
+       reason: 'Based on your interest in technical skills',
+       difficulty: 'advanced'
+     });
+   }
+   
+   // Ensure we have at least some recommendations
+   if (recommendations.length === 0) {
+     recommendations.push({
+       moduleId: 'physical-core',
+       title: 'Core & Balance Foundation',
+       category: 'Physical Training',
+       reason: 'Recommended starting point for all astronaut candidates',
+       difficulty: 'beginner'
+     });
+     
+     recommendations.push({
+       moduleId: 'physical-endurance',
+       title: 'Endurance Boost',
+       category: 'Physical Training',
+       reason: 'Essential for all space missions',
+       difficulty: 'beginner'
+     });
+   }
+   
+   res.json({
+     success: true,
+     recommendations
+   });
+ } catch (error) {
+   console.error('Error generating recommendations:', error);
+   res.status(500).json({ 
+     success: false, 
+     error: 'Failed to generate recommendations: ' + error.message
+   });
+ }
+});
 
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "MISSING_KEY") {
     console.error("❌ ERROR: Missing OpenAI API Key in STELLA Routes");
@@ -79,37 +305,6 @@ const CACHE_TTL = 3600000; // 1 hour in milliseconds
 const userRateLimit = new Map();
 const MAX_REQUESTS_PER_MINUTE = 10;
 
-// Apply rate limiting middleware
-const applyRateLimit = (req, res, next) => {
-  const userId = req.body.userId || req.query.userId || req.params.userId || 'anonymous';
-  const now = Date.now();
-  
-  if (!userRateLimit.has(userId)) {
-    userRateLimit.set(userId, { count: 1, resetTime: now + 60000 });
-    return next();
-  }
-  
-  const userLimit = userRateLimit.get(userId);
-  
-  // Reset counter if minute has passed
-  if (now > userLimit.resetTime) {
-    userLimit.count = 1;
-    userLimit.resetTime = now + 60000;
-    return next();
-  }
-  
-  // Check if limit exceeded
-  if (userLimit.count >= MAX_REQUESTS_PER_MINUTE) {
-    return res.status(429).json({
-      success: false,
-      error: 'Rate limit exceeded. Please try again later.'
-    });
-  }
-  
-  // Increment counter and continue
-  userLimit.count++;
-  next();
-};
 
 async function generateEmbedding(text) {
   const response = await openai.embeddings.create({
@@ -118,6 +313,15 @@ async function generateEmbedding(text) {
   });
   return response.data[0].embedding;
 }
+// Add this near your rate limiter
+setInterval(() => {
+  const now = Date.now();
+  for (const [userId, data] of userRateLimit.entries()) {
+    if (now > data.resetTime + 60000) { // Remove entries older than 2 minutes
+      userRateLimit.delete(userId);
+    }
+  }
+}, 300000); // Clean up every 5 minutes
 
 // Temporarily comment out this section if you don't have langchain installed
 // Uncomment after installing required packages
@@ -316,6 +520,73 @@ async function getOpenAIResponse(question, userId, userProfile = null) {
 }
 
 /**
+ * Generate personalized guidance
+ */
+async function getPersonalizedGuidance(userId, question) {
+  try {
+    // Generate user profile with context
+    const userProfile = await generateUserProfile(userId);
+    
+    // Check if a similar question exists
+    const similarQuestionResult = await findSimilarQuestion(userId, question);
+    
+    if (similarQuestionResult.found && similarQuestionResult.similarity > 0.8) {
+      console.log('Using similar question response');
+      return similarQuestionResult.response.content;
+    }
+    
+    // Get response from OpenAI
+    const openAIResponse = await this.getOpenAIResponse(question, userId, userProfile);
+
+    // Store this conversation for learning
+    const sessionId = `stella_${Date.now()}`;
+    
+    // Store user question
+    const userQuestion = new StellaConversation({
+      userId,
+      fromUser: true,
+      content: question,
+      timestamp: new Date(),
+      metadata: {
+        sessionId,
+        source: 'api'
+      },
+      aiAnalysis: {
+        ...(await analyzeQuestion(question)),
+        confidenceScore: 1.0
+      }
+    });
+    
+    // Store STELLA's response
+    const stellaResponse = new StellaConversation({
+      userId,
+      fromUser: false,
+      content: openAIResponse,
+      timestamp: new Date(Date.now() + 1),
+      metadata: {
+        sessionId,
+        source: 'openai',
+        model: 'gpt-4o'
+      },
+      aiAnalysis: {
+        // Extract action items from response
+        actionItems: extractActionItems(openAIResponse),
+        confidenceScore: 0.9  // Initial confidence score
+      }
+    });
+    
+    // Add to batch processing queue
+    pendingConversations.push(userQuestion, stellaResponse);
+    processPendingConversations();
+    
+    return openAIResponse;
+  } catch (error) {
+    console.error('Error in getPersonalizedGuidance:', error);
+    throw error;
+  }
+}
+
+/**
  * Generate User Profile
  */
 async function generateUserProfile(userId) {
@@ -346,19 +617,6 @@ async function safeGetUserProgress(userId) {
   }
 }
 
-// Simple test endpoint
-router.get('/test', (req, res) => {
-  res.json({ message: "STELLA API is working" });
-});
-
-// Initialize STELLA endpoint
-router.get('/initialize', (req, res) => {
-  res.json({
-    success: true,
-    message: "STELLA initialized successfully",
-    version: "1.0"
-  });
-});
 /**
  * Improved similarity check using more robust matching
  */
@@ -468,6 +726,7 @@ async function findSimilarQuestion(userId, question) {
     return { found: false };
   }
 }
+
 // Add this function
 async function determineUserStage(userId) {
   try {
@@ -515,56 +774,6 @@ async function fetchFromSLL(question, userId) {
   } catch (error) {
     console.error('Error fetching from STELLA Learning Library:', error);
     return null;
-  }
-}
-
-/**
- * Generate direct OpenAI response for critical or complex questions
- */
-async function getOpenAIResponse(question, userId, userProfile = null) {
-  if (!openai) {
-    throw new Error("OpenAI service is not available");
-  }
-
-  const messages = [{ role: 'system', content: systemPrompt }];
-
-  // Add user context if available
-  if (userProfile) {
-    const contextMessage = `User Information:
-    - Progress: ${JSON.stringify(userProfile.progress || {})}
-    - Recent conversations: ${userProfile.recentConversations?.length || 0} recent interactions`;
-    
-    messages.push({ role: 'system', content: contextMessage });
-  }
-
-  messages.push({ role: 'user', content: question });
-
-  const openaiRes = await openai.chat.completions.create({
-    model: 'gpt-4o',
-    messages: messages,
-    temperature: 0.7,
-    max_tokens: 500,
-  });
-
-  return openaiRes.choices[0].message.content;
-}
-
-/**
- * Generate User Profile
- */
-async function generateUserProfile(userId) {
-  try {
-    const progress = await safeGetUserProgress(userId);
-    const recentConversations = await StellaConversation.find({ userId })
-      .sort({ timestamp: -1 }).limit(5).lean();
-
-    return {
-      progress,
-      recentConversations
-    };
-  } catch (error) {
-    console.error('Error generating user profile:', error);
-    return { progress: null, recentConversations: [] };
   }
 }
 
@@ -748,35 +957,150 @@ router.post('/progress/evaluate', applyRateLimit, async (req, res) => {
     res.status(500).json({ success: false, error: "An error occurred while processing your performance data." });
   }
 });
+
+/**
+ * Get personalized guidance from STELLA
+ */
 router.post('/guidance', applyRateLimit, async (req, res) => {
-  const { userId, question } = req.body;
-
-  if (!userId || !question) {
-    return res.status(400).json({ success: false, error: 'userId and question required' });
-  }
-
-  const lowerQuestion = question.toLowerCase();
-
-  // Handle dynamic date/time queries first
-  if (lowerQuestion.includes("today's date") || lowerQuestion.includes("what day is it")) {
-    return res.json({
-      success: true,
-      guidance: {
-        message: `Today's date is ${new Date().toLocaleDateString()}.`
+  try {
+    const { userId, question } = req.body;
+    
+    if (!userId || !question) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing required fields: userId and/or question"
+      });
+    }
+    
+    console.log(`Processing guidance request for userId ${userId} with question: ${question}`);
+    
+    // Generate a session ID for this conversation
+    const sessionId = `stella_${Date.now()}`;
+    
+    // Store the user's question in MongoDB
+    const userQuestion = new StellaConversation({
+      userId,
+      fromUser: true,
+      content: question,
+      timestamp: new Date(),
+      metadata: {
+        sessionId,
+        context: 'general'
+      },
+      aiAnalysis: await analyzeQuestion(question)
+    });
+    
+    // First check if similar question exists in SSL
+    const similarQuestionResult = await findSimilarQuestion(userId, question);
+    
+    let responseContent;
+    
+    if (similarQuestionResult.found && similarQuestionResult.similarity > 0.8) {
+      console.log('Using similar question response from SSL');
+      responseContent = similarQuestionResult.response.content;
+    } else {
+      // Build rich context for personalized response
+      const userContext = await buildUserContext(userId);
+      
+      // Get response from OpenAI with context
+responseContent = await this.getOpenAIResponse(question, userId, userContext);
+    }
+    
+    // Store STELLA's response
+    const stellaResponse = new StellaConversation({
+      userId,
+      fromUser: false,
+      content: responseContent,
+      timestamp: new Date(Date.now() + 1),
+      metadata: {
+        sessionId,
+        context: 'general',
+        source: similarQuestionResult.found ? 'ssl' : 'openai'
+      },
+      aiAnalysis: {
+        actionItems: extractActionItems(responseContent),
+        confidenceScore: similarQuestionResult.found ? 0.95 : 0.9
       }
     });
-  }
-
-  // Existing OpenAI logic here
-  try {
-    const responseContent = await getOpenAIResponse(question, userId);
-    return res.json({ success: true, guidance: { message: responseContent } });
+    
+    // Save both to database
+    try {
+      await userQuestion.save();
+      await stellaResponse.save();
+      console.log('Conversation saved to database');
+    } catch (dbError) {
+      console.error('Error saving to database:', dbError);
+      // Continue anyway - don't fail the response if DB save fails
+    }
+    
+    res.json({
+      success: true, 
+      guidance: { 
+        message: responseContent 
+      }
+    });
   } catch (error) {
     console.error("Error getting guidance:", error);
-    return res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error"
+    });
   }
 });
+// GET /api/stella/status
+router.get('/status', (req, res) => {
+  res.json({ status: "STELLA is online." });
+});
 
+// GET /api/stella/daily-briefing
+router.get('/daily-briefing', (req, res) => {
+  const userId = req.query.userId;
+  res.json({ briefing: `Daily briefing for user ${userId}.` });
+});
+
+// GET /api/stella/countdown/status
+router.get('/countdown/status', (req, res) => {
+  const userId = req.query.userId;
+  res.json({ countdown: `Countdown status for ${userId}` });
+});
+
+// GET /api/stella/personality/settings
+router.get('/personality/settings', (req, res) => {
+  const userId = req.query.userId;
+  res.json({ personality: `Personality settings for ${userId}` });
+});
+/**
+ * Get recent STELLA conversations for a user
+ */
+router.get('/recent-conversations/:userId', applyRateLimit, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!userId || userId === 'undefined') {
+      return res.status(400).json({
+        success: false,
+        error: 'Valid userId is required'
+      });
+    }
+    
+    // Get recent conversations
+    const conversations = await StellaConversation.find({ userId })
+      .sort({ timestamp: -1 })
+      .limit(10);
+    
+    res.json({ 
+      success: true, 
+      count: conversations.length,
+      conversations 
+    });
+  } catch (error) {
+    console.error('Error fetching conversations:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to fetch conversations: ' + error.message
+    });
+  }
+});
 /**
  * Receive feedback on STELLA's responses for learning
  */
@@ -876,7 +1200,6 @@ router.get('/conversations/recent', applyRateLimit, async (req, res) => {
     });
   }
 });
-
 /**
  * Get most commonly asked questions
  */
@@ -931,7 +1254,6 @@ router.get('/statistics/:userId', applyRateLimit, async (req, res) => {
     });
   }
 });
-
 /**
  * Clear conversation history for a user
  */
@@ -961,7 +1283,6 @@ router.delete('/conversations/:userId', applyRateLimit, async (req, res) => {
    });
  }
 });
-
 /**
 * STELLA system status
 */
@@ -978,7 +1299,12 @@ router.get('/status', (req, res) => {
    }
  });
 });
-
+/**
+ * GET /api/stella/status
+ * Check STELLA system status
+ */
+router.get('/status', (req, res) => {
+  const isOpenAIAvailable = !!open
 /**
 * Get training recommendations for a specific user
 */

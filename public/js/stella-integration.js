@@ -478,70 +478,88 @@ window.StellaIntegration = {
     }
   },
   /**
-   * Attach UI event listeners
-   * @private
-   */
-  _attachUIEventListeners: function() {
-    // Handle Enter key press in the question input
-    const questionInput = document.getElementById('stella-question');
-    if (questionInput) {
-      questionInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
+ * Attach UI event listeners
+ * @private
+ */
+_attachUIEventListeners: function() {
+  // Handle Enter key press in the question input
+  const questionInput = document.getElementById('stella-question');
+  if (questionInput) {
+    questionInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('send-to-stella').click();
+      }
+    });
+  }
+  
+  // Handle click on the send button
+  const sendButton = document.getElementById('send-to-stella');
+  if (sendButton) {
+    sendButton.addEventListener('click', () => {
+      const question = questionInput.value.trim();
+      if (question) {
+        // Clear input
+        questionInput.value = '';
+        
+        // Display user message
+        this._displayMessage('user', question);
+        
+        // Send question
+        this.askQuestion(question)
+          .then(response => {
+            // Display STELLA's response
+            this._displayMessage('stella', response.guidance.message);
+          })
+          .catch(error => {
+            console.error('Error asking STELLA:', error);
+            // Show error message
+            this._displayMessage('system', "I'm having trouble connecting. Please try again in a moment.");
+          });
+      }
+    });
+  }
+  
+  // Set up quick action buttons
+  document.querySelectorAll('.stella-action-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const question = button.getAttribute('data-question');
+      if (question) {
+        // Set the question in the input field
+        const questionInput = document.getElementById('stella-question');
+        if (questionInput) {
+          questionInput.value = question;
+          // Trigger click on send button
           document.getElementById('send-to-stella').click();
         }
-      });
-    }
-    
-    // Handle click on the send button
-    const sendButton = document.getElementById('send-to-stella');
-    if (sendButton) {
-      sendButton.addEventListener('click', () => {
-        const question = questionInput.value.trim();
-        if (question) {
-          // Clear input
-          questionInput.value = '';
-          
-          // Send question
-          this.askQuestion(question)
-            .then(response => {
-              // Update UI with response
-              const stellaMessage = document.getElementById('stella-message');
-              if (stellaMessage) {
-                stellaMessage.innerHTML = `<p class="text-white">${response.guidance.message}</p>`;
-              }
-              
-              // Add to conversation history UI if it exists
-              const conversationHistory = document.querySelector('.stella-conversation');
-              if (conversationHistory) {
-                // Add user question
-                const userBubble = document.createElement('div');
-                userBubble.className = 'bg-blue-500/20 p-3 rounded-lg mb-2 border-l-2 border-blue-500';
-                userBubble.innerHTML = `<p class="text-white">${question}</p>`;
-                conversationHistory.appendChild(userBubble);
-                
-                // Add STELLA response
-                const stellaBubble = document.createElement('div');
-                stellaBubble.className = 'bg-red-500/20 p-3 rounded-lg mb-2 border-l-2 border-red-500';
-                stellaBubble.innerHTML = `<p class="text-white">${response.guidance.message}</p>`;
-                conversationHistory.appendChild(stellaBubble);
-                
-                // Scroll to bottom
-                conversationHistory.scrollTop = conversationHistory.scrollHeight;
-              }
-            })
-            .catch(error => {
-              console.error('Error asking STELLA:', error);
-              // Show error message
-              const stellaMessage = document.getElementById('stella-message');
-              if (stellaMessage) {
-                stellaMessage.innerHTML = `<p class="text-red-400">I'm having trouble connecting. Please try again in a moment.</p>`;
-              }
-            });
-        }
-      });
-    }
-    
+      }
+    });
+  });
+},
+
+/**
+ * Display message in the conversation UI
+ * @param {String} sender - Message sender (user, stella, system)
+ * @param {String} message - Message content
+ * @private
+ */
+_displayMessage: function(sender, message) {
+  const stellaConversation = document.querySelector('.stella-conversation');
+  if (!stellaConversation) return;
+  
+  const messageElement = document.createElement('div');
+  messageElement.className = `message ${sender}`;
+  
+  const content = document.createElement('div');
+  content.className = 'message-content';
+  content.innerHTML = message;
+  
+  messageElement.appendChild(content);
+  stellaConversation.appendChild(messageElement);
+  
+  // Scroll to bottom
+  stellaConversation.scrollTop = stellaConversation.scrollHeight;
+},
     // Set up quick action buttons
     document.querySelectorAll('.stella-action-btn').forEach(button => {
       button.addEventListener('click', () => {
@@ -558,22 +576,21 @@ window.StellaIntegration = {
       });
     });
   },
-  
-  /**
-   * Internal logging method
-   * @param {String} message - Log message
-   * @param {Object} data - Additional data
-   * @private
-   */
-  _log: function(message, data) {
-    if (this.config.debug) {
-      if (data) {
-        console.log(`STELLA: ${message}`, data);
-      } else {
-        console.log(`STELLA: ${message}`);
-      }
+ /**
+ * Internal logging method
+ * @param {String} message - Log message
+ * @param {Object} data - Additional data
+ * @private
+ */
+_log: function(message, data) {
+  if (this.config.debug) {
+    if (data) {
+      console.log(`STELLA: ${message}`, data);
+    } else {
+      console.log(`STELLA: ${message}`);
     }
   }
+}
 };
 
 // Initialize STELLA on page load if auto-init data attribute is present
@@ -596,6 +613,18 @@ document.addEventListener('DOMContentLoaded', () => {
           detail: { userId, sessionId: window.StellaIntegration.sessionId }
         });
         document.dispatchEvent(event);
+      })
+      .catch(error => {
+        console.error('❌ STELLA connection failed:', error);
+      });
+  }
+  
+  // Connect existing UI if not using auto-init
+  if (!document.querySelector('[data-stella-auto-init]') && document.getElementById('send-to-stella')) {
+    window.StellaIntegration.init({ debug: true });
+    window.StellaIntegration.connect('anonymous')
+      .then(() => {
+        console.log('✅ STELLA connected successfully');
       })
       .catch(error => {
         console.error('❌ STELLA connection failed:', error);

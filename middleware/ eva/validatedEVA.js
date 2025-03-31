@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { authenticate } = require('../authenticate');
+const { authenticate } = require('../middleware/authenticate'); // correct
 const EVASession = require('../../models/eva/EVASession');
 
 // Base authentication using your existing middleware

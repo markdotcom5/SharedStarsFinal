@@ -222,4 +222,4 @@ const STELLA = {
   };
   
   // Export for use in browser
-  window.STELLA = STELLA;
+  module.exports = router;

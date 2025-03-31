@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'); // Import mongoose
 const User = require('../models/User'); // Import the User model
-const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
+const bcrypt = require('../mockBcrypt'); // Temporary mock // Import bcrypt for password hashing
 
 mongoose.connect('mongodb+srv://<your_connection_string>', {
     useNewUrlParser: true,

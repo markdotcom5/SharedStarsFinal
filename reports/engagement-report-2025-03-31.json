@@ -1,0 +1,85 @@
+{
+  "totalInteractions": 66,
+  "activeUsers": 6,
+  "personalityInsights": {
+    "honesty": {
+      "highPerformance": "0.0%",
+      "mediumPerformance": "0.0%",
+      "lowPerformance": "100.0%",
+      "recommendation": "low"
+    },
+    "humor": {
+      "highPerformance": "100.0%",
+      "mediumPerformance": "0.0%",
+      "lowPerformance": "0.0%",
+      "recommendation": "high"
+    },
+    "formality": {
+      "highPerformance": "0.0%",
+      "mediumPerformance": "100.0%",
+      "lowPerformance": "0.0%",
+      "recommendation": "medium"
+    },
+    "encouragement": {
+      "highPerformance": "0.0%",
+      "mediumPerformance": "100.0%",
+      "lowPerformance": "0.0%",
+      "recommendation": "medium"
+    },
+    "detail": {
+      "highPerformance": "0.0%",
+      "mediumPerformance": "100.0%",
+      "lowPerformance": "0.0%",
+      "recommendation": "medium"
+    }
+  },
+  "engineInsights": {
+    "vector": {
+      "usageCount": 55,
+      "usagePercentage": "45.5%",
+      "userAdoption": "100.0%"
+    },
+    "module_analysis": {
+      "usageCount": 7,
+      "usagePercentage": "5.8%",
+      "userAdoption": "25.0%"
+    },
+    "generative": {
+      "usageCount": 55,
+      "usagePercentage": "45.5%",
+      "userAdoption": "100.0%"
+    },
+    "knowledge_graph": {
+      "usageCount": 4,
+      "usagePercentage": "3.3%",
+      "userAdoption": "25.0%"
+    }
+  },
+  "topTopics": [
+    {
+      "topic": "general",
+      "count": 43
+    },
+    {
+      "topic": "training",
+      "count": 10
+    },
+    {
+      "topic": "physical_training",
+      "count": 9
+    },
+    {
+      "topic": "mission",
+      "count": 9
+    },
+    {
+      "topic": "stella",
+      "count": 7
+    }
+  ],
+  "recommendations": [
+    "Consider setting humor higher in default personality as it performs better",
+    "Prioritize vector engine as it has the highest usage",
+    "Consider improving or removing knowledge_graph engine due to low usage"
+  ]
+}

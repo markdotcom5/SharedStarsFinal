@@ -1,13 +1,11 @@
 // scripts/populateEmbeddings.js
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const { OpenAI } = require('openai');
+const { openai } = require('../services/openaiService');  // ✅ corrected path
 const StellaConversation = require('../models/StellaConversation');
 
 dotenv.config();
 mongoose.connect(process.env.MONGODB_URI).then(() => console.log('✅ MongoDB Connected'));
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function generateEmbedding(text) {
   const response = await openai.embeddings.create({
@@ -16,6 +14,7 @@ async function generateEmbedding(text) {
   });
   return response.data[0].embedding;
 }
+
 
 async function populateEmbeddings() {
   const conversations = await StellaConversation.find({ 'embeddings.questionVector': { $size: 0 } }).limit(100);

@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('../mockBcrypt'); // Temporary mock
 const mongoose = require('mongoose');
 const User = require('./models/User'); // Adjust path if needed.
 

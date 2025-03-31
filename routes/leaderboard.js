@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const { authenticate } = require('../middleware/auth');
+const { authenticate } = require('../middleware/authenticate'); // correct
 const Leaderboard = require('../models/Leaderboard');
 const User = require('../models/User');
 const AISpaceCoach = require('../services/AISpaceCoach');

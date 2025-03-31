@@ -10,6 +10,7 @@ const axios = require("axios");
 const emailService = require("../services/emailService");
 const config = require("../config");
 
+// This function should just be defined, not executed
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 // =======================
@@ -53,8 +54,9 @@ router.post("/signup", async (req, res) => {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 12);
 
-          // Generate OTP
+        // Generate OTP
         const otp = generateOTP();
+        console.log("Generated OTP for", email, ":", otp); // Added logging
         const otpExpires = Date.now() + 5 * 60 * 1000; // OTP expires in 5 minutes
         
         // Create new user with the correct fields
@@ -69,8 +71,15 @@ router.post("/signup", async (req, res) => {
 
         await user.save();
 
-        // ✅ Send OTP Email
-        await emailService.sendOTPEmail(email, otp);
+        // ✅ Send OTP Email with better logging
+        try {
+            console.log("Attempting to send OTP email to:", email);
+            await emailService.sendOTPEmail(email, otp);
+            console.log("OTP email sent successfully");
+        } catch (emailError) {
+            console.error("Failed to send OTP email:", emailError);
+            // Continue with the response even if email fails
+        }
 
         res.status(201).json({ message: "OTP sent. Redirecting to verification page." });
     } catch (error) {
@@ -78,49 +87,6 @@ router.post("/signup", async (req, res) => {
         res.status(500).json({ error: "Server error" });
     }
 });
-// =======================
-async function validatePassword(enteredPassword, storedHashedPassword) {
-    return await bcrypt.compare(enteredPassword, storedHashedPassword);
-}
-
-router.post('/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
-
-        if (!user) {
-            return res.status(400).json({ error: "User not found" });
-        }
-
-        const isMatch = await validatePassword(password, user.password);
-
-        if (!isMatch) {
-            return res.status(401).json({ error: "Authentication failed" });
-        }
-
-        // Generate JWT Token (good!)
-        const token = jwt.sign(
-            { userId: user._id.toString(), email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: '7d' }
-        );
-
-        // ✅ Clearly set cookie (establishes session)
-        res.cookie('token', token, {
-            httpOnly: true, // Important for security
-            secure: false, // set to true in production with HTTPS
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-        });
-
-        // ✅ Redirect user to mission-control clearly after login
-        res.json({ success: true, redirectUrl: '/mission-control' });
-
-    } catch (error) {
-        console.error("❌ Login Error:", error);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
 // Register Route
 router.post("/register", async (req, res) => {
     try {
@@ -167,7 +133,46 @@ const token = jwt.sign(
         res.status(500).json({ error: "Registration failed", details: error.message });
     }
 });
-
+// Add this to your auth.js file
+router.post("/verify-otp", async (req, res) => {
+    try {
+      const { email, otp } = req.body;
+      
+      const user = await User.findOne({ 
+        email: email.trim().toLowerCase(),
+        otp: otp,
+        otpExpires: { $gt: Date.now() }
+      });
+      
+      if (!user) {
+        return res.status(400).json({ success: false, error: "Invalid or expired OTP" });
+      }
+      
+      // Mark user as verified
+      user.isVerified = true;
+      user.otp = undefined;
+      user.otpExpires = undefined;
+      await user.save();
+      
+      // Generate token for auto-login after verification
+      const token = jwt.sign(
+        { userId: user._id.toString() },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+      
+      res.json({ 
+        success: true, 
+        message: "Email verified successfully",
+        token,
+        redirectUrl: '/mission-control'
+      });
+      
+    } catch (error) {
+      console.error('❌ Error verifying OTP:', error);
+      res.status(500).json({ success: false, error: "Failed to verify email" });
+    }
+  });
 router.get("/linkedin/callback", async (req, res) => {
     const authorizationCode = req.query.code;
 

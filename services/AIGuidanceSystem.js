@@ -4,15 +4,20 @@ const TrainingSession = require("../models/TrainingSession.js");
 const Intervention = require("../models/Intervention.js");
 const Achievement = require("../models/Achievement.js");
 const { EventEmitter } = require('events'); 
-fetch('/api/stella/user-progress', {
-    method: 'GET',
-    credentials: 'include'  // if using cookies/sessions
-  })
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(progress) {
-    console.log("✅ User Progress:", progress);
+
+// Helper function to fetch user progress - moved outside the class
+const fetchUserProgress = async (userId) => {
+  try {
+    const response = await fetch(`/api/stella/user-progress?userId=${userId}`, {
+      method: 'GET',
+      credentials: 'include'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("❌ Error fetching user progress:", error);
+    return null;
+  }
+};
 
 class AIGuidanceSystem extends EventEmitter {
     constructor() {
@@ -112,6 +117,78 @@ class AIGuidanceSystem extends EventEmitter {
             duration: { started: new Date() }
         });
     }
+    
+    // ✅ Intervention handlers (added to fix missing methods)
+    async handleTimeBasedIntervention(intervention, userProgress) {
+        // Implementation for time-based interventions
+        intervention.guidance = {
+            message: "You've been working for a while. Consider taking a short break.",
+            type: "TIME_SUGGESTION",
+            urgency: "LOW"
+        };
+        intervention.status = "DELIVERED";
+        await intervention.save();
+        return intervention;
+    }
+    
+    async handleErrorBasedIntervention(intervention, userProgress) {
+        // Implementation for error-based interventions
+        intervention.guidance = {
+            message: "I've noticed some challenges. Let's approach this differently.",
+            type: "ERROR_CORRECTION",
+            urgency: "MEDIUM"
+        };
+        intervention.status = "DELIVERED";
+        await intervention.save();
+        return intervention;
+    }
+    
+    async handleConfidenceIntervention(intervention, userProgress) {
+        // Implementation for confidence-based interventions
+        intervention.guidance = {
+            message: "You're making great progress! Keep up the good work.",
+            type: "CONFIDENCE_BOOST",
+            urgency: "LOW"
+        };
+        intervention.status = "DELIVERED";
+        await intervention.save();
+        return intervention;
+    }
+    
+    async handleProgressIntervention(intervention, userProgress) {
+        // Implementation for progress-based interventions
+        intervention.guidance = {
+            message: "Let's adjust your training to challenge you appropriately.",
+            type: "PROGRESS_ADJUSTMENT",
+            urgency: "MEDIUM"
+        };
+        intervention.status = "DELIVERED";
+        await intervention.save();
+        return intervention;
+    }
+    
+    // ✅ Added missing achievement triggers method
+    async checkAchievementTriggers(userId, intervention) {
+        try {
+            // Check if this intervention triggers any achievements
+            const achievementTriggered = await Achievement.findOne({
+                triggerType: intervention.triggerType,
+                moduleId: intervention.moduleId
+            });
+            
+            if (achievementTriggered) {
+                // Emit achievement event
+                this.emit('achievement-triggered', {
+                    userId,
+                    achievementId: achievementTriggered._id,
+                    timestamp: new Date()
+                });
+            }
+        } catch (error) {
+            console.error('❌ Error checking achievement triggers:', error);
+        }
+    }
+
     // ✅ Emergency Response Simulation
     async simulateEmergencyResponse(userId, scenarioType) {
         try {

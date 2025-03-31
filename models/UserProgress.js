@@ -64,10 +64,9 @@ const ModuleProgressSchema = new Schema({
 
 // ✅ User Progress Schema
 const UserProgressSchema = new mongoose.Schema({
-    userId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "User", 
-        required: true 
+    userId: {
+      type: String,  // Change from ObjectId to String
+      required: true
     },
     credits: {
         breakdown: {

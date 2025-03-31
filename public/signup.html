@@ -21,9 +21,10 @@
     <link rel="stylesheet" href="/css/main.css" />
 
      <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
-    <script src="/js/languageManager.js" defer></script>
-    <script type="module" src="/public/js/CountdownTimer.js"></script>
-    <script type="module" src="/js/HomepageHandler.js"></script>  
+<!-- Remove duplicate scripts and fix paths -->
+<script src="/js/languageManager.js" defer></script>
+<script type="module" src="/js/countdown.js"></script>
+<script type="module" src="/js/HomepageHandler.js"></script>
 
     <!-- Inline styles for Stripe elements -->
     <style>
@@ -60,9 +61,8 @@
     
     <!-- Language Selection Script -->
     <script src="/js/translations.js"></script>
-    <script src="/js/languageManager.js"></script>
     
-    <script type="module" src="trainingHandler.js"></script>
+    <script type="module" src="/js/TrainingHandler.js"></script>
   </head>
   <body class="min-h-screen bg-base-200 flex flex-col">
     <!-- NAVBAR -->
@@ -81,13 +81,7 @@
           <li><a href="/about.html" data-i18n="nav.about">About</a></li>
           <li><a href="/leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a></li>
           <li><a href="/subscribe.html" data-i18n="nav.subscribe">Subscribe</a></li>
-  
-          <!-- <li><a href="/Why-StelTrek.html" data-i18n="nav.why">Why StelTrek</a></li>
-          <li><a href="/login.html" data-i18n="nav.login">Login</a></li>
-          <li><a href="/mission-control.html" data-i18n="nav.mission-control">Mission-Control</a></li>
-          <li><a href="/profile.html" data-i18n="nav.profile">Profile</a></li>
-          <li><a href="/signup.html" data-i18n="nav.signup">Sign Up</a></li>
-          <li><a href="/welcome.html" data-i18n="nav.welcome">Welcome</a></li> -->
+
         </ul>
   
         <div class="relative">
@@ -114,45 +108,83 @@
       <div class="flex flex-col items-center justify-between">
         <div class="w-[496px] mt-52 rounded-3xl bg-black border-white-100 border-2 items-center justify-between">
           <div class="flex flex-col items-center justify-between">
-            <img src="/icons/Vector.png" class="w-[248px] h-[139px]" ></img>
-            <image src="/icons/Logo (1).png" class="w-16 h-16"></image>
+            <img src="/icons/Vector.png" class="w-[248px] h-[139px]" alt="Vector Icon" />
+            <img src="/icons/Logo (1).png" class="w-16 h-16" alt="Logo" />
           </div>
           <div class="flex flex-col items-center justify-between">
             <p class="text-heading5 text-white my-8">Create your account</p>
-            
+    
             <form id="signup-form" class="space-y-6 text-white">
-              <div class="flex items-center justify-between ">
-                <input type="text" name="firstname" id="firstname" placeholder="First Name" class="form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
-                <input type="text" name="lastname" id="lastname" placeholder="Last Name" class="form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
+              <div class="flex items-center justify-between gap-2">
+                <input 
+                  type="text" 
+                  name="firstname" 
+                  id="firstname" 
+                  placeholder="First Name"
+                  autocomplete="given-name"
+                  class="form-control px-6 py-4 text-gray-800 bg-white border-gray-300 border-2 rounded-full" 
+                  required
+                />
+                <input 
+                  type="text" 
+                  name="lastname" 
+                  id="lastname" 
+                  placeholder="Last Name"
+                  autocomplete="family-name"
+                  class="form-control px-6 py-4 text-gray-800 bg-white border-gray-300 border-2 rounded-full" 
+                  required
+                />
               </div>
               <div class="w-[432px]">
-                <input type="email" name="email" id="email" placeholder="Email address" class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
+                <input 
+                  type="email" 
+                  name="email" 
+                  id="email" 
+                  placeholder="Email address"
+                  autocomplete="email"
+                  class="w-full form-control px-6 py-4 text-gray-800 bg-white border-gray-300 border-2 rounded-full"
+                  required
+                />
               </div>
               <div class="w-[432px]">
-                <input type="password" name="password" id="password" placeholder="Password" class="w-full form-control text-body-small-medium px-6 py-4 text-white-300 bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100" required>
+                <input 
+                  type="password" 
+                  name="password" 
+                  id="password" 
+                  placeholder="Password"
+                  autocomplete="new-password"
+                  class="w-full form-control px-6 py-4 text-gray-800 bg-white border-gray-300 border-2 rounded-full" 
+                  required
+                />
               </div>
-              <button type="submit" id="signup-btn" class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full ">Sign Up</button>
+              <button 
+                type="submit" 
+                id="signup-btn" 
+                class="w-full form-control text-body-xsmall-semibold px-6 py-4 text-white bg-brand-700 border-white-100 border-2 rounded-full"
+              >
+                Sign Up
+              </button>
               <p id="signup-error" class="text-red-500 text-sm text-center hidden"></p>
             </form>
-
-          <div class="flex flex-col items-center justify-between">
-            <p class="text-white text-body-small-medium my-8">Already have an account? <a href="/login" class="text-blue-500">Sign In</a></p>
-            <div class="flex items-center justify-between gap-3 w-[432px] mb-10">
-              <button type="submit" class="w-full flex items-center justify-center form-control text-body-xsmall-semibold gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
-                <img src="/icons/Google.png" alt="Google Logo" class="w-5 h-5"> 
-                <span>Continue with Google</span>
-              </button>
-              <button type="submit" class="w-full flex items-center justify-center form-control text-body-xsmall-semibold gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
-                <img src="/icons/Apple.png" alt="Google Logo" class="w-5 h-5"> 
-                <span>Continue with Google</span>
-              </button>
+    
+            <div class="flex flex-col items-center justify-between">
+              <p class="text-white text-body-small-medium my-8">Already have an account? <a href="/login" class="text-blue-500">Sign In</a></p>
+              <div class="flex items-center justify-between gap-3 w-[432px] mb-10">
+                <button type="button" class="w-full flex items-center justify-center form-control gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
+                  <img src="/icons/Google.png" alt="Google Logo" class="w-5 h-5"> 
+                  <span>Continue with Google</span>
+                </button>
+                <button type="button" class="w-full flex items-center justify-center form-control gap-2 px-4 py-4 text-white bg-black border-white-100 border-2 rounded-full bg-gradient-to-br from-black to-white-100">
+                  <img src="/icons/Apple.png" alt="Apple Logo" class="w-5 h-5"> 
+                  <span>Continue with Apple</span>
+                </button>
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
-      </div>
-    </main>
+    </section>
+    
 
     <!-- ONBOARDING WIZARD MODAL (Pop-Up) -->
     <div id="onboardingModal" class="modal fixed inset-0 flex items-center justify-center z-50 hidden">
@@ -299,11 +331,11 @@
           }
 
           try {
-              const response = await fetch("/api/auth/signup", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ name, email, password })
-              });
+            const response = await fetch("/api/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password })
+});
 
               const result = await response.json();
 

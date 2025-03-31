@@ -112,7 +112,6 @@ router.post('/:lang', async (req, res) => {
   }
 });
 
-module.exports = router;
 6. MongoDB Seed Data Example
 javascriptCopy// Example command to run in MongoDB shell
 db.translations.insertOne({
@@ -134,8 +133,7 @@ db.translations.insertOne({
 })
 7. Add API Integration to app.js
 javascriptCopy// In your app.js file
-const translationsRoutes = require('./routes/translations');
-app.use('/api/translations', translationsRoutes);
+const translationsRoutes = require('./routes/translations');app.use('/api/translations', translationsRoutes);
 8. Testing the Translation Implementation
 javascriptCopy// Add this to a test page to verify translations are working
 document.addEventListener('DOMContentLoaded', function() {

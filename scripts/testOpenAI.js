@@ -1,16 +1,15 @@
-require('dotenv').config();
-const OpenAI = require("openai");
+const { createChatCompletion, createEmbedding } = require('../services/openaiService');
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-(async () => {
+async function test() {
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o", // Changed from gpt-3.5-turbo to gpt-4o
-      messages: [{ role: "user", content: "Hello from SharedStars Academy! What makes you the most advanced GPT model?" }]
-    });
-    console.log(completion.choices[0].message.content);
+    const chatResult = await createChatCompletion([{ role: "user", content: "Hello!" }]);
+    console.log('✅ OpenAI Chat:', chatResult);
+
+    const embeddingResult = await createEmbedding("Test embedding text");
+    console.log('✅ OpenAI Embedding length:', embeddingResult.length);
   } catch (error) {
-    console.error("OpenAI Test Error:", error);
+    console.error('❌ Test Failed:', error);
   }
-})();
+}
+
+test();

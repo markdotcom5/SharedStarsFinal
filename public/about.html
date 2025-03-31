@@ -1,264 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="About SharedStars Academy - Learn about our mission, vision, and the team behind making space travel accessible to all">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Train for space with AI-powered modules at SharedStars Academy." />
+  
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self'; 
+      script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://i.ibb.co;
+      style-src 'self' 'unsafe-inline' data: https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+      font-src 'self' https://fonts.gstatic.com data:;
+      img-src 'self' data: https://www.sora.com https://i.ibb.co;
+      frame-src 'self' https://www.sora.com;
+      child-src 'self' https://www.sora.com;
+      connect-src 'self' https://api.openai.com https://api.sharedstars.com;
+    ">
+
+    <!-- Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+    <link href="/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/ai-assistant.css" />
+    <link rel="stylesheet" href="/css/sophon-stella.css">
     <link rel="stylesheet" href="/css/global.css">
-    <title>About Us - SharedStars Academy</title>
-
+    
+    <!-- Fixed Styling -->
     <style>
-        /* Page-specific styles that match your current implementation */
-        /* Clean fixed header CSS - Remove all duplicated styles */
-body {
-    background-color: #0c1017;
-    background-image: url('/images/space-bg.jpg');
-    background-size: cover;
-    font-family: 'Aeonik', sans-serif;
-    color: white;
-    margin: 0;
-    padding: 0;
-}
+      /* Critical fixes for UI elements */
+      body {
+        overflow-x: hidden;
+        width: 100vw;
+        min-height: 100vh;
+        font-family: 'Inter', sans-serif;
+      }
 
-.site-header {
-    background-color: rgba(12, 16, 23, 0.9);
-    padding: 15px 0;
-    position: relative;
-    z-index: 100;
-}
+      /* Header fixes */
+      header {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        z-index: 9999 !important;
+        background-color: rgba(0, 0, 0, 0.9) !important;
+        backdrop-filter: blur(10px) !important;
+        display: block !important;
+        visibility: visible !important;
+      }
 
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
+      /* Navigation fixes */
+      #nav-links {
+        display: flex !important;
+        visibility: visible !important;
+      }
 
-.header-content {
-    display: flex;
-    align-items: center;
-}
+      /* Hero section fixes */
+      #hero {
+        width: 100% !important;
+        min-height: 100vh !important;
+        padding-top: 80px !important;
+        position: relative !important;
+        overflow: hidden !important;
+      }
 
-.logo {
-    display: flex;
-    align-items: center;
-}
+      /* Button sizing fixes */
+      .cta-button {
+        max-width: 300px !important;
+        width: 80% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+      }
 
-.logo img {
-    height: 40px;
-}
-
-.nav-menu {
-    display: flex;
-    align-items: center;
-    margin-left: 60px; /* Add space between logo and menu */
-}
-
-.nav-menu a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
-    margin: 0 15px; /* Even spacing between nav items */
-}
-
-.nav-menu a:hover,
-.nav-menu a.active {
-    color: #4a7de9;
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-left: auto; /* Pushes header actions to the right */
-}
-
-.language-selector {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-}
-
-.get-started-btn {
-    background-color: #0066FF;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s;
-}
-
-.get-started-btn:hover {
-    background-color: #0055CC;
-}
-
-/* Updated Hero section with video */
-.hero-section {
-    padding: 80px 0 40px;
-    text-align: center;
-    position: relative;
-}
-
-.about-badge {
-    display: inline-block;
-    background-color: rgba(74, 125, 233, 0.2);
-    color: #4a7de9;
-    padding: 8px 16px;
-    border-radius: 20px;
-    margin-bottom: 20px;
-}
-
-.hero-title {
-    font-size: 56px;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 30px;
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.hero-subtitle {
-    font-size: 18px;
-    line-height: 1.6;
-    color: #d1d5db;
-    max-width: 800px;
-    margin: 0 auto 40px;
-}
-
-.cta-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 60px;
-}
-
-.cta-button {
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.cta-button.primary {
-    background: #0066FF;
-    color: white;
-}
-
-.cta-button.secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    backdrop-filter: blur(10px);
-}
-
-.cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Video container styling */
-.video-container {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto 60px;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    background-color: #000; /* Fallback background for video */
-}
-
-.video-container video {
-    width: 100%;
-    display: block;
-}
-
-/* Mission and vision section */
-.mission-vision-section {
-    padding: 60px 0;
-    text-align: center;
-}
-
-.mission-vision-title {
-    font-size: 48px;
-    font-weight: 700;
-    margin-bottom: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.rocket-emoji {
-    font-size: 42px;
-}
+      /* Widget positioning fix */
+      #stella-chat-widget {
+        position: fixed !important;
+        bottom: 20px !important;
+        right: 20px !important;
+        left: auto !important;
+        z-index: 9999 !important;
+        width: auto !important;
+      }
+      
+      /* Remove duplicate stat section */
+      #duplicate-stats {
+        display: none !important;
+      }
+      
+      /* Fix video background */
+      #hero-video {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        z-index: 0 !important;
+      }
+      
+      /* Fix content visibility */
+      .hero-content {
+        position: relative !important;
+        z-index: 10 !important;
+      }
+      
+      /* Sophon styling */
+      .sophon-avatar-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      
+      .sophon-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(255, 100, 0, 0.5);
+      }
+      
+      /* Clear any potential conflicting styles */
+      * {
+        box-sizing: border-box;
+      }
     </style>
-</head>
-<body>
-    <!-- Header with navigation -->
-    <header class="site-header">
-        <div class="container">
-            <div class="header-content">
-                <a href="/" class="logo">
-                    <img src="/images/SSLOGO.png" alt="SharedStars Logo">
-                </a>
-                
-                <nav class="nav-menu">
-                    <a href="/">Home</a>
-                    <a href="/academy.html">Academy</a>
-                    <a href="/about.html" class="active">About</a>
-                    <a href="/leaderboard.html">Leaderboard</a>
-                    <a href="/subscribe.html">Subscribe</a>
-                </nav>
-                
-                <div class="header-actions">
-                    <div class="language-selector">
-                        <img src="/images/flag-english.svg" alt="English" width="24" height="16">
-                        <span>English</span>
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 5L6 8L9 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <a href="/signup.html" class="get-started-btn">Get Started</a>
-                </div>
-            </div>
-        </div>
-    </header>
+    
+    <title>SharedStars - Train for Space with S.T.E.L.L.A. AI</title>
+    
+    <!-- JavaScript Files -->
+    <script src="/js/languageManager.js" defer></script>
+    <script src="/js/countdown.js" defer></script>
+    <script type="module" src="/js/HomepageHandler.js"></script>
+  </head>
+  
+<!-- Header with navigation -->
+ <!-- Fixed Header -->
+ <header class="fixed top-0 left-0 w-full bg-black bg-opacity-80 z-50 px-4 py-3">
+    <div class="container mx-auto flex items-center justify-between">
+      <a href="/" class="flex-shrink-0">
+        <img src="/images/SharedStars.svg" alt="SharedStars" class="h-12">
+      </a>
+  
+      <!-- Navigation Links -->
+      <nav id="nav-links" class="flex items-center space-x-6">
+        <a href="/" class="text-blue-400 font-semibold">Home</a>
+        <a href="/mission-control.html" class="text-white hover:text-blue-400 transition-colors">Mission Control</a>
+        <a href="/academy2.html" class="text-white hover:text-blue-400 transition-colors">Academy</a>
+        <a href="/leaderboard.html" class="text-white hover:text-blue-400 transition-colors">Leaderboard</a>
+        <a href="/subscribe.html" class="text-white hover:text-blue-400 transition-colors">Subscribe</a>
+        <a href="/about.html" class="text-white hover:text-blue-400 transition-colors">About</a>
+  
+        <!-- Auth Links -->
+        <a href="/login1.html" id="login-link" class="text-white hover:text-blue-400 transition-colors">Login</a>
+        <a href="/signup.html" id="signup-link" class="text-white bg-red-600 px-4 py-2 rounded-md hover:bg-red-700 transition-colors inline-block">Sign Up</a>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="about-badge">About Us</div>
-            <h1 class="hero-title">The Gateway to Space Begins Here</h1>
-            <p class="hero-subtitle">
-                At SharedStars, we are transforming space travel from a distant dream to an achievable reality. 
-                Through certifications, immersive training, and a global community of pioneers, we are making 
-                space exploration accessible to all.
-            </p>
-            
-            <div class="cta-buttons">
-                <a href="/signup.html" class="cta-button primary">Join the Future of Space Travel</a>
-                <a href="#board-of-advisors" class="cta-button secondary">Meet Our Board of Advisors</a>
-                <a href="/training.html" class="cta-button secondary">Start Your Space Training</a>
-            </div>
-            
-            <!-- Corrected Video Container with proper file name and path -->
-<!-- Video Container with root path reference -->
-            <div class="video-container">
-                 <video autoplay loop muted playsinline>
-                 <source src="/videos/ai-training.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-              </video>
-            </div>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="about-badge">About Us</div>
+        <h1 class="hero-title">The Gateway to Space Begins Here</h1>
+        <p class="hero-subtitle">
+            At SharedStars, we are transforming space travel from a distant dream to an achievable reality. 
+            Through certifications, immersive training, and a global community of pioneers, we are making 
+            space exploration accessible to all.
+        </p>
+        
+        <div class="cta-buttons">
+            <a href="/signup.html" class="cta-button primary">Join the Future of Space Travel</a>
+            <a href="#board-of-advisors" class="cta-button secondary">Meet Our Board of Advisors</a>
+            <a href="/training.html" class="cta-button secondary">Start Your Space Training</a>
         </div>
-    </section>
-
-    <!-- Mission and Vision Section -->
+        
+          <!-- HERO SECTION -->
+  <section id="hero" class="min-h-screen flex items-center justify-center relative">
+    <div class="absolute inset-0">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover">
+          <source src="./videos/ai-training.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-black/40"></div>
+      </div>
+    </div>
+</section>
 <!-- Mission and Vision Section - Perfect Match to Figma -->
 <section class="mission-vision-section">
     <div class="container">
@@ -275,7 +201,6 @@ body {
             certifications, and a dynamic learning ecosystem that prepares 
             them for space travel.
         </p>
-        
         <!-- Card grid -->
         <div class="mission-cards">
             <!-- Mission Card -->
@@ -379,54 +304,51 @@ body {
         </div>
     </div>
 </section>
+<!-- Complete Story Section with all paragraphs and proper i18n attributes -->
 <section class="story-section">
     <div class="container">
-        <!-- "Our Story" button -->
-        <a href="#" class="our-story-btn">Our Story</a>
+        <a href="#" class="our-story-btn" data-i18n="our-story">Our Story</a>
         
-        <!-- Title -->
-        <h2 class="story-title">
+        <h2 class="story-title" data-i18n="story-title">
             From an Impossible<br>Dream to a Movement
         </h2>
         
         <div class="story-content">
-            <!-- Left column - story text -->
             <div class="story-text">
-                <p class="story-paragraph">
+                <p class="story-paragraph" data-i18n="story-paragraph-1">
                     At one of the lowest points in my life, I felt that my <strong>dream of space travel was impossible.</strong> The cost of launching into orbit-ranging from hundreds of thousands to millions of dollars-made it seem like a <strong>privilege reserved for the ultra-wealthy.</strong>
                 </p>
                 
-                <p class="story-paragraph">
+                <p class="story-paragraph" data-i18n="story-paragraph-2">
                     Tormented with yet another night of Netflix I stumbled upon a new Series, <strong>"Three Body Problem"</strong> and from that moment on my life slowly began to change. After the Series ended my quest for more Sci-fi information remained, so I read and read and read Liu Cixin's trilogy as well.
                 </p>
                 
-                <p class="story-paragraph">
+                <p class="story-paragraph" data-i18n="story-paragraph-3">
                     Then, I discovered <strong>The Three-Body Problem</strong> by Liu Cixin. The book's themes of <strong>human resilience, innovation, and the power of collective effort</strong> reignited my determination.
                 </p>
                 
-                <p class="story-callout">
+                <p class="story-callout" data-i18n="story-callout-1">
                     What if space travel didn't have to be reserved for the elite?
                 </p>
                 
-                <p class="story-paragraph">
+                <p class="story-paragraph" data-i18n="story-paragraph-4">
                     That moment of inspiration led to <strong>SharedStars.</strong>
                 </p>
                 
-                <p class="story-callout-bold">
+                <p class="story-callout-bold" data-i18n="story-callout-2">
                     This isn't just a training platform-it's a movement.
                 </p>
                 
-                <p class="story-paragraph">
+                <p class="story-paragraph" data-i18n="story-paragraph-5">
                     We're dedicated to <strong>making space travel a reality</strong> by providing the education, community, and opportunities needed for <strong>anyone</strong> to prepare for the next frontier.
                 </p>
                 
                 <div class="signature">
-                    <p class="signature-quote">See you in Space,</p>
-                    <p class="signature-text">Founder, Mark Sendo</p>
+                    <p class="signature-quote" data-i18n="signature-quote">See you in Space,</p>
+                    <p class="signature-text" data-i18n="signature-name">Founder, Mark Sendo</p>
                 </div>
             </div>
             
-            <!-- Right column - founder image with updated styling -->
             <div class="founder-image-container">
                 <img src="/images/mark1.jpeg" alt="Mark R. Sendo" class="founder-image">
             </div>
@@ -1016,5 +938,85 @@ body {
           });
     });
 </script>
+<script>
+// Add this script to your about.html file (before the closing body tag)
+document.addEventListener('DOMContentLoaded', function() {
+    // Get user's language preference from localStorage or cookies
+    const userLanguage = getUserLanguagePreference() || 'en'; // Default to English
+    
+    // Update the language display in the header
+    updateLanguageDisplay(userLanguage);
+    
+    // Translate all content with data-i18n attributes
+    translatePage(userLanguage);
+});
+
+// Function to get the user's language preference
+function getUserLanguagePreference() {
+    // Check localStorage first (set on homepage)
+    const storedLanguage = localStorage.getItem('userLanguage');
+    if (storedLanguage) return storedLanguage;
+    
+    // Fallback to cookies if needed
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith('language=')) {
+            return cookie.substring('language='.length, cookie.length);
+        }
+    }
+    
+    // If no preference found, return null
+    return null;
+}
+
+// Function to update the language display in the header
+function updateLanguageDisplay(language) {
+    const flagImg = document.getElementById('current-language-flag');
+    const langName = document.getElementById('current-language-name');
+    
+    // Map language codes to display names and flag images
+    const languageMap = {
+        'en': { name: 'English', flag: '/images/flag-english.svg' },
+        'es': { name: 'Español', flag: '/images/flag-spanish.svg' },
+        'zh': { name: '中文', flag: '/images/flag-chinese.svg' },
+        'ko': { name: '한국어', flag: '/images/flag-korean.svg' }
+    };
+    
+    // Set the appropriate flag and language name
+    if (languageMap[language]) {
+        flagImg.src = languageMap[language].flag;
+        flagImg.alt = languageMap[language].name;
+        langName.textContent = languageMap[language].name;
+    }
+}
+
+// Function to translate the page content
+function translatePage(language) {
+    // Get all elements with data-i18n attribute
+    const elementsToTranslate = document.querySelectorAll('[data-i18n]');
+    
+    // Fetch the appropriate language file
+    fetch(`/i18n/${language}.json`)
+        .then(response => response.json())
+        .then(translations => {
+            // Update each element with its translated text
+            elementsToTranslate.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[key]) {
+                    // If it's an input with placeholder, update placeholder
+                    if (element.hasAttribute('placeholder')) {
+                        element.setAttribute('placeholder', translations[key]);
+                    } else {
+                        // Otherwise update the element's text content
+                        element.textContent = translations[key];
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading translations:', error);
+        });
+    </script>
 </body>
 </html>

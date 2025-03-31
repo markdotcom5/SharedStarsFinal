@@ -1,24 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const { OpenAI } = require("openai");
 const mongoose = require('mongoose');
 const { addDays, format } = require('date-fns');
 
 // Import models
 const UserProgress = require('../../models/UserProgress');
-const StellaConversation = require('../../models/StellaConversation');
-const { safeGetUserProgress, isValidObjectId } = require('../utils/progressUtils');
-// Initialize OpenAI client
-if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "MISSING_KEY") {
-  console.error("❌ ERROR: Missing OpenAI API Key!");
-  process.exit(1);
-}
+const { safeGetUserProgress, isValidObjectId } = require('../../utils/progressUtils');
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// Import OpenAI service (fix the duplicate import)
+const { openai } = require('../../services/openaiService');
+
+// Get access to STELLA_AI instance (should be set in app.js)
+const getStellaAI = (req) => req.app.get('stellaAI');
 
 // Performance optimization: Add a simple in-memory cache
 const responseCache = new Map();
 const CACHE_TTL = 3600000; // 1 hour in milliseconds
+
 // Rate limiting
 const userRateLimit = new Map();
 const MAX_REQUESTS_PER_MINUTE = 10;
@@ -28,25 +26,33 @@ const MAX_CONVERSATION_TOKENS = 2000;
 const MAX_USER_CONTEXT_TOKENS = 1000;
 
 /**
+ * Simple test endpoint
+ */
+router.get('/test', (req, res) => {
+  res.json({ message: 'STELLA API is working' });
+});
+
+/**
  * POST /api/stella/initialize
  * Initialize STELLA AI system for the user's session
  */
 router.post('/initialize', async (req, res) => {
   try {
+    // Get STELLA instance
+    const stellaAI = getStellaAI(req);
+    
     res.json({
       success: true,
       message: "STELLA initialized successfully",
-      version: "1.0"
+      version: stellaAI.version || "1.0",
+      capabilities: stellaAI.getCapabilities()
     });
   } catch (error) {
     console.error('Error initializing STELLA:', error);
     res.status(500).json({ success: false, error: 'Failed to initialize STELLA' });
   }
 });
-// Add this near the top of your routes/api/stella.js file, right after the router definition
-router.get('/test', (req, res) => {
-  res.json({ message: 'STELLA API is working' });
-});
+
 /**
  * POST /api/stella/connect
  * Connect user to STELLA services
@@ -54,10 +60,16 @@ router.get('/test', (req, res) => {
 router.post('/connect', async (req, res) => {
   try {
     const { userId } = req.body;
+    const sessionId = `stella_${Date.now()}`;
+    
+    // Get STELLA instance and initialize user session
+    const stellaAI = getStellaAI(req);
+    const personalityTraits = await stellaAI.personalityService.getPersonalityForUser(userId);
     
     res.json({
       success: true,
-      sessionId: `stella_${Date.now()}`,
+      sessionId,
+      personality: personalityTraits,
       message: "Connected to STELLA"
     });
   } catch (error) {
@@ -67,8 +79,426 @@ router.post('/connect', async (req, res) => {
 });
 
 /**
- * NEW: Helper function to analyze question
- * Determines question type, extracts key entities, etc.
+ * POST /api/stella/guidance
+ * Get personalized guidance from STELLA
+ */
+router.post('/guidance', async (req, res) => {
+  try {
+    const { userId, question } = req.body;
+    
+    if (!userId || !question) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing required fields: userId and/or question"
+      });
+    }
+    
+    console.log(`Processing guidance request for userId ${userId} with question: ${question}`);
+    
+    // Get STELLA instance
+    const stellaAI = getStellaAI(req);
+    
+    // Generate a session ID for this conversation
+    const sessionId = `stella_${Date.now()}`;
+    
+    // Analyze question for context
+    const questionAnalysis = await analyzeQuestion(question);
+    
+    // Store the user's question in MongoDB
+    const userQuestion = new StellaConversation({
+      userId,
+      fromUser: true,
+      content: question,
+      timestamp: new Date(),
+      metadata: {
+        sessionId,
+        context: 'general'
+      },
+      aiAnalysis: questionAnalysis
+    });
+    
+    // Check if a similar question exists
+    const similarQuestionResult = await findSimilarQuestion(userId, question);
+    
+    let responseContent;
+    
+    if (similarQuestionResult.found && similarQuestionResult.similarity > 0.8) {
+      console.log('Using similar question response from SSL');
+      responseContent = similarQuestionResult.response.content;
+    } else {
+      // Use the personalized response from STELLA_AI (which now uses PersonalityService)
+      responseContent = await stellaAI.getPersonalizedResponse(userId, question, {
+        questionAnalysis,
+        sessionId
+      });
+    }
+    
+    // Store STELLA's response
+    const stellaResponse = new StellaConversation({
+      userId,
+      fromUser: false,
+      content: responseContent,
+      timestamp: new Date(Date.now() + 1),
+      metadata: {
+        sessionId,
+        context: 'general',
+        source: similarQuestionResult.found ? 'ssl' : 'openai'
+      },
+      aiAnalysis: {
+        actionItems: extractActionItems(responseContent),
+        confidenceScore: similarQuestionResult.found ? 0.95 : 0.9
+      }
+    });
+    
+    // Save both to database
+    try {
+      await userQuestion.save();
+      await stellaResponse.save();
+      console.log('Conversation saved to database');
+    } catch (dbError) {
+      console.error('Error saving to database:', dbError);
+      // Continue anyway - don't fail the response if DB save fails
+    }
+    
+    res.json({
+      success: true, 
+      guidance: { 
+        message: responseContent 
+      }
+    });
+  } catch (error) {
+    console.error("Error getting guidance:", error);
+    res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error"
+    });
+  }
+});
+
+/**
+ * POST /api/stella/feedback
+ * Receive feedback on STELLA's responses for learning
+ */
+router.post('/feedback', async (req, res) => {
+  try {
+    const { userId, messageId, sessionId, helpful, rating, feedbackText } = req.body;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: 'userId is required'
+      });
+    }
+    
+    // We need either messageId or sessionId
+    if (!messageId && !sessionId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Either messageId or sessionId is required'
+      });
+    }
+    
+    // Find the message to update
+    let message;
+    if (messageId) {
+      message = await StellaConversation.findById(messageId);
+    } else {
+      // Find the most recent response in this session
+      message = await StellaConversation.findOne({
+        userId,
+        fromUser: false,
+        'metadata.sessionId': sessionId
+      }).sort({ timestamp: -1 });
+    }
+    
+    if (!message) {
+      return res.status(404).json({
+        success: false,
+        error: 'Message not found'
+      });
+    }
+    
+    // Update the message with feedback
+    message.userFeedback = {
+      helpful,
+      rating: rating || null,
+      feedbackText: feedbackText || null,
+      receivedAt: new Date()
+    };
+    
+    // If it wasn't helpful, reduce the confidence score
+    if (helpful === false) {
+      message.aiAnalysis.confidenceScore = Math.max(0.5, (message.aiAnalysis.confidenceScore || 0.85) - 0.1);
+    } else {
+      message.aiAnalysis.confidenceScore = Math.min(1.0, (message.aiAnalysis.confidenceScore || 0.85) + 0.05);
+    }
+    
+    await message.save();
+    
+    // Get STELLA instance to update learning
+    const stellaAI = getStellaAI(req);
+    await stellaAI.personalityService.processFeedback(userId, message, helpful);
+    
+    res.json({
+      success: true,
+      message: 'Feedback received and processed'
+    });
+  } catch (error) {
+    console.error('Error processing feedback:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to process feedback: ' + error.message
+    });
+  }
+});
+
+/**
+ * GET /api/stella/conversations/recent
+ * Get recent conversations
+ */
+router.get('/conversations/recent', async (req, res) => {
+  try {
+    const { userId, limit = 20 } = req.query;
+    
+    const queryOptions = userId ? { userId } : {};
+    
+    const recentConversations = await StellaConversation.find(queryOptions)
+      .sort({ timestamp: -1 })
+      .limit(parseInt(limit));
+    
+    res.json({ 
+      success: true, 
+      conversations: recentConversations 
+    });
+  } catch (error) {
+    console.error('Error fetching conversations:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to fetch conversations: ' + error.message
+    });
+  }
+});
+
+/**
+ * GET /api/stella/common-questions
+ * Get the most commonly asked questions
+ */
+router.get('/common-questions', async (req, res) => {
+  try {
+    const commonQuestions = await StellaConversation.getMostCommonQuestions(10);
+    
+    res.json({
+      success: true,
+      questions: commonQuestions.map(q => ({
+        id: q._id,
+        question: q.content,
+        frequency: q.frequencyData?.similarQuestionCount || 1,
+        lastAsked: q.frequencyData?.lastAsked
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching common questions:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to fetch common questions: ' + error.message
+    });
+  }
+});
+
+/**
+ * GET /api/stella/status
+ * Check STELLA system status
+ */
+// Simplified status endpoint for testing
+router.get('/status', (req, res) => {
+  res.json({
+    success: true,
+    status: "online",
+    version: "1.0",
+    capabilities: ["Training guidance", "Progress tracking", "Exercise analysis", "Learning engine"]
+  });
+});
+/**
+ * NEW! GET /api/stella/daily-briefing
+ * Get the presidential space briefing for the day
+ */
+router.get('/daily-briefing', async (req, res) => {
+  try {
+    const { userId } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: 'userId is required'
+      });
+    }
+    
+    // Get STELLA instance
+    const stellaAI = getStellaAI(req);
+    
+    // Generate a daily briefing
+    const briefingData = await stellaAI.generateDailyBriefing({
+      userId,
+      date: new Date()
+    });
+    
+    res.json({
+      success: true,
+      briefing: briefingData
+    });
+  } catch (error) {
+    console.error('Error generating daily briefing:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to generate daily briefing: ' + error.message
+    });
+  }
+});
+
+/**
+ * NEW! POST /api/stella/countdown/start
+ * Start a countdown for a user
+ */
+router.post('/countdown/start', async (req, res) => {
+  try {
+    const { userId, mission, duration } = req.body;
+    
+    if (!userId || !mission) {
+      return res.status(400).json({
+        success: false,
+        error: 'userId and mission are required'
+      });
+    }
+    
+    // Get STELLA instance
+    const stellaAI = getStellaAI(req);
+    
+    // Start the countdown
+    const countdownData = await stellaAI.countdownService.startCountdown(userId, {
+      mission,
+      duration: duration || 604800 // Default to 1 week in seconds
+    });
+    
+    res.json({
+      success: true,
+      countdown: countdownData
+    });
+  } catch (error) {
+    console.error('Error starting countdown:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to start countdown: ' + error.message
+    });
+  }
+});
+
+/**
+ * NEW! GET /api/stella/countdown/status
+ * Get current countdown status for a user
+ */
+router.get('/countdown/status', async (req, res) => {
+  try {
+    const { userId } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        error: 'userId is required'
+      });
+    }
+    
+    // Get STELLA instance
+    const stellaAI = getStellaAI(req);
+    
+    // Get countdown status
+    const countdownStatus = await stellaAI.countdownService.getCountdownStatus(userId);
+    
+    res.json({
+      success: true,
+      status: countdownStatus
+    });
+  } catch (error) {
+    console.error('Error getting countdown status:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to get countdown status: ' + error.message
+    });
+  }
+});
+
+/**
+ * NEW! POST /api/stella/countdown/activity
+ * Record user activity to potentially accelerate countdown
+ */
+router.post('/countdown/activity', async (req, res) => {
+  try {
+    const { userId, activityType, activityData } = req.body;
+    
+    if (!userId || !activityType) {
+      return res.status(400).json({
+        success: false,
+        error: 'userId and activityType are required'
+      });
+    }
+    
+    // Get STELLA instance
+    const stellaAI = getStellaAI(req);
+    
+    // Update countdown based on activity
+    const updateResult = await stellaAI.calculateCountdownUpdate(userId, {
+      type: activityType,
+      data: activityData || {}
+    });
+    
+    res.json({
+      success: true,
+      update: updateResult
+    });
+  } catch (error) {
+    console.error('Error updating countdown with activity:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to update countdown: ' + error.message
+    });
+  }
+});
+
+/**
+ * NEW! POST /api/stella/personality/update
+ * Update STELLA's personality for a user
+ */
+router.post('/personality/update', async (req, res) => {
+  try {
+    const { userId, traits } = req.body;
+    
+    if (!userId || !traits) {
+      return res.status(400).json({
+        success: false,
+        error: 'userId and traits are required'
+      });
+    }
+    
+    // Get STELLA instance
+    const stellaAI = getStellaAI(req);
+    
+    // Update personality traits
+    const updatedTraits = await stellaAI.personalityService.updatePersonality(userId, traits);
+    
+    res.json({
+      success: true,
+      personality: updatedTraits
+    });
+  } catch (error) {
+    console.error('Error updating personality:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to update personality: ' + error.message
+    });
+  }
+});
+
+/**
+ * Helper function to analyze question
  */
 async function analyzeQuestion(question) {
   // In a full implementation, this could use a dedicated ML model
@@ -132,8 +562,7 @@ async function analyzeQuestion(question) {
 }
 
 /**
- * NEW: Check for similar questions in database
- * Returns the most similar question and its response
+ * Check for similar questions in database
  */
 async function findSimilarQuestion(userId, question) {
   try {
@@ -201,6 +630,7 @@ async function findSimilarQuestion(userId, question) {
           
           return {
             found: true,
+            similarity: 0.85, // Estimate similarity score
             question: similarQuestion,
             response: stellaResponse
           };
@@ -214,193 +644,6 @@ async function findSimilarQuestion(userId, question) {
     return { found: false };
   }
 }
-router.post('/guidance', async (req, res) => {
-  const { userId, question } = req.body;
-
-  if (!userId || !question) {
-    return res.status(400).json({ message: "Missing userId or question." });
-  }
-
-  try {
-    const user = await User.findById(userId);
-    const session = await TrainingSession.findOne({ userId });
-
-    const userContext = user ? `User: ${user.name}, Subscription: ${user.subscriptionLevel}` : "New User";
-    const moduleContext = session ? `Current Module: ${session.currentModule}` : "No active module";
-
-    const prompt = `
-      You're STELLA, the AI training assistant for astronauts.
-      ${userContext}
-      ${moduleContext}
-      User Question: ${question}
-      Provide a short, actionable response.
-    `;
-
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [{ role: 'system', content: prompt }],
-      max_tokens: 250
-    });
-
-    const message = response.choices[0].message.content.trim();
-
-    res.json({ success: true, guidance: { message } });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error." });
-  }
-});
-/**
- * NEW: POST /api/stella/feedback
- * Receive feedback on STELLA's responses for learning
- */
-router.post('/feedback', async (req, res) => {
-  try {
-    const { userId, messageId, sessionId, helpful, rating, feedbackText } = req.body;
-    
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        error: 'userId is required'
-      });
-    }
-    
-    // We need either messageId or sessionId
-    if (!messageId && !sessionId) {
-      return res.status(400).json({
-        success: false,
-        error: 'Either messageId or sessionId is required'
-      });
-    }
-    
-    // Find the message to update
-    let message;
-    if (messageId) {
-      message = await StellaConversation.findById(messageId);
-    } else {
-      // Find the most recent response in this session
-      message = await StellaConversation.findOne({
-        userId,
-        fromUser: false,
-        'metadata.sessionId': sessionId
-      }).sort({ timestamp: -1 });
-    }
-    
-    if (!message) {
-      return res.status(404).json({
-        success: false,
-        error: 'Message not found'
-      });
-    }
-    
-    // Update the message with feedback
-    message.userFeedback = {
-      helpful,
-      rating: rating || null,
-      feedbackText: feedbackText || null,
-      receivedAt: new Date()
-    };
-    
-    // If it wasn't helpful, reduce the confidence score
-    if (helpful === false) {
-      message.aiAnalysis.confidenceScore = Math.max(0.5, (message.aiAnalysis.confidenceScore || 0.85) - 0.1);
-    } else {
-      message.aiAnalysis.confidenceScore = Math.min(1.0, (message.aiAnalysis.confidenceScore || 0.85) + 0.05);
-    }
-    
-    await message.save();
-    
-    res.json({
-      success: true,
-      message: 'Feedback received and processed'
-    });
-  } catch (error) {
-    console.error('Error processing feedback:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to process feedback: ' + error.message
-    });
-  }
-});
-
-// Add to routes/api/stella.js
-router.get('/conversations/recent', async (req, res) => {
-  try {
-    const recentConversations = await StellaConversation.find()
-      .sort({ timestamp: -1 })
-      .limit(20);
-    
-    res.json({ success: true, conversations: recentConversations });
-  } catch (error) {
-    console.error('Error fetching conversations:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch conversations' });
-  }
-});
-
-// Log for debugging when storing conversations
-// This should be moved inside your /guidance route handler where you save conversations
-// console.log('Storing STELLA conversation:', {
-//   userId,
-//   fromUser: true,
-//   content: question,
-//   timestamp: new Date(),
-//   metadata: {
-//     context: exerciseId ? 'training' : 'general'
-//   }
-// });
-
-/**
- * NEW: GET /api/stella/common-questions
- * Get the most commonly asked questions
- */
-router.get('/common-questions', async (req, res) => {
-  try {
-    const commonQuestions = await StellaConversation.getMostCommonQuestions(10);
-    
-    res.json({
-      success: true,
-      questions: commonQuestions.map(q => ({
-        id: q._id,
-        question: q.content,
-        frequency: q.frequencyData?.similarQuestionCount || 1,
-        lastAsked: q.frequencyData?.lastAsked
-      }))
-    });
-  } catch (error) {
-    console.error('Error fetching common questions:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to fetch common questions: ' + error.message
-    });
-  }
-});
-
-/**
- * GET /api/stella/status
- * Check STELLA system status
- */
-router.get('/status', async (req, res) => {
-  try {
-    // Get some stats for the status response
-    const stats = {
-      totalConversations: await StellaConversation.countDocuments(),
-      totalUsers: await StellaConversation.distinct('userId').countDocuments(),
-      responseMetrics: await StellaConversation.getResponseMetrics()
-    };
-    
-    res.json({
-      success: true,
-      status: "online",
-      version: "1.0",
-      capabilities: ["Training guidance", "Progress tracking", "Exercise analysis", "Learning engine"],
-      stats
-    });
-  } catch (error) {
-    console.error('Error checking STELLA status:', error);
-    res.status(500).json({ success: false, error: 'Failed to check status' });
-  }
-});
 
 /**
  * Helper function to extract action items from text
@@ -435,6 +678,7 @@ function estimateTokens(text) {
   return Math.ceil((text || '').split(/\s+/).length * 1.3);
 }
 
-// In your routes/api/stella.js, at the very end:
-// console.log("Stella router routes:", router.stack.map(r => r.route?.path).filter(Boolean));
+// Import StellaConversation model
+const StellaConversation = mongoose.model('StellaConversation');
+
 module.exports = router;

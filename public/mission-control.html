@@ -166,7 +166,368 @@
       justify-content: center;
       color: #60A5FA;
     }
-    
+    .mission-control-container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 300px;
+    background: #1c2836;
+    color: white;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.countdown-section {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+#mission-countdown {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.countdown-label {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.stella-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f5f5f5;
+    border-left: 1px solid #ddd;
+}
+
+.stella-header {
+    padding: 15px;
+    background: #2c3e50;
+    color: white;
+}
+
+.stella-conversation {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    margin-bottom: 15px;
+    max-width: 80%;
+}
+
+.message.user {
+    align-self: flex-end;
+    background: #dcf8c6;
+    border-radius: 15px 15px 0 15px;
+    padding: 10px 15px;
+}
+
+.message.stella {
+    align-self: flex-start;
+    background: white;
+    border-radius: 15px 15px 15px 0;
+    padding: 10px 15px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message.system {
+    align-self: center;
+    background: #f0f0f0;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-style: italic;
+    max-width: 90%;
+}
+
+.message-feedback {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+}
+
+.message-feedback button {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.message-feedback button:hover {
+    color: #2c3e50;
+}
+
+.feedback-submitted {
+    font-size: 12px;
+    color: #4caf50;
+}
+
+.stella-input {
+    display: flex;
+    padding: 15px;
+    background: white;
+    border-top: 1px solid #ddd;
+}
+
+.stella-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.stella-input button {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.action-items {
+    margin-top: 10px;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 3px solid #4caf50;
+}
+
+.action-items h4 {
+    margin: 0 0 5px 0;
+    color: #2c3e50;
+}
+
+.action-items ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}
+
+.typing-indicator .dot {
+    width: 8px;
+    height: 8px;
+    background: #888;
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: typing 1s infinite ease-in-out;
+}
+
+.typing-indicator .dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.typing-indicator .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+.stella-conversation {
+  color: #ffffff; /* or any other color that contrasts with your background */
+}
+
+/* Fix text contrast issues */
+.message {
+  color: #0a0a14 !important; /* Dark text color */
+  background-color: rgba(255, 255, 255, 0.9) !important; /* White background with opacity */
+  border: 1px solid #1e3f5a !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  max-width: 80% !important;
+  margin-bottom: 10px !important;
+}
+
+/* User messages should be right-aligned with different styling */
+.message.user {
+  background-color: rgba(30, 87, 153, 0.1) !important;
+  border-color: #1e57a9 !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+/* STELLA messages should be left-aligned */
+.message.stella {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+.user-message, .stella-message {
+  color: #ffffff;
+}
+
+/* Make sure input text is visible too */
+#stella-question {
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.recommendations-panel {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.recommendation {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 3px solid #3498db;
+}
+
+.recommendation-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.recommendation-description {
+    font-size: 14px;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.recommendation-action {
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.countdown-impact {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #2c3e50;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: slide-in 0.5s ease-out;
+    z-index: 1000;
+}
+
+.impact-message {
+    display: flex;
+    align-items: center;
+}
+
+.impact-message i {
+    margin-right: 10px;
+    color: #4caf50;
+}
+
+.impact-value {
+    margin-left: 10px;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.fade-out {
+    animation: fade-out 0.5s ease-in;
+    opacity: 0;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+    /* Add to your existing CSS */
+.personality-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: #1e293b;
+  border-radius: 4px;
+  outline: none;
+}
+
+.personality-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.personality-slider::-webkit-slider-thumb:hover {
+  background: #60a5fa;
+}
+
+.personality-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border: none;
+}
+
+.personality-slider::-moz-range-thumb:hover {
+  background: #60a5fa;
+}
+
+.personality-slider-container {
+  margin-bottom: 1rem;
+}
+
+.personality-preset.active {
+  background-color: rgba(59, 130, 246, 0.5);
+}
     .countdown-box {
       background-color: rgba(17, 24, 39, 0.7);
       border: 1px solid rgba(59, 130, 246, 0.2);
@@ -253,55 +614,321 @@
       
       <!-- Main Grid Layout -->
       <div class="grid grid-cols-12 gap-6">
-        <!-- STELLA AI Assistant - Prominent Placement -->
-        <div class="col-span-12 lg:col-span-7 mb-6">
-          <div class="mission-control-card p-6 h-full relative overflow-hidden">
-            <div class="flex items-center mb-6">
-              <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h2 class="text-2xl font-bold text-blue-400">STELLA AI Assistant</h2>
-            </div>
-            
-            <div id="stella-message" class="stella-bubble mb-6">
-              <p>Welcome to your Mission Control, John! I'm STELLA, your AI training companion. I notice you haven't completed your initial assessment yet. This is the perfect place to start your space training journey - it will help me personalize your experience.</p>
-              <p class="mt-3">Would you like me to guide you through your initial assessment now? It will take about 15 minutes and will help us create your optimal training path.</p>
-              <p class="text-sm text-blue-300 mt-4">Ask me about assessments, training modules, or your personalized space timeline.</p>
-            </div>
-            
-            <div class="flex">
-              <input 
-                id="stella-question" 
-                type="text" 
-                placeholder="Ask STELLA a question..." 
-                class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 flex-grow mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <button 
-                id="send-to-stella" 
-                class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition-colors">
-                Ask
-              </button>
-            </div>
-            
-            <!-- Quick Action Buttons -->
-            <div class="mt-4 flex flex-wrap gap-2">
-              <button class="bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-opacity-50 transition-colors">
-                Start Assessment
-              </button>
-              <button class="bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-opacity-50 transition-colors">
-                Show My Progress
-              </button>
-              <button class="bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-opacity-50 transition-colors">
-                Today's Training
-              </button>
-            </div>
-            
-            <!-- Conversation container for STELLA's responses - increased height -->
-            <div class="stella-conversation mt-4 max-h-64 overflow-y-auto px-1"></div>
+<!-- STELLA AI Assistant - Main Chat Interface -->
+<div class="col-span-12 lg:col-span-7 mb-6">
+  <div class="mission-control-card p-6 h-full relative overflow-hidden">
+    <div class="flex items-center mb-6">
+      <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-blue-400">STELLA AI Assistant</h2>
+    </div>
+    
+    <!-- Conversation Container -->
+    <div class="stella-conversation" style="color: #ffffff;">      <div class="message system">
+        <div class="message-content">
+          Welcome to STELLA, your Space Training and Education Learning Liaison Assistant. How can I help with your space training today?
+        </div>
+      </div>
+    </div>
+    
+    <!-- User Input Field -->
+    <div class="flex mb-4">
+      <input 
+        id="stella-question" 
+        type="text" 
+        placeholder="Ask STELLA a question..." 
+        class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 flex-grow mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <button 
+        id="send-to-stella" 
+        class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition-colors">
+        Ask
+      </button>
+    </div>
+    
+    <!-- Quick Action Buttons -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-opacity-50 transition-colors">
+        Start Assessment
+      </button>
+      <button class="bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-opacity-50 transition-colors">
+        Show My Progress
+      </button>
+      <button class="bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-sm hover:bg-opacity-50 transition-colors">
+        Today's Training
+      </button>
+    </div>
+    
+    <!-- STELLA Personality Lab -->
+    <div class="border-t border-blue-800 pt-4">
+      <h3 class="text-lg font-semibold text-blue-300 mb-3">STELLA Personality Lab</h3>
+      <p class="text-sm text-gray-400 mb-4">Customize how STELLA interacts with you by adjusting these personality traits:</p>
+      
+      <!-- Personality Sliders -->
+      <div class="space-y-4">
+        <!-- Honesty Level -->
+        <div class="personality-slider-container">
+          <div class="flex justify-between mb-1">
+            <label for="honesty-slider" class="text-sm">Honesty Level</label>
+            <span class="text-sm text-blue-300" id="honesty-value">70%</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-xs text-gray-500 mr-2">Tactful</span>
+            <input type="range" id="honesty-slider" class="personality-slider flex-grow" 
+                  data-trait="honesty" min="0" max="100" value="70">
+            <span class="text-xs text-gray-500 ml-2">Direct</span>
           </div>
         </div>
         
+        <!-- Humor Level -->
+        <div class="personality-slider-container">
+          <div class="flex justify-between mb-1">
+            <label for="humor-slider" class="text-sm">Humor Level</label>
+            <span class="text-sm text-blue-300" id="humor-value">50%</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-xs text-gray-500 mr-2">Serious</span>
+            <input type="range" id="humor-slider" class="personality-slider flex-grow" 
+                  data-trait="humor" min="0" max="100" value="50">
+            <span class="text-xs text-gray-500 ml-2">Playful</span>
+          </div>
+        </div>
+        
+        <!-- Formality Level -->
+        <div class="personality-slider-container">
+          <div class="flex justify-between mb-1">
+            <label for="formality-slider" class="text-sm">Formality</label>
+            <span class="text-sm text-blue-300" id="formality-value">60%</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-xs text-gray-500 mr-2">Casual</span>
+            <input type="range" id="formality-slider" class="personality-slider flex-grow" 
+                  data-trait="formality" min="0" max="100" value="60">
+            <span class="text-xs text-gray-500 ml-2">Formal</span>
+          </div>
+        </div>
+        
+        <!-- Encouragement Level -->
+        <div class="personality-slider-container">
+          <div class="flex justify-between mb-1">
+            <label for="encouragement-slider" class="text-sm">Encouragement</label>
+            <span class="text-sm text-blue-300" id="encouragement-value">75%</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-xs text-gray-500 mr-2">Challenging</span>
+            <input type="range" id="encouragement-slider" class="personality-slider flex-grow" 
+                  data-trait="encouragement" min="0" max="100" value="75">
+            <span class="text-xs text-gray-500 ml-2">Supportive</span>
+          </div>
+        </div>
+        
+        <!-- Detail Level -->
+        <div class="personality-slider-container">
+          <div class="flex justify-between mb-1">
+            <label for="detail-slider" class="text-sm">Detail Level</label>
+            <span class="text-sm text-blue-300" id="detail-value">65%</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-xs text-gray-500 mr-2">Concise</span>
+            <input type="range" id="detail-slider" class="personality-slider flex-grow" 
+                  data-trait="detail" min="0" max="100" value="65">
+            <span class="text-xs text-gray-500 ml-2">Detailed</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Visual Preview -->
+      <div class="mt-6 bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-blue-800">
+        <h4 class="text-sm font-medium mb-2 text-blue-300">Response Preview:</h4>
+        <div id="personality-preview" class="text-sm text-gray-300 p-3 bg-gray-900 bg-opacity-50 rounded">
+          <p>Your physical training shows moderate progress, but there's room for improvement in consistency and intensity.</p>
+          <p>Think of your training like preparing for a zero-gravity marathon - one small step at a time!</p>
+        </div>
+        <div class="text-xs text-gray-500 mt-2">
+          <i class="fas fa-info-circle mr-1"></i> This preview reflects how STELLA will respond with current settings.
+        </div>
+      </div>
+      
+      <!-- Update Button -->
+      <button id="update-personality-btn" class="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition-colors w-full">
+        Update STELLA Personality
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Space Readiness Countdown Section -->
+<div class="col-span-12 lg:col-span-5 mb-6">
+  <div class="mission-control-card p-6 h-full">
+    <div class="flex items-center mb-6">
+      <div class="w-12 h-12 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center mr-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-blue-400">Countdown to Space Readiness</h2>
+    </div>
+    
+    <!-- Need assessment notification -->
+    <div class="bg-indigo-900 bg-opacity-20 border border-indigo-500 border-opacity-20 rounded-lg p-4 mb-4">
+      <div class="flex items-start">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-indigo-300 text-sm">Complete your initial assessment to begin your countdown and unlock your personal space readiness timeline.</p>
+      </div>
+    </div>
+    
+    <!-- Countdown Boxes -->
+    <div class="grid grid-cols-6 gap-2 mb-6 countdown-boxes">
+      <!-- Years -->
+      <div class="countdown-digit-box bg-blue-900 bg-opacity-40 border border-blue-800 p-3 rounded-lg text-center">
+        <div class="text-3xl font-bold text-white" id="countdown-years">--</div>
+        <p class="text-xs text-blue-200 mt-1">Years</p>
+      </div>
+      
+      <!-- Weeks -->
+      <div class="countdown-digit-box bg-blue-900 bg-opacity-40 border border-blue-800 p-3 rounded-lg text-center">
+        <div class="text-3xl font-bold text-white" id="countdown-weeks">--</div>
+        <p class="text-xs text-blue-200 mt-1">Weeks</p>
+      </div>
+      
+      <!-- Days -->
+      <div class="countdown-digit-box bg-blue-900 bg-opacity-40 border border-blue-800 p-3 rounded-lg text-center">
+        <div class="text-3xl font-bold text-white" id="countdown-days">--</div>
+        <p class="text-xs text-blue-200 mt-1">Days</p>
+      </div>
+      
+      <!-- Hours -->
+      <div class="countdown-digit-box bg-blue-900 bg-opacity-40 border border-blue-800 p-3 rounded-lg text-center">
+        <div class="text-3xl font-bold text-white" id="countdown-hours">--</div>
+        <p class="text-xs text-blue-200 mt-1">Hours</p>
+      </div>
+      
+      <!-- Minutes -->
+      <div class="countdown-digit-box bg-blue-900 bg-opacity-40 border border-blue-800 p-3 rounded-lg text-center">
+        <div class="text-3xl font-bold text-white" id="countdown-minutes">--</div>
+        <p class="text-xs text-blue-200 mt-1">Minutes</p>
+      </div>
+      
+      <!-- Seconds -->
+      <div class="countdown-digit-box bg-blue-900 bg-opacity-40 border border-blue-800 p-3 rounded-lg text-center">
+        <div class="text-3xl font-bold text-white" id="countdown-seconds">--</div>
+        <p class="text-xs text-blue-200 mt-1">Seconds</p>
+      </div>
+    </div>
+    
+    <!-- Countdown Info -->
+    <div class="bg-blue-900 bg-opacity-20 p-4 rounded-lg">
+      <h3 class="text-lg font-semibold text-blue-300 mb-2">Projected Completion</h3>
+      <div class="text-xl font-bold text-white mb-3" id="countdown-projected-date">--</div>
+      
+      <h3 class="text-lg font-semibold text-blue-300 mb-2">Accelerate Your Timeline</h3>
+      <p class="text-sm text-gray-400 mb-3">Your journey to space can be accelerated by:</p>
+      
+      <div id="countdown-acceleration">
+        <ul class="text-sm text-gray-400 space-y-1">
+          <li class="flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Completing all training modules
+          </li>
+          <li class="flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Participating in mission simulations
+          </li>
+          <li class="flex items-start">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Completing physical training exercises
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    <!-- Next Milestone -->
+    <div class="countdown-info-box bg-blue-900 bg-opacity-30 border border-blue-800 p-4 rounded-lg">
+      <h4 class="text-lg font-semibold text-blue-300 mb-2">Next Milestone</h4>
+      <div class="text-xl font-bold text-white mb-1" id="countdown-milestone">Intermediate Training</div>
+      <p class="text-sm text-blue-200 mb-3"><span id="countdown-milestone-days">545</span> days remaining</p>
+      
+      <div class="bg-blue-900 bg-opacity-40 p-3 rounded border border-blue-700 mt-2">
+        <h5 class="text-sm font-semibold text-blue-300 mb-1">Milestone Description</h5>
+        <p class="text-xs text-blue-100" id="countdown-milestone-description">Completed basic training fundamentals and ready for advanced modules</p>
+      </div>
+    </div>
+    
+    <!-- Acceleration Opportunities -->
+    <div class="countdown-info-box bg-blue-900 bg-opacity-30 border border-blue-800 p-4 rounded-lg">
+      <h4 class="text-lg font-semibold text-blue-300 mb-2">Acceleration Opportunities</h4>
+      <ul class="text-sm text-blue-100 space-y-2" id="countdown-acceleration">
+        <li class="flex items-center">
+          <span class="bg-green-600 rounded-full w-2 h-2 mr-2"></span>
+          <span class="flex-grow">Complete assessments</span>
+          <span class="text-green-400">-5.2 days</span>
+        </li>
+        <li class="flex items-center">
+          <span class="bg-green-600 rounded-full w-2 h-2 mr-2"></span>
+          <span class="flex-grow">Daily physical training</span>
+          <span class="text-green-400">-3.5 days</span>
+        </li>
+        <li class="flex items-center">
+          <span class="bg-green-600 rounded-full w-2 h-2 mr-2"></span>
+          <span class="flex-grow">Mission simulations</span>
+          <span class="text-green-400">-8.0 days</span>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Timeline Impact -->
+    <div class="countdown-info-box bg-blue-900 bg-opacity-30 border border-blue-800 p-4 rounded-lg">
+      <h4 class="text-lg font-semibold text-blue-300 mb-2">Timeline Impact</h4>
+      <div class="bg-blue-900 bg-opacity-40 p-3 rounded border border-blue-700">
+        <p class="text-sm text-blue-100" id="countdown-impact-description">Regular physical training can significantly accelerate your space readiness</p>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-xs text-blue-200">Potential reduction:</span>
+          <span class="text-green-400 font-bold" id="countdown-impact-change">-3.5 days</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Recent Reductions -->
+    <div class="countdown-info-box bg-blue-900 bg-opacity-30 border border-blue-800 p-4 rounded-lg col-span-2">
+      <h4 class="text-lg font-semibold text-blue-300 mb-2">Recent Activity</h4>
+      <div class="space-y-2" id="countdown-history">
+        <div class="grid grid-cols-3 text-xs text-blue-200 font-semibold mb-1">
+          <div>Date</div>
+          <div>Activity</div>
+          <div class="text-right">Reduction</div>
+        </div>
+        <div class="h-px bg-blue-800 mb-2"></div>
+        <div class="grid grid-cols-3 text-sm">
+          <div class="text-blue-200">Mar 28, 2025</div>
+          <div class="text-blue-100">Physical Training</div>
+          <div class="text-green-400 text-right">-2.5 days</div>
+        </div>
+        <div class="grid grid-cols-3 text-sm">
+          <div class="text-blue-200">Mar 26, 2025</div>
+          <div class="text-blue-100">Assessment</div>
+          <div class="text-green-400 text-right">-4.8 days</div>
+        </div>
+        <div class="grid grid-cols-3 text-sm">
+          <div class="text-blue-200">Mar 24, 2025</div>
+          <div class="text-blue-100">Mission Simulation</div>
+          <div class="text-green-400 text-right">-7.2 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
         <!-- Countdown to Space Readiness -->
         <div class="col-span-12 lg:col-span-5 mb-6">
           <div class="mission-control-card p-6 h-full">
@@ -883,395 +1510,730 @@
 <!-- Add these before your closing body tag if not already present -->
 <script src="/js/progressAssessment.js"></script>
 <script src="/js/progressChart.js"></script>
-<script src="/js/visualizations/ProgressTracker.js"></script>  
-
+<script src="/js/visualizations/ProgressTracker.js"></script>
 <script>
-  // Debug STELLA Connection
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('Checking STELLA elements:');
-    console.log('Input element:', document.getElementById('stella-question'));
-    console.log('Button element:', document.getElementById('send-to-stella'));
-    console.log('Conversation element:', document.querySelector('.stella-conversation'));
-    
-    // Test direct API call
-    fetch('/api/stella/status')
-      .then(response => response.json())
-      .then(data => {
-        console.log('STELLA API Status:', data);
-      })
-      .catch(error => {
-        console.error('STELLA API Error:', error);
-      });
-  });
-  // Add this to your mission-control.html or any protected page
 document.addEventListener('DOMContentLoaded', function() {
-  const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+  // Initialize STELLA
+  setupSTELLAIntegration();
   
-  if (!token) {
-    // No token found, redirect to login
-    window.location.href = '/login1.html?reason=unauthorized';
-    return;
-  }
+  // Initialize personality sliders
+  setupPersonalitySliders();
   
-  // Optional: Verify token with backend
-  fetch('/api/auth/verify-token', {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Invalid token');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('User authenticated:', data);
-    // Continue loading the protected page
-  })
-  .catch(error => {
-    console.error('Authentication error:', error);
-    // Clear invalid token
-    localStorage.removeItem('authToken');
-    sessionStorage.removeItem('authToken');
-    // Redirect to login
-    window.location.href = '/login1.html?reason=session-expired';
-  });
+  // Initialize countdown
+  setupCountdown();
 });
-</script>
 
-<!-- STELLA AI Integration for Mission Control -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Get STELLA elements
-  console.log('🔍 Setting up STELLA AI in Mission Control...');
-
+/**
+ * Setup STELLA AI integration
+ */
+function setupSTELLAIntegration() {
   // Get STELLA elements
   const stellaInput = document.getElementById('stella-question');
-  const stellaButton = document.getElementById('send-to-stella');
+  const stellaSendButton = document.getElementById('send-to-stella');
   const stellaConversation = document.querySelector('.stella-conversation');
   
-  // Verify elements exist
-  if (!stellaInput || !stellaButton) {
-    console.error('❌ STELLA input or button not found!');
-    return;
-  }
+  if (!stellaInput || !stellaSendButton) return;
   
-  if (!stellaConversation) {
-    console.error('❌ STELLA conversation container not found!');
-    return;
-  }
-  
-  // Remove any existing event listeners
-  stellaButton.replaceWith(stellaButton.cloneNode(true));
-  stellaInput.replaceWith(stellaInput.cloneNode(true));
-  
-  // Get fresh references after replacement
-  const newStellaButton = document.getElementById('send-to-stella');
-  const newStellaInput = document.getElementById('stella-question');
-  
-  // Add event listeners
-  newStellaButton.addEventListener('click', handleStellaMessage);
-  newStellaInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      handleStellaMessage();
-    }
-  });
-  
-  console.log('✅ STELLA event listeners attached successfully');
-  
-  // Main STELLA handler function
-  async function handleStellaMessage() {
-    const question = newStellaInput.value.trim();
-    if (!question) return;
-    
-    console.log('🤖 STELLA processing question:', question);
-    
-    // Make sure conversation container is visible
-    stellaConversation.classList.remove('hidden');
-    
-    // Display user message
-    stellaConversation.innerHTML += `
-      <div class="mb-2 text-right">
-        <div class="inline-block bg-blue-600 ml-auto px-3 py-2 rounded-lg max-w-xs">
-          ${question}
-        </div>
-      </div>
-    `;
-    
-    // Clear input
-    newStellaInput.value = '';
-    
-    // Add loading indicator
-    stellaConversation.innerHTML += `
-      <div class="mb-2" id="stella-loading">
-        <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
-          <div class="flex space-x-2">
-            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce"></div>
-            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-75"></div>
-            <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-150"></div>
-          </div>
-        </div>
-      </div>
-    `;
-    
-    // Scroll to bottom of conversation
-    stellaConversation.scrollTop = stellaConversation.scrollHeight;
-    
-    // Extract recent conversation messages to provide context
-    const conversationHistory = [];
-    const messageElements = stellaConversation.querySelectorAll('.mb-2, .mb-4');
-    
-    // Process messages (skip the loading indicator)
-    let count = 0;
-    for (let i = messageElements.length-1; i >= 0 && count < 5; i--) {
-      const element = messageElements[i];
-      if (element.id === 'stella-loading') continue;
+  // Connect to STELLA API
+  fetch('/api/stella/connect', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      userId: getUserId()
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log('Connected to STELLA AI');
+      // Store session ID
+      localStorage.setItem('stella_session_id', data.sessionId);
       
-      const messageDiv = element.querySelector('div.inline-block');
-      if (!messageDiv) continue;
-      
-      const messageText = messageDiv.textContent.trim();
-      if (!messageText) continue;
-      
-      const isUser = element.classList.contains('text-right');
-      
-      conversationHistory.unshift({
-        fromUser: isUser,
-        content: messageText,
-        timestamp: new Date().toISOString()
+      // Setup event handlers
+      stellaSendButton.addEventListener('click', sendMessageToSTELLA);
+      stellaInput.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+          sendMessageToSTELLA();
+        }
       });
       
-      count++;
+      // Apply stored personality if available
+      if (data.personality) {
+        updatePersonalitySliders(data.personality);
+      }
+    } else {
+      console.error('Failed to connect to STELLA AI');
     }
+  })
+  .catch(error => {
+    console.error('Error connecting to STELLA:', error);
+  });
+}
+
+/**
+ * Get user ID from local storage or generate a new one
+ */
+function getUserId() {
+  let userId = localStorage.getItem('user_id');
+  if (!userId) {
+    userId = 'user_' + Date.now();
+    localStorage.setItem('user_id', userId);
+  }
+  return userId;
+}
+
+/**
+ * Send message to STELLA AI
+ */
+function sendMessageToSTELLA() {
+  const stellaInput = document.getElementById('stella-question');
+  const stellaConversation = document.querySelector('.stella-conversation');
+  const question = stellaInput.value.trim();
+  
+  if (!question) return;
+  
+  // Clear input
+  stellaInput.value = '';
+  
+  // Display user message
+  displayMessage('user', question);
+  
+  // Show typing indicator
+  displayTypingIndicator();
+  
+  // Get session ID from localStorage
+  const sessionId = localStorage.getItem('stella_session_id') || `session_${Date.now()}`;
+  
+  // Get conversation history
+  const conversationHistory = JSON.parse(localStorage.getItem('stella_conversation_history') || '[]');
+  
+  // Call STELLA API
+  fetch('/api/stella/guidance', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      userId: getUserId(),
+      question: question,
+      context: {
+        currentPage: 'mission-control',
+        moduleContext: getCurrentModule()
+      },
+      sessionId: sessionId,
+      conversationHistory: conversationHistory
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Remove typing indicator
+    removeTypingIndicator();
     
-    try {
-      // Get user ID from localStorage or use a default
-      const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous';
-      const exerciseId = 'mission-control';
+    if (data.success) {
+      // Display STELLA response
+      displayMessage('stella', data.guidance.message);
       
-      let response;
+      // Store feedback token for later use
+      if (data.feedbackToken) {
+        stellaConversation.lastElementChild.dataset.feedbackToken = data.feedbackToken;
+      }
       
-      // Try to use StellaIntegration if available
-      if (window.StellaIntegration && window.StellaIntegration.isInitialized) {
-        console.log('🔍 Using StellaIntegration...');
+      // Update conversation history
+      conversationHistory.push({
+        role: 'user',
+        content: question
+      });
+      conversationHistory.push({
+        role: 'assistant',
+        content: data.guidance.message
+      });
+      
+      // Limit history to last 10 messages
+      while (conversationHistory.length > 10) {
+        conversationHistory.shift();
+      }
+      
+      localStorage.setItem('stella_conversation_history', JSON.stringify(conversationHistory));
+      
+      // Display action items if any
+      if (data.guidance.actionItems && data.guidance.actionItems.length > 0) {
+        displayActionItems(data.guidance.actionItems);
+      }
+      
+      // Update countdown if provided
+      if (data.countdown && data.countdown.timelineImpact) {
+        updateCountdown(data.countdown);
+      }
+    } else {
+      displayMessage('system', "I'm having trouble processing your request. Please try again.");
+    }
+  })
+  .catch(error => {
+    console.error('Error sending message to STELLA:', error);
+    removeTypingIndicator();
+    displayMessage('system', "Connection to mission control interrupted. Please try again.");
+  });
+}
+
+/**
+ * Display message in conversation
+ */
+function displayMessage(sender, message) {
+  const stellaConversation = document.querySelector('.stella-conversation');
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message', sender);
+  
+  const content = document.createElement('div');
+  content.classList.add('message-content');
+  content.innerHTML = message;
+  
+  messageElement.appendChild(content);
+  
+  // Add feedback buttons for STELLA messages
+  if (sender === 'stella') {
+    const feedbackElement = document.createElement('div');
+    feedbackElement.classList.add('message-feedback');
+    feedbackElement.innerHTML = `
+      <button class="feedback-helpful" title="Helpful"><i class="fas fa-thumbs-up"></i></button>
+      <button class="feedback-unhelpful" title="Not Helpful"><i class="fas fa-thumbs-down"></i></button>
+    `;
+    messageElement.appendChild(feedbackElement);
+    
+    // Add event listeners for feedback
+    setTimeout(() => {
+      const helpfulBtn = messageElement.querySelector('.feedback-helpful');
+      const unhelpfulBtn = messageElement.querySelector('.feedback-unhelpful');
+      
+      helpfulBtn.addEventListener('click', () => provideFeedback(messageElement, true));
+      unhelpfulBtn.addEventListener('click', () => provideFeedback(messageElement, false));
+    }, 100);
+  }
+  
+  stellaConversation.appendChild(messageElement);
+  
+  // Scroll to bottom
+  stellaConversation.scrollTop = stellaConversation.scrollHeight;
+}
+
+/**
+ * Display typing indicator
+ */
+function displayTypingIndicator() {
+  const stellaConversation = document.querySelector('.stella-conversation');
+  const typingIndicator = document.createElement('div');
+  typingIndicator.classList.add('message', 'stella', 'typing-indicator');
+  typingIndicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  
+  stellaConversation.appendChild(typingIndicator);
+  stellaConversation.scrollTop = stellaConversation.scrollHeight;
+}
+
+/**
+ * Remove typing indicator
+ */
+function removeTypingIndicator() {
+  const typingIndicator = document.querySelector('.typing-indicator');
+  if (typingIndicator) {
+    typingIndicator.remove();
+  }
+}
+
+/**
+ * Display action items
+ */
+function displayActionItems(actionItems) {
+  const stellaConversation = document.querySelector('.stella-conversation');
+  const lastMessage = stellaConversation.lastElementChild;
+  
+  const actionsElement = document.createElement('div');
+  actionsElement.classList.add('action-items');
+  
+  let actionsHTML = '<h4>Recommended Actions:</h4><ul>';
+  actionItems.forEach(item => {
+    actionsHTML += `<li>${item}</li>`;
+  });
+  actionsHTML += '</ul>';
+  
+  actionsElement.innerHTML = actionsHTML;
+  lastMessage.appendChild(actionsElement);
+}
+
+/**
+ * Provide feedback on STELLA response
+ */
+function provideFeedback(messageElement, helpful) {
+  const feedbackToken = messageElement.dataset.feedbackToken;
+  if (!feedbackToken) {
+    console.warn('No feedback token available for this message');
+    return;
+  }
+  
+  // Disable feedback buttons
+  const feedbackButtons = messageElement.querySelectorAll('.message-feedback button');
+  feedbackButtons.forEach(btn => btn.disabled = true);
+  
+  // Show feedback submitted message
+  const feedbackElement = messageElement.querySelector('.message-feedback');
+  feedbackElement.innerHTML = '<span class="feedback-submitted">Feedback submitted</span>';
+  
+  // Send feedback to API
+  fetch('/api/stella/feedback', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      feedbackToken: feedbackToken,
+      helpful: helpful,
+      rating: helpful ? 4 : 2
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Feedback submitted:', data);
+  })
+  .catch(error => {
+    console.error('Error submitting feedback:', error);
+  });
+}
+
+/**
+ * Setup personality sliders
+ */
+function setupPersonalitySliders() {
+  const sliders = document.querySelectorAll('.personality-slider');
+  const updateButton = document.getElementById('update-personality-btn');
+  
+  if (!sliders.length || !updateButton) return;
+  
+  // Add event listeners to all sliders
+  sliders.forEach(slider => {
+    const valueDisplay = document.getElementById(`${slider.dataset.trait}-value`);
+    
+    // Update display on change
+    slider.addEventListener('input', () => {
+      if (valueDisplay) {
+        valueDisplay.textContent = `${slider.value}%`;
+      }
+      updatePersonalityPreview();
+    });
+  });
+  
+  // Add event listener to update button
+  updateButton.addEventListener('click', updatePersonality);
+  
+  // Initial preview update
+  updatePersonalityPreview();
+}
+
+/**
+ * Update personality sliders from values
+ */
+function updatePersonalitySliders(traits) {
+  for (const [trait, value] of Object.entries(traits)) {
+    const slider = document.querySelector(`.personality-slider[data-trait="${trait}"]`);
+    const valueDisplay = document.getElementById(`${trait}-value`);
+    
+    if (slider) {
+      slider.value = value;
+      if (valueDisplay) {
+        valueDisplay.textContent = `${value}%`;
+      }
+    }
+  }
+  
+  updatePersonalityPreview();
+}
+
+/**
+ * Update personality preview
+ */
+function updatePersonalityPreview() {
+  const previewElement = document.getElementById('personality-preview');
+  if (!previewElement) return;
+  
+  // Get current values
+  const honesty = getSliderValue('honesty');
+  const humor = getSliderValue('humor');
+  const formality = getSliderValue('formality');
+  const encouragement = getSliderValue('encouragement');
+  const detail = getSliderValue('detail');
+  
+  // Generate preview text
+  let preview = '<p>';
+  
+  // Base message
+  preview += 'Your physical training shows moderate progress';
+  
+  // Honesty adjustment
+  if (honesty > 80) {
+    preview += ', but your performance is significantly below recommended levels';
+  } else if (honesty > 50) {
+    preview += ', but there\'s room for improvement in consistency and intensity';
+  } else {
+    preview += ' and you\'re doing quite well with your exercise regimen';
+  }
+  
+  preview += '.</p>';
+  
+  // Detail adjustment
+  if (detail > 80) {
+    preview += '<p>Your cardiovascular endurance is at 68% of target levels, while strength training is at 72%. Focus on increasing workout frequency from 2 days to 4-5 days per week, with specific emphasis on core stability exercises for microgravity adaptation.</p>';
+  } else if (detail > 50) {
+    preview += '<p>Focus on increasing your workout frequency and adding more variety to target different muscle groups, especially your core for microgravity preparation.</p>';
+  }
+  
+  // Humor and encouragement
+  if (humor > 70) {
+    preview += '<p>Think of your training like preparing for a zero-gravity marathon - one small step at a time! 🚀</p>';
+  }
+  
+  if (encouragement > 70) {
+    preview += '<p>You\'re making progress, and I\'m confident you\'ll reach your training goals with consistent effort!</p>';
+  } else if (encouragement < 30) {
+    preview += '<p>You need to significantly increase your effort level if you expect to complete this training program.</p>';
+  }
+  
+  previewElement.innerHTML = preview;
+}
+
+/**
+ * Get slider value
+ */
+function getSliderValue(trait) {
+  const slider = document.querySelector(`.personality-slider[data-trait="${trait}"]`);
+  return slider ? parseInt(slider.value) : 50;
+}
+
+/**
+ * Update personality traits
+ */
+ function updatePersonality() {
+  const updateButton = document.getElementById('update-personality-btn');
+  if (updateButton) {
+    updateButton.innerHTML = '<span class="spinner"></span> Updating...';
+    updateButton.disabled = true;
+  }
+  
+  // Get all trait values
+  const traits = {
+    honesty: getSliderValue('honesty'),
+    humor: getSliderValue('humor'),
+    formality: getSliderValue('formality'),
+    encouragement: getSliderValue('encouragement'),
+    detail: getSliderValue('detail')
+  };
+  
+  // Send to API
+  fetch('/api/stella/personality/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      userId: getUserId(),
+      traits: traits
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Show success notification
+      showNotification('STELLA personality updated successfully!', 'success');
+      
+      // Update conversation with notification
+      const stellaConversation = document.querySelector('.stella-conversation');
+      if (stellaConversation) {
+        displayMessage('system', 'STELLA personality settings have been updated. I\'ll adjust my communication style accordingly.');
         
-        // Connect if not already connected
-        if (!window.StellaIntegration.isConnected) {
-          await window.StellaIntegration.connect(userId);
-        }
-        
-        // Ask STELLA through integration
-        response = await window.StellaIntegration.askQuestion(question, {
-          userId: userId,
-          exerciseId: exerciseId,
-          conversationHistory: conversationHistory
-        });
-      } else {
-        // Direct API call if integration not available
-        console.log('🔍 StellaIntegration not available, using direct API call...');
-        
-        const apiResponse = await fetch('/api/stella/guidance', {
+        // Important: Immediately ask STELLA for a confirmation message to show the new personality
+        fetch('/api/stella/guidance', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            userId: userId,
-            question: question,
-            exerciseId: exerciseId,
-            conversationHistory: conversationHistory,
-            // Add this to help with matching similar questions
+            userId: getUserId(),
+            question: "Show me your new personality settings in action",
             context: {
-              currentPage: 'trainingHub',
-              moduleContext: document.querySelector('.module-card:hover')?.querySelector('h3')?.textContent || null
-            }
+              currentPage: 'personality-update',
+              moduleContext: 'personality'
+            },
+            sessionId: localStorage.getItem('stella_session_id') || `session_${Date.now()}`
           })
-        });
-        
-        if (!apiResponse.ok) {
-          throw new Error(`Failed to get STELLA response: ${apiResponse.status}`);
-        }
-        
-        response = await apiResponse.json();
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            displayMessage('stella', data.guidance.message);
+          }
+        })
+        .catch(error => console.error('Error getting personality demo:', error));
       }
+    } else {
+      showNotification('Failed to update STELLA personality', 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Error updating personality:', error);
+    showNotification('Error connecting to STELLA', 'error');
+  })
+  .finally(() => {
+    if (updateButton) {
+      updateButton.innerHTML = 'Update STELLA Personality';
+      updateButton.disabled = false;
+    }
+  });
+}
+
+/**
+ * Setup countdown display and update from API
+ */
+ function setupCountdown() {
+  // Initial display update
+  updateCountdownDisplay();
+  
+  // Update seconds counter every second
+  setInterval(() => {
+    const secondsElement = document.getElementById('countdown-seconds');
+    if (secondsElement) {
+      let seconds = parseInt(secondsElement.textContent);
+      if (isNaN(seconds) || seconds === '--') seconds = 59;
       
-      // Handle response
-      console.log('✅ STELLA response:', response);
-      
-      // Remove loading indicator
-      document.getElementById('stella-loading')?.remove();
-      
-      if (response.success && response.guidance) {
-        // Parse guidance from the response
-        const message = response.guidance.message || "I'm processing your request.";
-        const messageId = response.messageId || 'latest';
-        
-        let responseHTML = `
-          <div class="mb-4" data-message-id="${messageId}" data-session-id="${response.sessionId || ''}">
-            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-              <p>${message}</p>
-        `;
-        
-        // Add action items if available
-        if (response.guidance.actionItems && response.guidance.actionItems.length > 0) {
-          responseHTML += `<ul class="mt-3 space-y-2">`;
-          response.guidance.actionItems.forEach(item => {
-            responseHTML += `<li class="text-blue-300">• ${item}</li>`;
-          });
-          responseHTML += `</ul>`;
-        }
-        
-        // Close message container
-        responseHTML += `
-            </div>
-            <div class="flex justify-end mt-1 space-x-2 text-xs">
-              <button class="text-gray-500 hover:text-green-500 feedback-btn" data-value="helpful">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017a2 2 0 01-1.865-1.71l-.745-4.47a2 2 0 011.865-2.29H14z" />
-                </svg>
-              </button>
-              <button class="text-gray-500 hover:text-red-500 feedback-btn" data-value="not-helpful">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.866.1l.745 4.47a2 2 0 01-1.865 2.29H10z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        `;
-        
-        // Add to conversation
-        stellaConversation.innerHTML += responseHTML;
+      if (seconds <= 0) {
+        seconds = 59;
+        // Update minutes when seconds roll over
+        updateMinutes();
       } else {
-        // Fallback response
-        stellaConversation.innerHTML += `
-          <div class="mb-4">
-            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-              <p>I'm having trouble processing your request. Could you please try again?</p>
-            </div>
-          </div>
-        `;
+        seconds--;
       }
-    } catch (error) {
-      console.error('❌ STELLA error:', error);
-      
-      // Remove loading indicator
-      document.getElementById('stella-loading')?.remove();
-      
-      // Fall back to local responses if API fails
-      const localResponse = getLocalStellaResponse(question);
-      
-      stellaConversation.innerHTML += `
-        <div class="mb-4">
-          <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-            <p>${localResponse}</p>
-          </div>
-        </div>
-      `;
+      secondsElement.textContent = seconds;
+    }
+  }, 1000);
+  
+  // Update full display every minute (keep your existing logic)
+  setInterval(updateCountdownDisplay, 60000);
+
+  // Fetch initial countdown data (keep your existing logic)
+  fetch('/api/stella/countdown', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success && data.countdown) {
+      updateCountdownValues(data.countdown);
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching countdown:', error);
+  });
+}
+
+// Helper function to update minutes when seconds roll over
+function updateMinutes() {
+  const minutesElement = document.getElementById('countdown-minutes');
+  if (minutesElement) {
+    let minutes = parseInt(minutesElement.textContent);
+    if (isNaN(minutes) || minutes === '--') minutes = 59;
+    
+    if (minutes <= 0) {
+      minutes = 59;
+      // Update hours when minutes roll over
+      updateHours();
+    } else {
+      minutes--;
+    }
+    minutesElement.textContent = minutes;
+  }
+}
+
+// Helper function to update hours when minutes roll over
+function updateHours() {
+  const hoursElement = document.getElementById('countdown-hours');
+  if (hoursElement) {
+    let hours = parseInt(hoursElement.textContent);
+    if (isNaN(hours) || hours === '--') hours = 23;
+    
+    if (hours <= 0) {
+      hours = 23;
+      // Update days when hours roll over
+      updateDays();
+    } else {
+      hours--;
+    }
+    hoursElement.textContent = hours;
+  }
+}
+
+// Helper function to update days
+function updateDays() {
+  // This would need to update days, weeks, and years
+  // For simplicity, we'll just reload the full countdown
+  updateCountdownDisplay();
+}
+/**
+ * Update countdown display based on stored values
+ */
+function updateCountdownDisplay() {
+  // Get countdown elements
+  const yearsElement = document.getElementById('countdown-years');
+  const weeksElement = document.getElementById('countdown-weeks');
+  const daysElement = document.getElementById('countdown-days');
+  const hoursElement = document.getElementById('countdown-hours');
+  const minutesElement = document.getElementById('countdown-minutes');
+  const secondsElement = document.getElementById('countdown-seconds');
+  const projectedDateElement = document.getElementById('countdown-projected-date');
+  
+  // Check if all elements exist
+  if (!yearsElement || !daysElement) return;
+  
+  // Get countdown data from localStorage
+  const countdownData = JSON.parse(localStorage.getItem('countdown_data') || 'null');
+  
+  if (countdownData && countdownData.daysRemaining) {
+    // Calculate time units
+    const totalDays = countdownData.daysRemaining;
+    const years = Math.floor(totalDays / 365);
+    const remainingDaysAfterYears = totalDays % 365;
+    const weeks = Math.floor(remainingDaysAfterYears / 7);
+    const days = Math.floor(remainingDaysAfterYears % 7);
+    
+    // Get current time for hours, minutes, seconds
+    const now = new Date();
+    const hours = 23 - now.getHours();
+    const minutes = 59 - now.getMinutes();
+    const seconds = 59 - now.getSeconds();
+    
+    // Update elements with values
+    yearsElement.textContent = years;
+    if (weeksElement) weeksElement.textContent = weeks;
+    daysElement.textContent = days;
+    if (hoursElement) hoursElement.textContent = hours;
+    if (minutesElement) minutesElement.textContent = minutes;
+    if (secondsElement) secondsElement.textContent = seconds;
+    
+    // Update projected date if element exists
+    if (projectedDateElement && countdownData.projectedDate) {
+      const date = new Date(countdownData.projectedDate);
+      projectedDateElement.textContent = date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
     }
     
-    // Scroll to bottom regardless of outcome
-    stellaConversation.scrollTop = stellaConversation.scrollHeight;
+    // Update progress if elements exist
+    const progressBarElement = document.getElementById('countdown-progress-bar');
+    const progressPercentElement = document.getElementById('countdown-progress-percent');
+    
+    if (progressBarElement && progressPercentElement && countdownData.progress) {
+      progressBarElement.style.width = `${countdownData.progress}%`;
+      progressPercentElement.textContent = countdownData.progress.toFixed(1);
+    }
+    
+    // Update milestone if elements exist
+    const milestoneElement = document.getElementById('countdown-milestone');
+    const milestoneDaysElement = document.getElementById('countdown-milestone-days');
+    
+    if (milestoneElement && milestoneDaysElement && countdownData.nextMilestone) {
+      milestoneElement.textContent = countdownData.nextMilestone.name;
+      milestoneDaysElement.textContent = countdownData.nextMilestone.daysRemaining;
+    }
+  } else {
+    // No data available - show placeholder or assessment message
+    yearsElement.textContent = '--';
+    if (weeksElement) weeksElement.textContent = '--';
+    daysElement.textContent = '--';
+    if (hoursElement) hoursElement.textContent = '--';
+    if (minutesElement) minutesElement.textContent = '--';
+    if (secondsElement) secondsElement.textContent = '--';
+  }
+}
+
+/**
+ * Update countdown values from API response
+ */
+function updateCountdownValues(countdown) {
+  // Store countdown data in localStorage
+  localStorage.setItem('countdown_data', JSON.stringify(countdown));
+  
+  // Update display
+  updateCountdownDisplay();
+}
+
+/**
+ * Update countdown from STELLA response
+ */
+function updateCountdown(countdownData) {
+  if (countdownData.timelineImpact) {
+    // Show impact notification
+    const message = `${countdownData.timelineImpact.impactDescription} (-${countdownData.timelineImpact.timelineChange} days)`;
+    showNotification(message, 'success');
   }
   
-  // Backup static responses if API fails
-  function getLocalStellaResponse(question) {
-    // Convert question to lowercase for easier matching
-    const lowerQuestion = question.toLowerCase();
+  if (countdownData.countdownUpdate) {
+    // Update stored countdown data
+    const storedData = JSON.parse(localStorage.getItem('countdown_data') || '{}');
+    const updatedData = {
+      ...storedData,
+      daysRemaining: countdownData.countdownUpdate.daysRemaining,
+      totalReduction: countdownData.countdownUpdate.totalReduction,
+      projectedDate: countdownData.countdownUpdate.projectedDate
+    };
     
-    // Check for common question patterns
-    if (lowerQuestion.includes('hello') || lowerQuestion.includes('hi')) {
-      return "Hello! I'm STELLA, your AI assistant for Mission Control. How can I help you today?";
-    }
+    localStorage.setItem('countdown_data', JSON.stringify(updatedData));
     
-    if (lowerQuestion.includes('assessment') || lowerQuestion.includes('test')) {
-      return "Our assessments help tailor your space training program. The initial assessment is required before starting specialized training modules. Would you like to begin?";
-    }
-    
-    if (lowerQuestion.includes('physical') || lowerQuestion.includes('train')) {
-      return "Physical training is essential for space missions. It includes exercises for core strength, balance, endurance, and flexibility - all critical for zero gravity environments.";
-    }
-    
-    if (lowerQuestion.includes('start') || lowerQuestion.includes('begin')) {
-      return "Yes, you're ready to begin your training! Click one of these options to get started: Start Assessment - Begin with a personalized evaluation (recommended for new trainees), Physical Training - Jump straight into physical conditioning exercises, or Technical Skills - Start with technical knowledge modules.";
-    }
-    
-    if (lowerQuestion.includes('mission') || lowerQuestion.includes('module')) {
-      return "Mission Control tracks your progress through training modules. You'll need to complete your initial assessment to unlock mission-specific training paths.";
-    }
-    
-    if (lowerQuestion.includes('countdown') || lowerQuestion.includes('timeline')) {
-      return "Your space readiness countdown shows your estimated timeline to space. Complete assessments and training modules to accelerate your timeline.";
-    }
-    
-    // Default response if no patterns match
-    return "I'm here to help you navigate Mission Control. You can ask me about assessments, your space readiness timeline, or any aspect of your training program.";
+    // Update display
+    updateCountdownDisplay();
   }
+}
+
+/**
+ * Get current module context
+ */
+function getCurrentModule() {
+  // You can customize this to get the current module from the page
+  // For now, just return a default value
+  return 'mission-control';
+}
+
+/**
+ * Show notification
+ */
+function showNotification(message, type = 'info') {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      ${message}
+    </div>
+    <button class="notification-close">&times;</button>
+  `;
   
-  // Add the feedback handler function
-  function handleFeedback(messageId, isHelpful, sessionId) {
-    // Send feedback to the server to help STELLA learn
-    fetch('/api/stella/feedback', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        userId: localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'anonymous',
-        messageId: messageId,
-        sessionId: sessionId,
-        helpful: isHelpful,
-        feedbackText: null,
-        rating: isHelpful ? 5 : 1
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('✅ STELLA feedback recorded:', data);
-    })
-    .catch(error => {
-      console.error('❌ Error recording STELLA feedback:', error);
+  // Add to document
+  document.body.appendChild(notification);
+  
+  // Add close button handler
+  const closeButton = notification.querySelector('.notification-close');
+  if (closeButton) {
+    closeButton.addEventListener('click', () => {
+      notification.classList.add('fade-out');
+      setTimeout(() => notification.remove(), 300);
     });
   }
   
-  // Add event listeners for feedback buttons
-  document.addEventListener('click', function(e) {
-    const button = e.target.closest('.feedback-btn');
-    if (button) {
-      const isHelpful = button.dataset.value === 'helpful';
-      const messageContainer = button.closest('.mb-4');
-      const messageId = messageContainer.dataset.messageId || 'latest';
-      const sessionId = messageContainer.dataset.sessionId || '';
-      
-      // Visual feedback
-      button.classList.remove('text-gray-500');
-      button.classList.add(isHelpful ? 'text-green-500' : 'text-red-500');
-      
-      // Send feedback to server
-      handleFeedback(messageId, isHelpful, sessionId);
-      
-      // Disable both buttons after selection
-      const buttons = messageContainer.querySelectorAll('.feedback-btn');
-      buttons.forEach(b => {
-        b.disabled = true;
-        if (b !== button) {
-          b.classList.add('opacity-30');
-        }
-      });
-    }
-  });
-  
-  // Set up quick action buttons
-  document.querySelectorAll('.mission-control-card button').forEach(button => {
-    if (button.id !== 'send-to-stella') {
-      button.addEventListener('click', function() {
-        const action = this.textContent.trim();
-        newStellaInput.value = `Tell me about ${action}`;
-        handleStellaMessage();
-      });
-    }
-  });
-});
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    notification.classList.add('fade-out');
+    setTimeout(() => notification.remove(), 300);
+  }, 5000);
+}
 </script>
 </body>
 </html>

@@ -25,132 +25,87 @@
     <link rel="stylesheet" href="/css/ai-assistant.css" />
     <link rel="stylesheet" href="/css/sophon-stella.css">
     <link rel="stylesheet" href="/css/global.css">
-    <!-- STELLA Sophon Theme Styles -->
+    
+    <!-- Fixed Styling -->
     <style>
-      /* Emergency CSS fixes for header and hero visibility */
-body {
-  overflow-x: hidden;
-  width: 100vw;
-  min-height: 100vh;
-}
+      /* Critical fixes for UI elements */
+      body {
+        overflow-x: hidden;
+        width: 100vw;
+        min-height: 100vh;
+        font-family: 'Inter', sans-serif;
+      }
 
-header {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  z-index: 9999 !important;
-  background-color: rgba(0, 0, 0, 0.9) !important;
-  backdrop-filter: blur(10px) !important;
-}
+      /* Header fixes */
+      header {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        z-index: 9999 !important;
+        background-color: rgba(0, 0, 0, 0.9) !important;
+        backdrop-filter: blur(10px) !important;
+        display: block !important;
+        visibility: visible !important;
+      }
 
-header *, header a, header button {
-  color: white !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
+      /* Navigation fixes */
+      #nav-links {
+        display: flex !important;
+        visibility: visible !important;
+      }
 
-#hero {
-  width: 100% !important;
-  min-height: 100vh !important;
-  padding-top: 80px !important; /* Make room for the fixed header */
-  position: relative !important;
-  overflow: hidden !important;
-}
+      /* Hero section fixes */
+      #hero {
+        width: 100% !important;
+        min-height: 100vh !important;
+        padding-top: 80px !important;
+        position: relative !important;
+        overflow: hidden !important;
+      }
 
-#hero > div {
-  width: 100% !important;
-  position: relative !important;
-}
+      /* Button sizing fixes */
+      .cta-button {
+        max-width: 300px !important;
+        width: 80% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+      }
 
-#hero h1, #hero h2, #hero p, #hero a {
-  color: white !important;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9) !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Clear any potential conflicts */
-.max-w-6xl, .max-w-4xl, .container {
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-@media (min-width: 768px) {
-  .max-w-6xl {
-    max-width: 1152px !important;
-  }
-  
-  .max-w-4xl {
-    max-width: 896px !important;
-  }
-  
-  .container {
-    max-width: 1280px !important;
-  }
-}
-
-/* Fix for constrained content */
-#hero .mx-auto {
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* Force video to be behind content */
-#hero video {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  z-index: 0 !important;
-}
-
-/* Guarantee button visibility */
-.bg-blue-600, .bg-red-600 {
-  position: relative !important;
-  z-index: 50 !important;
-  padding: 0.75rem 1.5rem !important;
-  border-radius: 0.5rem !important;
-  font-weight: bold !important;
-  color: white !important;
-  transition
-
-      /* Red background with gradient */
-      #stella-ai {
-        background: linear-gradient(135deg, #350000, #8B0000, #FF4500) !important;
-        position: relative;
-        overflow: hidden;
+      /* Widget positioning fix */
+      #stella-chat-widget {
+        position: fixed !important;
+        bottom: 20px !important;
+        right: 20px !important;
+        left: auto !important;
+        z-index: 9999 !important;
+        width: auto !important;
       }
       
-      /* Floating particles effect */
-      #stella-ai::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: 
-          radial-gradient(2px 2px at 20px 30px, rgba(255, 200, 0, 0.8), rgba(0,0,0,0)),
-          radial-gradient(2px 2px at 40px 70px, rgba(255, 100, 0, 0.8), rgba(0,0,0,0)),
-          radial-gradient(1px 1px at 90px 40px, rgba(255, 150, 0, 0.8), rgba(0,0,0,0)),
-          radial-gradient(2px 2px at 120px 120px, rgba(255, 200, 50, 0.8), rgba(0,0,0,0));
-        background-repeat: repeat;
-        background-size: 400px 400px;
-        animation: particles-float 60s linear infinite;
-        opacity: 0.4;
-        z-index: 1;
-        pointer-events: none;
+      /* Remove duplicate stat section */
+      #duplicate-stats {
+        display: none !important;
       }
       
-      @keyframes particles-float {
-        0% { transform: translateY(0); }
-        100% { transform: translateY(-400px); }
+      /* Fix video background */
+      #hero-video {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        z-index: 0 !important;
       }
       
-      /* Sophon avatar styling */
+      /* Fix content visibility */
+      .hero-content {
+        position: relative !important;
+        z-index: 10 !important;
+      }
+      
+      /* Sophon styling */
       .sophon-avatar-container {
         position: relative;
         display: flex;
@@ -162,735 +117,158 @@ header *, header a, header button {
         width: 80px;
         height: 80px;
         border-radius: 50%;
-        background: url('/images/sophon-avatar.jpg') center/cover;
         box-shadow: 0 0 20px rgba(255, 100, 0, 0.5);
-        animation: avatar-pulse 3s infinite alternate;
-        position: relative;
-        z-index: 10;
       }
       
-      @keyframes avatar-pulse {
-        0% { box-shadow: 0 0 10px rgba(255, 100, 0, 0.3); }
-        100% { box-shadow: 0 0 30px rgba(255, 100, 0, 0.7); }
+      /* Clear any potential conflicting styles */
+      * {
+        box-sizing: border-box;
       }
-
-      /* Sword effect */
-      .sophon-sword {
-        position: absolute;
-        height: 4px;
-        background: linear-gradient(to right, rgba(255, 200, 200, 0), rgba(255, 255, 255, 0.9));
-        box-shadow: 0 0 15px rgba(255, 150, 150, 0.8);
-        transform-origin: left center;
-        z-index: 100;
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      /* Sword animation - runs every 10 seconds */
-      .slicer-animation .sophon-sword {
-        animation: swordSlice 1.5s forwards;
-      }
-
-      @keyframes swordSlice {
-        0% { 
-          opacity: 0;
-          width: 0;
-          transform: translateX(40px) translateY(-40px) rotate(45deg);
-        }
-        20% { 
-          opacity: 1;
-          width: 150px;
-        }
-        40% { 
-          transform: translateX(40px) translateY(-40px) rotate(45deg);
-        }
-        80% { 
-          opacity: 1;
-          width: 150px;
-          transform: translateX(-40px) translateY(40px) rotate(-45deg);
-        }
-        100% { 
-          opacity: 0;
-          width: 0;
-          transform: translateX(-40px) translateY(40px) rotate(-45deg);
-        }
-      }
-
-/* Flash effect during sword animation */
-.slicer-animation .flash-effect {
-  animation: flashEffect 1s forwards;
-}
-
-@keyframes flashEffect {
-  0%, 100% { opacity: 0; }
-  30%, 60% { opacity: 0.4; }
-}
-
-      /* Enhanced container styling */
-      #stella-ai .bg-gray-900\/70, 
-      #stella-ai .border-gray-800 {
-        background-color: rgba(20, 10, 5, 0.7) !important;
-        border-color: rgba(255, 100, 0, 0.3) !important;
-        box-shadow: 0 0 30px rgba(255, 80, 0, 0.3) !important;
-      }
-
-      /* Enhanced message styling */
-      .stella-bubble, 
-      #stella-message {
-        background-color: rgba(50, 10, 0, 0.7) !important;
-        border-left: 3px solid rgba(255, 120, 0, 0.8) !important;
-        box-shadow: 0 0 15px rgba(255, 100, 0, 0.2) !important;
-      }
-
-      /* Enhanced button styling */
-      .stella-action-btn,
-      #send-to-stella,
-      #stella-ai .bg-blue-600 {
-        background: linear-gradient(to bottom, rgba(255, 80, 0, 0.8), rgba(200, 40, 0, 0.8)) !important;
-        border: 1px solid rgba(255, 120, 0, 0.4) !important;
-        color: white !important;
-        transition: all 0.3s ease !important;
-      }
-
-      .stella-action-btn:hover,
-      #send-to-stella:hover,
-      #stella-ai .bg-blue-600:hover {
-        background: linear-gradient(to bottom, rgba(255, 100, 0, 0.9), rgba(220, 60, 0, 0.9)) !important;
-        transform: translateY(-2px) !important;
-      }
-
-      /* Enhanced input styling */
-      #stella-question {
-        background: rgba(40, 10, 5, 0.8) !important;
-        border: 1px solid rgba(255, 100, 0, 0.3) !important;
-        color: white !important;
-      }
-
-      #stella-question:focus {
-        border-color: rgba(255, 150, 0, 0.6) !important;
-        outline: none;
-      }
-      
-      /* Heat distortion effect */
-      .heat-distortion {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 5;
-        opacity: 0.4;
-        background: transparent;
-        pointer-events: none;
-        animation: heat-wave 10s infinite;
-      }
-      
-      @keyframes heat-wave {
-        0% { filter: blur(0px); }
-        25% { filter: blur(1px); }
-        50% { filter: blur(0px); }
-        75% { filter: blur(1px); }
-        100% { filter: blur(0px); }
-      }
-      
-      /* Online indicator */
-      .online-indicator {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-      
-      .status-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #ff4500;
-        box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
-        animation: pulse-online 2s infinite;
-      }
-      
-      .status-text {
-        color: #ff4500;
-        font-size: 14px;
-        font-weight: 500;
-      }
-      
-      @keyframes pulse-online {
-        0% { box-shadow: 0 0 5px rgba(255, 69, 0, 0.5); }
-        50% { box-shadow: 0 0 15px rgba(255, 69, 0, 0.8); }
-        100% { box-shadow: 0 0 5px rgba(255, 69, 0, 0.5); }
-      }
-    </style>
-    
-    <!-- Site General Styles -->
-    <style>
-      /* Force the grid to display properly */
-      .training-grid {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        width: 100% !important;
-        gap: 20px !important;
-      }
-      
-      /* Force each card to take equal width */
-      .training-card {
-        width: 33.33% !important;
-        flex: 1 1 0 !important;
-        display: block !important;
-        max-width: 33.33% !important;
-        box-sizing: border-box !important;
-      }
-      
-      /* Make sure the cards stack on mobile */
-      @media (max-width: 768px) {
-        .training-grid {
-          flex-direction: column !important;
-        }
-        
-        .training-card {
-          width: 100% !important;
-          max-width: 100% !important;
-        }
-      }
-      
-      /* Ensure the glass effect works */
-      .glass-effect {
-        background-color: rgba(15, 23, 42, 0.7);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(59, 130, 246, 0.2);
-        border-radius: 0.5rem;
-      }
-      
-      body {
-        font-family: 'Inter', sans-serif;
-        scroll-behavior: smooth;
-      }
-      
-      .space-gradient {
-        background: linear-gradient(to bottom, #0f172a, #1e293b);
-      }
-      
-      .hero-text {
-        font-size: clamp(4rem, 15vw, 12rem);
-        line-height: 1;
-      }
-      
-      .cosmic-hover {
-        transition: all 0.3s ease;
-      }
-      
-      .cosmic-hover:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
-      }
-      #hero .relative.z-10 {
-  z-index: 10 !important;
-  color: white !important;
-  position: relative !important;
-}
-#hero .absolute.inset-0 {
-  z-index: 1; /* Keep video background behind content */
-}
-
-#hero .absolute.inset-0.bg-black\/50 {
-  z-index: 5; /* Keep overlay between video and content */
-}
-
-/* Ensure text is visible with enhanced contrast */
-#hero h1, #hero h2, #hero p {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
-}
-
-#hero .bg-gray-900\/70 {
-  background-color: rgba(17, 24, 39, 0.85) !important; /* More opaque background for stat boxes */
-}
-      /* Four panel layout */
-      .plans-grid {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        width: 100%;
-        gap: 16px;
-      }
-      
-      .plan-card {
-        flex: 1 1 0;
-        min-width: 0;
-      }
-      
-      /* Mobile responsiveness */
-      @media (max-width: 1024px) {
-        .plans-grid {
-          flex-direction: column;
-        }
-        .plan-card {
-          width: 100%;
-        }
-      }
-    /* Enhanced hero section styles */
-#hero {
-  position: relative;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
-}
-
-#hero .absolute.inset-0 {
-  z-index: 1; /* Keep video background behind content */
-}
-
-#hero .absolute.inset-0.bg-black\/60 {
-  z-index: 5; /* Keep overlay between video and content */
-}
-
-/* Ensure text is visible with enhanced contrast */
-#hero h1, #hero h2, #hero p {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
-}
-
-#hero .bg-gray-900\/70 {
-  background-color: rgba(17, 24, 39, 0.85) !important; /* More opaque background for stat boxes */
-}
-
-/* Cosmic effect for glowing digits */
-.cosmic-digit {
-  text-shadow: 0 0 15px rgba(59, 130, 246, 0.7);
-  position: relative;
-  animation: cosmic-pulse 2s infinite alternate;
-}
-
-@keyframes cosmic-pulse {
-  0% { text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
-  100% { text-shadow: 0 0 20px rgba(59, 130, 246, 0.9); }
-}
-
-/* Enhanced CTA buttons */
-.cosmic-hover {
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.cosmic-hover:before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%);
-  opacity: 0;
-  transform: scale(0);
-  transition: transform 0.6s ease, opacity 0.6s ease;
-}
-
-.cosmic-hover:hover:before {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.cosmic-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.5);
-}
-
-/* Stars background effect */
-.stars-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  background-image: 
-    radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0)),
-    radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0)),
-    radial-gradient(2px 2px at 120px 120px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 150px 90px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 200px 190px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0)),
-    radial-gradient(2px 2px at 250px 290px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 300px 320px, rgba(255, 255, 255, 0.8), rgba(0,0,0,0));
-  background-repeat: repeat;
-  background-size: 400px 400px;
-  animation: stars-scrolling 60s linear infinite;
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-@keyframes stars-scrolling {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(400px); }
-}
-
-/* Global countdown ticker */
-#global-countdown {
-  animation: blinking 1.5s infinite;
-}
-
-@keyframes blinking {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-/* Personalized welcome animation */
-#personalized-welcome {
-  animation
-      
-      /* Cosmic digit effects */
-      .cosmic-digit {
-        text-shadow: 0 0 10px rgba(255,0,0,0.5);
-        position: relative;
-      }
-      
-      .cosmic-digit::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(to bottom, transparent, rgba(255,0,0,0.1), transparent);
-        animation: digit-scan 2s linear infinite;
-        pointer-events: none;
-      }
-      
-      @keyframes digit-scan {
-        0% { transform: translateY(-100%); }
-        100% { transform: translateY(100%); }
-      }
-      
-      /* STELLA Sophon Sword Animation CSS */
-
-/* Sophon's sword - Basic styling */
-.sophon-sword {
-  position: absolute;
-  height: 4px;
-  background: linear-gradient(to right, rgba(255, 200, 200, 0), rgba(255, 255, 255, 0.9));
-  box-shadow: 0 0 15px rgba(255, 150, 150, 0.8);
-  transform-origin: left center;
-  z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-  width: 0;
-}
-/* Emergency header fixes */
-header {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  z-index: 9999 !important;
-  background-color: rgba(0, 0, 0, 0.8) !important;
-  backdrop-filter: blur(10px) !important;
-}
-
-header a, header button, header .language-selector, header img {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Fix language selector */
-.language-selector {
-  position: relative !important;
-}
-
-#language-dropdown {
-  position: absolute !important;
-  right: 0 !important;
-  top: 100% !important;
-  z-index: 10000 !important;
-  background-color: rgba(31, 41, 55, 0.9) !important;
-  backdrop-filter: blur(10px) !important;
-}
-
-/* Fix for the mobile menu hamburger icon */
-header .md\:hidden {
-  display: block !important;
-}
-
-@media (min-width: 768px) {
-  header .md\:hidden {
-    display: none !important;
-  }
-  
-  header .hidden.md\:flex {
-    display: flex !important;
-  }
-}
-/* Sword slash animation */
-@keyframes swordSlash {
-  0% { 
-    opacity: 0;
-    width: 0;
-    transform: rotate(45deg) translateX(-50px); 
-  }
-  20% {
-    opacity: 1;
-    width: 150px;
-  }
-  40% { 
-    transform: rotate(45deg) translateX(-50px); 
-  }
-  80% { 
-    opacity: 1;
-    width: 150px;
-    transform: rotate(-60deg) translateX(-50px);
-  }
-  100% { 
-    opacity: 0;
-    width: 0;
-    transform: rotate(-60deg) translateX(50px);
-  }
-}
-
-/* Flash effect for sword */
-.flash-effect {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 0, 0, 0.2);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 10;
-}
-
-@keyframes flash {
-  0% { opacity: 0; }
-  50% { opacity: 0.3; }
-  100% { opacity: 0; }
-}
-
-/* Sliced question styling */
-.sliced-question {
-  position: relative;
-  overflow: visible !important;
-}
-
-/* Create the sliced effect using pseudo-elements */
-.sliced-question::before,
-.sliced-question::after {
-  content: attr(data-content);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: inherit;
-  border-radius: inherit;
-  color: inherit;
-  padding: inherit;
-  margin: 0;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sliced-question::before {
-  clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
-  animation: slice-top 0.5s forwards;
-  animation-delay: 0.3s;
-  z-index: 2;
-}
-
-.sliced-question::after {
-  clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
-  animation: slice-bottom 0.5s forwards;
-  animation-delay: 0.3s;
-  z-index: 2;
-}
-
-.sliced-question p {
-  opacity: 0; /* Hide the original text */
-}
-
-@keyframes slice-top {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-10px) translateY(-5px) rotate(-2deg); }
-}
-
-@keyframes slice-bottom {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(10px) translateY(5px) rotate(2deg); }
-}
     </style>
     
     <title>SharedStars - Train for Space with S.T.E.L.L.A. AI</title>
+    
+    <!-- JavaScript Files -->
+    <script src="/js/languageManager.js" defer></script>
+    <script src="/js/countdown.js" defer></script>
+    <script type="module" src="/js/HomepageHandler.js"></script>
   </head>
   
-  <body>
-   <!-- HEADER - Fixed with guaranteed visibility -->
-<header class="fixed top-0 left-0 w-full bg-black/90 backdrop-blur-lg shadow-lg z-50" style="z-index: 9999 !important;">
-  <nav class="container mx-auto flex justify-between items-center px-4 py-3">
-    <div class="flex-shrink-0">
-      <a href="/">
-        <img src="./images/SharedStars.svg" alt="SharedStars" class="h-12" style="margin-left: 0;">
+<body class="bg-black text-white min-h-screen">
+  <!-- Fixed Header -->
+  <header class="fixed top-0 left-0 w-full bg-black bg-opacity-80 z-50 px-4 py-3">
+    <div class="container mx-auto flex items-center justify-between">
+      <a href="/" class="flex-shrink-0">
+        <img src="/images/SharedStars.svg" alt="SharedStars" class="h-12">
       </a>
-    </div>
-    
-    <ul class="hidden md:flex gap-6">
-      <li><a href="/" class="text-blue-400 font-bold">Home</a></li>
-      <li><a href="/academy2.html" class="text-white hover:text-blue-400">Academy</a></li>
-      <li><a href="/about.html" class="text-white hover:text-blue-400">About</a></li>
-      <li><a href="/leaderboard.html" class="text-white hover:text-blue-400">Leaderboard</a></li>
-      <li><a href="/subscribe.html" class="text-white hover:text-blue-400">Subscribe</a></li>
-    </ul>
-    
-    <div class="flex gap-3 items-center">
-      <!-- Simplified Language Selector -->
-      <div class="relative inline-block mr-2">
-        <select id="language-select" class="bg-gray-800 text-white py-2 px-3 rounded border border-gray-700">
-          <option value="en">🇺🇸 English</option>
-          <option value="es">🇪🇸 Español</option>
-          <option value="ko">🇰🇷 한국어</option>
-          <option value="zh">🇨🇳 中文</option>
-        </select>
-      </div>
-      
-      <a href="/login1.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all">Login</a>
-      <a href="/signupold.html" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all">Sign Up</a>
-      
-      <!-- Mobile menu button (visible on small screens) -->
-      <button class="md:hidden bg-gray-800 p-2 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    </div>
-  </nav>
   
-  <!-- Mobile menu (hidden by default) -->
-  <div class="hidden md:hidden bg-gray-900 px-4 py-3">
-    <ul class="space-y-2">
-      <li><a href="/" class="block text-blue-400 font-bold py-2">Home</a></li>
-      <li><a href="/academy2.html" class="block text-white hover:text-blue-400 py-2">Academy</a></li>
-      <li><a href="/about.html" class="block text-white hover:text-blue-400 py-2">About</a></li>
-      <li><a href="/leaderboard.html" class="block text-white hover:text-blue-400 py-2">Leaderboard</a></li>
-      <li><a href="/subscribe.html" class="block text-white hover:text-blue-400 py-2">Subscribe</a></li>
-    </ul>
-  </div>
-</header>
+      <!-- Navigation Links -->
+      <nav id="nav-links" class="flex items-center space-x-6">
+        <a href="/" class="text-blue-400 font-semibold">Home</a>
+        <a href="/mission-control.html" class="text-white hover:text-blue-400 transition-colors">Mission Control</a>
+        <a href="/academy2.html" class="text-white hover:text-blue-400 transition-colors">Academy</a>
+        <a href="/leaderboard.html" class="text-white hover:text-blue-400 transition-colors">Leaderboard</a>
+        <a href="/subscribe.html" class="text-white hover:text-blue-400 transition-colors">Subscribe</a>
+        <a href="/about.html" class="text-white hover:text-blue-400 transition-colors">About</a>
+  
+        <!-- Auth Links -->
+        <a href="/login1.html" id="login-link" class="text-white hover:text-blue-400 transition-colors">Login</a>
+        <a href="/signup.html" id="signup-link" class="text-white bg-red-600 px-4 py-2 rounded-md hover:bg-red-700 transition-colors inline-block">Sign Up</a>
+      </nav>
+    </div>
+  </header>
 
-    <!-- COMPLETE HERO SECTION -->
-    <section id="hero" class="relative min-h-screen w-full">
-      <!-- Video Background with Fallback -->
-      <div class="absolute inset-0 z-0 overflow-hidden">
-        <!-- Video Background -->
-        <video id="hero-video" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-          <source src="./videos/academy10.mp4" type="video/mp4">
-        </video>
-        
-        <!-- Fallback Image (displays if video fails) -->
-        <div id="video-fallback" class="absolute inset-0 bg-cover bg-center" style="background-image: url('./images/space-background.jpg'); display: none;"></div>
-        
-        <!-- Dark Overlay -->
-        <div class="absolute inset-0 bg-black opacity-70 z-1"></div>
-      </div>
+  <!-- Hero Section -->
+  <section id="hero" class="relative min-h-screen">
+    <!-- Video Background -->
+    <div class="absolute inset-0 z-0 overflow-hidden">
+      <video id="hero-video" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+        <source src="/videos/academy10.mp4" type="video/mp4">
+      </video>
       
-      <!-- Centered Hero Content -->
-      <div class="relative z-10 text-center mx-auto max-w-5xl px-4 py-16 mt-16">
+      <!-- Fallback Image -->
+      <div id="video-fallback" class="absolute inset-0 bg-cover bg-center" style="background-image: url('/images/space-background.jpg'); display: none;"></div>
+      
+      <!-- Dark Overlay -->
+      <div class="absolute inset-0 bg-black opacity-70"></div>
+    </div>
+      
+    <!-- Hero Content -->
+    <div class="hero-content relative z-10 flex flex-col items-center justify-center min-h-screen text-center px-4 py-12 pt-20">
+      <div class="mx-auto max-w-6xl">
         <!-- STELLA Badge -->
-        <div class="inline-block mb-6 px-6 py-2 bg-blue-900/30 backdrop-blur-sm rounded-full border border-blue-500/20">
-          <span class="text-blue-300 font-semibold tracking-wider text-sm uppercase">Powered by S.T.E.L.L.A. AI</span>
+        <div class="inline-block px-4 py-2 bg-blue-500/30 border border-blue-400/40 rounded-full mb-6">
+          <span class="text-blue-300 font-semibold tracking-wide text-sm">POWERED BY S.T.E.L.L.A. AI</span>
         </div>
         
         <!-- Main Headline -->
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white leading-tight">
-          Meet STELLA: The AI Revolutionizing<br class="hidden sm:block"> Astronaut Training
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-white leading-tight" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+          Meet STELLA: The AI Revolutionizing Astronaut Training
         </h1>
         
         <!-- Secondary Headline -->
-        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 text-white">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 text-white leading-tight" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
           World's Largest AI-Powered Space Training Platform
         </h2>
         
         <!-- Subtext -->
-        <p class="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto mb-10">
+        <p class="text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed mb-8" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
           In 36 months, humanity divides: those trained by STELLA, and those left watching from Earth.
         </p>
         
-        <!-- CTA Buttons - Fixed Width for Consistency -->
+        <!-- CTA Buttons -->
         <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 mb-16">
-          <a href="/academy2.html" class="w-full sm:w-64 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all">
+          <a href="/academy2.html" class="cta-button bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-blue-500 transition-all">
             Start Training with STELLA
           </a>
           
-          <a href="/subscribe.html" class="w-full sm:w-64 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all">
+          <a href="/subscribe.html" class="cta-button bg-red-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-red-500 transition-all">
             Explore Membership Plans
           </a>
         </div>
         
-        <!-- Stats Grid - Fixed Layout -->
+        <!-- Stats Section - Only show once -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-          <div class="bg-gray-900/70 backdrop-blur-sm p-4 rounded-lg border border-gray-800">
-            <div class="text-3xl md:text-4xl font-bold text-blue-400">13</div>
-            <div class="text-sm text-gray-400">Months to Space</div>
+          <div class="bg-gray-900/80 p-4 rounded-lg border border-gray-700">
+            <div class="text-3xl md:text-4xl font-bold text-blue-400" id="months-counter">13</div>
+            <div class="text-sm text-gray-300">Months to Space</div>
           </div>
-          <div class="bg-gray-900/70 backdrop-blur-sm p-4 rounded-lg border border-gray-800">
-            <div class="text-3xl md:text-4xl font-bold text-blue-400">08</div>
-            <div class="text-sm text-gray-400">Training Modules</div>
+          <div class="bg-gray-900/80 p-4 rounded-lg border border-gray-700">
+            <div class="text-3xl md:text-4xl font-bold text-blue-400" id="modules-counter">08</div>
+            <div class="text-sm text-gray-300">Training Modules</div>
           </div>
-          <div class="bg-gray-900/70 backdrop-blur-sm p-4 rounded-lg border border-gray-800">
-            <div class="text-3xl md:text-4xl font-bold text-blue-400">17</div>
-            <div class="text-sm text-gray-400">AI Certifications</div>
+          <div class="bg-gray-900/80 p-4 rounded-lg border border-gray-700">
+            <div class="text-3xl md:text-4xl font-bold text-blue-400" id="certifications-counter">17</div>
+            <div class="text-sm text-gray-300">AI Certifications</div>
           </div>
-          <div class="bg-gray-900/70 backdrop-blur-sm p-4 rounded-lg border border-gray-800">
-            <div class="text-3xl md:text-4xl font-bold text-blue-400">93</div>
-            <div class="text-sm text-gray-400">Seats Remaining</div>
+          <div class="bg-gray-900/80 p-4 rounded-lg border border-gray-700">
+            <div class="text-3xl md:text-4xl font-bold text-blue-400" id="seats-counter">93</div>
+            <div class="text-sm text-gray-300">Seats Remaining</div>
           </div>
-        </div>
-        
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
         </div>
       </div>
-    </section>
-  <!-- Floating stars background effect -->
-  <div class="stars-background"></div>
-</section>
+      
+      <!-- Scroll Indicator -->
+      <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      </div>
+    </div>
+  </section>
 
-<!-- STELLA Chat Widget -->
-<div id="stella-chat-widget" class="fixed bottom-6 right-6 z-50">
-  <button class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg flex items-center justify-center">
-    <span class="astronaut-icon">👩‍🚀</span>
-  </button>
-  <div class="hidden absolute bottom-16 right-0 w-80 bg-gray-900/90 backdrop-blur-md rounded-lg border border-blue-800/30 shadow-2xl p-4">
-    <div class="flex items-center mb-4">
-      <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center mr-3">
-        <span class="text-lg">👩‍🚀</span>
-      </div>
-      <div>
-        <div class="text-white font-medium">STELLA AI</div>
-        <div class="text-xs text-green-400 flex items-center">
-          <span class="w-2 h-2 bg-green-400 rounded-full mr-1"></span>
-          <span>Online</span>
+  <!-- STELLA Chat Widget (Fixed position) -->
+  <div id="stella-chat-widget" class="fixed bottom-6 right-6 z-50">
+    <button class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg flex items-center justify-center">
+      <span class="astronaut-icon">👩‍🚀</span>
+    </button>
+    <div class="hidden absolute bottom-16 right-0 w-80 bg-gray-900/90 backdrop-blur-md rounded-lg border border-blue-800/30 shadow-2xl p-4">
+      <div class="flex items-center mb-4">
+        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+          <span class="text-lg">👩‍🚀</span>
+        </div>
+        <div>
+          <div class="text-white font-medium">STELLA AI</div>
+          <div class="text-xs text-green-400 flex items-center">
+            <span class="w-2 h-2 bg-green-400 rounded-full mr-1"></span>
+            <span>Online</span>
+          </div>
         </div>
       </div>
+      <div class="mb-3 text-white text-sm">
+        Hi <span id="chat-user-name">there</span>, I'm STELLA, your personal astronaut trainer. Ready to start your space journey?
+      </div>
+      <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm">
+        Start Training Now
+      </button>
     </div>
-    <div class="mb-3 text-white text-sm">
-      Hi <span id="chat-user-name">there</span>, I'm STELLA, your personal astronaut trainer. Ready to start your space journey?
-    </div>
-    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm">
-      Start Training Now
-    </button>
   </div>
-</div>
+
+  <!-- STELLA AI Section -->
   <section id="stella-ai" class="py-20 relative overflow-hidden">
-    <!-- Sophon-inspired background -->
-    <div class="absolute inset-0">
-      <div class="sophon-background"></div>
-      <div class="sophon-particles"></div>
-      <div class="heat-distortion"></div>
-      <div class="flash-effect"></div>
-    </div>
-  
+    <!-- Background effects -->
+    <div class="absolute inset-0 bg-gradient-to-br from-red-900/80 to-black"></div>
+    
     <div class="container mx-auto px-4 relative z-10">
       <div class="flex flex-col lg:flex-row items-center gap-12">
         <!-- Left Column: STELLA Description -->
@@ -902,7 +280,7 @@ header .md\:hidden {
           <h2 class="text-3xl md:text-4xl font-bold text-white">Earth's Most Advanced<br>Astronaut Trainer</h2>
           
           <p class="text-lg text-gray-300">
-            STELLA adapts astronaut training in real-time, leveraging AI to personalize each user's journey to space. Traditional training manuals and rigid protocols are obsolete; STELLA ensures every astronaut masters skills dynamically, efficiently, and precisely tailored to their needs.
+            STELLA adapts astronaut training in real-time, leveraging cutting-edge AI to personalize your space journey. Unlike traditional programs, STELLA's dynamic approach ensures you master essential skills efficiently, precisely tailored to your unique abilities and learning style.
           </p>
           
           <div class="space-y-4">
@@ -914,7 +292,7 @@ header .md\:hidden {
               </div>
               <div>
                 <h3 class="text-xl font-semibold text-white">Real-Time Adaptation</h3>
-                <p class="text-gray-400">Continuous assessment and adjustment of training content.</p>
+                <p class="text-gray-400">STELLA continuously analyzes your performance to adjust training difficulty, focus, and pace in real-time.</p>
               </div>
             </div>
             
@@ -926,7 +304,7 @@ header .md\:hidden {
               </div>
               <div>
                 <h3 class="text-xl font-semibold text-white">Predictive Training</h3>
-                <p class="text-gray-400">Identifies and strengthens weaknesses proactively.</p>
+                <p class="text-gray-400">Using advanced AI models, STELLA identifies and strengthens your weaknesses before they become critical during space missions.</p>
               </div>
             </div>
             
@@ -938,23 +316,22 @@ header .md\:hidden {
               </div>
               <div>
                 <h3 class="text-xl font-semibold text-white">Guaranteed Preparedness</h3>
-                <p class="text-gray-400">AI-driven mission readiness evaluation, surpassing traditional astronaut training.</p>
+                <p class="text-gray-400">With STELLA's mission readiness evaluation, you'll be better prepared than traditionally-trained astronauts in a fraction of the time.</p>
               </div>
             </div>
           </div>
           
-          <a href="/academy.html" class="inline-block bg-gradient-to-br from-orange-500 to-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:from-orange-400 hover:to-red-600 transition-all duration-300 transform hover:-translate-y-1">
+          <a href="/academy2.html" class="inline-block bg-gradient-to-br from-orange-500 to-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:from-orange-400 hover:to-red-600 transition-all duration-300 transform hover:-translate-y-1">
             Start Your AI Training
           </a>
         </div>
         
         <!-- Right Column: STELLA Chat Interface -->
         <div class="w-full lg:w-1/2">
-          <div class="bg-gray-900/30 backdrop-blur-md rounded-xl border border-red-900/30 p-6 shadow-2xl stella-container">
-            <!-- Sophon Avatar Container -->
+          <div class="bg-gray-900/30 backdrop-blur-md rounded-xl border border-red-900/30 p-6 shadow-2xl">
+            <!-- Avatar Container -->
             <div class="sophon-avatar-container">
-              <img src="https://i.ibb.co/5vw4CpF/sophon-avatar.jpg" alt="STELLA" class="sophon-avatar" id="sophon-avatar">
-              <div class="sophon-sword" id="sophon-sword"></div>
+              <img src="/images/avatar2.png" alt="STELLA" class="sophon-avatar" onerror="this.src='https://i.ibb.co/5vw4CpF/sophon-avatar.jpg'">
             </div>
             
             <div class="flex items-center justify-between mb-4">
@@ -962,146 +339,70 @@ header .md\:hidden {
                 <h3 class="text-xl font-semibold text-white">STELLA AI</h3>
                 <p class="text-sm text-orange-300">Your Personal Astronaut Trainer</p>
               </div>
-              <div class="online-indicator">
-                <span class="status-dot"></span>
-                <span class="status-text">Online</span>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span class="text-green-400 text-xs">Online</span>
               </div>
             </div>
             
-            <!-- STELLA AI Container -->
-            <div class="stella-bubble" id="stella-message">
+            <!-- STELLA Chat -->
+            <div class="bg-gray-800/50 border-l-2 border-orange-500/50 p-4 rounded-r-lg rounded-bl-lg mb-4">
               <p class="text-white">Hello! I'm STELLA, your Space Training Enhancement and Learning Logic Assistant. How can I help with your space training today?</p>
             </div>
             
             <!-- Input Area -->
             <div class="flex">
-              <input id="stella-question" type="text" placeholder="Ask STELLA a question..." 
-                class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 flex-grow mr-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
-              <button id="send-to-stella" class="px-4 py-2 rounded-lg font-medium transition-colors">
+              <input type="text" placeholder="Ask STELLA a question..." 
+                class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 flex-grow mr-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-white">
+              <button class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                 Ask
               </button>
             </div>
             
             <!-- Quick Actions -->
-            <div class="stella-quick-actions mt-4 flex flex-wrap gap-2">
-              <button class="stella-action-btn px-3 py-1 rounded-md text-sm" data-question="Tell me about Physical Training">
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button class="bg-orange-600/20 hover:bg-orange-600/30 text-orange-400 border border-orange-500/30 px-3 py-1 rounded-md text-sm">
                 Physical Training
               </button>
-              <button class="stella-action-btn px-3 py-1 rounded-md text-sm" data-question="How do I take my assessment?">
+              <button class="bg-orange-600/20 hover:bg-orange-600/30 text-orange-400 border border-orange-500/30 px-3 py-1 rounded-md text-sm">
                 Start Assessment
               </button>
-              <button class="stella-action-btn px-3 py-1 rounded-md text-sm" data-question="How do I track my progress?">
+              <button class="bg-orange-600/20 hover:bg-orange-600/30 text-orange-400 border border-orange-500/30 px-3 py-1 rounded-md text-sm">
                 Track Progress
               </button>
             </div>
-            
-            <!-- Conversation History (initially empty) -->
-            <div class="stella-conversation mt-4 max-h-60 overflow-y-auto px-1"></div>
           </div>
         </div>
       </div>
     </div>
   </section>
-  
-  <!-- THREE BODY PROBLEM INSPIRED COUNTDOWN SECTION -->
+
+  <!-- Countdown Section -->
   <section id="space-countdown" class="py-20 relative bg-black">
-    <!-- Cosmic Background with Stars -->
-    <div class="absolute inset-0 overflow-hidden">
-      <div class="stars-background"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/70"></div>
+    <!-- Space background -->
+    <div class="absolute inset-0 overflow-hidden opacity-30">
+      <div class="absolute w-2 h-2 bg-white rounded-full animate-pulse top-10 left-1/4"></div>
+      <div class="absolute w-1 h-1 bg-white rounded-full animate-pulse top-20 left-1/3"></div>
+      <div class="absolute w-2 h-2 bg-white rounded-full animate-pulse top-40 left-1/2"></div>
+      <div class="absolute w-1 h-1 bg-white rounded-full animate-pulse top-60 left-2/3"></div>
+      <div class="absolute w-2 h-2 bg-white rounded-full animate-pulse top-80 left-3/4"></div>
     </div>
-  
+
     <div class="container mx-auto px-4 relative z-10">
       <div class="text-center mb-12">
         <div class="inline-block px-4 py-2 bg-red-500/20 border border-red-400/30 rounded-full mb-6 animate-pulse">
           <span class="text-red-400 font-semibold tracking-wide text-sm font-mono">COUNTDOWN ACTIVE</span>
         </div>
-        <h2 class="text-3xl md:text-5xl font-bold text-white font-mono glitch-text">THE COSMIC CLOCK IS TICKING</h2>
+        <h2 class="text-3xl md:text-5xl font-bold text-white font-mono">THE COSMIC CLOCK IS TICKING</h2>
         <p class="text-lg text-gray-300 max-w-3xl mx-auto mt-4 font-mono">
-          Your window to become space-ready is precisely calculated by STELLA AI.
+          Your window to become space-ready is precisely calculated by STELLA.
         </p>
       </div>
       
-      <!-- Three Body Problem Style Countdown -->
-      <div class="max-w-4xl mx-auto relative">
-        <!-- Primary Countdown Display -->
-        <div class="relative">
-          <!-- Glitch overlay effect -->
-          <div class="absolute inset-0 glitch-overlay opacity-10"></div>
-          
-          <!-- Main countdown -->
-          <div class="bg-black/60 border border-red-500/30 rounded-xl p-8 shadow-[0_0_15px_rgba(255,0,0,0.3)] backdrop-blur-sm">
-            <div class="grid grid-cols-7 gap-1 font-mono">
-              <!-- Years -->
-              <div class="flex flex-col items-center p-2">
-                <div id="tb-countdown-years" class="text-5xl md:text-6xl font-bold text-red-500 cosmic-digit">00</div>
-                <div class="text-xs text-gray-400 mt-2 tracking-wider">YEARS</div>
-              </div>
-              
-              <!-- Divider -->
-              <div class="flex items-center justify-center">
-                <div class="text-4xl md:text-5xl font-bold text-red-500">:</div>
-              </div>
-              
-              <!-- Months -->
-              <div class="flex flex-col items-center p-2">
-                <div id="tb-countdown-months" class="text-5xl md:text-6xl font-bold text-red-500 cosmic-digit">13</div>
-                <div class="text-xs text-gray-400 mt-2 tracking-wider">MONTHS</div>
-              </div>
-              
-              <!-- Divider -->
-              <div class="flex items-center justify-center">
-                <div class="text-4xl md:text-5xl font-bold text-red-500">:</div>
-              </div>
-              
-              <!-- Days -->
-              <div class="flex flex-col items-center p-2">
-                <div id="tb-countdown-days" class="text-5xl md:text-6xl font-bold text-red-500 cosmic-digit">17</div>
-                <div class="text-xs text-gray-400 mt-2 tracking-wider">DAYS</div>
-              </div>
-              
-              <!-- Divider -->
-              <div class="flex items-center justify-center">
-                <div class="text-4xl md:text-5xl font-bold text-red-500">:</div>
-              </div>
-              
-              <!-- Hours -->
-              <div class="flex flex-col items-center p-2">
-                <div id="tb-countdown-hours" class="text-5xl md:text-6xl font-bold text-red-500 cosmic-digit">06</div>
-                <div class="text-xs text-gray-400 mt-2 tracking-wider">HOURS</div>
-              </div>
-            </div>
-            
-            <!-- Secondary countdown (smaller units) -->
-            <div class="flex justify-center mt-6 font-mono">
-              <div class="flex items-end gap-2">
-                <div id="tb-countdown-minutes" class="text-2xl font-bold text-red-400">23</div>
-                <div class="text-xs text-gray-500 mb-1">MIN</div>
-                
-                <div class="text-2xl font-bold text-red-400">:</div>
-                
-                <div id="tb-countdown-seconds" class="text-2xl font-bold text-red-400">45</div>
-                <div class="text-xs text-gray-500 mb-1">SEC</div>
-              </div>
-            </div>
-            
-            <!-- Pulsing indicator -->
-            <div class="flex justify-center mt-8">
-              <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-            </div>
-            
-            <!-- Ominous message -->
-            <div class="text-center mt-6">
-              <p class="text-red-400 font-mono text-sm tracking-wider">HUMANITY DIVIDES IN <span class="font-bold">1095 DAYS</span></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
       <!-- Training Advancement Cards -->
-      <div class="grid md:grid-cols-2 gap-6 mt-16 max-w-4xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
         <!-- STELLA Insight Card -->
-        <div class="bg-black/60 border border-blue-500/30 rounded-xl p-6 shadow-[0_0_15px_rgba(0,100,255,0.2)] backdrop-blur-sm hover:shadow-[0_0_20px_rgba(0,100,255,0.4)] transition-all duration-500">
+        <div class="bg-black/60 border border-blue-500/30 rounded-xl p-6 shadow-lg backdrop-blur-sm hover:shadow-lg transition-all duration-500">
           <div class="flex items-start gap-4">
             <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
@@ -1110,7 +411,7 @@ header .md\:hidden {
             </div>
             <div>
               <h3 class="text-xl font-bold text-blue-400 font-mono">STELLA INSIGHT</h3>
-              <p class="text-gray-300 mt-2">Your Core & Balance mission completion has accelerated your training by 5%. Complete Microgravity Adaptation to further reduce countdown by 28 days.</p>
+              <p class="text-gray-300 mt-2">Your Core & Balance training performance has accelerated your timeline by 5%. Complete Microgravity Adaptation to further reduce your countdown by 28 days.</p>
               <div class="mt-4">
                 <a href="/academy.html" class="inline-block bg-blue-500/20 text-blue-400 border border-blue-500/30 px-4 py-2 rounded-lg hover:bg-blue-500/30 transition-colors font-mono text-sm">
                   CONTINUE TRAINING
@@ -1121,7 +422,7 @@ header .md\:hidden {
         </div>
         
         <!-- Seat Allocation Card -->
-        <div class="bg-black/60 border border-amber-500/30 rounded-xl p-6 shadow-[0_0_15px_rgba(255,200,0,0.2)] backdrop-blur-sm hover:shadow-[0_0_20px_rgba(255,200,0,0.4)] transition-all duration-500">
+        <div class="bg-black/60 border border-amber-500/30 rounded-xl p-6 shadow-lg backdrop-blur-sm hover:shadow-lg transition-all duration-500">
           <div class="flex items-start gap-4">
             <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
@@ -1133,7 +434,7 @@ header .md\:hidden {
               <div class="flex items-center gap-3 mt-2">
                 <span class="text-gray-300">Remaining:</span>
                 <div class="bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-lg">
-                  <span id="seats-remaining" class="text-amber-400 font-bold font-mono">93</span>
+                  <span id="seats-remaining2" class="text-amber-400 font-bold font-mono">93</span>
                 </div>
                 <span class="text-xs text-gray-500">(15 claimed this week)</span>
               </div>
@@ -1148,151 +449,39 @@ header .md\:hidden {
       </div>
     </div>
   </section>
-  
-  <!-- SPACE JOURNEY PROGRESS SECTION -->
-  <section id="journey-progress" class="py-20 relative bg-black">
+
+  <!-- Core Values Section -->
+  <section id="core-values" class="py-20 relative bg-gray-900">
     <div class="container mx-auto px-4 relative z-10">
-      <!-- Countdown Progress & Alerts -->
-      <div class="max-w-4xl mx-auto bg-gray-900/80 rounded-xl border border-gray-800 overflow-hidden">
-        <!-- Timeline Progress -->
-        <div class="relative h-2 bg-gray-800">
-          <div class="absolute left-0 top-0 h-full bg-blue-600" style="width: 35%;"></div>
+      <div class="text-center mb-16">
+        <div class="inline-block px-4 py-2 bg-blue-500/20 border border-blue-400/30 rounded-full mb-6">
+          <span class="text-blue-400 font-semibold tracking-wide text-sm">THE STELLA ADVANTAGE</span>
         </div>
-        
-        <!-- Countdown Info -->
-        <div class="p-6">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <div>
-              <h3 class="text-xl font-semibold text-white">Your Space Journey Progress</h3>
-              <p class="text-gray-400">Accelerate your timeline by completing training modules</p>
-            </div>
-            <div class="font-mono text-blue-400 bg-blue-900/30 py-2 px-4 rounded-lg border border-blue-800/50">
-              35% Complete
-            </div>
-          </div>
-          
-          <!-- Real-time Updates -->
-          <div class="space-y-4">
-            <div class="bg-green-900/20 border border-green-800/30 rounded-lg p-4 flex items-start gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                <div class="text-green-500 font-medium">Recent Achievement</div>
-                <p class="text-gray-300">Completing Core & Balance training reduced your countdown by 3 weeks!</p>
-              </div>
-            </div>
-            
-            <div class="bg-blue-900/20 border border-blue-800/30 rounded-lg p-4 flex items-start gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                <div class="text-blue-500 font-medium">STELLA Insight</div>
-                <p class="text-gray-300">Complete your Cardiovascular Assessment to potentially reduce your timeline by up to 2 months.</p>
-              </div>
-            </div>
-            
-            <div class="bg-yellow-900/20 border border-yellow-800/30 rounded-lg p-4 flex items-start gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <div>
-                <div class="text-yellow-500 font-medium">Seat Availability Alert</div>
-                <p class="text-gray-300">Only <span class="font-bold">93 seats</span> remaining for this year's space travel applicants.</p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Action Buttons -->
-          <div class="mt-8 flex flex-wrap gap-4">
-            <a href="/physicalTraining.html" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-500 transition-all duration-300">
-              Accelerate Your Timeline
-            </a>
-            <a href="/subscribe.html" class="bg-transparent border border-blue-400 text-blue-400 font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-400/10 transition-all duration-300">
-              Upgrade Membership
-            </a>
-          </div>
-        </div>
-      </div>
-          <p class="text-gray-300 max-w-3xl mx-auto mt-6">
-          STELLA's AI ensures technical accuracy and cultural nuance in all languages. Your preferences are remembered across sessions.
+        <h2 class="text-3xl md:text-4xl font-bold text-white">Core Value Propositions</h2>
+        <p class="text-lg text-gray-300 max-w-3xl mx-auto mt-4">
+          STELLA AI redefines space preparation with personalized, data-driven, and results-guaranteed training.
         </p>
       </div>
-    </div>
-  </section>
-  
-<!-- CORE VALUE PROPOSITIONS SECTION -->
-<section id="core-values" class="py-20 relative">
-  <!-- Video Background (for consistency) -->
-  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-    <source src="./videos/academy10.mp4" type="video/mp4" />
-  </video>
-  
-  <!-- Overlay -->
-  <div class="absolute inset-0 bg-black/70"></div>
-  
-  <div class="container mx-auto px-4 relative z-10">
-    <div class="text-center mb-16">
-      <div class="inline-block px-4 py-2 bg-blue-500/20 border border-blue-400/30 rounded-full mb-6">
-        <span class="text-blue-400 font-semibold tracking-wide text-sm">THE STELLA ADVANTAGE</span>
-      </div>
-      <h2 class="text-3xl md:text-4xl font-bold text-white">Core Value Propositions</h2>
-      <p class="text-lg text-gray-300 max-w-3xl mx-auto mt-4">
-        STELLA AI redefines space preparation with personalized, data-driven, and results-guaranteed training.
-      </p>
-    </div>
-    
-    <!-- Three Core Values -->
-    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-      <!-- Urgency Redefined -->
-      <div class="relative overflow-hidden rounded-xl" style="background-color: rgba(30, 41, 59, 0.3); backdrop-filter: blur(8px);">
-        <div class="border border-blue-500/20 h-full flex flex-col">
-          <div class="h-48 bg-gradient-to-br from-blue-900/40 to-blue-700/40 relative">
-            <!-- Icon -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-blue-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            
-            <!-- Number Badge -->
-            <div class="absolute top-4 left-4 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-xl font-bold text-white">1</div>
-          </div>
-          
-          <div class="p-6 flex-grow">
-            <h3 class="text-xl font-bold text-white mb-3">Urgency Redefined</h3>
-            <p class="text-gray-400">Space waits for no one. Train now, or stay grounded. STELLA's AI-powered timeline creates personalized urgency based on your progress.</p>
-            
-            <div class="mt-6 pt-6 border-t border-gray-700/30">
-              <div class="flex items-center text-blue-400">
-                <span>See real-time seat reservation</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+      
+      <!-- Three Core Values -->
+      <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <!-- Urgency Redefined -->
+        <div class="relative overflow-hidden rounded-xl bg-gray-800/50 backdrop-blur-sm">
+          <div class="border border-blue-500/20 h-full flex flex-col">
+            <div class="h-48 bg-gradient-to-br from-blue-900/40 to-blue-700/40 relative">
+              <!-- Icon -->
+              <div class="absolute inset-0 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-blue-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Training Revolutionized -->
-      <div class="relative overflow-hidden rounded-xl" style="background-color: rgba(30, 41, 59, 0.3); backdrop-filter: blur(8px);">
-        <div class="border border-purple-500/20 h-full flex flex-col">
-          <div class="h-48 bg-gradient-to-br from-purple-900/40 to-purple-700/40 relative">
-            <!-- Icon -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-purple-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
+              
+              <!-- Number Badge -->
+              <div class="absolute top-4 left-4 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-xl font-bold text-white">1</div>
             </div>
             
-            <!-- Number Badge -->
-            <div class="absolute top-4 left-4 w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-xl font-bold text-white">2</div>
-          </div>
-          
-          <div class="p-6 flex-grow">
-            <h3 class="text-xl font-bold text-white mb-3">Training Revolutionized</h3>
+            <div class="p-6 flex-grow">
+              <h3 class="text-xl font-bold text-whitemb-3">Training Revolutionized</h3>
             <p class="text-gray-400">Forget outdated manuals. STELLA delivers dynamic, real-time astronaut coaching that adapts to your learning style, pace, and strengths.</p>
             
             <div class="mt-6 pt-6 border-t border-gray-700/30">
@@ -2017,201 +1206,195 @@ header .md\:hidden {
 </div>
 </section>
 <!-- TRAINING MODULES SECTION with Glass Effect -->
-<section id="training-modules" class="min-h-screen relative py-20 overflow-hidden">
-  <!-- Video Background with proper z-index -->
-  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0">
-    <source src="./videos/trainingmods1.mp4" type="video/mp4" />
-  </video>
-  
-  <!-- Overlay for better content visibility -->
-  <div class="absolute inset-0 bg-black/50 z-1"></div>
-  
-  <!-- Content wrapper with proper z-index -->
-  <div class="relative z-10 container mx-auto px-4">
-    <!-- Section Title with data-i18n attributes for language support -->
-    <div class="text-center mb-16" data-aos="fade-up">
-      <h2 class="text-4xl font-bold text-blue-400 mb-4" data-i18n="training.title">Elite Training Modules</h2>
-      <p class="text-white text-xl" data-i18n="training.subtitle">Master real space mission skills with industry-certified training</p>
-    </div>
+  <section id="training-modules" class="relative py-20">
+    <!-- Video Background -->
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+      <source src="./videos/trainingmods1.mp4" type="video/mp4" />
+    </video>
     
-    <!-- Training Modules Grid using the custom training-grid class -->
-    <div class="training-grid" data-aos="fade-up" data-aos-delay="200">
-      <!-- Physical Training Module -->
-      <div class="training-card">
-        <div class="relative overflow-hidden rounded-lg glass-effect">
-          <!-- Top Duration Badge -->
-          <div class="absolute top-4 right-4 z-20">
-            <div class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-              6-8 Months
-            </div>
-          </div>
-          
-          <!-- Glass Panel Content -->
-          <div class="relative p-8">
-            <!-- Title -->
-            <h3 class="text-2xl text-blue-400 font-bold mb-8" data-i18n="training.physical.title">Physical Training</h3>
-            
-            <!-- Progress Circle with Dot -->
-            <div class="flex justify-center mb-8">
-              <div class="relative">
-                <!-- Blue Dot Indicator -->
-                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-blue-400 rounded-full"></div>
-                
-                <!-- 0% Text -->
-                <div class="text-center mt-6">
-                  <span class="text-4xl font-bold text-white">0%</span>
-                </div>
+    <div class="container mx-auto px-4 relative z-10">
+      <!-- Section Title -->
+      <h2 class="text-4xl font-bold text-blue-400 text-center mb-4">Elite Training Modules</h2>
+      <p class="text-white text-center mb-12">Master real space mission skills with industry-certified training</p>
+      
+      <!-- Training Modules using our custom CSS class -->
+      <div class="training-grid">
+        <!-- Physical Training Module -->
+        <div class="training-card">
+          <div class="relative overflow-hidden rounded-lg glass-effect">
+            <!-- Top Duration Badge -->
+            <div class="absolute top-2 right-2 z-20">
+              <div class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                6-8 Months
               </div>
             </div>
             
-            <!-- Certification Badge -->
-            <div class="text-sm text-blue-200 mb-6">
-              ISO-31000-ZG Certification
+            <!-- Glass Panel Effect -->
+            <div class="relative p-8">
+              <!-- Title -->
+              <h3 class="text-2xl text-blue-400 font-bold mb-8">Physical Training</h3>
+              
+              <!-- Progress Circle with Dot -->
+              <div class="flex justify-center mb-8">
+                <div class="relative">
+                  <!-- Blue Dot Indicator -->
+                  <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-blue-400 rounded-full"></div>
+                  
+                  <!-- 0% Text -->
+                  <div class="text-center mt-6">
+                    <span class="text-4xl font-bold text-white">0%</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Certification Badge -->
+              <div class="text-sm text-blue-200 mb-6">
+                ISO-31000-ZG Certification
+              </div>
+              
+              <!-- Description -->
+              <p class="text-white mb-8">
+                Master zero-gravity movement, biometric adaptation, and emergency procedures
+              </p>
+              
+              <!-- Requirements -->
+              <p class="text-gray-400 mb-6">
+                Required: Medical Clearance, Basic Physics
+              </p>
+              
+              <!-- Hours & Button -->
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-300">300 Training Hours Required</span>
+                <a href="/signup.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-md">
+                  Start Training
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Technical Systems Module -->
+        <div class="training-card">
+          <div class="relative overflow-hidden rounded-lg" style="background-color: rgba(139, 92, 246, 0.1);">
+            <!-- Top Duration Badge -->
+            <div class="absolute top-2 right-2 z-20">
+              <div class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                4-6 Months
+              </div>
             </div>
             
-            <!-- Description -->
-            <p class="text-white mb-8" data-i18n="training.physical.description">
-              Master zero-gravity movement, biometric adaptation, and emergency procedures
-            </p>
+            <!-- Glass Panel Effect -->
+            <div class="relative p-8" style="background-color: rgba(91, 33, 182, 0.1); backdrop-filter: blur(8px);">
+              <!-- Title -->
+              <h3 class="text-2xl text-purple-400 font-bold mb-8">Technical Systems</h3>
+              
+              <!-- Progress Circle with Dot -->
+              <div class="flex justify-center mb-8">
+                <div class="relative">
+                  <!-- Purple Dot Indicator -->
+                  <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-purple-400 rounded-full"></div>
+                  
+                  <!-- 0% Text -->
+                  <div class="text-center mt-6">
+                    <span class="text-4xl font-bold text-white">0%</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Certification Badge -->
+              <div class="text-sm text-purple-200 mb-6">
+                OSHA-ST-102 Certification
+              </div>
+              
+              <!-- Description -->
+              <p class="text-white mb-8">
+                Master spacecraft systems, maintenance, and emergency protocols
+              </p>
+              
+              <!-- Requirements -->
+              <p class="text-gray-400 mb-6">
+                Required: Physical Training Completion
+              </p>
+              
+              <!-- Hours & Button -->
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-300">200 Simulation Hours Required</span>
+                <a href="/signup.html" class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2 rounded-md">
+                  Start Training
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mission Simulation Module -->
+        <div class="training-card">
+          <div class="relative overflow-hidden rounded-lg" style="background-color: rgba(45, 212, 191, 0.1);">
+            <!-- Top Duration Badge -->
+            <div class="absolute top-2 right-2 z-20">
+              <div class="bg-cyan-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                3-4 Months
+              </div>
+            </div>
             
-            <!-- Requirements -->
-            <p class="text-gray-400 mb-6" data-i18n="training.physical.requirements">
-              Required: Medical Clearance, Basic Physics
-            </p>
-            
-            <!-- Hours & Button -->
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-300" data-i18n="training.physical.hours">300 Training Hours Required</span>
-              <a href="/signup.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-md cosmic-hover" data-i18n="training.startButton">
-                Start Training
-              </a>
+            <!-- Glass Panel Effect -->
+            <div class="relative p-8" style="background-color: rgba(8, 145, 178, 0.1); backdrop-filter: blur(8px);">
+              <!-- Title -->
+              <h3 class="text-2xl text-cyan-400 font-bold mb-8">Mission Simulation</h3>
+              
+              <!-- Progress Circle with Dot -->
+              <div class="flex justify-center mb-8">
+                <div class="relative">
+                  <!-- Cyan Dot Indicator -->
+                  <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-cyan-400 rounded-full"></div>
+                  
+                  <!-- 0% Text -->
+                  <div class="text-center mt-6">
+                    <span class="text-4xl font-bold text-white">0%</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Certification Badge -->
+              <div class="text-sm text-cyan-200 mb-6">
+                ISO-31010-MO Certification
+              </div>
+              
+              <!-- Description -->
+              <p class="text-white mb-8">
+                Complete mission scenarios and team coordination exercises
+              </p>
+              
+              <!-- Requirements -->
+              <p class="text-gray-400 mb-6">
+                Required: Technical Systems Completion
+              </p>
+              
+              <!-- Hours & Button -->
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-300">100 Mission Hours Required</span>
+                <a href="/signup.html" class="bg-cyan-600 hover:bg-cyan-500 text-white px-6 py-2 rounded-md">
+                  Start Training
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- Technical Systems Module -->
-      <div class="training-card">
-        <div class="relative overflow-hidden rounded-lg glass-effect" style="background-color: rgba(91, 33, 182, 0.2);">
-          <!-- Top Duration Badge -->
-          <div class="absolute top-4 right-4 z-20">
-            <div class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-              4-6 Months
-            </div>
-          </div>
-          
-          <!-- Glass Panel Content -->
-          <div class="relative p-8">
-            <!-- Title -->
-            <h3 class="text-2xl text-purple-400 font-bold mb-8" data-i18n="training.technical.title">Technical Systems</h3>
-            
-            <!-- Progress Circle with Dot -->
-            <div class="flex justify-center mb-8">
-              <div class="relative">
-                <!-- Purple Dot Indicator -->
-                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-purple-400 rounded-full"></div>
-                
-                <!-- 0% Text -->
-                <div class="text-center mt-6">
-                  <span class="text-4xl font-bold text-white">0%</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Certification Badge -->
-            <div class="text-sm text-purple-200 mb-6">
-              OSHA-ST-102 Certification
-            </div>
-            
-            <!-- Description -->
-            <p class="text-white mb-8" data-i18n="training.technical.description">
-              Master spacecraft systems, maintenance, and emergency protocols
-            </p>
-            
-            <!-- Requirements -->
-            <p class="text-gray-400 mb-6" data-i18n="training.technical.requirements">
-              Required: Physical Training Completion
-            </p>
-            
-            <!-- Hours & Button -->
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-300" data-i18n="training.technical.hours">200 Simulation Hours Required</span>
-              <a href="/signup.html" class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2 rounded-md cosmic-hover" data-i18n="training.startButton">
-                Start Training
-              </a>
-            </div>
-          </div>
+      <!-- STELLA Integration Box -->
+      <div class="max-w-3xl mx-auto mt-16 rounded-lg p-6 text-center" style="background-color: rgba(30, 58, 138, 0.3); backdrop-filter: blur(8px);">
+        <div class="inline-flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full mb-4">
+          <span class="text-white font-bold">i</span>
         </div>
-      </div>
-      
-      <!-- Mission Simulation Module -->
-      <div class="training-card">
-        <div class="relative overflow-hidden rounded-lg glass-effect" style="background-color: rgba(8, 145, 178, 0.2);">
-          <!-- Top Duration Badge -->
-          <div class="absolute top-4 right-4 z-20">
-            <div class="bg-cyan-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-              3-4 Months
-            </div>
-          </div>
-          
-          <!-- Glass Panel Content -->
-          <div class="relative p-8">
-            <!-- Title -->
-            <h3 class="text-2xl text-cyan-400 font-bold mb-8" data-i18n="training.mission.title">Mission Simulation</h3>
-            
-            <!-- Progress Circle with Dot -->
-            <div class="flex justify-center mb-8">
-              <div class="relative">
-                <!-- Cyan Dot Indicator -->
-                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-cyan-400 rounded-full"></div>
-                
-                <!-- 0% Text -->
-                <div class="text-center mt-6">
-                  <span class="text-4xl font-bold text-white">0%</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Certification Badge -->
-            <div class="text-sm text-cyan-200 mb-6">
-              ISO-31010-MO Certification
-            </div>
-            
-            <!-- Description -->
-            <p class="text-white mb-8" data-i18n="training.mission.description">
-              Complete mission scenarios and team coordination exercises
-            </p>
-            
-            <!-- Requirements -->
-            <p class="text-gray-400 mb-6" data-i18n="training.mission.requirements">
-              Required: Technical Systems Completion
-            </p>
-            
-            <!-- Hours & Button -->
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-300" data-i18n="training.mission.hours">100 Mission Hours Required</span>
-              <a href="/signup.html" class="bg-cyan-600 hover:bg-cyan-500 text-white px-6 py-2 rounded-md cosmic-hover" data-i18n="training.startButton">
-                Start Training
-              </a>
-            </div>
-          </div>
-        </div>
+        <h4 class="text-xl text-blue-400 font-bold mb-4">STELLA Integration</h4>
+        <p class="text-white">
+          All training modules are enhanced by STELLA AI, which continuously adapts curriculum, 
+          provides real-time feedback, and accelerates your learning based on your unique progress patterns.
+        </p>
       </div>
     </div>
-    
-    <!-- STELLA Integration Box -->
-    <div class="max-w-3xl mx-auto mt-16 rounded-lg p-6 text-center glass-effect" data-aos="fade-up" data-aos-delay="400">
-      <div class="inline-flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full mb-4">
-        <span class="text-white font-bold">i</span>
-      </div>
-      <h4 class="text-xl text-blue-400 font-bold mb-4" data-i18n="training.stella.title">STELLA Integration</h4>
-      <p class="text-white" data-i18n="training.stella.description">
-        All training modules are enhanced by STELLA AI, which continuously adapts curriculum, 
-        provides real-time feedback, and accelerates your learning based on your unique progress patterns.
-      </p>
-    </div>
-  </div>
-</section>
+  </section>
   <!-- Footer -->
 <footer style="background-color: rgba(13, 18, 30, 0.6); padding: 60px 20px; text-align: center;">
     <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
@@ -2275,218 +1458,99 @@ header .md\:hidden {
         </a>
     </div>
 </footer>
-<!-- Script for mobile menu toggle -->
+
+<!-- Script for language selection and mobile menu -->
 <script>
-  // Fix video background issues
-document.addEventListener('DOMContentLoaded', function() {
-  const heroSection = document.getElementById('hero');
-  const existingVideo = heroSection.querySelector('video');
-  
-  // If video exists but isn't playing properly
-  if (existingVideo) {
-    // Force reload the video
-    const currentSrc = existingVideo.querySelector('source').src;
-    existingVideo.querySelector('source').src = currentSrc + '?t=' + new Date().getTime();
-    existingVideo.load();
+  document.addEventListener("DOMContentLoaded", function() {
+    // Get the language dropdown element
+    const languageSelect = document.getElementById('language-select');
     
-    // Make sure video is visible and positioned correctly
-    existingVideo.style.position = 'absolute';
-    existingVideo.style.top = '0';
-    existingVideo.style.left = '0';
-    existingVideo.style.width = '100%';
-    existingVideo.style.height = '100%';
-    existingVideo.style.objectFit = 'cover';
-    existingVideo.style.zIndex = '0';
-    
-    // Add fallback for video errors
-    existingVideo.addEventListener('error', function() {
-      console.log('Video error detected, adding fallback background');
-      heroSection.style.backgroundImage = 'url("./images/space-background.jpg")';
-      heroSection.style.backgroundSize = 'cover';
-      heroSection.style.backgroundPosition = 'center';
-      existingVideo.style.display = 'none';
-    });
-  } else {
-    // If no video exists, we can add one
-    console.log('No video found, consider adding one for better UX');
-  }
-  
-  // Make sure overlay has correct z-index
-  const overlay = heroSection.querySelector('.absolute.inset-0.bg-black');
-  if (overlay) {
-    overlay.style.zIndex = '1';
-  }
-  
-  // Make sure content is above overlay
-  const heroContent = heroSection.querySelector('.relative.z-10, .z-20, .z-30');
-  if (heroContent) {
-    heroContent.style.zIndex = '10';
-    heroContent.style.position = 'relative';
-  }
-});
-// Fix language selector
-document.addEventListener('DOMContentLoaded', function() {
-  const languageBtn = document.getElementById('language-dropdown-btn');
-  const languageDropdown = document.getElementById('language-dropdown');
-  
-  if (languageBtn && languageDropdown) {
-    // Ensure dropdown is hidden by default
-    languageDropdown.classList.add('hidden');
-    
-    // Toggle dropdown
-    languageBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      languageDropdown.classList.toggle('hidden');
-    });
-    
-    // Close when clicking elsewhere
-    document.addEventListener('click', function() {
-      languageDropdown.classList.add('hidden');
-    });
-    
-    // Prevent clicks inside dropdown from closing it
-    languageDropdown.addEventListener('click', function(e) {
-      e.stopPropagation();
-    });
-  }
-});
-  document.addEventListener('DOMContentLoaded', function() {
-    const menuButton = document.querySelector('.md\\:hidden.bg-gray-800');
-    const mobileMenu = document.querySelector('.hidden.md\\:hidden.bg-gray-900');
-    
-    if (menuButton && mobileMenu) {
-      menuButton.addEventListener('click', function() {
-        mobileMenu.classList.toggle('hidden');
-      });
+    // Set initial value based on stored preference or browser language
+    const savedLanguage = localStorage.getItem('preferredLanguage') || navigator.language.split('-')[0];
+    if (languageSelect && languageSelect.querySelector(`option[value="${savedLanguage}"]`)) {
+      languageSelect.value = savedLanguage;
     }
     
-    // Language selector functionality
-    const languageSelect = document.getElementById('language-select');
+    // Apply initial translations
+    if (window.applyTranslations) {
+      window.applyTranslations(languageSelect.value);
+    }
+    
+    // Add change event listener
     if (languageSelect) {
       languageSelect.addEventListener('change', function() {
-        const lang = this.value;
-        console.log('Language changed to:', lang);
-        localStorage.setItem('selectedLanguage', lang);
-      });
-      
-      // Load saved preference
-      const savedLang = localStorage.getItem('selectedLanguage');
-      if (savedLang) {
-        const option = document.querySelector(`option[value="${savedLang}"]`);
-        if (option) {
-          languageSelect.value = savedLang;
+        const selectedLanguage = this.value;
+        
+        // Save the language preference
+        localStorage.setItem('preferredLanguage', selectedLanguage);
+        
+        // Apply translations immediately
+        if (window.applyTranslations) {
+          window.applyTranslations(selectedLanguage);
+        } else if (window.languageManager) {
+          window.languageManager.setLanguage(selectedLanguage);
         }
-      }
-    }
-  });
-</script>
-<!-- Header Scripts -->
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Language dropdown toggle
-    const langBtn = document.getElementById('language-btn');
-    const langDropdown = document.getElementById('language-dropdown');
-    const langOptions = document.querySelectorAll('.lang-option');
-    const flagIcon = document.querySelector('.flag-icon');
-    
-    langBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      langDropdown.classList.toggle('hidden');
-    });
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!langBtn.contains(e.target) && !langDropdown.contains(e.target)) {
-        langDropdown.classList.add('hidden');
-      }
-    });
-    
-    // Language selection
-    langOptions.forEach(option => {
-      option.addEventListener('click', function(e) {
-        e.preventDefault();
-        const lang = this.getAttribute('data-lang');
-        const langText = this.textContent.trim();
-        const flag = this.querySelector('span').textContent;
         
-        // Update button
-        flagIcon.textContent = flag;
+        // Set HTML lang attribute for accessibility
+        document.documentElement.setAttribute('lang', selectedLanguage);
         
-        // Close dropdown
-        langDropdown.classList.add('hidden');
-        
-        // Save preference
-        localStorage.setItem('selectedLanguage', lang);
+        console.log(`Language changed to: ${selectedLanguage}`);
       });
-    });
+    }
     
-    // Mobile menu toggle
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuBtn.addEventListener('click', function() {
-      mobileMenu.classList.toggle('hidden');
-    });
-  });
-</script>
-<script>
-
-  // Show personalized welcome for returning users
-  document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is logged in (this would be your actual auth check)
+    // Show personalized welcome for returning users
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     
     if (isLoggedIn) {
       const userName = localStorage.getItem('userName') || 'Astronaut';
-      document.getElementById('user-name').textContent = userName;
-      document.getElementById('chat-user-name').textContent = userName;
-      document.getElementById('personalized-welcome').classList.remove('hidden');
+      const userNameElement = document.getElementById('user-name');
+      const chatUserNameElement = document.getElementById('chat-user-name');
+      
+      if (userNameElement) userNameElement.textContent = userName;
+      if (chatUserNameElement) chatUserNameElement.textContent = userName;
+      
+      const personalizedWelcome = document.getElementById('personalized-welcome');
+      if (personalizedWelcome) personalizedWelcome.classList.remove('hidden');
     }
     
     // Toggle STELLA chat widget
     const chatButton = document.querySelector('#stella-chat-widget button');
     const chatWindow = document.querySelector('#stella-chat-widget div');
     
-    chatButton.addEventListener('click', function() {
-      chatWindow.classList.toggle('hidden');
-    });
-  });
+    if (chatButton && chatWindow) {
+      chatButton.addEventListener('click', function() {
+        chatWindow.classList.toggle('hidden');
+      });
+    }
 
-  // Add this to your main.js or inline in the homepage HTML
-document.addEventListener('DOMContentLoaded', function() {
-  // Check if hero content is visible
-  const heroContent = document.querySelector('#hero .relative.z-10');
-  if (heroContent) {
-    console.log('Hero content found:', heroContent);
+    // Video fallback handling
+    const video = document.getElementById('hero-video');
+    const fallback = document.getElementById('video-fallback');
     
-    // Force visibility
-    heroContent.style.opacity = '1';
-    heroContent.style.visibility = 'visible';
-    heroContent.style.display = 'block';
-    
-    // Ensure proper z-index
-    heroContent.style.zIndex = '20';
-    
-    // Add a subtle background if text still isn't visible enough
-    heroContent.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-    heroContent.style.padding = '20px';
-    heroContent.style.borderRadius = '8px';
-  } else {
-    console.error('Hero content not found in DOM');
-  }
-  
-  // Verify video background
-  const videoBackground = document.querySelector('#hero video');
-  if (videoBackground) {
-    console.log('Video background found');
-    // Ensure video is playing
-    videoBackground.play().catch(err => console.error('Video play error:', err));
-  } else {
-    console.error('Video background not found in DOM');
-  }
-});
+    if (video && fallback) {
+      // Show fallback if video fails to load
+      video.addEventListener('error', function() {
+        video.style.display = 'none';
+        fallback.style.display = 'block';
+        console.log('Video failed to load, showing fallback image');
+      });
+      
+      // Check if video is playing after a delay
+      setTimeout(function() {
+        if (video.readyState === 0) {
+          video.style.display = 'none';
+          fallback.style.display = 'block';
+          console.log('Video failed to start, showing fallback image');
+        }
+      }, 2000);
+    }
+  });
+</script>
+
+<!-- STELLA AI Chat functionality -->
+<script>
   document.addEventListener('DOMContentLoaded', function () {
-    // Visual elements and animations only
+    // Visual elements and animations
     const stellaContainer = document.querySelector('.stella-container');
     const sophonSword = document.getElementById('sophon-sword');
     const sophonAvatar = document.getElementById('sophon-avatar');
@@ -2511,16 +1575,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Add periodic sword animation (visual only)
-    setInterval(function() {
-      if (stellaContainer) {
+    if (stellaContainer) {
+      setInterval(function() {
         stellaContainer.classList.add('slicer-animation');
         setTimeout(function() {
           stellaContainer.classList.remove('slicer-animation');
         }, 1500);
-      }
-    }, 12000);
+      }, 12000);
+    }
     
-    // Expose triggerSwordAnimation globally so it can be called from other scripts
+    // Expose triggerSwordAnimation globally
     window.triggerSwordAnimation = function(messageId) {
       if (!sophonSword || !stellaContainer) return;
       
@@ -2577,37 +1641,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 800);
       }
     };
-  });
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const video = document.getElementById('hero-video');
-    const fallback = document.getElementById('video-fallback');
-    
-    // Show fallback if video fails to load
-    video.addEventListener('error', function() {
-      video.style.display = 'none';
-      fallback.style.display = 'block';
-      console.log('Video failed to load, showing fallback image');
-    });
-    
-    // Check if video is playing after a delay
-    setTimeout(function() {
-      if (video.readyState === 0) {
-        video.style.display = 'none';
-        fallback.style.display = 'block';
-        console.log('Video failed to start, showing fallback image');
-      }
-    }, 2000);
-  });
-</script>
-<script>
-  document.getElementById('language-select').addEventListener('change', function() {
-  const lang = this.value;
-  console.log('Language changed to:', lang);
-  localStorage.setItem('selectedLanguage', lang);
-});
-  document.addEventListener('DOMContentLoaded', function () {
+
     // Functional elements
     const stellaInput = document.getElementById('stella-question');
     const stellaButton = document.getElementById('send-to-stella');
@@ -2615,11 +1649,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Event listeners
     if (stellaButton) {
-    stellaButton.addEventListener('click', function(event) {
+      stellaButton.addEventListener('click', function(event) {
         console.log("🚩 STELLA Button Clicked!");
-        handleStellaMessage(event); // Pass the event along if needed
-    });
-}
+        handleStellaMessage(event);
+      });
+    }
+
     // Quick action buttons
     const actionButtons = document.querySelectorAll('.stella-action-btn');
     if (actionButtons.length > 0 && stellaInput) {
@@ -2645,56 +1680,55 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
   
     async function handleStellaMessage() {
-  const question = stellaInput.value.trim();
-  if (!question) return;
+      const question = stellaInput.value.trim();
+      if (!question) return;
 
-  const messageId = addUserMessage(question);
-  stellaInput.value = '';
-  showLoadingIndicator();
+      const messageId = addUserMessage(question);
+      stellaInput.value = '';
+      showLoadingIndicator();
 
-  if (window.triggerSwordAnimation) {
-    window.triggerSwordAnimation(messageId);
-  }
+      if (window.triggerSwordAnimation) {
+        window.triggerSwordAnimation(messageId);
+      }
 
-  let conversationHistory = JSON.parse(localStorage.getItem('stellaConversationHistory') || '[]');
+      let conversationHistory = JSON.parse(localStorage.getItem('stellaConversationHistory') || '[]');
 
-  try {
-    const res = await fetch('/api/stella/guidance', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      // Replace with:
-      body: JSON.stringify({
-      userId: "anonymous-user", // Or "test-user" or any default value
-      question,
-      conversationHistory
-      })
-    });
+      try {
+        const res = await fetch('/api/stella/guidance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: "anonymous-user",
+            question,
+            conversationHistory
+          })
+        });
 
-    const data = await res.json();
-    const message = data.guidance?.message || "I'm not sure how to answer that right now.";
+        const data = await res.json();
+        const message = data.guidance?.message || "I'm not sure how to answer that right now.";
 
-    removeLoadingIndicator();
-    addStellaMessage(message);
+        removeLoadingIndicator();
+        addStellaMessage(message);
 
-    conversationHistory.push({ fromUser: true, content: question, timestamp: new Date().toISOString() });
-    conversationHistory.push({ fromUser: false, content: message, timestamp: new Date().toISOString() });
-    conversationHistory = conversationHistory.slice(-10);
-    localStorage.setItem('stellaConversationHistory', JSON.stringify(conversationHistory));
+        conversationHistory.push({ fromUser: true, content: question, timestamp: new Date().toISOString() });
+        conversationHistory.push({ fromUser: false, content: message, timestamp: new Date().toISOString() });
+        conversationHistory = conversationHistory.slice(-10);
+        localStorage.setItem('stellaConversationHistory', JSON.stringify(conversationHistory));
 
-  } catch (err) {
-  console.error("STELLA API error:", err);
-  removeLoadingIndicator();
-  const fallback = getIntelligentResponse(question);
-  addStellaMessage(fallback.message, fallback.actionItems);
-}
+      } catch (err) {
+        console.error("STELLA API error:", err);
+        removeLoadingIndicator();
+        const fallback = getIntelligentResponse(question);
+        addStellaMessage(fallback.message, fallback.actionItems);
+      }
 
-  if (stellaConversation) {
-    stellaConversation.scrollTop = stellaConversation.scrollHeight;
-  }
-}
+      if (stellaConversation) {
+        stellaConversation.scrollTop = stellaConversation.scrollHeight;
+      }
+    }
     
     function addUserMessage(msg) {
-      if (!stellaConversation) return null;  // Already present, good.
+      if (!stellaConversation) return null;
       
       // Create unique ID
       const messageId = 'user-msg-' + Date.now();
@@ -2801,172 +1835,144 @@ document.addEventListener('DOMContentLoaded', function() {
     return date.toLocaleDateString('en-US', options);
   }
 </script>
+
 <!-- Language Management Scripts -->
-<script src="/js/translation.js"></script>
-<script src="/js/languageDropdown.js"></script>
+<script src="/js/translations.js"></script>
 <script src="/js/languageManager.js"></script>
 
-<!-- Date Management Script -->
+<!-- Additional functionality scripts -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Update current date in briefing
-  const dateElement = document.getElementById('briefing-date');
-  if (dateElement) {
-    const now = new Date();
-    const formattedDate = now.toLocaleDateString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric'
-    }).replace(/\//g, '/');
+  document.addEventListener('DOMContentLoaded', function() {
+    // Update current date in briefing
+    const dateElement = document.getElementById('briefing-date');
+    if (dateElement) {
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+      }).replace(/\//g, '/');
+      
+      dateElement.textContent = formattedDate;
+    }
     
-    dateElement.textContent = formattedDate;
-  }
-  
-  // Initialize language features
-  if (typeof initializeLanguage === 'function') {
-    initializeLanguage();
-  }
-  
-  if (typeof initializeLanguageDropdown === 'function') {
-    initializeLanguageDropdown();
-  }
-});
-</script>
-
-<!-- Testimonials Carousel Script -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const track = document.querySelector('.testimonials-track');
-  const cards = document.querySelectorAll('.testimonial-card');
-  const prevButton = document.getElementById('testimonial-prev');
-  const nextButton = document.getElementById('testimonial-next');
-  
-  // Verify cards exist first
-  if (!track || cards.length === 0) {
-    console.warn('Testimonials elements not found');
-    return;
-  }
-
-  let position = 0;
-  const cardWidth = cards[0].offsetWidth + 24;
-  
-  function updatePosition() {
-    track.style.transform = `translateX(${-position * cardWidth}px)`;
-    track.style.transition = 'transform 0.4s ease-out';
-  }
-  
-  if (prevButton) {
-    prevButton.addEventListener('click', function() {
-      position = Math.max(position - 1, 0);
-      updatePosition();
-    });
-  }
-  
-  if (nextButton) {
-    nextButton.addEventListener('click', function() {
-      position = Math.min(position + 1, cards.length - 1);
-      updatePosition();
-    });
-  }
-  
-  let autoRotate = setInterval(function() {
-    position = (position + 1) % cards.length;
-    updatePosition();
-  }, 5000);
-  
-  const testimonialsContainer = document.querySelector('.testimonials-container');
-
-  if (testimonialsContainer) {
-    testimonialsContainer.addEventListener('mouseenter', function() {
-      clearInterval(autoRotate);
-    });
+    // Testimonials carousel functionality
+    const track = document.querySelector('.testimonials-track');
+    const cards = document.querySelectorAll('.testimonial-card');
+    const prevButton = document.getElementById('testimonial-prev');
+    const nextButton = document.getElementById('testimonial-next');
     
-    testimonialsContainer.addEventListener('mouseleave', function() {
-      autoRotate = setInterval(function() {
+    if (track && cards.length > 0) {
+      let position = 0;
+      const cardWidth = cards[0].offsetWidth + 24;
+      
+      function updatePosition() {
+        track.style.transform = `translateX(${-position * cardWidth}px)`;
+        track.style.transition = 'transform 0.4s ease-out';
+      }
+      
+      if (prevButton) {
+        prevButton.addEventListener('click', function() {
+          position = Math.max(position - 1, 0);
+          updatePosition();
+        });
+      }
+      
+      if (nextButton) {
+        nextButton.addEventListener('click', function() {
+          position = Math.min(position + 1, cards.length - 1);
+          updatePosition();
+        });
+      }
+      
+      let autoRotate = setInterval(function() {
         position = (position + 1) % cards.length;
         updatePosition();
       }, 5000);
-    });
-  }
-});
-</script>
-
-<!-- Countdown Timer Script -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const countdownElements = {
-    years: document.getElementById('tb-countdown-years'),
-    months: document.getElementById('tb-countdown-months'),
-    days: document.getElementById('tb-countdown-days'),
-    hours: document.getElementById('tb-countdown-hours'),
-    minutes: document.getElementById('tb-countdown-minutes'),
-    seconds: document.getElementById('tb-countdown-seconds')
-  };
-  
-  // Check if countdown elements exist
-  const hasCountdown = Object.values(countdownElements).every(el => el !== null);
-  
-  if (hasCountdown) {
-    // Set the countdown target date (36 months from now)
-    const now = new Date();
-    const targetDate = new Date(now);
-    targetDate.setMonth(now.getMonth() + 36);
-    
-    // Update the countdown every second
-    function updateCountdown() {
-      const currentTime = new Date();
-      const timeDifference = targetDate - currentTime;
       
-      // Calculate time components
-      const years = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 365));
-      const months = Math.floor((timeDifference % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
-      const days = Math.floor((timeDifference % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-      
-      // Update DOM elements
-      countdownElements.years.textContent = years.toString().padStart(2, '0');
-      countdownElements.months.textContent = months.toString().padStart(2, '0');
-      countdownElements.days.textContent = days.toString().padStart(2, '0');
-      countdownElements.hours.textContent = hours.toString().padStart(2, '0');
-      countdownElements.minutes.textContent = minutes.toString().padStart(2, '0');
-      countdownElements.seconds.textContent = seconds.toString().padStart(2, '0');
-      
-      // Add glitch effect occasionally
-      if (Math.random() < 0.01) {
-        addGlitchEffect();
+      const testimonialsContainer = document.querySelector('.testimonials-container');
+      if (testimonialsContainer) {
+        testimonialsContainer.addEventListener('mouseenter', function() {
+          clearInterval(autoRotate);
+        });
+        
+        testimonialsContainer.addEventListener('mouseleave', function() {
+          autoRotate = setInterval(function() {
+            position = (position + 1) % cards.length;
+            updatePosition();
+          }, 5000);
+        });
       }
     }
     
-    // Function to add temporary glitch effect
-    function addGlitchEffect() {
-      const digits = document.querySelectorAll('.cosmic-digit');
-      digits.forEach(digit => {
-        digit.classList.add('glitching');
-        setTimeout(() => {
-          digit.classList.remove('glitching');
-        }, 200);
-      });
+    // Countdown timer functionality
+    const countdownElements = {
+      years: document.getElementById('tb-countdown-years'),
+      months: document.getElementById('tb-countdown-months'),
+      days: document.getElementById('tb-countdown-days'),
+      hours: document.getElementById('tb-countdown-hours'),
+      minutes: document.getElementById('tb-countdown-minutes'),
+      seconds: document.getElementById('tb-countdown-seconds')
+    };
+    
+    const hasCountdown = Object.values(countdownElements).some(el => el !== null);
+    
+    if (hasCountdown) {
+      // Set the countdown target date (36 months from now)
+      const now = new Date();
+      const targetDate = new Date(now);
+      targetDate.setMonth(now.getMonth() + 36);
+      
+      function updateCountdown() {
+        const currentTime = new Date();
+        const timeDifference = targetDate - currentTime;
+        
+        const years = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 365));
+        const months = Math.floor((timeDifference % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
+        const days = Math.floor((timeDifference % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+        
+        // Update DOM elements if they exist
+        if (countdownElements.years) countdownElements.years.textContent = years.toString().padStart(2, '0');
+        if (countdownElements.months) countdownElements.months.textContent = months.toString().padStart(2, '0');
+        if (countdownElements.days) countdownElements.days.textContent = days.toString().padStart(2, '0');
+        if (countdownElements.hours) countdownElements.hours.textContent = hours.toString().padStart(2, '0');
+        if (countdownElements.minutes) countdownElements.minutes.textContent = minutes.toString().padStart(2, '0');
+        if (countdownElements.seconds) countdownElements.seconds.textContent = seconds.toString().padStart(2, '0');
+        
+        // Add glitch effect occasionally
+        if (Math.random() < 0.01) {
+          addGlitchEffect();
+        }
+      }
+      
+      function addGlitchEffect() {
+        const digits = document.querySelectorAll('.cosmic-digit');
+        digits.forEach(digit => {
+          digit.classList.add('glitching');
+          setTimeout(() => {
+            digit.classList.remove('glitching');
+          }, 200);
+        });
+      }
+      
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
     }
     
-    // Update immediately and then every second
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-    
-    // Simulated seat countdown (decreases randomly)
+    // Seats counter
     let seatsRemaining = 93;
     const seatsElement = document.getElementById('seats-remaining');
     
     if (seatsElement) {
       function updateSeats() {
         if (seatsRemaining > 1) {
-          // Random chance of decreasing seats (15% chance)
           if (Math.random() < 0.15) {
             seatsRemaining -= 1;
             seatsElement.textContent = seatsRemaining;
             
-            // Show temporary alert
             const alertMessage = document.createElement('div');
             alertMessage.className = 'fixed bottom-5 right-5 bg-amber-900/80 text-white px-4 py-3 rounded-lg shadow-lg z-50 font-mono border border-amber-500/50';
             alertMessage.innerHTML = `<div class="flex items-center gap-2">
@@ -2976,7 +1982,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             document.body.appendChild(alertMessage);
             
-            // Remove alert after 3 seconds
             setTimeout(() => {
               alertMessage.classList.add('opacity-0');
               setTimeout(() => {
@@ -2987,24 +1992,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
       
-      // Update seats every 30 seconds
       setInterval(updateSeats, 30000);
     }
-  }
-});
-  document.addEventListener('DOMContentLoaded', function() {
-    // Force hero section to be full width
+    
+    // Hero section formatting
     const heroSection = document.getElementById('hero');
     if (heroSection) {
       heroSection.style.width = '100vw';
       heroSection.style.maxWidth = '100vw';
       heroSection.style.margin = '0';
       heroSection.style.padding = '0';
-      heroSection.style.paddingTop = '80px'; // Space for header
+      heroSection.style.paddingTop = '80px';
       heroSection.style.position = 'relative';
       heroSection.style.zIndex = '1';
       
-      // Find any parent containers and make them full width too
       let parent = heroSection.parentElement;
       while (parent && parent !== document.body) {
         parent.style.width = '100%';
@@ -3015,7 +2016,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Force header to be visible
+    // Header visibility
     const header = document.querySelector('header');
     if (header) {
       header.style.position = 'fixed';

@@ -5,7 +5,6 @@ class AchievementsController {
         this.eventListeners = new Map();
         this.initialize();
     }
-
     async initialize() {
         try {
             await this.loadAchievements();

@@ -2,7 +2,7 @@
 
 require('dotenv').config();
 const mongoose = require('mongoose');
-const { OpenAI } = require('openai');
+const OpenAI = require('openai');
 const fs = require('fs');
 const path = require('path');
 
@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Initialize OpenAI
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const { openai } = require('../services/openaiService');
 
 // Initial seed questions by category
 const seedQuestions = {

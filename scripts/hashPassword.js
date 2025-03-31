@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('../mockBcrypt'); // Temporary mock
 
 const hashPassword = async () => {
     try {

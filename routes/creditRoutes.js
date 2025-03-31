@@ -136,5 +136,30 @@ router.get('/history', authenticate, async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch credit history', message: error.message });
     }
 });
+// Award credits to user
+router.post('/award', authenticate, async (req, res) => {
+    try {
+        const { amount, reason } = req.body;
+        
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { $inc: { credits: amount } },
+            { new: true }
+        );
+        
+        res.json({
+            success: true,
+            newBalance: user.credits,
+            awarded: amount,
+            reason
+        });
+    } catch (error) {
+        console.error('Error awarding credits:', error);
+        res.status(500).json({
+            error: 'Failed to award credits',
+            message: error.message
+        });
+    }
+}); 
 
 module.exports = router;

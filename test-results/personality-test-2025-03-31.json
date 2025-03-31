@@ -1,0 +1,172 @@
+{
+  "timestamp": "2025-03-31T15:35:31.729Z",
+  "scenarios": [
+    {
+      "scenario": "High Humor",
+      "personality": {
+        "honesty": 50,
+        "humor": 90,
+        "formality": 50,
+        "encouragement": 50,
+        "detail": 50
+      },
+      "context": "general",
+      "topics": [
+        "training"
+      ],
+      "template": "I'm here to assist with your space training. How can I help?",
+      "metadata": {
+        "source": "error_fallback",
+        "error": "Invalid sort value: { $expr: [object Object] }"
+      },
+      "baseResponse": "Space training involves physical preparation, technical knowledge acquisition, and psychological adaptation to prepare astronauts for the challenges of spaceflight.",
+      "enhancedResponse": "I'm here to assist with your space training. How can I help? Space training involves physical preparation, technical knowledge acquisition, and psychological adaptation to prepare astronauts for the challenges of spaceflight. to assist with your space training. How can I help?"
+    },
+    {
+      "scenario": "High Honesty",
+      "personality": {
+        "honesty": 90,
+        "humor": 30,
+        "formality": 50,
+        "encouragement": 50,
+        "detail": 50
+      },
+      "context": "assessment",
+      "topics": [
+        "physical_training"
+      ],
+      "template": "I'm here to assist with your space training. How can I help?",
+      "metadata": {
+        "source": "error_fallback",
+        "error": "Invalid sort value: { $expr: [object Object] }"
+      },
+      "baseResponse": "Your current physical fitness metrics show you're at 75% of the required level for spaceflight. Your cardiovascular endurance is strong, but upper body strength needs improvement.",
+      "enhancedResponse": "I'm here to assist with your space training. How can I help? Your current physical fitness metrics show you're at 75% of the required level for spaceflight. Your cardiovascular endurance is strong, but upper body strength needs improvement. to assist with your space training. How can I help?"
+    },
+    {
+      "scenario": "High Formality",
+      "personality": {
+        "honesty": 50,
+        "humor": 30,
+        "formality": 90,
+        "encouragement": 50,
+        "detail": 50
+      },
+      "context": "instruction",
+      "topics": [],
+      "template": "I'm here to assist with your space training. How can I help?",
+      "metadata": {
+        "source": "error_fallback",
+        "error": "Invalid sort value: { $expr: [object Object] }"
+      },
+      "baseResponse": "To complete the vestibular adaptation exercise, you'll need to rotate your head while maintaining visual focus on a fixed point. This helps your brain adapt to the sensory conflicts experienced in microgravity.",
+      "enhancedResponse": "I'm here to assist with your space training. How can I help? To complete the vestibular adaptation exercise, you'll need to rotate your head while maintaining visual focus on a fixed point. This helps your brain adapt to the sensory conflicts experienced in microgravity. to assist with your space training. How can I help?"
+    },
+    {
+      "scenario": "High Encouragement",
+      "personality": {
+        "honesty": 40,
+        "humor": 40,
+        "formality": 40,
+        "encouragement": 90,
+        "detail": 40
+      },
+      "context": "progress",
+      "topics": [
+        "training"
+      ],
+      "template": "I'm here to assist with your space training. How can I help?",
+      "metadata": {
+        "source": "error_fallback",
+        "error": "Invalid sort value: { $expr: [object Object] }"
+      },
+      "baseResponse": "You've improved your physical readiness by 15% since last month. Your technical knowledge tests show a 22% improvement in spacecraft systems understanding.",
+      "enhancedResponse": "I'm here to assist with your space training. How can I help? You've improved your physical readiness by 15% since last month. Your technical knowledge tests show a 22% improvement in spacecraft systems understanding. to assist with your space training. How can I help?"
+    },
+    {
+      "scenario": "High Detail",
+      "personality": {
+        "honesty": 50,
+        "humor": 30,
+        "formality": 60,
+        "encouragement": 50,
+        "detail": 90
+      },
+      "context": "instruction",
+      "topics": [
+        "physical_training"
+      ],
+      "template": "I'm here to assist with your space training. How can I help?",
+      "metadata": {
+        "source": "error_fallback",
+        "error": "Invalid sort value: { $expr: [object Object] }"
+      },
+      "baseResponse": "To complete the vestibular adaptation exercise, you'll need to rotate your head while maintaining visual focus on a fixed point. This helps your brain adapt to the sensory conflicts experienced in microgravity.",
+      "enhancedResponse": "I'm here to assist with your space training. How can I help? To complete the vestibular adaptation exercise, you'll need to rotate your head while maintaining visual focus on a fixed point. This helps your brain adapt to the sensory conflicts experienced in microgravity. to assist with your space training. How can I help?"
+    },
+    {
+      "scenario": "Balanced Personality",
+      "personality": {
+        "honesty": 50,
+        "humor": 50,
+        "formality": 50,
+        "encouragement": 50,
+        "detail": 50
+      },
+      "context": "general",
+      "topics": [
+        "training"
+      ],
+      "template": "I'm here to assist with your space training. How can I help?",
+      "metadata": {
+        "source": "error_fallback",
+        "error": "Invalid sort value: { $expr: [object Object] }"
+      },
+      "baseResponse": "Space training involves physical preparation, technical knowledge acquisition, and psychological adaptation to prepare astronauts for the challenges of spaceflight.",
+      "enhancedResponse": "I'm here to assist with your space training. How can I help? Space training involves physical preparation, technical knowledge acquisition, and psychological adaptation to prepare astronauts for the challenges of spaceflight. to assist with your space training. How can I help?"
+    },
+    {
+      "scenario": "Extreme Humor",
+      "personality": {
+        "honesty": 20,
+        "humor": 95,
+        "formality": 10,
+        "encouragement": 60,
+        "detail": 30
+      },
+      "context": "general",
+      "topics": [
+        "joke"
+      ],
+      "template": "I'm here to assist with your space training. How can I help?",
+      "metadata": {
+        "source": "error_fallback",
+        "error": "Invalid sort value: { $expr: [object Object] }"
+      },
+      "baseResponse": "Space training involves physical preparation, technical knowledge acquisition, and psychological adaptation to prepare astronauts for the challenges of spaceflight.",
+      "enhancedResponse": "I'm here to assist with your space training. How can I help? Space training involves physical preparation, technical knowledge acquisition, and psychological adaptation to prepare astronauts for the challenges of spaceflight. to assist with your space training. How can I help?"
+    },
+    {
+      "scenario": "Technical Expert",
+      "personality": {
+        "honesty": 85,
+        "humor": 15,
+        "formality": 75,
+        "encouragement": 40,
+        "detail": 90
+      },
+      "context": "instruction",
+      "topics": [
+        "science",
+        "technical"
+      ],
+      "template": "I'm here to assist with your space training. How can I help?",
+      "metadata": {
+        "source": "error_fallback",
+        "error": "Invalid sort value: { $expr: [object Object] }"
+      },
+      "baseResponse": "To complete the vestibular adaptation exercise, you'll need to rotate your head while maintaining visual focus on a fixed point. This helps your brain adapt to the sensory conflicts experienced in microgravity.",
+      "enhancedResponse": "I'm here to assist with your space training. How can I help? To complete the vestibular adaptation exercise, you'll need to rotate your head while maintaining visual focus on a fixed point. This helps your brain adapt to the sensory conflicts experienced in microgravity. to assist with your space training. How can I help?"
+    }
+  ]
+}

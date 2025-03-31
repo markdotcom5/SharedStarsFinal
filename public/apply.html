@@ -42,7 +42,208 @@
             object-fit: cover;
             opacity: 0.5;
         }
-        
+
+    /* STELLA AI Panel Styles */
+    .stella-assistant-panel {
+        background: rgba(13, 17, 23, 0.8);
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .stella-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .stella-avatar {
+        flex: 0 0 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4f39fa, #da62c4);
+        padding: 3px;
+        margin-right: 15px;
+        overflow: hidden;
+    }
+    
+    .stella-avatar-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    .stella-title h3 {
+        margin: 0;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 18px;
+    }
+    
+    .stella-title p {
+        margin: 5px 0 0;
+        color: #a8b2d1;
+        font-size: 14px;
+    }
+    
+    .stella-content {
+        color: #d1d5db;
+    }
+    
+    .stella-message {
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+    
+    .stella-message p {
+        margin-bottom: 10px;
+    }
+    
+    .highlight {
+        color: #4f39fa;
+        font-weight: 600;
+    }
+    
+    .stella-insights {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+      /* STELLA Success Modal Styles */
+      .stella-success-analysis {
+        background: rgba(20, 30, 48, 0.7);
+        border-radius: 10px;
+        padding: 15px;
+        margin: 20px 0;
+        border: 1px solid #30363d;
+    }
+    
+    .stella-success-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .stella-avatar-small {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4f39fa, #da62c4);
+        padding: 2px;
+        margin-right: 12px;
+        overflow: hidden;
+    }
+    
+    .stella-success-header h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 16px;
+    }
+    
+    .stella-success-content {
+        color: #d1d5db;
+    }
+    
+    .stella-greeting {
+        margin-bottom: 15px;
+    }
+    
+    .cognitive-profile-summary {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .profile-metric {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .metric-label {
+        flex: 0 0 120px;
+        font-size: 14px;
+        color: #a8b2d1;
+    }
+    
+    .metric-bar {
+        flex: 1;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 0 10px;
+    }
+    
+    .metric-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4f39fa, #da62c4);
+        border-radius: 4px;
+    }
+    
+    .metric-value {
+        font-size: 14px;
+        color: #a8b2d1;
+        width: 40px;
+        text-align: right;
+    }
+    
+    .stella-insight {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .highlight-text {
+        color: #da62c4;
+        font-weight: 600;
+    }
+    .insight-item {
+        display: flex;
+        align-items: center;
+        border-left: 3px solid #4f39fa;
+        padding-left: 10px;
+        background: rgba(79, 57, 250, 0.1);
+        border-radius: 0 6px 6px 0;
+        padding: 8px 12px;
+    }
+    
+    .insight-icon {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+    
+    .insight-text {
+        font-size: 14px;
+    }
+
+    /* Animation for STELLA's insights */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .insight-item {
+        animation: fadeIn 0.5s ease-out;
+        animation-fill-mode: both;
+    }
+    
+    .insight-item:nth-child(1) {
+        animation-delay: 0.3s;
+    }
+    
+    .insight-item:nth-child(2) {
+        animation-delay: 0.6s;
+    }
+    
+    .insight-item:nth-child(3) {
+        animation-delay: 0.9s;
+    }
+
         /* Overlay for better text readability */
         .video-overlay {
             position: fixed;
@@ -593,7 +794,39 @@
                 <div class="step" data-step="3"></div>
                 <div class="step" data-step="4"></div>
             </div>
-            
+            <!-- STELLA AI Presence Section -->
+<div class="stella-assistant-panel">
+    <div class="stella-header">
+        <div class="stella-avatar">
+            <img src="/images/stella-icon.png" alt="STELLA" class="stella-avatar-img">
+        </div>
+        <div class="stella-title">
+            <h3>STELLA</h3>
+            <p>Space Training Enhancement through Learning & Leadership Adaptation</p>
+        </div>
+    </div>
+    <div class="stella-content">
+        <div class="stella-message" id="stella-message">
+            <p>Welcome to SharedStars Academy! I'm STELLA, your space training assistant.</p>
+            <p>As you complete your application, I'll analyze your responses to create your initial <span class="highlight">Space Cognitive Profile</span>. This will help me personalize your training experience when you're accepted.</p>
+            <p>Please provide detailed information in each section to help me understand your unique learning patterns and space mission readiness.</p>
+        </div>
+        <div class="stella-insights" id="stella-insights">
+            <div class="insight-item">
+                <div class="insight-icon">🧠</div>
+                <div class="insight-text">Your application helps initialize the Space Cognitive Load Balancer™</div>
+            </div>
+            <div class="insight-item">
+                <div class="insight-icon">🚀</div>
+                <div class="insight-text">I'll create a personalized training path based on your cognitive profile</div>
+            </div>
+            <div class="insight-item">
+                <div class="insight-icon">📊</div>
+                <div class="insight-text">Each response helps me understand your learning patterns better</div>
+            </div>
+        </div>
+    </div>
+</div>
             <form id="application-form" style="width: 100%;" enctype="multipart/form-data" method="POST" action="/api/applications/submit">
                 <div class="step-content">
                     <!-- Step 1: Personal Information -->
@@ -769,8 +1002,6 @@
             </form>
         </div>
     </div>
-    
-   <!-- Success Modal (Hidden by default) -->
 <!-- Success Modal (Hidden by default) -->
 <div id="success-modal" class="modal hidden">
     <div class="modal-content">
@@ -782,12 +1013,47 @@
         
         <h2 style="color: #10b981; margin-bottom: 15px;">Application Received!</h2>
         
-        <p style="color: #d1d5db; margin-bottom: 20px;">Thank you for applying to SharedStars Academy. Your application has been successfully submitted and STELLA AI will review it shortly.</p>
+        <!-- STELLA AI Analysis Section -->
+        <div class="stella-success-analysis">
+            <div class="stella-success-header">
+                <div class="stella-avatar-small">
+                    <img src="/images/stella-icon.png" alt="STELLA" class="stella-avatar-img">
+                </div>
+                <h3>STELLA's Initial Analysis</h3>
+            </div>
+            <div class="stella-success-content" id="stella-profile-results">
+                <p class="stella-greeting">Thank you for your application! I've created your initial cognitive profile.</p>
+                <div class="cognitive-profile-summary">
+                    <div class="profile-metric">
+                        <div class="metric-label">Learning Potential</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" style="width: 78%"></div>
+                        </div>
+                        <div class="metric-value">78%</div>
+                    </div>
+                    <div class="profile-metric">
+                        <div class="metric-label">Adaptation Ability</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" style="width: 85%"></div>
+                        </div>
+                        <div class="metric-value">85%</div>
+                    </div>
+                    <div class="profile-metric">
+                        <div class="metric-label">Space Readiness</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" style="width: 62%"></div>
+                        </div>
+                        <div class="metric-value">62%</div>
+                    </div>
+                </div>
+                <p class="stella-insight">Your profile indicates strengths in <span class="highlight-text">visual learning</span> and <span class="highlight-text">problem-solving</span>. When accepted, we'll refine this profile with comprehensive assessments.</p>
+            </div>
+        </div>
         
         <p style="color: #9ca3af; margin-bottom: 15px;">What's next:</p>
         <ul style="color: #9ca3af; margin-bottom: 25px; text-align: left; padding-left: 20px;">
             <li>You'll receive a confirmation email within 24 hours</li>
-            <li>STELLA AI will analyze your profile for mission compatibility</li>
+            <li>I'll continue analyzing your profile for mission compatibility</li>
             <li>Our team will reach out with next steps within 5 business days</li>
         </ul>
         
@@ -799,9 +1065,126 @@
     </div>
 </div>
 <script src="/js/languageManager.js" defer></script>
-
 <script src="/js/frontend.js"></script>
 <script>
+    // Add STELLA interaction based on form steps
+nextButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        const currentStep = parseInt(this.getAttribute('data-step'));
+        updateSTELLAResponse(currentStep + 1);
+    });
+});
+
+prevButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        const currentStep = parseInt(this.getAttribute('data-step'));
+        updateSTELLAResponse(currentStep - 1);
+    });
+});
+
+// Function to update STELLA's content based on the current step
+function updateSTELLAResponse(stepNumber) {
+    const stellaMessage = document.getElementById('stella-message');
+    const stellaInsights = document.getElementById('stella-insights');
+    
+    if (!stellaMessage || !stellaInsights) return;
+    
+    // Clear previous insights
+    stellaInsights.innerHTML = '';
+    
+    // Update STELLA's message based on current step
+    switch(stepNumber) {
+        case 1:
+            stellaMessage.innerHTML = `
+                <p>Welcome to SharedStars Academy! I'm STELLA, your space training assistant.</p>
+                <p>As you complete your application, I'll analyze your responses to create your initial <span class="highlight">Space Cognitive Profile</span>. This will help me personalize your training experience when you're accepted.</p>
+                <p>Let's start with your personal information.</p>
+            `;
+            
+            // Add insights for step 1
+            addInsight('🧠', 'Your application helps initialize the Space Cognitive Load Balancer™');
+            addInsight('🚀', 'I\'ll create a personalized training path based on your cognitive profile');
+            addInsight('📊', 'Each response helps me understand your learning patterns better');
+            break;
+            
+        case 2:
+            stellaMessage.innerHTML = `
+                <p>Great! Now, let's talk about your educational background.</p>
+                <p>Your education history gives me insight into your <span class="highlight">learning patterns</span> and foundational knowledge. This helps calibrate your Space Cognitive Load Balancer™ profile.</p>
+            `;
+            
+            // Add insights for step 2
+            addInsight('🎓', 'Your educational background helps determine your baseline cognitive capacity');
+            addInsight('🧩', 'Different fields of study indicate various cognitive strengths');
+            addInsight('📚', 'This information helps optimize your initial training difficulty');
+            break;
+            
+        case 3:
+            stellaMessage.innerHTML = `
+                <p>Excellent progress! Now I'd like to know about your skills and experience.</p>
+                <p>Your skill selection helps me map your <span class="highlight">cognitive fingerprint</span> - a key component of the Space Cognitive Load Balancer™ that determines how you process and retain information.</p>
+            `;
+            
+            // Add insights for step 3
+            addInsight('🔍', 'Your skill profile reveals cognitive processing preferences');
+            addInsight('⚖️', 'I\'ll balance your training load based on skill distribution');
+            addInsight('🧪', 'Experience details help determine your procedural learning capacity');
+            break;
+            
+        case 4:
+            stellaMessage.innerHTML = `
+                <p>Final step! Now I need to understand your motivation and mission preferences.</p>
+                <p>Your responses here will help me determine your <span class="highlight">stress response factor</span> and optimal learning periods - crucial elements of your cognitive profile.</p>
+                <p>This completes the data needed for your initial cognitive assessment.</p>
+            `;
+            
+            // Add insights for step 4
+            addInsight('🔋', 'Motivation indicators help calculate your recovery rate');
+            addInsight('🛰️', 'Mission preferences reveal multi-tasking and cognitive adaptation abilities');
+            addInsight('✨', 'Upon acceptance, we\'ll conduct detailed assessments to refine your profile');
+            break;
+    }
+    
+    // Animate the header to draw attention
+    const stellaHeader = document.querySelector('.stella-header');
+    if (stellaHeader) {
+        stellaHeader.style.animation = 'pulse 1s';
+        setTimeout(() => {
+            stellaHeader.style.animation = '';
+        }, 1000);
+    }
+}
+
+// Helper function to add insights with animation
+function addInsight(icon, text) {
+    const stellaInsights = document.getElementById('stella-insights');
+    if (!stellaInsights) return;
+    
+    const insightElement = document.createElement('div');
+    insightElement.className = 'insight-item';
+    insightElement.innerHTML = `
+        <div class="insight-icon">${icon}</div>
+        <div class="insight-text">${text}</div>
+    `;
+    
+    stellaInsights.appendChild(insightElement);
+}
+
+// Initialize STELLA on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Add pulse animation
+    const styleSheet = document.styleSheets[0];
+    styleSheet.insertRule(`
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    `, styleSheet.cssRules.length);
+    
+    // Initialize STELLA's content
+    updateSTELLAResponse(1);
+});
   // Complete form handling script - replaces all previous scripts
 document.addEventListener('DOMContentLoaded', function() {
     const applicationForm = document.getElementById('application-form');
@@ -993,6 +1376,53 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 
+                // Update STELLA's analysis in the success modal
+                if (result.stellaInsight) {
+                    const stellaProfileResults = document.getElementById('stella-profile-results');
+                    if (stellaProfileResults) {
+                        // Update greeting
+                        const greeting = stellaProfileResults.querySelector('.stella-greeting');
+                        if (greeting) {
+                            greeting.textContent = result.stellaInsight.greeting || "Thank you for your application!";
+                        }
+                        
+                        // Update metrics if available
+                        if (result.cognitiveProfile) {
+                            const metrics = stellaProfileResults.querySelectorAll('.profile-metric');
+                            
+                            // Learning Potential (based on baselineCapacity)
+                            if (metrics[0] && result.cognitiveProfile.baselineCapacity) {
+                                const percentage = Math.round(result.cognitiveProfile.baselineCapacity * 100);
+                                metrics[0].querySelector('.metric-fill').style.width = `${percentage}%`;
+                                metrics[0].querySelector('.metric-value').textContent = `${percentage}%`;
+                            }
+                            
+                            // Adaptation Ability (based on average of fingerprint values)
+                            if (metrics[1] && result.cognitiveProfile.cognitiveFingerprint) {
+                                const values = Object.values(result.cognitiveProfile.cognitiveFingerprint);
+                                const average = values.reduce((sum, val) => sum + val, 0) / values.length;
+                                const percentage = Math.round(average * 100);
+                                metrics[1].querySelector('.metric-fill').style.width = `${percentage}%`;
+                                metrics[1].querySelector('.metric-value').textContent = `${percentage}%`;
+                            }
+                            
+                            // Space Readiness (fixed for now, would be calculated in production)
+                            if (metrics[2]) {
+                                // In a real implementation, this would be calculated from the profile
+                                const percentage = 62; // Fixed for demo
+                                metrics[2].querySelector('.metric-fill').style.width = `${percentage}%`;
+                                metrics[2].querySelector('.metric-value').textContent = `${percentage}%`;
+                            }
+                        }
+                        
+                        // Update insight message
+                        const insightElement = stellaProfileResults.querySelector('.stella-insight');
+                        if (insightElement && result.stellaInsight.initialAssessment) {
+                            insightElement.innerHTML = result.stellaInsight.initialAssessment;
+                        }
+                    }
+                }
+                
                 // Hide processing message
                 if (formSuccessMessage) {
                     formSuccessMessage.style.display = 'none';
@@ -1076,6 +1506,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-        </script>
+</script>
 </body>
 </html>

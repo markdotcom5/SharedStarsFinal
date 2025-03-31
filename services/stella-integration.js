@@ -9,7 +9,6 @@ class STELLAIntegration extends EventEmitter {
         if (typeof aiHandler.initialize !== "function") {
             throw new Error("❌ Critical Failure: AI Handler missing initialize method!");
         }
-
         this.aiHandler = aiHandler;
         this.timelineManager = new SpaceTimelineManager();
         this.trainingModules = new Map();

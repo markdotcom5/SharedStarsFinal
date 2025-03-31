@@ -2071,53 +2071,10 @@ body {
     font-size: 14px;
     color: #9ca3af;
 }
-
-/* Founder image - adjusted to not be too large */
-.founder-image-container {
-    position: relative;
-    /* Push the image up a bit */
-    margin-top: -40px;
-}
-
-.founder-image {
-    width: 100%;
-    max-height: 500px; /* Control the maximum height */
-    object-fit: cover; /* Keeps aspect ratio while filling container */
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive */
-@media (max-width: 992px) {
+    
     .story-content {
-        grid-template-columns: 1fr;
-        gap: 40px;
+        flex-direction: column;
     }
-    
-    .founder-image-container {
-        margin-top: 0; /* Reset negative margin on smaller screens */
-    }
-    
-    .founder-image {
-        max-width: 400px;
-        margin: 0 auto;
-        max-height: none; /* Allow natural height on mobile */
-    }
-    
-    .story-title {
-        font-size: 42px;
-    }
-}
-
-@media (max-width: 768px) {
-    .story-title {
-        font-size: 36px;
-    }
-    
-    .story-callout, .story-callout-bold {
-        font-size: 20px;
-    }
-}
 /* Board of Advisors Section with Space Background */
 .advisors-section {
     position: relative;
@@ -2126,7 +2083,33 @@ body {
     background-color: #0c1017; /* Dark blue base */
     overflow: hidden;
 }
+/* CSS to reduce the founder image by 50% */
+.founder-image-container {
+    max-width: 220px; /* Reduced size - adjust as needed */
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    margin: 0 auto; /* Center if in mobile view */
+}
 
+.founder-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+/* Responsive adjustment for smaller screens */
+@media (max-width: 768px) {
+    .founder-image-container {
+        max-width: 180px;
+        margin: 30px auto;
+    }
+    
+    .story-content {
+        flex-direction: column;
+    }
+}
 /* Create stars effect */
 .advisors-section::before {
     content: '';

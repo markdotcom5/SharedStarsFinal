@@ -108,8 +108,12 @@ async function loadUserProfile() {
 async function loadAssessmentStatus() {
   try {
     const userId = getUserId();
-    const response = await fetch(`/api/assessment/status/${userId}`);
-    
+    if (response.success && response.guidance && response.guidance.message) {
+      message = response.guidance.message;
+    } else {
+      message = "Sorry, I'm having trouble providing a detailed answer right now. Can you try again?";
+    }
+        
     if (!response.ok) {
       throw new Error('Failed to load assessment status');
     }
@@ -679,181 +683,299 @@ function showEmptyMissionsState() {
     </div>
   `;
 }
-
 /**
- * Setup STELLA AI integration
+ * Send message to STELLA AI
  */
-function setupSTELLAIntegration() {
-  // Get STELLA elements
+function sendMessageToSTELLA() {
   const stellaInput = document.getElementById('stella-question');
-  const stellaSendButton = document.getElementById('send-to-stella');
   const stellaConversation = document.querySelector('.stella-conversation');
+  const question = stellaInput.value.trim();
   
-  if (!stellaInput || !stellaSendButton) return;
+  if (!question) return;
   
-  // Connect to STELLA API
-  fetch('/api/stella/connect', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      userId: getUserId()
-    })
+  // Clear input
+  stellaInput.value = '';
+  
+  // Display user message
+  displayMessage('user', question);
+  
+  // Show typing indicator
+  displayTypingIndicator();
+  
+  // Get session ID from localStorage
+  const sessionId = localStorage.getItem('stella_session_id') || `session_${Date.now()}`;
+  
+  // Get conversation history
+  const conversationHistory = JSON.parse(localStorage.getItem('stella_conversation_history') || '[]');
+  
+  // Call STELLA API
+  fetch('/api/stella/guidance', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          userId: getUserId(),
+          question: question,
+          context: {
+              currentPage: 'mission-control',
+              moduleContext: getCurrentModule()
+          },
+          sessionId: sessionId,
+          conversationHistory: conversationHistory
+      })
   })
   .then(response => response.json())
   .then(data => {
-    if (data.success) {
-      console.log('Connected to STELLA AI');
+      // Remove typing indicator
+      removeTypingIndicator();
       
-      // Store session ID
-      localStorage.setItem('stella_session_id', data.sessionId);
-      
-      // Setup event handlers
-      stellaSendButton.addEventListener('click', sendMessageToSTELLA);
-      stellaInput.addEventListener('keydown', event => {
-        if (event.key === 'Enter') {
-          sendMessageToSTELLA();
-        }
-      });
-    } else {
-      console.error('Failed to connect to STELLA AI');
-    }
+      if (data.success) {
+          // Display STELLA response
+          displayMessage('stella', data.guidance.message);
+          
+          // Store feedback token for later use
+          if (data.feedbackToken) {
+              stellaConversation.lastElementChild.dataset.feedbackToken = data.feedbackToken;
+          }
+          
+          // Update conversation history
+          conversationHistory.push({
+              role: 'user',
+              content: question
+          });
+          conversationHistory.push({
+              role: 'assistant',
+              content: data.guidance.message
+          });
+          
+          // Limit history to last 10 messages
+          while (conversationHistory.length > 10) {
+              conversationHistory.shift();
+          }
+          
+          localStorage.setItem('stella_conversation_history', JSON.stringify(conversationHistory));
+          
+          // Display action items if any
+          if (data.guidance.actionItems && data.guidance.actionItems.length > 0) {
+              displayActionItems(data.guidance.actionItems);
+          }
+          
+          // Update countdown if provided
+          if (data.countdown && data.countdown.timelineImpact) {
+              updateCountdown(data.countdown);
+          }
+          
+          // Show recommendations if available
+          if (data.adaptiveLearning && data.adaptiveLearning.recommendedNextSteps) {
+              showRecommendations(data.adaptiveLearning.recommendedNextSteps);
+          }
+      } else {
+          displayMessage('system', "I'm having trouble processing your request. Please try again.");
+      }
   })
   .catch(error => {
-    console.error('Error connecting to STELLA:', error);
+      console.error('Error sending message to STELLA:', error);
+      removeTypingIndicator();
+      displayMessage('system', "Connection to mission control interrupted. Please try again.");
+  });
+}
+
+/**
+* Display message in conversation
+*/
+function displayMessage(sender, message) {
+  const stellaConversation = document.querySelector('.stella-conversation');
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message', sender);
+  
+  const content = document.createElement('div');
+  content.classList.add('message-content');
+  content.innerHTML = message;
+  
+  messageElement.appendChild(content);
+  
+  // Add feedback buttons for STELLA messages
+  if (sender === 'stella') {
+      const feedbackElement = document.createElement('div');
+      feedbackElement.classList.add('message-feedback');
+      feedbackElement.innerHTML = `
+          <button class="feedback-helpful" title="Helpful"><i class="fas fa-thumbs-up"></i></button>
+          <button class="feedback-unhelpful" title="Not Helpful"><i class="fas fa-thumbs-down"></i></button>
+      `;
+      messageElement.appendChild(feedbackElement);
+      
+      // Add event listeners for feedback
+      setTimeout(() => {
+          const helpfulBtn = messageElement.querySelector('.feedback-helpful');
+          const unhelpfulBtn = messageElement.querySelector('.feedback-unhelpful');
+          
+          helpfulBtn.addEventListener('click', () => provideFeedback(messageElement, true));
+          unhelpfulBtn.addEventListener('click', () => provideFeedback(messageElement, false));
+      }, 100);
+  }
+  
+  stellaConversation.appendChild(messageElement);
+  
+  // Scroll to bottom
+  stellaConversation.scrollTop = stellaConversation.scrollHeight;
+}
+
+/**
+* Display typing indicator
+*/
+function displayTypingIndicator() {
+  const stellaConversation = document.querySelector('.stella-conversation');
+  const typingIndicator = document.createElement('div');
+  typingIndicator.classList.add('message', 'stella', 'typing-indicator');
+  typingIndicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  
+  stellaConversation.appendChild(typingIndicator);
+  stellaConversation.scrollTop = stellaConversation.scrollHeight;
+}
+
+/**
+* Remove typing indicator
+*/
+function removeTypingIndicator() {
+  const typingIndicator = document.querySelector('.typing-indicator');
+  if (typingIndicator) {
+      typingIndicator.remove();
+  }
+}
+
+/**
+* Display action items
+*/
+function displayActionItems(actionItems) {
+  const stellaConversation = document.querySelector('.stella-conversation');
+  const lastMessage = stellaConversation.lastElementChild;
+  
+  const actionsElement = document.createElement('div');
+  actionsElement.classList.add('action-items');
+  
+  let actionsHTML = '<h4>Recommended Actions:</h4><ul>';
+  actionItems.forEach(item => {
+      actionsHTML += `<li>${item}</li>`;
+  });
+  actionsHTML += '</ul>';
+  
+  actionsElement.innerHTML = actionsHTML;
+  lastMessage.appendChild(actionsElement);
+}
+
+/**
+* Provide feedback on STELLA response
+*/
+function provideFeedback(messageElement, helpful) {
+  const feedbackToken = messageElement.dataset.feedbackToken;
+  if (!feedbackToken) {
+      console.warn('No feedback token available for this message');
+      return;
+  }
+  
+  // Disable feedback buttons
+  const feedbackButtons = messageElement.querySelectorAll('.message-feedback button');
+  feedbackButtons.forEach(btn => btn.disabled = true);
+  
+  // Show feedback submitted message
+  const feedbackElement = messageElement.querySelector('.message-feedback');
+  feedbackElement.innerHTML = '<span class="feedback-submitted">Feedback submitted</span>';
+  
+  // Send feedback to API
+  fetch('/api/stella/feedback', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          feedbackToken: feedbackToken,
+          helpful: helpful,
+          rating: helpful ? 4 : 2
+      })
+  })
+  .then(response => response.json())
+  .then(data => {
+      console.log('Feedback submitted:', data);
+  })
+  .catch(error => {
+      console.error('Error submitting feedback:', error);
+  });
+}
+
+/**
+* Update countdown display
+*/
+function updateCountdown(countdownData) {
+  const countdownElement = document.getElementById('mission-countdown');
+  if (!countdownElement) return;
+  
+  if (countdownData.timelineImpact && countdownData.timelineImpact.timelineChange) {
+      // Show impact notification
+      const notification = document.createElement('div');
+      notification.classList.add('countdown-impact');
+      notification.innerHTML = `
+          <div class="impact-message">
+              <i class="fas fa-clock"></i>
+              <span>${countdownData.timelineImpact.impactDescription}</span>
+              <span class="impact-value">-${countdownData.timelineImpact.timelineChange} days</span>
+          </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Remove after 5 seconds
+      setTimeout(() => {
+          notification.classList.add('fade-out');
+          setTimeout(() => notification.remove(), 500);
+      }, 5000);
+  }
+  
+  // Update countdown display if it exists
+  if (countdownData.daysRemaining) {
+      countdownElement.textContent = countdownData.daysRemaining.toFixed(1);
+  }
+}
+
+/**
+* Show recommended next steps
+*/
+function showRecommendations(nextSteps) {
+  const recommendationsContainer = document.getElementById('recommendations-container');
+  if (!recommendationsContainer) return;
+  
+  recommendationsContainer.innerHTML = '';
+  
+  nextSteps.forEach(step => {
+      const stepElement = document.createElement('div');
+      stepElement.classList.add('recommendation');
+      stepElement.innerHTML = `
+          <div class="recommendation-title">${step.title}</div>
+          <div class="recommendation-description">${step.description}</div>
+          <a href="${step.url}" class="recommendation-action">Start Now</a>
+      `;
+      
+      recommendationsContainer.appendChild(stepElement);
   });
   
-  /**
-   * Send message to STELLA AI
-   */
-  async function sendMessageToSTELLA() {
-    const question = stellaInput.value.trim();
-    if (!question) return;
-    
-    // Clear input
-    stellaInput.value = '';
-    
-    // Show user message
-    if (stellaConversation) {
-      // Make sure conversation is visible
-      stellaConversation.classList.remove('hidden');
-      
-      // Add user message
-      stellaConversation.innerHTML += `
-        <div class="mb-2 text-right">
-          <div class="inline-block bg-blue-600 ml-auto px-3 py-2 rounded-lg max-w-xs">
-            ${question}
-          </div>
-        </div>
-      `;
-      
-      // Add loading indicator
-      stellaConversation.innerHTML += `
-        <div class="mb-2" id="stella-loading">
-          <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg">
-            <div class="flex space-x-2">
-              <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce"></div>
-              <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-75"></div>
-              <div class="bg-blue-400 w-2 h-2 rounded-full animate-bounce delay-150"></div>
-            </div>
-          </div>
-        </div>
-      `;
-      
-      // Scroll to bottom
-      stellaConversation.scrollTop = stellaConversation.scrollHeight;
-    }
-    
-    try {
-      // Get session ID
-      const sessionId = localStorage.getItem('stella_session_id');
-      
-      // Send to STELLA API
-      const response = await fetch('/api/stella/guidance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: getUserId(),
-          question: question,
-          sessionId: sessionId
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to get response from STELLA');
-      }
-      
-      const data = await response.json();
-      
-      // Remove loading indicator
-      const loadingIndicator = document.getElementById('stella-loading');
-      if (loadingIndicator) {
-        loadingIndicator.remove();
-      }
-      
-      // Show STELLA's response
-      if (data.success && data.guidance) {
-        let responseHTML = `
-          <div class="mb-4">
-            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-              <p>${data.guidance.message}</p>
-        `;
-        
-        // Add action items if available
-        if (data.guidance.actionItems && data.guidance.actionItems.length > 0) {
-          responseHTML += `<ul class="mt-2 space-y-1">`;
-          data.guidance.actionItems.forEach(item => {
-            responseHTML += `<li class="text-blue-300">• ${item}</li>`;
-          });
-          responseHTML += `</ul>`;
-        }
-        
-        // Close containers
-        responseHTML += `
-            </div>
-          </div>
-        `;
-        
-        stellaConversation.innerHTML += responseHTML;
-      } else {
-        // Fallback response
-        stellaConversation.innerHTML += `
-          <div class="mb-4">
-            <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-              <p>I'm having trouble processing your request right now. Please try again.</p>
-            </div>
-          </div>
-        `;
-      }
-      
-      // Scroll to bottom
-      stellaConversation.scrollTop = stellaConversation.scrollHeight;
-      
-    } catch (error) {
-      console.error('Error sending message to STELLA:', error);
-      
-      // Remove loading indicator
-      const loadingIndicator = document.getElementById('stella-loading');
-      if (loadingIndicator) {
-        loadingIndicator.remove();
-      }
-      
-      // Show error message
-      stellaConversation.innerHTML += `
-        <div class="mb-4">
-          <div class="inline-block bg-gray-700 px-3 py-2 rounded-lg max-w-xs">
-            <p>I'm having trouble connecting to my knowledge base right now. Please try again in a moment.</p>
-          </div>
-        </div>
-      `;
-      
-      // Scroll to bottom
-      stellaConversation.scrollTop = stellaConversation.scrollHeight;
-    }
-  }
+  // Show recommendations panel
+  recommendationsContainer.parentElement.classList.add('show');
+}
+
+/**
+* Get current user ID
+*/
+function getUserId() {
+  // Replace with your actual user ID retrieval logic
+  return localStorage.getItem('userId') || 'test-user';
+}
+
+/**
+* Get current module context
+*/
+function getCurrentModule() {
+  // Replace with your actual module context retrieval logic
+  return document.body.dataset.currentModule || 'mission-control';
 }
 
 /**

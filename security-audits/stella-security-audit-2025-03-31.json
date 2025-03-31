@@ -1,0 +1,109 @@
+{
+  "timestamp": "2025-03-31T14:11:03.671Z",
+  "summary": {
+    "totalIssuesFound": 10,
+    "criticalIssues": 0,
+    "moderateIssues": 7,
+    "minorIssues": 3,
+    "remediatedItems": 0
+  },
+  "knowledgeBaseIssues": [
+    {
+      "itemId": "67ea7ffb588b7ac1384e3a5d",
+      "title": "Unknown",
+      "issues": [
+        "Potential PII exposure: Date of physical assessment"
+      ],
+      "severity": 1,
+      "remediated": false
+    },
+    {
+      "itemId": "67ea847bfa56eb3205c85e38",
+      "title": "Unknown",
+      "issues": [
+        "Security vulnerabilities or sensitive data exposure",
+        "Code exposure"
+      ],
+      "severity": 2,
+      "remediated": false
+    },
+    {
+      "itemId": "67ea847cfa56eb3205c85e3a",
+      "title": "Unknown",
+      "issues": [
+        "Personal identifiable information (PII): Email address exposure",
+        "Potential security vulnerability: Email address could be targeted for spam or phishing"
+      ],
+      "severity": 2,
+      "remediated": false
+    },
+    {
+      "itemId": "67ea958a5b9ca6bd71e6845f",
+      "title": "Unknown",
+      "issues": [
+        "Personal identifiable information (PII)"
+      ],
+      "severity": 1,
+      "remediated": false
+    },
+    {
+      "itemId": "67ea9d2837edd2de276aa56b",
+      "title": "Unknown",
+      "issues": [
+        "Security vulnerabilities or sensitive data exposure"
+      ],
+      "severity": 2,
+      "remediated": false
+    },
+    {
+      "itemId": "67ea9d2837edd2de276aa56d",
+      "title": "Unknown",
+      "issues": [
+        "Potential exposure of an email address",
+        "Instruction for obtaining permission which may be irrelevant to the content"
+      ],
+      "severity": 1,
+      "remediated": false
+    },
+    {
+      "itemId": "67eaa0184f7a146cf7a45074",
+      "title": "Unknown",
+      "issues": [
+        "Personal identifiable information (PII)"
+      ],
+      "severity": 2,
+      "remediated": false
+    },
+    {
+      "itemId": "67eaa17dfb0ab2eaf795aee7",
+      "title": "Unknown",
+      "issues": [
+        "Potential exposure of sensitive health information"
+      ],
+      "severity": 2,
+      "remediated": false
+    },
+    {
+      "itemId": "67eaa1bec3e325bfda51d167",
+      "title": "Unknown",
+      "issues": [
+        "Security vulnerabilities or sensitive data exposure: The content includes JavaScript code which is improperly displayed, potentially revealing internal logic or functionality.",
+        "Potential exposure of sensitive URLs or directory paths: The presence of relative URLs or directory paths such as '.. /.. /n6465652/n6465653/index_10538073' can indicate the structure of a web application, which might be sensitive information."
+      ],
+      "severity": 2,
+      "remediated": false
+    },
+    {
+      "itemId": "67eaa1bec3e325bfda51d169",
+      "title": "Unknown",
+      "issues": [
+        "Personal identifiable information (PII)",
+        "Security vulnerabilities or sensitive data exposure"
+      ],
+      "severity": 2,
+      "remediated": false
+    }
+  ],
+  "interactionIssues": [],
+  "personalityIssues": []
+}

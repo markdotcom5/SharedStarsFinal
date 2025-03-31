@@ -250,28 +250,95 @@
 <!-- STELLA & Training Progress Section -->
 <section class="py-16 bg-gradient-to-b from-gray-900 to-black">
   <div class="container mx-auto px-4">
+    <!-- NEW: Mission Control Panel wrapper for STELLA and new features -->
+    <div class="mission-control-panel mb-8">
+      <h2 class="text-2xl font-bold text-white mb-6">STELLA Mission Control</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- STELLA Chat Column (2/3 width on medium+ screens) -->
+        <div class="md:col-span-2">
+          <!-- Original STELLA AI Assistant -->
+          <div class="briefing-card p-6 rounded-lg border border-blue-800/30 backdrop-blur-sm">
+            <div class="flex items-center mb-6">
+              <h2 class="text-2xl font-bold">STELLA AI Assistant</h2>
+            </div>
+            
+            <div id="stella-message" class="stella-bubble mb-6">
+              <p>Welcome to your Training Hub! I'm STELLA, your AI training companion.</p>
+              <p class="text-sm text-blue-300 mt-4">Ask me about training modules or personalized advice.</p>
+            </div>
+            
+            <div class="flex">
+              <input id="stella-question" type="text" placeholder="Ask STELLA a question..." class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 flex-grow mr-2">
+              <button id="send-to-stella" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg">Ask</button>
+            </div>
+            
+            <!-- Conversation container -->
+            <div class="stella-conversation mt-4 max-h-60 overflow-y-auto px-1">
+              <div id="stellaResponse"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- NEW: Enhanced Features Column (1/3 width) -->
+        <div class="flex flex-col space-y-6">
+          <!-- NEW: Presidential Space Briefing Component -->
+          <div id="stella-briefing" class="bg-gray-800 p-4 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-lg font-semibold text-blue-400">Presidential Space Briefing</h3>
+              <span id="briefing-date" class="text-xs text-gray-400">March 29, 2025</span>
+            </div>
+            <div id="briefing-alert" class="bg-green-900 text-green-300 px-2 py-1 rounded text-xs mb-2">ALERT LEVEL: GREEN</div>
+            <div id="briefing-content" class="text-white text-sm">
+              <p class="mb-2"><strong>Summary:</strong> All systems nominal. Today's focus is on EVA preparation training.</p>
+              <div class="mt-3">
+                <p class="text-blue-400 font-semibold">Training Focus</p>
+                <p class="text-white text-sm">Focus on completing the Core & Balance module today.</p>
+              </div>
+            </div>
+            <button id="refresh-briefing" class="mt-3 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-xs">Refresh Briefing</button>
+          </div>
+          
+          <!-- NEW: Mission Countdown Component -->
+          <div id="stella-countdown" class="bg-gray-800 p-4 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-lg font-semibold text-blue-400">Mission Countdown</h3>
+              <span class="text-xs text-gray-400">Accelerate with activity</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="countdown-display">
+                <span id="countdown-days" class="text-2xl font-bold text-white">7</span>
+                <span class="text-xs text-gray-400">days</span>
+                <span id="countdown-hours" class="text-2xl font-bold text-white ml-2">12</span>
+                <span class="text-xs text-gray-400">hrs</span>
+                <span id="countdown-minutes" class="text-2xl font-bold text-white ml-2">30</span>
+                <span class="text-xs text-gray-400">min</span>
+              </div>
+              <button id="start-countdown" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm">Start</button>
+            </div>
+            <div class="h-1 bg-gray-700 mt-3 rounded">
+              <div id="countdown-progress" class="h-1 bg-blue-500 rounded" style="width: 65%"></div>
+            </div>
+          </div>
+          
+          <!-- NEW: STELLA Personality Panel Component -->
+          <div class="stella-personality-panel bg-gray-800 p-4 rounded-lg">
+            <h3 class="text-lg font-semibold text-blue-400 mb-2">STELLA Personality</h3>
+            <div class="flex flex-wrap gap-2">
+              <button class="personality-preset px-3 py-1 bg-blue-600 rounded text-white text-sm" data-traits='{"honesty":0.9,"humor":0.3,"formality":0.8,"detail":0.9,"encouragement":0.5}'>Professional</button>
+              <button class="personality-preset px-3 py-1 bg-green-600 rounded text-white text-sm" data-traits='{"honesty":0.6,"humor":0.7,"formality":0.4,"detail":0.6,"encouragement":0.9}'>Encouraging</button>
+              <button class="personality-preset px-3 py-1 bg-purple-600 rounded text-white text-sm" data-traits='{"honesty":0.8,"humor":0.5,"formality":0.7,"detail":1.0,"encouragement":0.6}'>Technical</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="grid md:grid-cols-2 gap-8">
-<!-- STELLA AI Assistant section -->
-<div class="briefing-card p-6 rounded-lg border border-blue-800/30 backdrop-blur-sm">
-  <div class="flex items-center mb-6">
-    <h2 class="text-2xl font-bold">STELLA AI Assistant</h2>
+      <!-- This part continues with the original content -->
+      <!-- Your existing content for the rest of the training hub goes here -->
+    </div>
   </div>
-  
-  <div id="stella-message" class="stella-bubble mb-6">
-    <p>Welcome to your Training Hub! I'm STELLA, your AI training companion.</p>
-    <p class="text-sm text-blue-300 mt-4">Ask me about training modules or personalized advice.</p>
-  </div>
-  
-  <div class="flex">
-    <input id="stella-question" type="text" placeholder="Ask STELLA a question..." class="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 flex-grow mr-2">
-    <button id="send-to-stella" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg">Ask</button>
-  </div>
-  
-  <!-- Conversation container -->
-  <div class="stella-conversation mt-4 max-h-60 overflow-y-auto px-1">
-    <div id="stellaResponse"></div> <!-- ✅ Add this explicitly here -->
-  </div>
-</div>
+</section>
 
   <!-- How Training Works Section -->
   <section class="py-16 bg-gradient-to-b from-black to-gray-900">
@@ -315,442 +382,572 @@
             <p class="text-gray-400">Engage in hands-on training with real-time AI coaching to simulate space mission tasks.</p>
           </div>
         </div>
-        
-        <!-- Step 5 -->
-        <div class="flex">
-          <div class="step-number">5</div>
-          <div>
-            <h3 class="text-xl font-semibold mb-1">Track your leaderboard status, earn certifications, and progress to space readiness.</h3>
-            <p class="text-gray-400">Monitor leaderboard ranking, earn certifications, and advance toward space readiness.</p>
-          </div>
+      </div>
+      
+      <!-- Step 5 -->
+      <div class="flex">
+        <div class="step-number">5</div>
+        <div>
+          <h3 class="text-xl font-semibold mb-1">Track your leaderboard status, earn certifications, and progress to space readiness.</h3>
+          <p class="text-gray-400">Monitor leaderboard ranking, earn certifications, and advance toward space readiness.</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Available Training Modules -->
-  <section class="py-16 bg-gradient-to-b from-gray-900 to-black">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-2">Available Training Modules</h2>
-      <p class="text-center text-gray-400 max-w-3xl mx-auto mb-12">Complete all modules to maximize your space readiness</p>
-      
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        <!-- Physical Training Card -->
-        <div class="module-card overflow-hidden">
-          <div class="relative">
-            <img src="/images/modules/physical-training.jpg" alt="Physical Training" class="w-full h-48 object-cover">
-            <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-semibold px-2 py-1 m-2 rounded">MOST POPULAR</div>
-            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
-          </div>
-          
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="text-xl font-semibold">Physical Training</h3>
-              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">4 Missions</span>
-            </div>
-            
-            <p class="text-gray-400 mb-4">Master strength, endurance, balance and flexibility essential for zero-gravity environments.</p>
-            
-            <!-- For Physical Training module -->
-            <div class="mb-4">
-             <div class="progress-bar" data-module-id="physical">
-                 <div class="progress-fill" style="width: 0%"></div>
-               </div>
-                <div class="flex justify-between text-xs mt-1">
-               <span class="module-completion">0% Complete</span>
-                 <span class="module-certifications">0 Certifications</span>
-               </div>
-              </div>
-            
-            <!-- Around line 459-460, find the Begin Training or Continue Training button -->
-              <a href="/physicalTraining.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
-                     Continue Training
-                  </a>
-          </div>
+<!-- Available Training Modules -->
+<section class="py-16 bg-gradient-to-b from-gray-900 to-black">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-2">Available Training Modules</h2>
+    <p class="text-center text-gray-400 max-w-3xl mx-auto mb-12">Complete all modules to maximize your space readiness</p>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <!-- Physical Training Card -->
+      <div class="module-card overflow-hidden">
+        <div class="relative">
+          <img src="/images/modules/physical-training.jpg" alt="Physical Training" class="w-full h-48 object-cover">
+          <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-semibold px-2 py-1 m-2 rounded">MOST POPULAR</div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
         </div>
         
-        <!-- Mental Fitness Card -->
-        <div class="module-card overflow-hidden">
-          <div class="relative">
-            <img src="/images/modules/mental-fitness.jpg" alt="Mental Fitness" class="w-full h-48 object-cover">
-            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-xl font-semibold">Physical Training</h3>
+            <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">4 Missions</span>
           </div>
           
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="text-xl font-semibold">Mental Fitness</h3>
-              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">5 Missions</span>
-            </div>
-            
-            <p class="text-gray-400 mb-4">Develop cognitive resilience and stress management techniques for space adaptation.</p>
-            
-            <div class="mb-4">
-              <div class="progress-bar" data-module-id="mental">
-                <div class="progress-fill" style="width: 0%"></div>
-              </div>
+          <p class="text-gray-400 mb-4">Master strength, endurance, balance and flexibility essential for zero-gravity environments.</p>
+          
+          <!-- For Physical Training module -->
+          <div class="mb-4">
+           <div class="progress-bar" data-module-id="physical">
+               <div class="progress-fill" style="width: 0%"></div>
+             </div>
               <div class="flex justify-between text-xs mt-1">
-                <span class="module-completion">0% Complete</span>
-                <span class="module-certifications">0 Certifications</span>
-              </div>
+             <span class="module-completion">0% Complete</span>
+               <span class="module-certifications">0 Certifications</span>
+             </div>
             </div>
-            
-            <!-- Around line 491-492, find the Begin Training or Continue Training button -->
+          
+          <!-- Around line 459-460, find the Begin Training or Continue Training button -->
+            <a href="/physicalTraining.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
+                   Continue Training
+                </a>
+        </div>
+      </div>
+      
+      <!-- Mental Fitness Card -->
+      <div class="module-card overflow-hidden">
+        <div class="relative">
+          <img src="/images/modules/mental-fitness.jpg" alt="Mental Fitness" class="w-full h-48 object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-xl font-semibold">Mental Fitness</h3>
+            <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">5 Missions</span>
+          </div>
+          
+          <p class="text-gray-400 mb-4">Develop cognitive resilience and stress management techniques for space adaptation.</p>
+          
+          <div class="mb-4">
+            <div class="progress-bar" data-module-id="mental">
+              <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs mt-1">
+              <span class="module-completion">0% Complete</span>
+              <span class="module-certifications">0 Certifications</span>
+            </div>
+          </div>
+          
+          <!-- Around line 491-492, find the Begin Training or Continue Training button -->
 <a href="/training-modules/mental/index.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
-  Continue Training
+Continue Training
 </a>
 <!-- Add this button right next to your "Ask" button in the STELLA section -->
 <button 
-  id="test-stella-api" 
-  class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium transition-colors ml-2">
-  Test API
+id="test-stella-api" 
+class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium transition-colors ml-2">
+Test API
 </button>
-          </div>
+        </div>
+      </div>
+      
+      <!-- Leadership Card -->
+      <div class="module-card overflow-hidden">
+        <div class="relative">
+          <img src="/images/modules/leadership.jpg" alt="Leadership" class="w-full h-48 object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
         </div>
         
-        <!-- Leadership Card -->
-        <div class="module-card overflow-hidden">
-          <div class="relative">
-            <img src="/images/modules/leadership.jpg" alt="Leadership" class="w-full h-48 object-cover">
-            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-xl font-semibold">Leadership Training</h3>
+            <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">4 Missions</span>
           </div>
           
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="text-xl font-semibold">Leadership Training</h3>
-              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">4 Missions</span>
+          <p class="text-gray-400 mb-4">Master crisis management, team coordination, and deep space communication.</p>
+          
+          <div class="mb-4">
+            <div class="progress-bar" data-module-id="leadership">
+              <div class="progress-fill" style="width: 0%"></div>
             </div>
-            
-            <p class="text-gray-400 mb-4">Master crisis management, team coordination, and deep space communication.</p>
-            
-            <div class="mb-4">
-              <div class="progress-bar" data-module-id="leadership">
-                <div class="progress-fill" style="width: 0%"></div>
-              </div>
-              <div class="flex justify-between text-xs mt-1">
-                <span class="module-completion">0% Complete</span>
-                <span class="module-certifications">0 Certifications</span>
-              </div>
+            <div class="flex justify-between text-xs mt-1">
+              <span class="module-completion">0% Complete</span>
+              <span class="module-certifications">0 Certifications</span>
             </div>
-            
-            <!-- Around line 522-523, find the Begin Training or Continue Training button -->
+          </div>
+          
+          <!-- Around line 522-523, find the Begin Training or Continue Training button -->
 <a href="/training-modules/leadership.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
-  Continue Training
+Continue Training
 </a>
-          </div>
+        </div>
+      </div>
+      
+      <!-- Technical Skills Card -->
+      <div class="module-card overflow-hidden">
+        <div class="relative">
+          <img src="/images/modules/technical-skills.jpg" alt="Technical Skills" class="w-full h-48 object-cover">
+          <div class="absolute top-0 right-0 bg-purple-600 text-white text-xs font-semibold px-2 py-1 m-2 rounded">PREMIUM</div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
         </div>
         
-        <!-- Technical Skills Card -->
-        <div class="module-card overflow-hidden">
-          <div class="relative">
-            <img src="/images/modules/technical-skills.jpg" alt="Technical Skills" class="w-full h-48 object-cover">
-            <div class="absolute top-0 right-0 bg-purple-600 text-white text-xs font-semibold px-2 py-1 m-2 rounded">PREMIUM</div>
-            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-xl font-semibold">Technical Training</h3>
+            <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">6 Missions</span>
           </div>
           
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="text-xl font-semibold">Technical Training</h3>
-              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">6 Missions</span>
+          <p class="text-gray-400 mb-4">Master spacecraft systems, emergency procedures, and technical operations.</p>
+          
+          <div class="mb-4">
+            <div class="progress-bar" data-module-id="technical">
+              <div class="progress-fill" style="width: 0%"></div>
             </div>
-            
-            <p class="text-gray-400 mb-4">Master spacecraft systems, emergency procedures, and technical operations.</p>
-            
-            <div class="mb-4">
-              <div class="progress-bar" data-module-id="technical">
-                <div class="progress-fill" style="width: 0%"></div>
-              </div>
-              <div class="flex justify-between text-xs mt-1">
-                <span class="module-completion">0% Complete</span>
-                <span class="module-certifications">0 Certifications</span>
-              </div>
+            <div class="flex justify-between text-xs mt-1">
+              <span class="module-completion">0% Complete</span>
+              <span class="module-certifications">0 Certifications</span>
             </div>
-            
-            <!-- Around line 554-555, find the Begin Training or Continue Training button -->
+          </div>
+          
+          <!-- Around line 554-555, find the Begin Training or Continue Training button -->
 <a href="/training-modules/technical/index.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
-  Continue Training
+Continue Training
 </a>
-          </div>
+        </div>
+      </div>
+      
+      <!-- EVA Training Card -->
+      <div class="module-card overflow-hidden">
+        <div class="relative">
+          <img src="/images/modules/eva-training.jpg" alt="EVA Training" class="w-full h-48 object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
         </div>
         
-        <!-- EVA Training Card -->
-        <div class="module-card overflow-hidden">
-          <div class="relative">
-            <img src="/images/modules/eva-training.jpg" alt="EVA Training" class="w-full h-48 object-cover">
-            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-xl font-semibold">EVA Training</h3>
+            <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">3 Missions</span>
           </div>
           
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="text-xl font-semibold">EVA Training</h3>
-              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">3 Missions</span>
+          <p class="text-gray-400 mb-4">Learn extravehicular activity procedures and safety protocols for spacewalks.</p>
+          
+          <div class="mb-4">
+            <div class="progress-bar" data-module-id="eva">
+              <div class="progress-fill" style="width: 0%"></div>
             </div>
-            
-            <p class="text-gray-400 mb-4">Learn extravehicular activity procedures and safety protocols for spacewalks.</p>
-            
-            <div class="mb-4">
-              <div class="progress-bar" data-module-id="eva">
-                <div class="progress-fill" style="width: 0%"></div>
-              </div>
-              <div class="flex justify-between text-xs mt-1">
-                <span class="module-completion">0% Complete</span>
-                <span class="module-certifications">0 Certifications</span>
-              </div>
+            <div class="flex justify-between text-xs mt-1">
+              <span class="module-completion">0% Complete</span>
+              <span class="module-certifications">0 Certifications</span>
             </div>
-            
-            <!-- Around line 585-586, find the Begin Training or Continue Training button -->
+          </div>
+          
+          <!-- Around line 585-586, find the Begin Training or Continue Training button -->
 <a href="/training-modules/eva/index.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
-  Start Training
+Start Training
 </a>
-          </div>
         </div>
-        <button id="test-stella-api" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium transition-colors">
-          Test API Connection
-        </button>
-        <!-- Assessment Card -->
-        <div class="module-card overflow-hidden">
-          <div class="relative">
-            <img src="/images/modules/assessment.jpg" alt="Assessment Skills" class="w-full h-48 object-cover">
-            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+      </div>
+      <button id="test-stella-api" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium transition-colors">
+        Test API Connection
+      </button>
+      <!-- Assessment Card -->
+      <div class="module-card overflow-hidden">
+        <div class="relative">
+          <img src="/images/modules/assessment.jpg" alt="Assessment Skills" class="w-full h-48 object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent h-16"></div>
+        </div>
+        
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-xl font-semibold">Assessment</h3>
+            <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">Required</span>
           </div>
           
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="text-xl font-semibold">Assessment</h3>
-              <span class="bg-blue-900 bg-opacity-50 text-blue-300 text-xs px-2 py-1 rounded">Required</span>
-            </div>
-            
-            <p class="text-gray-400 mb-4">Complete your initial assessment to create your personalized training path.</p>
-            
-            <div class="mb-4">
-              <div class="bg-indigo-900 bg-opacity-30 rounded-lg p-3 border border-indigo-500 border-opacity-20 text-sm">
-                <div class="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span class="text-indigo-300">Required before starting any training modules</span>
-                </div>
+          <p class="text-gray-400 mb-4">Complete your initial assessment to create your personalized training path.</p>
+          
+          <div class="mb-4">
+            <div class="bg-indigo-900 bg-opacity-30 rounded-lg p-3 border border-indigo-500 border-opacity-20 text-sm">
+              <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-indigo-300">Required before starting any training modules</span>
               </div>
             </div>
-            
-            <!-- Around line 616-617, find the Begin Assessment button -->
-<a href="/physicalTraining.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
-  Start Assessment
-</a>
           </div>
+          
+          <!-- Around line 616-617, find the Begin Assessment button -->
+<a href="/physicalTraining.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-center text-white py-2 rounded-lg font-medium transition-colors">
+Start Assessment
+</a>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- Your Countdown to Space -->
-  <section class="py-16 bg-gradient-to-b from-black to-gray-900 relative">
-    <div class="stars-overlay"></div>
-    <div class="container mx-auto px-4 relative z-10">
-      <h2 class="text-3xl font-bold text-center mb-2">Your Countdown to Space</h2>
-      <p class="text-center text-gray-400 max-w-3xl mx-auto mb-12">Track your progress toward space readiness</p>
+  </div>
+</section>
+<!-- Add this to your dashboard page or training hub -->
+<div class="stella-countdown-widget" id="stella-countdown-widget">
+<!-- This will be populated by JavaScript -->
+</div>
+<!-- Your Countdown to Space -->
+<section class="py-16 bg-gradient-to-b from-black to-gray-900 relative">
+  <div class="stars-overlay"></div>
+  <div class="container mx-auto px-4 relative z-10">
+    <h2 class="text-3xl font-bold text-center mb-2">Your Countdown to Space</h2>
+    <p class="text-center text-gray-400 max-w-3xl mx-auto mb-12">Track your progress toward space readiness</p>
+    
+    <!-- Global Space Travel Timeline -->
+    <div class="max-w-4xl mx-auto mb-12 bg-gray-800 bg-opacity-30 rounded-xl p-6 border border-blue-500 border-opacity-20">
+      <h3 class="text-xl font-semibold text-center mb-2">Mass Space Travel Timeline</h3>
+      <p class="text-center text-gray-400 mb-6">Estimated time until commercial space travel becomes widely accessible</p>
       
-      <!-- Global Space Travel Timeline -->
-      <div class="max-w-4xl mx-auto mb-12 bg-gray-800 bg-opacity-30 rounded-xl p-6 border border-blue-500 border-opacity-20">
-        <h3 class="text-xl font-semibold text-center mb-2">Mass Space Travel Timeline</h3>
-        <p class="text-center text-gray-400 mb-6">Estimated time until commercial space travel becomes widely accessible</p>
-        
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
-          <div class="countdown-box">
-            <div class="countdown-value">13</div>
-            <div class="countdown-label">Years</div>
-          </div>
-          <div class="countdown-box">
-            <div class="countdown-value">00</div>
-            <div class="countdown-label">Months</div>
-          </div>
-          <div class="countdown-box">
-            <div class="countdown-value">00</div>
-            <div class="countdown-label">Days</div>
-          </div>
-          <div class="countdown-box">
-            <div class="countdown-value">00</div>
-            <div class="countdown-label">Hours</div>
-          </div>
-          <div class="countdown-box">
-            <div class="countdown-value">00</div>
-            <div class="countdown-label">Minutes</div>
-          </div>
-          <div class="countdown-box">
-            <div class="countdown-value">00</div>
-            <div class="countdown-label">Seconds</div>
-          </div>
+      <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+        <div class="countdown-box">
+          <div class="countdown-value">13</div>
+          <div class="countdown-label">Years</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-value">00</div>
+          <div class="countdown-label">Months</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-value">00</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-value">00</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-value">00</div>
+          <div class="countdown-label">Minutes</div>
+        </div>
+        <div class="countdown-box">
+          <div class="countdown-value">00</div>
+          <div class="countdown-label">Seconds</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Your Personal Timeline -->
+    <div class="max-w-4xl mx-auto bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-xl p-6 border border-blue-500 border-opacity-20 relative">
+      <div class="absolute top-0 right-0 m-4 bg-green-500 bg-opacity-20 border border-green-500 border-opacity-30 text-green-400 text-xs font-semibold rounded-full px-3 py-1 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <span>5 YEARS SAVED</span>
+      </div>
+      
+      <h3 class="text-xl font-semibold text-center mb-2">Your Personal Space Timeline</h3>
+      <p class="text-center text-blue-400 mb-6">Based on your training progress and subscription level</p>
+      
+      <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+        <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+          <div class="countdown-value">8</div>
+          <div class="countdown-label">Years</div>
+        </div>
+        <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+          <div class="countdown-value">3</div>
+          <div class="countdown-label">Months</div>
+        </div>
+        <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+          <div class="countdown-value">15</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+          <div class="countdown-value">6</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+          <div class="countdown-value">22</div>
+          <div class="countdown-label">Minutes</div>
+        </div>
+        <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
+          <div class="countdown-value">37</div>
+          <div class="countdown-label">Seconds</div>
         </div>
       </div>
       
-      <!-- Your Personal Timeline -->
-      <div class="max-w-4xl mx-auto bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-xl p-6 border border-blue-500 border-opacity-20 relative">
-        <div class="absolute top-0 right-0 m-4 bg-green-500 bg-opacity-20 border border-green-500 border-opacity-30 text-green-400 text-xs font-semibold rounded-full px-3 py-1 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="flex flex-col sm:flex-row justify-center mt-8 gap-4">
+        <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span>5 YEARS SAVED</span>
-        </div>
-        
-        <h3 class="text-xl font-semibold text-center mb-2">Your Personal Space Timeline</h3>
-        <p class="text-center text-blue-400 mb-6">Based on your training progress and subscription level</p>
-        
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
-          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
-            <div class="countdown-value">8</div>
-            <div class="countdown-label">Years</div>
-          </div>
-          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
-            <div class="countdown-value">3</div>
-            <div class="countdown-label">Months</div>
-          </div>
-          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
-            <div class="countdown-value">15</div>
-            <div class="countdown-label">Days</div>
-          </div>
-          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
-            <div class="countdown-value">6</div>
-            <div class="countdown-label">Hours</div>
-          </div>
-          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
-            <div class="countdown-value">22</div>
-            <div class="countdown-label">Minutes</div>
-          </div>
-          <div class="countdown-box border-blue-500 border-opacity-30 bg-blue-900 bg-opacity-20">
-            <div class="countdown-value">37</div>
-            <div class="countdown-label">Seconds</div>
-          </div>
-        </div>
-        
-        <div class="flex flex-col sm:flex-row justify-center mt-8 gap-4">
-          <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            Accelerate Your Timeline
-          </button>
-          <button class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Timeline Details
-          </button>
-        </div>
+          Accelerate Your Timeline
+        </button>
+        <button class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Timeline Details
+        </button>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Call to Action -->
-  <section class="py-16 bg-gradient-to-b from-gray-900 to-black relative">
-    <div class="stars-overlay"></div>
-    <div class="container mx-auto px-4 relative z-10 text-center">
-      <h2 class="text-3xl font-bold mb-4">Ready to Begin Your Space Journey?</h2>
-      <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-8">Your path to space begins with a single step. Start your training today and accelerate your journey to the stars.</p>
-      
-      <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="#" id="start-assessment-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-          Start Initial Assessment
-        </a>
-        <a href="/physicalTraining.html" class="bg-gray-700 hover:bg-gray-600 text-white px-8 py-4 rounded-lg font-medium transition-colors text-lg">
-          Resume Training
-        </a>
-      </div>
+<!-- Call to Action -->
+<section class="py-16 bg-gradient-to-b from-gray-900 to-black relative">
+  <div class="stars-overlay"></div>
+  <div class="container mx-auto px-4 relative z-10 text-center">
+    <h2 class="text-3xl font-bold mb-4">Ready to Begin Your Space Journey?</h2>
+    <p class="text-xl text-gray-400 max-w-3xl mx-auto mb-8">Your path to space begins with a single step. Start your training today and accelerate your journey to the stars.</p>
+    
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <a href="#" id="start-assessment-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+        Start Initial Assessment
+      </a>
+      <a href="/physicalTraining.html" class="bg-gray-700 hover:bg-gray-600 text-white px-8 py-4 rounded-lg font-medium transition-colors text-lg">
+        Resume Training
+      </a>
     </div>
-  </section>
+  </div>
+</section>
 <!-- FOOTER -->
 <footer class="relative bg-blue-950/90 text-white py-16 overflow-hidden">
-  <!-- Animated Floating Particles -->
-  <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
-    <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
-    <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
-  </div>
-  <div class="container mx-auto px-4 relative z-10">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
-      <!-- About -->
-      <div>
-        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
-          <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">StelTrek Academy</a></li>
-        </ul>
-      </div>
-      <!-- Community -->
-      <div>
-        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
-          <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
-        </ul>
-      </div>
-      <!-- Resources -->
-      <div>
-        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
-          <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
-        </ul>
-      </div>
-      <!-- Legal -->
-      <div>
-        <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
-        <ul class="space-y-2 mt-4">
-          <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
-          <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
-        </ul>
-      </div>
-    <!-- Bottom section with copyright and social media -->
-    <div class="mt-12 pt-8 border-t border-blue-900/20 flex flex-col md:flex-row justify-between items-center">
-      <p class="text-gray-500">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+<!-- Animated Floating Particles -->
+<div class="absolute inset-0 overflow-hidden">
+  <div class="absolute w-2 h-2 bg-blue-400/20 rounded-full animate-float-slow" style="top: 10%; left: 20%;"></div>
+  <div class="absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float-medium" style="top: 30%; right: 25%;"></div>
+  <div class="absolute w-2 h-2 bg-blue-300/20 rounded-full animate-float-fast" style="bottom: 20%; left: 40%;"></div>
+</div>
+<div class="container mx-auto px-4 relative z-10">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
+    <!-- About -->
+    <div>
+      <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.about.title">About</h3>
+      <ul class="space-y-2 mt-4">
+        <li><a href="/about.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.ourStory">Our Story</a></li>
+        <li><a href="/academy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.about.academy">StelTrek Academy</a></li>
+      </ul>
+    </div>
+    <!-- Community -->
+    <div>
+      <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.community.title">Community</h3>
+      <ul class="space-y-2 mt-4">
+        <li><a href="/events.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.events">Events</a></li>
+        <li><a href="/forums.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.community.forums">Forums</a></li>
+      </ul>
+    </div>
+    <!-- Resources -->
+    <div>
+      <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.resources.title">Resources</h3>
+      <ul class="space-y-2 mt-4">
+        <li><a href="/faq.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.faq">FAQ</a></li>
+        <li><a href="/support.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.resources.support">Support</a></li>
+      </ul>
+    </div>
+    <!-- Legal -->
+    <div>
+      <h3 class="font-bold text-lg text-blue-400" data-i18n="footer.legal.title">Legal</h3>
+      <ul class="space-y-2 mt-4">
+        <li><a href="/terms.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.terms">Terms</a></li>
+        <li><a href="/privacy.html" class="hover:text-blue-400 transition-colors" data-i18n="footer.legal.privacy">Privacy</a></li>
+      </ul>
+    </div>
+  <!-- Bottom section with copyright and social media -->
+  <div class="mt-12 pt-8 border-t border-blue-900/20 flex flex-col md:flex-row justify-between items-center">
+    <p class="text-gray-500">© 2025 Celestial Technologies, LLC. All rights reserved.</p>
+    
+    <!-- All 7 social media links -->
+    <div class="flex space-x-4 mt-4 md:mt-0">
+      <!-- LinkedIn -->
+      <a href="https://www.linkedin.com/company/106241890" class="text-gray-400 hover:text-blue-400" aria-label="LinkedIn">
+        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+      </a>
       
-      <!-- All 7 social media links -->
-      <div class="flex space-x-4 mt-4 md:mt-0">
-        <!-- LinkedIn -->
-        <a href="https://www.linkedin.com/company/106241890" class="text-gray-400 hover:text-blue-400" aria-label="LinkedIn">
-          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-        </a>
-        
-        <!-- Twitter/X -->
-        <a href="https://x.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Twitter">
-          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-        </a>
-        
-        <!-- Facebook -->
-        <a href="https://www.facebook.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Facebook">
-          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
-        </a>
-        
-        <!-- Instagram -->
-        <a href="https://www.instagram.com/sharedstarsacademy/" class="text-gray-400 hover:text-blue-400" aria-label="Instagram">
-          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        </a>
-        
-        <!-- Telegram -->
-        <a href="https://t.me/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Telegram">
-          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12zm3.224 17.871c.188.133.43.166.646.085.215-.082.374-.253.463-.489.089-.236.089-.498 0-.734l-1.74-4.36 4.4-2.507c.466-.265.466-.934 0-1.199l-9.65-5.514c-.465-.266-1.048.055-1.047.577l.072 12.71c0 .522.583.843 1.048.577l3.293-1.879zm-8.791-7.414l2.083 1.188-.759 1.329-1.324-.755v-1.762zm6.442 7.385l-1.621.925c-.961.548-2.132-.106-2.132-1.186l-.04-6.99 3.793 7.251z"/></svg>
-        </a>
-        
-        <!-- TikTok -->
-        <a href="https://www.tiktok.com/@sharedstarsacademy" class="text-gray-400 hover:text-blue-400" aria-label="TikTok">
-          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-        </a>
-        
-        <!-- YouTube -->
-        <a href="https://www.youtube.com/@SharedStarsAcademy" class="text-gray-400 hover:text-blue-400" aria-label="YouTube">
-          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-        </a>
-      </div>
+      <!-- Twitter/X -->
+      <a href="https://x.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Twitter">
+        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+      </a>
+      
+      <!-- Facebook -->
+      <a href="https://www.facebook.com/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Facebook">
+        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+      </a>
+      
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/sharedstarsacademy/" class="text-gray-400 hover:text-blue-400" aria-label="Instagram">
+        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      
+      <!-- Telegram -->
+      <a href="https://t.me/SharedStars" class="text-gray-400 hover:text-blue-400" aria-label="Telegram">
+        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.372-12 12 0 6.627 5.374 12 12 12 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12zm3.224 17.871c.188.133.43.166.646.085.215-.082.374-.253.463-.489.089-.236.089-.498 0-.734l-1.74-4.36 4.4-2.507c.466-.265.466-.934 0-1.199l-9.65-5.514c-.465-.266-1.048.055-1.047.577l.072 12.71c0 .522.583.843 1.048.577l3.293-1.879zm-8.791-7.414l2.083 1.188-.759 1.329-1.324-.755v-1.762zm6.442 7.385l-1.621.925c-.961.548-2.132-.106-2.132-1.186l-.04-6.99 3.793 7.251z"/></svg>
+      </a>
+      
+      <!-- TikTok -->
+      <a href="https://www.tiktok.com/@sharedstarsacademy" class="text-gray-400 hover:text-blue-400" aria-label="TikTok">
+        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+      </a>
+      
+      <!-- YouTube -->
+      <a href="https://www.youtube.com/@SharedStarsAcademy" class="text-gray-400 hover:text-blue-400" aria-label="YouTube">
+        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+      </a>
     </div>
-  </div>
-    </div>
-    <script>
-      // Update current year dynamically if needed
-      document.getElementById("current-year") &&
-        (document.getElementById("current-year").textContent = new Date().getFullYear());
-    </script>
   </div>
 </div>
+  </div>
+  <script>
+    // Update current year dynamically if needed
+    document.getElementById("current-year") &&
+      (document.getElementById("current-year").textContent = new Date().getFullYear());
+  </script>
+</div>
+</div>
 <!-- FOOTER -->
+<script>
+// Simple countdown implementation
+async function initializeCountdown() {
+  const countdownWidget = document.getElementById('stella-countdown-widget');
+  if (!countdownWidget) return;
+  
+  try {
+    // Get current user ID from your auth system
+    const userId = getUserId(); // Replace with your method to get user ID
+    
+    // Check if there's an active countdown
+    const response = await fetch(`/api/stella/countdown/status?userId=${userId}`);
+    const data = await response.json();
+    
+    if (data.success && data.status && data.status.active) {
+      // Set up countdown display
+      updateCountdownDisplay(countdownWidget, data.status);
+      
+      // Start timer
+      startCountdownTimer(countdownWidget, data.status);
+    } else {
+      // No active countdown
+      countdownWidget.innerHTML = `
+        <div class="mission-start-panel">
+          <h3>Ready for your mission?</h3>
+          <p>Start your countdown to become space mission ready!</p>
+          <button id="start-mission-btn" class="btn btn-primary">Begin Countdown</button>
+        </div>
+      `;
+      
+      // Add event listener
+      document.getElementById('start-mission-btn').addEventListener('click', startNewCountdown);
+    }
+  } catch (error) {
+    console.error('Error initializing countdown:', error);
+    countdownWidget.innerHTML = `<div class="error-message">Unable to connect to mission control</div>`;
+  }
+}
 
+// Call this when the page loads
+document.addEventListener('DOMContentLoaded', initializeCountdown);
+</script>
+<!-- Update your existing STELLA chat interface with this script -->
+<script>
+// Enhance STELLA with personality
+async function enhanceStellaChat() {
+  // Get current user ID
+  const userId = getUserId(); // Replace with your method
+  
+  // Connect to STELLA with personality
+  try {
+    const response = await fetch('/api/stella/connect', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      console.log('STELLA connected with personality traits:', data.personality);
+      // Store session ID for future messages
+      window.stellaSessionId = data.sessionId;
+    }
+  } catch (error) {
+    console.error('Error connecting to STELLA:', error);
+  }
+  
+  // Update the existing send message function to use the new guidance endpoint
+  const originalSendFunction = window.sendStellaMessage || function(){};
+  
+  window.sendStellaMessage = async function(message) {
+    try {
+      // First call the original function if it exists
+      if (typeof originalSendFunction === 'function') {
+        originalSendFunction(message);
+      }
+      
+      // Then use the enhanced guidance endpoint
+      const response = await fetch('/api/stella/guidance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          question: message,
+          sessionId: window.stellaSessionId
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Display message in chat (use your existing display function)
+        displayStellaResponse(data.guidance.message);
+        
+        // Record activity to accelerate countdown if active
+        recordActivity('chat_interaction');
+      }
+    } catch (error) {
+      console.error('Error sending message to STELLA:', error);
+      displaySystemMessage('Connection error. Please try again.');
+    }
+  };
+}
+
+// Add simple activity tracking for countdown acceleration
+async function recordActivity(activityType, details = {}) {
+  try {
+    const userId = getUserId(); // Replace with your method
+    
+    await fetch('/api/stella/countdown/activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId,
+        activityType,
+        activityData: details
+      })
+    });
+  } catch (error) {
+    console.error('Error recording activity:', error);
+  }
+}
+
+// Initialize enhanced STELLA when the page loads
+document.addEventListener('DOMContentLoaded', enhanceStellaChat);
+</script>
 <!-- Core STELLA AI -->
 <script src="/js/stella-core.js"></script>
 <script src="/js/stella-integration.js"></script>
@@ -764,153 +961,466 @@
 <script src="/js/progressAssessment.js"></script>
 <script src="/js/progressChart.js"></script>
 <script src="/js/visualizations/ProgressTracker.js"></script>
+<script src="path/to/helpers.js"></script>
+
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Select core elements
-    const stellaInput = document.getElementById('stella-question');
-    const stellaButton = document.getElementById('send-to-stella');
-    const stellaConversation = document.querySelector('.stella-conversation');
+document.addEventListener('DOMContentLoaded', function() {
+// Select core elements
+const stellaInput = document.getElementById('stella-question');
+const stellaButton = document.getElementById('send-to-stella');
+const stellaConversation = document.querySelector('.stella-conversation');
+const userId = 'test-user'; // Replace with actual user ID when available
 
-    // Verify elements exist
-    if (!stellaInput || !stellaButton || !stellaConversation) {
-      console.error('⚠️ STELLA: Missing UI elements.');
-      return;
-    }
+// Initialize STELLA services
+let stellaCountdown = null;
+let userPersonality = {
+  humor: 0.7,
+  honesty: 0.8,
+  formality: 0.4,
+  detail: 0.6,
+  encouragement: 0.7
+};
 
-    // Event listener for send button
-    stellaButton.addEventListener('click', function(event) {
-    console.log("🚩 STELLA Button Clicked!");
-    handleStellaMessage(event);
-});
-
-    // Allow pressing Enter to send message
-    stellaInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') handleStellaMessage();
-    });
-
-    // Quick action buttons functionality
-    document.querySelectorAll('.stella-action-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        stellaInput.value = this.getAttribute('data-question');
-        handleStellaMessage();
-      });
-    });
-
-    // Initial STELLA welcome message
-    if (stellaConversation.children.length === 0) {
-      addStellaMessage("I'm here to assist with your space training. How can I help today?", [
-        "Begin Training Assessment",
-        "Explore Mission Simulations"
-      ]);
-    }
-
-    async function handleStellaMessage() {
-      const question = stellaInput.value.trim();
-      if (!question) return;
-
-      addUserMessage(question);
-      stellaInput.value = '';
-      showLoadingIndicator();
-
-      // Temporarily using default userId
-      const userId = 'temp-user';
-
-      try {
-  const res = await fetch('/api/stella/guidance', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId, question }), 
-  });
-
-  const data = await res.json();
-  removeLoadingIndicator(); // ✅ Add this line
-
-  if (res.ok) {
-    addStellaMessage(data.guidance.message);
-  } else {
-    throw new Error(data.message || "Server Error");
-  }
-  
-} catch (err) {
-  console.error(err);
-  removeLoadingIndicator(); // ✅ Add this line too
-  addStellaMessage("I'm currently experiencing connectivity issues. Please try again or review your dashboard.");
+// Verify elements exist
+if (!stellaInput || !stellaButton || !stellaConversation) {
+  console.error('⚠️ STELLA: Missing UI elements.');
+  return;
 }
 
+// Initialize STELLA services
+initializeStellaServices();
 
+// Event listener for send button
+stellaButton.addEventListener('click', function(event) {
+  console.log("🚩 STELLA Button Clicked!");
+  handleStellaMessage();
+});
 
-      stellaConversation.scrollTop = stellaConversation.scrollHeight;
+// Allow pressing Enter to send message
+stellaInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleStellaMessage();
+});
+
+// Quick action buttons functionality
+document.querySelectorAll('.stella-action-btn').forEach(button => {
+  button.addEventListener('click', function() {
+    stellaInput.value = this.getAttribute('data-question');
+    handleStellaMessage();
+  });
+});
+
+// Initial STELLA welcome message
+if (stellaConversation.children.length === 0) {
+  addStellaMessage("I'm here to assist with your space training. How can I help today?", [
+    "Begin Training Assessment",
+    "Explore Mission Simulations"
+  ]);
+}
+function getUserId() {
+  return localStorage.getItem('userId') || 'test-user';
+}
+
+function addStellaMessage(msg) {
+  const chatArea = document.getElementById('stellaChatBox');
+  if (chatArea) {
+    chatArea.innerHTML += `<div class="stella-message">${msg}</div>`;
+  } else {
+    console.warn("Chat area not found!");
+  }
+}
+
+// Initialize STELLA services
+async function initializeStellaServices() {
+  try {
+    // Check STELLA status
+    const statusRes = await fetch('/api/stella/status');
+    const statusData = await statusRes.json();
+    console.log("STELLA Status:", statusData);
+
+    // Try to get countdown status if available
+    try {
+      const countdownRes = await fetch(`/api/stella/countdown/status?userId=${userId}`);
+      if (countdownRes.ok) {
+        const countdownData = await countdownRes.json();
+        if (countdownData.success && countdownData.status.active) {
+          stellaCountdown = countdownData.status;
+          updateCountdownDisplay();
+        }
+      }
+    } catch (err) {
+      console.log("Countdown service not yet available");
     }
 
-    function addUserMessage(msg) {
-      stellaConversation.innerHTML += `
-        <div class="mb-4 flex justify-end">
-          <div class="bg-blue-600 text-white px-3 py-2 rounded-lg max-w-xs">${msg}</div>
-        </div>`;
+    // Try to get personality settings if available
+    try {
+      const personalityRes = await fetch(`/api/stella/personality/settings?userId=${userId}`);
+      if (personalityRes.ok) {
+        const personalityData = await personalityRes.json();
+        if (personalityData.success) {
+          userPersonality = personalityData.traits;
+        }
+      }
+    } catch (err) {
+      console.log("Personality service not yet available");
+    }
+  } catch (err) {
+    console.error("Error initializing STELLA services:", err);
+  }
+}
+
+// Handle sending messages to STELLA
+async function handleStellaMessage() {
+  const question = stellaInput.value.trim();
+  if (!question) return;
+
+  // Clear input field and add user message to conversation
+  stellaInput.value = '';
+  addUserMessage(question);
+  showLoadingIndicator();
+
+  try {
+    // Record activity for countdown acceleration
+    try {
+      await recordActivity('chat_interaction', { messageLength: question.length });
+    } catch (err) {
+      console.log("Countdown activity recording not available");
     }
 
-    function addStellaMessage(msg, actions = []) {
-      stellaConversation.innerHTML += `
-        <div class="mb-4">
-          <div class="bg-gray-700 text-white px-3 py-2 rounded-lg max-w-xs">
-            <p>${msg}</p>
-            ${actions.length ? 
-              `<ul class="mt-2">${actions.map(item => 
-                `<li class="text-blue-300 cursor-pointer stella-action-btn" data-question="${item}">${item}</li>`).join('')}</ul>` : ''}
-          </div>
-        </div>`;
+    // Send question to STELLA API
+    const res = await fetch('/api/stella/guidance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        userId: userId, 
+        question,
+        personality: userPersonality // Send personality traits if service is available
+      })
+    });
 
-      // Reattach action listeners
-      document.querySelectorAll('.stella-action-btn').forEach(button => {
-        button.addEventListener('click', function() {
-          stellaInput.value = this.getAttribute('data-question');
-          handleStellaMessage();
-        });
+    const data = await res.json();
+    removeLoadingIndicator();
+
+    if (res.ok && data.success) {
+      // Extract action items if provided
+      const actionItems = data.guidance.actionItems || [];
+      addStellaMessage(data.guidance.message, actionItems);
+    } else {
+      throw new Error(data.message || "Server Error");
+    }
+  } catch (err) {
+    console.error(err);
+    removeLoadingIndicator();
+    addStellaMessage("I'm currently experiencing connectivity issues. Please try again or review your dashboard.");
+  }
+
+  stellaConversation.scrollTop = stellaConversation.scrollHeight;
+}
+
+// Record user activity to accelerate countdown
+async function recordActivity(activityType, details = {}) {
+  if (!stellaCountdown) return;
+  
+  try {
+    const res = await fetch('/api/stella/countdown/activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: userId,
+        activityType,
+        activityData: details
+      })
+    });
+    
+    const data = await res.json();
+    
+    if (res.ok && data.success && data.update) {
+      stellaCountdown = data.update;
+      updateCountdownDisplay();
+    }
+  } catch (err) {
+    console.error("Error recording activity:", err);
+  }
+}
+
+// Update countdown display if available
+function updateCountdownDisplay() {
+  const countdownElement = document.getElementById('stella-countdown');
+  if (!countdownElement || !stellaCountdown) return;
+  
+  const days = Math.floor(stellaCountdown.currentTime / 86400);
+  const hours = Math.floor((stellaCountdown.currentTime % 86400) / 3600);
+  const minutes = Math.floor((stellaCountdown.currentTime % 3600) / 60);
+  
+  countdownElement.innerHTML = `
+    <div class="bg-gray-800 p-3 rounded-lg mb-3">
+      <div class="text-sm text-gray-400">Mission Countdown</div>
+      <div class="text-xl font-bold">${days}d ${hours}h ${minutes}m</div>
+      <div class="h-1 bg-gray-700 mt-2 rounded">
+        <div class="h-1 bg-blue-500 rounded" style="width: ${Math.floor((1 - (stellaCountdown.currentTime / stellaCountdown.totalTime)) * 100)}%"></div>
+      </div>
+    </div>
+  `;
+}
+
+function addUserMessage(msg) {
+  stellaConversation.innerHTML += `
+    <div class="mb-4 flex justify-end">
+      <div class="bg-blue-600 text-white px-3 py-2 rounded-lg max-w-xs">${escapeHtml(msg)}</div>
+    </div>`;
+}
+
+function addStellaMessage(msg, actions = []) {
+  stellaConversation.innerHTML += `
+    <div class="mb-4">
+      <div class="bg-gray-700 text-white px-3 py-2 rounded-lg max-w-xs">
+        <p>${formatMessage(msg)}</p>
+        ${actions.length ? 
+          `<ul class="mt-2">${actions.map(item => 
+            `<li class="text-blue-300 cursor-pointer stella-action-btn" data-question="${escapeHtml(item)}">${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+      </div>
+    </div>`;
+
+  // Reattach action listeners
+  document.querySelectorAll('.stella-action-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      stellaInput.value = this.getAttribute('data-question');
+      handleStellaMessage();
+    });
+  });
+}
+
+function showLoadingIndicator() {
+  stellaConversation.innerHTML += `
+    <div id="stella-loading" class="mb-4">
+      <div class="bg-gray-700 text-white px-3 py-2 rounded-lg">
+        <span class="animate-pulse">Thinking...</span>
+      </div>
+    </div>`;
+  
+  stellaConversation.scrollTop = stellaConversation.scrollHeight;
+}
+
+function removeLoadingIndicator() {
+  document.getElementById('stella-loading')?.remove();
+}
+
+// Format message with basic Markdown
+function formatMessage(message) {
+  let formatted = escapeHtml(message);
+  
+  // Bold
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // Italic
+  formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  
+  // Lists
+  formatted = formatted.replace(/^- (.*)/gm, '<li>$1</li>');
+  
+  // Wrap lists in ul tags
+  if (formatted.includes('<li>')) {
+    formatted = formatted.replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>');
+  }
+  
+  // Convert line breaks
+  formatted = formatted.replace(/\n/g, '<br>');
+  
+  return formatted;
+}
+
+// Safely escape HTML
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+});
+
+// NEW: JavaScript for the enhanced features
+document.addEventListener('DOMContentLoaded', function() {
+// Initialize STELLA Personality Panel
+document.querySelectorAll('.personality-preset').forEach(button => {
+  button.addEventListener('click', async () => {
+    const traits = JSON.parse(button.getAttribute('data-traits'));
+    try {
+      // Update personality (this will be a no-op if endpoint doesn't exist yet)
+      await fetch('/api/stella/personality/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: 'test-user', traits })
       });
-    }
-
-    function showLoadingIndicator() {
-      stellaConversation.innerHTML += `
-        <div id="stella-loading" class="mb-4">
-          <div class="bg-gray-700 text-white px-3 py-2 rounded-lg">
-            <span class="animate-pulse">Thinking...</span>
-          </div>
-        </div>`;
-    }
-
-    function removeLoadingIndicator() {
-      document.getElementById('stella-loading')?.remove();
-    }
-
-    function getIntelligentResponse(question) {
-      const lowerQ = question.toLowerCase();
-      const date = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-
-      if (lowerQ.includes("date") || lowerQ.includes("today")) {
-        return { message: `Today's date is ${date}. How else can I assist you?`, actionItems: [] };
-      }
-
-      if (lowerQ.includes("physical")) {
-        return {
-          message: "Physical training is vital for space travel. Shall we start with Core & Balance or Strength & Endurance?",
-          actionItems: ["Start Core & Balance", "Begin Strength & Endurance"]
-        };
-      }
-
-      if (lowerQ.includes("assessment")) {
-        return {
-          message: "Your assessment helps us tailor your training effectively.",
-          actionItems: ["Start Full Assessment", "Take Quick Evaluation"]
-        };
-      }
-
-      return {
-        message: "Let me guide you. Would you prefer to explore physical readiness, mental resilience, or technical skills?",
-        actionItems: ["View Training Modules", "Begin Assessment"]
-      };
+      
+      // Show visual feedback
+      document.querySelectorAll('.personality-preset').forEach(b => 
+        b.classList.remove('ring-2', 'ring-white'));
+      button.classList.add('ring-2', 'ring-white');
+      
+      // Provide feedback in chat
+      addStellaMessage(`My personality has been updated to "${button.textContent}". How can I assist you now?`);
+    } catch (err) {
+      console.log('Personality service not yet available:', err);
     }
   });
-</script>
+});
 
+// Initialize Mission Countdown
+const countdownInterval = {
+  intervalId: null,
+  currentTime: 604800, // 1 week in seconds
+  totalTime: 604800,
+  isActive: false
+};
+
+document.getElementById('start-countdown')?.addEventListener('click', async () => {
+  if (countdownInterval.isActive) return;
+  
+  try {
+    // Try to start countdown with actual API
+    const res = await fetch('/api/stella/countdown/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: 'test-user',
+        mission: 'training-certification',
+        duration: 604800
+      })
+    });
+    
+    // If API exists and works, use its data
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        countdownInterval.currentTime = data.countdown.currentTime;
+        countdownInterval.totalTime = data.countdown.totalTime;
+      }
+    }
+  } catch (err) {
+    console.log('Using mock countdown:', err);
+  }
+  
+  // Start the countdown display
+  countdownInterval.isActive = true;
+  updateCountdownDisplay();
+  
+  countdownInterval.intervalId = setInterval(() => {
+    if (countdownInterval.currentTime > 0) {
+      countdownInterval.currentTime--;
+      updateCountdownDisplay();
+    } else {
+      clearInterval(countdownInterval.intervalId);
+      
+      // Mission complete!
+      addStellaMessage("🎉 Congratulations! Your mission countdown is complete. You are now ready for your certification!");
+      
+      document.getElementById('start-countdown').textContent = 'Restart';
+      countdownInterval.isActive = false;
+    }
+  }, 1000);
+  
+  document.getElementById('start-countdown').textContent = 'Active';
+  addStellaMessage("Mission countdown initiated! Complete training activities to accelerate your countdown.");
+});
+
+function updateCountdownDisplay() {
+  const days = Math.floor(countdownInterval.currentTime / 86400);
+  const hours = Math.floor((countdownInterval.currentTime % 86400) / 3600);
+  const minutes = Math.floor((countdownInterval.currentTime % 3600) / 60);
+  
+  document.getElementById('countdown-days').textContent = days;
+  document.getElementById('countdown-hours').textContent = hours;
+  document.getElementById('countdown-minutes').textContent = minutes;
+  
+  const progressPct = (1 - (countdownInterval.currentTime / countdownInterval.totalTime)) * 100;
+  document.getElementById('countdown-progress').style.width = `${progressPct}%`;
+}
+
+// Initialize Presidential Briefing
+document.getElementById('refresh-briefing')?.addEventListener('click', async () => {
+  try {
+    // Try to fetch an actual briefing
+    const res = await fetch('/api/stella/daily-briefing?userId=test-user');
+    
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        updateBriefingDisplay(data.briefing);
+        return;
+      }
+    }
+    
+    // Fallback to mock briefing
+    const mockBriefing = {
+      date: new Date().toISOString(),
+      alertLevel: ["GREEN", "AMBER", "RED"][Math.floor(Math.random() * 3)],
+      summary: "Latest space operations proceeding as planned. Focus on completing your current training module.",
+      sections: [
+        {
+          title: "Training Priority",
+          content: "Continue your progress on the current module. Your performance is showing improvement."
+        },
+        {
+          title: "Mission Updates",
+          content: "Upcoming launch preparations are proceeding on schedule."
+        }
+      ]
+    };
+    
+    updateBriefingDisplay(mockBriefing);
+    
+  } catch (err) {
+    console.log('Briefing service not available:', err);
+    // Still update UI with mock data on error
+    updateBriefingDisplay({
+      date: new Date().toISOString(),
+      alertLevel: "GREEN",
+      summary: "All systems nominal. Continue with your scheduled training."
+    });
+  }
+});
+
+function updateBriefingDisplay(briefing) {
+  // Update date
+  document.getElementById('briefing-date').textContent = new Date(briefing.date).toLocaleDateString();
+  
+  // Update alert level
+  const alertElement = document.getElementById('briefing-alert');
+  alertElement.textContent = `ALERT LEVEL: ${briefing.alertLevel}`;
+  
+  // Set color based on alert level
+  if (briefing.alertLevel === 'GREEN') {
+    alertElement.className = 'bg-green-900 text-green-300 px-2 py-1 rounded text-xs mb-2';
+  } else if (briefing.alertLevel === 'AMBER') {
+    alertElement.className = 'bg-yellow-900 text-yellow-300 px-2 py-1 rounded text-xs mb-2';
+  } else if (briefing.alertLevel === 'RED') {
+    alertElement.className = 'bg-red-900 text-red-300 px-2 py-1 rounded text-xs mb-2';
+  }
+  
+  // Update summary and sections
+  let contentHTML = `<p class="mb-2"><strong>Summary:</strong> ${briefing.summary}</p>`;
+  
+  if (briefing.sections && briefing.sections.length > 0) {
+    briefing.sections.forEach(section => {
+      contentHTML += `
+        <div class="mt-3">
+          <p class="text-blue-400 font-semibold">${section.title}</p>
+          <p class="text-white text-sm">${section.content}</p>
+        </div>
+      `;
+    });
+  }
+  
+  document.getElementById('briefing-content').innerHTML = contentHTML;
+  
+  // Notify in chat
+  addStellaMessage(`📢 Presidential briefing updated. Alert level is ${briefing.alertLevel}.`);
+}
+
+// Load initial briefing
+document.getElementById('refresh-briefing')?.click();
+});
+</script>
 </body>
 </html>

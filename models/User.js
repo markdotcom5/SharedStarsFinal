@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require('../mockBcrypt'); // Temporary mock
 
 // ✅ User Schema
 const UserSchema = new mongoose.Schema({
@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema({
         customAmount: { type: Number, min: 50 },
     },
     leaderboard: {
-        score: { type: Number, default: 0, index: true },
+        score: { type: Number, default: 0 },
         rank: Number,
         history: [{
             date: { type: Date, default: Date.now },

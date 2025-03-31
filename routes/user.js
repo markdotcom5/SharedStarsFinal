@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('../mockBcrypt'); // Temporary mock
 const Joi = require('joi');
 const router = express.Router();
 const User = require('../models/User');

@@ -1,466 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="SharedStars Academy Training Modules" />
-    <title>SharedStars Academy</title>
-    <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data:; frame-src 'self' https://www.sora.com; child-src 'self' https://www.sora.com;">
-    <script>
-        console.log("Current CSP:", document.querySelector('meta[http-equiv="Content-Security-Policy"]').getAttribute('content'));
-      </script>
-  <!-- Stylesheets -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/main.css" />
-  <link rel="stylesheet" href="/css/ai-assistant.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <style>
-    /* Custom styles to match Figma design */
-    .hero-text {
-      font-size: 3.5rem;
-      line-height: 1.2;
-    }
-    
-    header img {
-      height: 50px; /* Keep the larger size we established */
-      margin-left: 0; /* Remove left margin to push it to far left */
-    }
-    
-    .cosmic-hover {
-      transform: translateY(0);
-      transition: all 0.3s ease;
-    }
+    <meta name="description" content="Train for space with AI-powered modules at SharedStars Academy." />
   
-    .cosmic-hover:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
-    }
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self'; 
+      script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://i.ibb.co;
+      style-src 'self' 'unsafe-inline' data: https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+      font-src 'self' https://fonts.gstatic.com data:;
+      img-src 'self' data: https://www.sora.com https://i.ibb.co;
+      frame-src 'self' https://www.sora.com;
+      child-src 'self' https://www.sora.com;
+      connect-src 'self' https://api.openai.com https://api.sharedstars.com;
+    ">
   
-    header nav {
-      padding-left: 0 !important;
-    }
-  
-    header nav div:first-child {
-      margin-left: 0 !important;
-      padding-left: 0 !important;
-    }
-  
-    header .container {
-      padding: 0 20px; /* Add more horizontal padding */
-    }
+    <!-- Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+    <link href="/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/ai-assistant.css" />
+    <link rel="stylesheet" href="/css/sophon-stella.css">
+    <link rel="stylesheet" href="/css/global.css">
     
-    /* Increase the brightness of the hero background */
-    .hero-section video,
-    .hero-section img {
-      filter: brightness(1.2); /* Increase brightness by 20% */
-    }
-    
-    #hero .cosmic-hover {
-      font-size: 1.1rem;
-      letter-spacing: 0.5px;
-    }
-    
-    /* Reduce the opacity of the overlay */
-    .hero-section .absolute.inset-0.bg-black {
-      opacity: 0.3; /* Reduce from 0.5 to 0.3 */
-    }
-    
-    /* Make Apply Now button stand out more */
-    header a[href="signup.html"] {
-      margin-left: 15px; /* Add space between this and the previous item */
-    }
-    
-    .step-circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-    
-    .module-card {
-      transition: all 0.3s ease;
-      border: 1px solid rgba(59, 130, 246, 0.2);
-    }
-    
-    .module-card:hover {
-      border-color: rgba(59, 130, 246, 0.5);
-      transform: translateY(-2px);
-    }
-  
-    .pulse-dot {
-      position: relative;
-    }
-    
-    .pulse-dot::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      border-radius: 50%;
-      background-color: rgba(59, 130, 246, 0.7);
-      z-index: -1;
-      animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-        opacity: 0.7;
+    <!-- Fixed Styling -->
+    <style>
+      /* Critical fixes for UI elements */
+      body {
+        overflow-x: hidden;
+        width: 100vw;
+        min-height: 100vh;
+        font-family: 'Inter', sans-serif;
       }
-      70% {
-        transform: scale(2);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 0;
-      }
-    }
-  
-    /* Added styles to match Figma design */
-    .badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-  
-    .progress-bar {
-      height: 8px;
-      border-radius: 4px;
-      background-color: rgba(59, 130, 246, 0.2);
-      overflow: hidden;
-    }
-  
-    .progress-fill {
-      height: 100%;
-      background-color: #3B82F6;
-      border-radius: 4px;
-    }
-  
-    .certification-card {
-      background: linear-gradient(135deg, rgba(13, 22, 41, 0.8) 0%, rgba(9, 16, 32, 0.9) 100%);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-  
-    .countdown-item {
-      width: 60px;
-      height: 60px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: rgba(15, 23, 42, 0.8);
-      border-radius: 8px;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-  
-    .tier-card {
-      background: linear-gradient(180deg, rgba(17, 24, 39, 0.7) 0%, rgba(9, 14, 27, 0.9) 100%);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      transition: all 0.3s ease;
-    }
-    
-    .logo {
-      height: 60px; /* adjust as needed for size */
-      width: auto;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-    }
-  
-    .tier-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(59, 130, 246, 0.6);
-      box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.4);
-    }
-  
-    .ai-assistant-bubble {
-      background-color: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 16px;
-      padding: 20px;
-      position: relative;
-    }
-  
-    .ai-assistant-bubble:before {
-      content: '';
-      position: absolute;
-      left: -10px;
-      top: 20px;
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
-      border-right: 10px solid rgba(59, 130, 246, 0.3);
-    }
-    
-    .module-badge {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 10px;
-    }
-  
-    @keyframes pulse-red {
-      0%, 100% {
-        background-color: rgba(220, 38, 38, 0.8);
-      }
-      50% {
-        background-color: rgba(239, 68, 68, 0.8);
-      }
-    }
-  
-    .animate-pulse-red {
-      animation: pulse-red 2s infinite;
-    }
-    
-    /* Enhanced Countdown Styles to Match Figma */
-    .countdown-container {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin: 20px 0;
-      flex-wrap: wrap;
-    }
-    
-    .countdown-box {
-      background-color: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 8px;
-      width: 80px;
-      height: 90px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .countdown-box:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
-    }
-    
-    .countdown-box span:first-child {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: white;
-      line-height: 1;
-    }
-    
-    .countdown-box span:last-child {
-      font-size: 0.875rem;
-      color: #9CA3AF;
-      margin-top: 4px;
-    }
-    
-    .countdown-box .blue-line {
-      width: 100%;
-      height: 2px;
-      background-color: #3B82F6;
-      position: absolute;
-      bottom: 24px;
-    }
-    
-    /* Blue bar countdown */
-    .blue-bar-countdown {
-      background-color: #3B82F6;
-      padding: 1rem 0;
-      width: 100%;
-    }
-    
-    .blue-bar-countdown .countdown-item {
-      width: auto;
-      background: transparent;
-      border: none;
-      color: white;
-    }
-    
-    .blue-bar-countdown .countdown-item span:first-child {
-      font-size: 1.75rem;
-      font-weight: bold;
-    }
-    
-    .blue-bar-countdown .countdown-item span:last-child {
-      font-size: 0.75rem;
-      opacity: 0.8;
-    }
-    
-    /* Final CTA Section Box */
-    .final-cta-box {
-      background-color: rgba(23, 37, 84, 0.7);
-      border-radius: 1.5rem;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .final-cta-box::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: url('/images/stars-bg.jpg');
-      background-size: cover;
-      opacity: 0.4;
-      z-index: -1;
-    }
-    
-    .subscribe-now-btn {
-      background-color: rgba(30, 64, 175, 0.7);
-      color: #93c5fd;
-      border: 1px solid rgba(59, 130, 246, 0.4);
-      border-radius: 9999px;
-      padding: 0.5rem 1.25rem;
-      font-size: 0.875rem;
-      transition: all 0.2s ease;
-    }
-    
-    .subscribe-now-btn:hover {
-      background-color: rgba(37, 99, 235, 0.8);
-      border-color: rgba(59, 130, 246, 0.6);
-    }
-    
-    /* Checkmark list items */
-    .checkmark-list-item {
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 0.75rem;
-    }
-    
-    .checkmark-icon {
-      margin-right: 0.75rem;
-      color: #3B82F6;
-      flex-shrink: 0;
-      margin-top: 0.125rem;
-    }
-    
-    /* Stellatrex building background */
-    .stellatrex-bg {
-      background-image: url('/images/stellatrex-building.jpg');
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    
-    .stellatrex-bg::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.6);
-    }
-    
-    /* Floating animation for particles */
-    @keyframes float-slow {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(-20px) translateX(10px); }
-    }
-    
-    @keyframes float-medium {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(-15px) translateX(-15px); }
-    }
-    
-    @keyframes float-fast {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(-10px) translateX(20px); }
-    }
-    
-    .animate-float-slow {
-      animation: float-slow 8s ease-in-out infinite;
-    }
-    
-    .animate-float-medium {
-      animation: float-medium 6s ease-in-out infinite;
-    }
-    
-    .animate-float-fast {
-      animation: float-fast 4s ease-in-out infinite;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .countdown-box {
-        width: 70px;
-        height: 80px;
-      }
-      
-      .countdown-box span:first-child {
-        font-size: 2rem;
-      }
-      
-      .countdown-box span:last-child {
-        font-size: 0.75rem;
-      }
-      
-      .blue-bar-countdown .countdown-item span:first-child {
-        font-size: 1.5rem;
-      }
-    }
-    
-    @media (max-width: 640px) {
-      .countdown-container {
-        gap: 8px;
-      }
-      
-      .countdown-box {
-        width: 60px;
-        height: 70px;
-      }
-      
-      .countdown-box span:first-child {
-        font-size: 1.75rem;
-      }
-      
-      .countdown-box .blue-line {
-        bottom: 20px;
-      }
-    }
-  </style>
- <title>SharedStars - Train for Space with S.T.E.L.L.A. AI</title>
-    
- <!-- JavaScript Files (Defer & Modules for Performance) -->
- <script src="/js/languageManager.js" defer></script>
- <script src="/js/countdown.js"></script>
- <script type="module" src="/js/HomepageHandler.js"></script>
-</head>
 
-<body class="bg-black text-white min-h-screen font-inter">
-<!-- HEADER with Proper Language Dropdown Implementation -->
-<header class="fixed top-0 w-full bg-black/90 backdrop-blur-lg z-50 shadow-lg">
- <nav class="container mx-auto flex justify-between items-center px-4 py-3">
-   <div class="flex-shrink-0">
-     <img src="./images/SharedStars.svg" alt="SharedStars" class="h-12" style="margin-left: 0;">
-   </div>
-   <ul class="flex gap-6">
-     <li><a href="/" class="text-blue-400 font-bold" data-i18n="nav.home">Home</a></li>
-     <li><a href="/academy2.html" class="hover:text-blue-400" data-i18n="academy">Academy</a></li>
-     <li><a href="/about.html" class="hover:text-blue-400" data-i18n="about">About</a></li>
-     <li><a href="/leaderboard.html" class="hover:text-blue-400" data-i18n="leaderboard">Leaderboard</a></li>
-     <li><a href="/subscribe.html" class="hover:text-blue-400" data-i18n="subscribe">Subscribe</a></li>
-   </ul>
-        <div class="flex gap-3">
-          <a href="/login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all">Login</a>
-          <a href="/signup.html" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-all">Sign Up</a>
-        </div>
+      /* Header fixes */
+      header {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        z-index: 9999 !important;
+        background-color: rgba(0, 0, 0, 0.9) !important;
+        backdrop-filter: blur(10px) !important;
+        display: block !important;
+        visibility: visible !important;
+      }
+
+      /* Navigation fixes */
+      #nav-links {
+        display: flex !important;
+        visibility: visible !important;
+      }
+
+      /* Hero section fixes */
+      #hero {
+        width: 100% !important;
+        min-height: 100vh !important;
+        padding-top: 80px !important;
+        position: relative !important;
+        overflow: hidden !important;
+      }
+
+      /* Button sizing fixes */
+      .cta-button {
+        max-width: 300px !important;
+        width: 80% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+      }
+
+      /* Widget positioning fix */
+      #stella-chat-widget {
+        position: fixed !important;
+        bottom: 20px !important;
+        right: 20px !important;
+        left: auto !important;
+        z-index: 9999 !important;
+        width: auto !important;
+      }
+      
+      /* Remove duplicate stat section */
+      #duplicate-stats {
+        display: none !important;
+      }
+      
+      /* Fix video background */
+      #hero-video {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        z-index: 0 !important;
+      }
+      
+      /* Fix content visibility */
+      .hero-content {
+        position: relative !important;
+        z-index: 10 !important;
+      }
+      
+      /* Sophon styling */
+      .sophon-avatar-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      
+      .sophon-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(255, 100, 0, 0.5);
+      }
+      
+      /* Clear any potential conflicting styles */
+      * {
+        box-sizing: border-box;
+      }
+    </style>
+    
+    
+    <title>SharedStars - Train for Space with S.T.E.L.L.A. AI</title>
+    
+    <!-- JavaScript Files -->
+    <script src="/js/languageManager.js" defer></script>
+    <script src="/js/countdown.js" defer></script>
+    <script type="module" src="/js/HomepageHandler.js"></script>
+  </head>
+  
+<!-- Header with navigation -->
+ <!-- Fixed Header -->
+ <header class="fixed top-0 left-0 w-full bg-black bg-opacity-80 z-50 px-4 py-3">
+    <div class="container mx-auto flex items-center justify-between">
+      <a href="/" class="flex-shrink-0">
+        <img src="/images/SharedStars.svg" alt="SharedStars" class="h-12">
+      </a>
+  
+      <!-- Navigation Links -->
+      <nav id="nav-links" class="flex items-center space-x-6">
+        <a href="/" class="text-blue-400 font-semibold">Home</a>
+        <a href="/mission-control.html" class="text-white hover:text-blue-400 transition-colors">Mission Control</a>
+        <a href="/academy2.html" class="text-white hover:text-blue-400 transition-colors">Academy</a>
+        <a href="/leaderboard.html" class="text-white hover:text-blue-400 transition-colors">Leaderboard</a>
+        <a href="/subscribe.html" class="text-white hover:text-blue-400 transition-colors">Subscribe</a>
+        <a href="/about.html" class="text-white hover:text-blue-400 transition-colors">About</a>
+  
+        <!-- Auth Links -->
+        <a href="/login1.html" id="login-link" class="text-white hover:text-blue-400 transition-colors">Login</a>
+        <a href="/signup.html" id="signup-link" class="text-white bg-red-600 px-4 py-2 rounded-md hover:bg-red-700 transition-colors inline-block">Sign Up</a>
       </nav>
-    </header>
+    </div>
+  </header>
   
   <!-- HERO SECTION -->
   <section id="hero" class="min-h-screen flex items-center justify-center relative">
