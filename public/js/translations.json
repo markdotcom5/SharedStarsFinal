@@ -80,6 +80,7 @@
             }
         },
         "socialProof": {
+            "tag": "Social Proof",
             "title": "Social proof & technology innovation",
             "join": "Join now",
             "videoTitle": "AI Leadership Statement",

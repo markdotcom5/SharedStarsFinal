@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="95" fill="#0F172A" />
+  <circle cx="100" cy="100" r="85" fill="#1E293B" />
+  
+  <!-- Space station or satellite -->
+  <g transform="translate(45, 45)">
+    <!-- Main module -->
+    <rect x="40" y="40" width="30" height="30" rx="3" fill="#475569" stroke="#94A3B8" stroke-width="1" />
+    
+    <!-- Solar panels -->
+    <rect x="10" y="45" width="30" height="20" fill="#0EA5E9" stroke="#0369A1" stroke-width="1" />
+    <line x1="15" y1="45" x2="15" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    <line x1="20" y1="45" x2="20" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    <line x1="25" y1="45" x2="25" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    <line x1="30" y1="45" x2="30" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    <line x1="35" y1="45" x2="35" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    
+    <rect x="70" y="45" width="30" height="20" fill="#0EA5E9" stroke="#0369A1" stroke-width="1" />
+    <line x1="75" y1="45" x2="75" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    <line x1="80" y1="45" x2="80" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    <line x1="85" y1="45" x2="85" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    <line x1="90" y1="45" x2="90" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    <line x1="95" y1="45" x2="95" y2="65" stroke="#0C4A6E" stroke-width="0.5" />
+    
+    <!-- Antenna -->
+    <line x1="55" y1="40" x2="55" y2="25" stroke="#94A3B8" stroke-width="1" />
+    <circle cx="55" cy="20" r="5" fill="none" stroke="#94A3B8" stroke-width="1" />
+    
+    <!-- Docking port -->
+    <rect x="45" y="70" width="20" height="10" fill="#64748B" stroke="#94A3B8" stroke-width="1" />
+    
+    <!-- Details -->
+    <circle cx="45" cy="45" r="2" fill="#F59E0B" />
+    <circle cx="45" cy="65" r="2" fill="#F59E0B" />
+    <circle cx="65" cy="45" r="2" fill="#F59E0B" />
+    <circle cx="65" cy="65" r="2" fill="#F59E0B" />
+  </g>
+  
+  <!-- Astronaut doing EVA repair -->
+  <g transform="translate(65, 95)">
+    <!-- Spacesuit -->
+    <rect x="15" y="30" width="20" height="25" rx="8" fill="#3B82F6" />
+    <!-- Helmet -->
+    <circle cx="25" cy="20" r="10" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2" />
+    <!-- Visor -->
+    <path d="M18 22 C18 15, 32 15, 32 22" fill="#38BDF8" stroke="#0369A1" stroke-width="1" />
+    <!-- Arms -->
+    <rect x="5" y="32" width="10" height="6" rx="3" fill="#3B82F6" />
+    <rect x="35" y="32" width="10" height="6" rx="3" fill="#3B82F6" />
+    
+    <!-- Tool in hand -->
+    <rect x="35" y="38" width="8" height="12" rx="1" fill="#94A3B8" />
+  </g>
+  
+  <!-- Engineering tools -->
+  <g transform="translate(130, 110)">
+    <!-- Wrench -->
+    <path d="M5,5 L15,15 L25,5 L20,0 L10,10 L5,5 Z" fill="#94A3B8" stroke="#64748B" stroke-width="1" />
+    
+    <!-- Digital tablet -->
+    <rect x="0" y="20" width="15" height="20" rx="2" fill="#475569" stroke="#CBD5E1" stroke-width="1" />
+    <rect x="2" y="23" width="11" height="14" rx="1" fill="#0EA5E9" />
+    <circle cx="7.5" cy="38" r="1" fill="#E2E8F0" />
+  </g>
+  
+  <!-- Circuit paths -->
+  <path d="M20,130 C40,130 40,160 60,160 C80,160 80,140 100,140 C120,140 120,160 140,160 C160,160 160,130 180,130" 
+        fill="none" stroke="#22D3EE" stroke-width="0.75" stroke-dasharray="2,1" />
+  
+  <!-- Binary data flowing -->
+  <text x="30" y="125" font-family="monospace" font-size="5" fill="#94A3B8">10110</text>
+  <text x="80" y="145" font-family="monospace" font-size="5" fill="#94A3B8">01001</text>
+  <text x="140" y="125" font-family="monospace" font-size="5" fill="#94A3B8">11000</text>
+  
+  <!-- Stars -->
+  <circle cx="25" cy="25" r="1" fill="white" />
+  <circle cx="40" cy="60" r="1" fill="white" />
+  <circle cx="160" cy="40" r="1" fill="white" />
+  <circle cx="180" cy="170" r="1" fill="white" />
+  <circle cx="70" cy="180" r="1" fill="white" />
+  <circle cx="130" cy="25" r="1" fill="white" />
+  <circle cx="170" cy="100" r="1.5" fill="white" />
+  <circle cx="30" cy="140" r="1.5" fill="white" />
+  
+  <!-- Title text -->
+  <text x="100" y="170" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" font-weight="bold">ENGINEERING SKILLS</text>
+</svg>

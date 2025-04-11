@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Train for space with AI-powered modules at SharedStars Academy." />
+
+    <!-- ✅ Content Security Policy (Enhanced for Security) -->
+    <meta http-equiv="Content-Security-Policy" content="
+          default-src 'self'; 
+          script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+          style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
+          font-src 'self' https://fonts.gstatic.com;
+          img-src 'self' data: https://www.sora.com;
+          frame-src 'self' https://www.sora.com;
+          child-src 'self' https://www.sora.com;
+          connect-src 'self' https://api.openai.com https://api.sharedstars.com;
+        ">
+
+    <!-- ✅ Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+    <link href="/css/tailwind.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="/css/global.css"> -->
+    <link rel="stylesheet" href="/css/ai-assistant.css" />
+
+    <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
+    <!-- <script src="/js/languageSelection.js" defer></script> -->
+    <script src="/js/languageManager.js" defer></script>
+    <script type="module" src="/js/countdown1.js"></script>
+    <script type="module" src="/js/HomepageHandler.js"></script>
+
+</head>
+
+<body class="bg-black">
+    <!-- Header (Navigation & Language Selector) -->
+    <header class="site-header absolute w-full z-50 px-6 md:px-[120px] py-4 bg-transparent">
+        <!-- Flex container -->
+        <div class="flex items-center justify-between">
+            <!-- Logo -->
+            <a href="/" aria-label="SharedStars Homepage" class="group">
+                <img src="/images/SharedStars.png" alt="SharedStars Logo"
+                    class="h-10 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+            </a>
+
+            <!-- Mobile menu toggle -->
+            <button id="menuToggle" class="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <img src="/icons/options.png" alt="Menu" class="w-6 h-6" />
+            </button>
+
+            <!-- Desktop Navigation -->
+            <ul
+                class="hidden md:flex flex-wrap items-center gap-4 text-body-small-medium font-body text-white-700 ml-10">
+                <li class="relative group py-4">
+                    <a href="/" class="px-4 hover:text-white">Home</a>
+                    <div
+                        class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+                    </div>
+                </li>
+                <li class="relative group py-4">
+                    <a href="/" class="px-4 hover:text-white">Academy</a>
+                    <div
+                        class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+                    </div>
+                </li>
+                <li class="relative group py-4">
+                    <a href="/" class="px-4 hover:text-white">About</a>
+                    <div
+                        class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+                    </div>
+                </li>
+                <li class="relative group py-4">
+                    <a href="/" class="px-4 hover:text-white">Leaderboard</a>
+                    <div
+                        class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+                    </div>
+                </li>
+                <li class="relative group py-4">
+                    <a href="/" class="px-4 hover:text-white">Subscribe</a>
+                    <div
+                        class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+                    </div>
+                </li>
+            </ul>
+
+            <!-- Right section (language + button) -->
+            <div class="hidden md:flex items-center gap-4">
+                <!-- Language Selector -->
+                <div class="relative">
+                    <button id="langDropdownBtn"
+                        class="flex items-center gap-2 bg-gray-700 px-3 py-2 text-white rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                        <img src="/images/USflag.png" alt="Selected Language Flag" class="w-4" />
+                        <img src="/icons/chevron-down.png" alt="Dropdown" class="w-4" />
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <ul id="langDropdownMenu"
+                        class="hidden absolute bg-white text-black shadow-lg rounded-lg mt-2 py-2 w-40 z-50">
+                        <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="en"><img
+                                    src="/images/USflag.png" class="w-4 mr-2" /> English</button></li>
+                        <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="zh"><img
+                                    src="/images/ChinaFlag.png" class="w-4 mr-2" /> 中文</button></li>
+                        <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="ko"><img
+                                    src="/images/KoreaFlag.png" class="w-4 mr-2" /> 한국어</button></li>
+                        <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="es"><img
+                                    src="/images/ChinaFlag.png" class="w-4 mr-2" /> Español</button></li>
+                    </ul>
+                </div>
+
+                <!-- Get Started Button -->
+                <button
+                    class="bg-brand-700 text-white text-body-2xsmall-semibold px-5 py-2 rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4)]">
+                    Get Started
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu"
+            class="md:hidden hidden flex-col items-start gap-4 mt-4 text-white text-sm font-medium transition-all duration-300">
+            <ul class="flex flex-col gap-2 w-full">
+                <li><a href="/" class="block px-4 py-2">Home</a></li>
+                <li><a href="/" class="block px-4 py-2">Academy</a></li>
+                <li><a href="/" class="block px-4 py-2">About</a></li>
+                <li><a href="/" class="block px-4 py-2">Leaderboard</a></li>
+                <li><a href="/" class="block px-4 py-2">Subscribe</a></li>
+            </ul>
+
+            <!-- Mobile lang + button -->
+            <div class="flex flex-col gap-4 px-4 mt-4">
+                <button
+                    class="bg-brand-700 text-white text-sm px-5 py-2 rounded-full w-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4)]">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section id="hero"
+        class="relative min-h-screen flex items-start justify-center text-center pt-24 overflow-y-hidden">
+        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+            <source src="/videos/academy10.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <div class="absolute inset-0 w-full h-full bg-black pointer-events-none bg-opacity-75"></div>
+
+        <div class="relative flex flex-col mt-28 items-center justify-start max-w-5xl px-4 z-20">
+            <span
+                class="mb-5 text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                Leaderboard & Mission Milestones
+            </span>
+            <h1 data-i18n="" class="hero-text font-aeonik text-heading1 text-white px-6 lg:px-20 mb-6">SharedStars
+                Galactic
+                <br> Leaderboard
+                <h1>
+                    <p data-i18n="" class="text-body-medium-medium max-w-2xl text-white-800 mb-8 px-6">
+                        The SharedStars Leaderboard is a dynamic ranking system that tracks your AI-assisted training,
+                        certifications, and spaceflight readiness milestones.
+                    </p>
+                </h1>
+        </div>
+    </section>
+
+    <!-- Leaderboard Works -->
+    <section class="mx-auto flex flex-col py-20 bg-black-50 text-white">
+        <div class="flex flex-col justify-center items-center">
+            <span
+                class="mb-5 w-80 text-center text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                Leaderboard & Mission Milestones
+            </span>
+            <h2 class="mb-5 text-heading2 font-white text-center lg:px-96"> Immersive Video Backdrop</h2>
+            <h1>
+                <p data-i18n="" class="text-body-medium-medium max-w-2xl text-white-800 mb-8 text-center">
+                    Dynamic AI-Generated Space Visuals Leaderboard background cycles between three high-energy cinematic
+                    experiences
+                </p>
+            </h1>
+        </div>
+        <div class="mx-auto justify-center items-center flex flex-wrap gap-6 p-6 text-white mt-4">
+            <div class="w-96 flex flex-col gap-4 p-6 rounded-2xl shadow-lg border border-white text-white bg-black bg-no-repeat bg-cover bg-center relative"
+                style="background-image: url('/images/glowblack.png');">
+                <div className="w-12 h-12">
+                    <img src="/images/immersive1.png" alt="leaderboard">
+                </div>
+                <h3 className="text-body-medium font-semibold">Astronaut Training</h3>
+                <p className="text-body-small opacity-80">Real-time AI coaching & mission evaluations.</p>
+            </div>
+            <div class="w-96 flex flex-col gap-4 p-6 rounded-2xl shadow-lg border border-white text-white bg-black bg-no-repeat bg-cover bg-center relative"
+                style="background-image: url('/images/glowblack.png');">
+                <div className="w-12 h-12">
+                    <img src="/images/immersive2.png" alt="leaderboard">
+                </div>
+                <h3 className="text-body-medium font-semibold">Simulated Spaceflight</h3>
+                <p className="text-body-small opacity-80">Spacecraft operations & zero-G drills.</p>
+            </div>
+            <div class="w-96 flex flex-col gap-4 p-6 rounded-2xl shadow-lg border border-white text-white bg-black bg-no-repeat bg-cover bg-center relative"
+                style="background-image: url('/images/glowblack.png');">
+                <div className="w-12 h-12">
+                    <img src="/images/immersive3.png" alt="leaderboard">
+                </div>
+                <h3 className="text-body-medium font-semibold">Launch Prep & Space Readiness </h3>
+                <p className="text-body-small opacity-80">AI-driven mission assignment progress.</p>
+            </div>
+        </div>
+        <div class="mt-6 flex justify-center items-center">
+            <div class="rounded-lg relative" style=" border: 2px solid rgba(210, 103, 219, 0.8)">
+                <div
+                    class="px-6 py-4 rounded-lg text-center [background-image:linear-gradient(to_right,rgba(0,0,0,10),rgba(0,0,0,1),rgba(112,55,117,0.5),rgba(0,0,0,1),rgba(0,0,0,1))]">
+                    <p class="text-white font-semibold">
+                        Your leaderboard rank isn’t
+                        <span class="text-[#D267DB]">just a number it’s a</span>
+                        direct path to your first mission.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Leaderboard Section -->
+    <section class="relative text-center bg-cover bg-center pb-20">
+
+        <div class="relative flex flex-col justify-center items-center"
+            style="background-image: url('/images/backgroundleader.png');">
+            <!-- Card Section -->
+            <div
+                class="absolute top-0 w-72 p-6 rounded-2xl bg-black shadow-lg border border-white flex flex-col text-start space-y-3 z-10">
+                <div class="w-12 h-12 flex items-center justify-center">
+                    <img src="/images/vision.png" alt="Global Rankings">
+                </div>
+                <h3 class="text-heading5 text-white">Our Vision</h3>
+                <p class="text-body-base text-white">We envision a world where space travel is inclusive and attainable
+                    for all,
+                    fostering a global community of pioneers united in the mission to explore beyond Earth.</p>
+            </div>
+
+            <!-- World Image Overlapping -->
+            <div class="relative mt-28 z-20">
+                <img src="/images/world.png" alt="world" class="w-72">
+            </div>
+        </div>
+
+        <div class="">
+            <!-- Title & Description -->
+            <div class="flex flex-col justify-center items-center text-white">
+                <span
+                    class="mb-5 w-48 text-center text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                    Leaderboard Works
+                </span>
+                <h2 class="mb-5 text-heading2 font-white text-center lg:px-96">How the Leaderboard Works</h2>
+                <h1>
+                    <p data-i18n="" class="text-body-medium-medium max-w-2xl text-white-800 mb-8 text-center">
+                        While others talk about space accessibility, we're building it—with the industry's best.
+                    </p>
+                </h1>
+            </div>
+            <!-- Feature Cards -->
+            <div
+                class="relative mt-12 flex flex-wrap justify-center items-center gap-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-0">
+
+                <!-- Feature Card -->
+                <div
+                    class="w-full max-w-xs p-6 rounded-2xl bg-black shadow-lg border border-white flex flex-col items-center text-center space-y-3">
+                    <div class="w-12 h-12">
+                        <img src="/icons/vision1.png" alt="Global Rankings">
+                    </div>
+                    <h3 class="text-body-medium text-white">Global Rankings</h3>
+                    <p class="text-body-small text-white">Compete with the best from around the world.</p>
+                </div>
+
+                <!-- Feature Card -->
+                <div
+                    class="w-full max-w-xs p-6 rounded-2xl bg-black shadow-lg border border-white flex flex-col items-center text-center space-y-3">
+                    <div class="w-12 h-12">
+                        <img src="/icons/vision2.png" alt="Regional Standings">
+                    </div>
+                    <h3 class="text-body-medium text-white">Regional Standings</h3>
+                    <p class="text-body-small text-white">Compare progress with others in your country/region.</p>
+                </div>
+
+                <!-- Feature Card -->
+                <div
+                    class="w-full max-w-xs p-6 rounded-2xl bg-black shadow-lg border border-white flex flex-col items-center text-center space-y-3">
+                    <div class="w-12 h-12">
+                        <img src="/icons/vision3.png" alt="Mission-Based Leaderboard">
+                    </div>
+                    <h3 class="text-body-medium text-white">Mission-Based Leaderboard</h3>
+                    <p class="text-body-small text-white">Specialized rankings based on AI-guided missions.</p>
+                </div>
+
+                <!-- Feature Card -->
+                <div
+                    class="w-full max-w-xs p-6 rounded-2xl bg-black shadow-lg border border-white flex flex-col items-center text-center space-y-3">
+                    <div class="w-12 h-12">
+                        <img src="/icons/vision4.png" alt="Personal Progress Chart">
+                    </div>
+                    <h3 class="text-body-medium text-white">Personal Progress Chart</h3>
+                    <p class="text-body-small text-white">AI tracks user milestones and provides real-time updates.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+    <!-- How to earn -->
+    <section class="bg-black text-white bg-cover bg-center bg-no-repeat w-full mb-20"
+        style="background-image: url('/images/bgearn.png');">
+        <div>
+            <div class="pt-5 flex flex-col justify-center items-center text-white px-4">
+                <span
+                    class="mb-5 w-36 text-center text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                    How to earn
+                </span>
+                <h2 class="mb-5 text-heading2 text-center w-full sm:w-2/3 lg:w-1/3">
+                    How to Earn Leaderboard Points
+                </h2>
+            </div>
+
+
+            <div class="mx-auto justify-center items-center flex flex-wrap gap-6 p-6 text-white mt-4">
+                <div class="w-96 flex flex-col gap-4 p-6 rounded-2xl shadow-lg border border-white text-white bg-blue-950"
+                    style="background-image: url('/images/glowbg.png');">
+                    <div className="w-12 h-12">
+                        <img src="/icons/earn1.png" alt="leaderboard">
+                    </div>
+                    <h3 className="text-body-medium">Al-Assisted Training Sessions</h3>
+                    <p className="text-body-small">Earn points for completing mission simulations, VR training, and
+                        interactive astronaut lessons.</p>
+                </div>
+                <div class="w-96 flex flex-col gap-4 p-6 rounded-2xl shadow-lg border border-white text-white bg-blue-950"
+                    style="background-image: url('/images/glowbg.png');">
+                    <div className="w-12 h-12">
+                        <img src="/icons/earn2.png" alt="leaderboard">
+                    </div>
+                    <h3 className="text-body-medium">Certification Milestones</h3>
+                    <p className="text-body-small">Ranking boosts for earning Shared Stars certifications.</p>
+                </div>
+                <div class="w-96 flex flex-col gap-4 p-6 rounded-2xl shadow-lg border border-white text-white bg-blue-950"
+                    style="background-image: url('/images/glowbg.png');">
+                    <div className="w-12 h-12">
+                        <img src="/icons/earn3.png" alt="leaderboard">
+                    </div>
+                    <h3 className="text-body-medium">Mission Completion Bonuses</h3>
+                    <p className="text-body-small">Extra leaderboard points for high scores in real-time spaceflight
+                        scenarios.</p>
+                </div>
+                <div class="w-96 flex flex-col gap-4 p-6 rounded-2xl shadow-lg border border-white text-white bg-blue-950"
+                    style="background-image: url('/images/glowbg.png');">
+                    <div className="w-12 h-12">
+                        <img src="/icons/earn4.png" alt="leaderboard">
+                    </div>
+                    <h3 className="text-body-medium">Subscription Tier Multipliers</h3>
+                    <p className="text-body-small">Higher-tier users progress faster toward mission selection. </p>
+                </div>
+                <div class="w-96 flex flex-col gap-4 p-6 rounded-2xl shadow-lg border border-white text-white bg-blue-950"
+                    style="background-image: url('/images/glowbg.png');">
+                    <div className="w-12 h-12">
+                        <img src="/icons/earn5.png" alt="leaderboard">
+                    </div>
+                    <h3 className="text-body-medium">Al-Generated Challenges</h3>
+                    <p className="text-body-small">Personalized analytics show real-time space readiness.</p>
+                </div>
+                <div class="w-96 flex flex-col gap-4 p-6 rounded-2xl shadow-lg border border-white text-white bg-blue-950"
+                    style="background-image: url('/images/glowbg.png');">
+                    <div className="w-12 h-12">
+                        <img src="/icons/earn6.png" alt="leaderboard">
+                    </div>
+                    <h3 className="text-body-medium">Community Engagement & Leadership</h3>
+                    <p className="text-body-small">Bonus points for mentorship, knowledge sharing, and forum
+                        participation. </p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-center">
+                <div class="rounded-lg relative" style=" border: 2px solid rgba(210, 103, 219, 0.8)">
+                    <div
+                        class="px-6 py-4 rounded-lg text-center [background-image:linear-gradient(to_right,rgba(0,0,0,10),rgba(0,0,0,1),rgba(112,55,117,0.5),rgba(0,0,0,1),rgba(0,0,0,1))]">
+                        <p class="text-white font-semibold">
+                            Your leaderboard position
+                            <span class="text-[#D267DB]">determines your priority</span>
+                            for spaceflight selection!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Unlock Leaderboard -->
+    <section class="bg-black text-white bg-cover bg-center bg-no-repeat lg:py-20 py-8"
+        style="background-image: url('/images/unlockbackground.png');">
+        <div class="flex flex-col justify-center items-center text-white px-4">
+            <span
+                class="mb-5 w-36 text-center text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+                Unlock Leaderboard
+            </span>
+            <h2 class="text-heading2 text-center w-full sm:w-3/4 lg:w-3/5">
+                Leaderboard Rewards & Spaceflight Access
+            </h2>
+        </div>
+
+        <div class="relative w-full min-h-screen bg-black flex items-center justify-center px-4 mt-10">
+            <!-- Central Image -->
+            <div class="absolute z-10 hidden md:block">
+                <img src="/images/sharedstars-globe.png" alt="SharedStars" class="w-[500px] lg:w-[787px]">
+            </div>
+
+            <!-- Cards Container -->
+            <div class="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 relative z-20">
+                <!-- Left Column -->
+                <div class="flex flex-col space-y-4 items-center md:items-end">
+                    <div class="bg-black border border-white p-4 rounded-lg w-full max-w-sm h-44 text-left"
+                        style="background-image: url('/images/glowbg.png');">
+                        <img src="/icons/Icon1.png" alt="icons">
+                        <h3 class="text-body-medium-semibold text-white mt-4">Ranking high isn’t just about prestige
+                        </h3>
+                        <p class="text-body-small text-white mt-2">it’s about real spaceflight selection.</p>
+                    </div>
+                    <div class="bg-black border border-white p-4 rounded-lg w-full max-w-sm h-44 text-left"
+                        style="background-image: url('/images/glowbg.png');">
+                        <img src="/icons/Icon2.png" alt="icons">
+                        <h3 class="text-body-medium-semibold text-white mt-4">Early Access to Training Modules</h3>
+                        <p class="text-body-small text-white mt-2">Unlock advanced astronaut training before others.</p>
+                    </div>
+                    <div class="bg-black border border-white p-4 rounded-lg w-full max-w-sm h-44 text-left"
+                        style="background-image: url('/images/glowbg.png');">
+                        <img src="/icons/Icon3.png" alt="icons">
+                        <h3 class="text-body-medium-semibold text-white mt-4">Exclusive Spaceflight Opportunities</h3>
+                        <p class="text-body-small text-white mt-2">Top leaderboard performers are prioritized for space
+                            missions.</p>
+                    </div>
+                </div>
+
+                <!-- Spacer for image (hidden on small screens) -->
+                <div class="hidden md:block"></div>
+
+                <!-- Right Column -->
+                <div class="flex flex-col space-y-4 items-center md:items-start">
+                    <div class="bg-black border border-white p-4 rounded-lg w-full max-w-sm h-44 text-left"
+                        style="background-image: url('/images/glowbg.png');">
+                        <img src="/icons/Icon4.png" alt="icons">
+                        <h3 class="text-body-medium-semibold text-white mt-4">Direct Astronaut Mentorship</h3>
+                        <p class="text-body-small text-white mt-2">Earn 1-on-1 coaching sessions with industry veterans
+                            & former NASA astronauts.</p>
+                    </div>
+                    <div class="bg-black border border-white p-4 rounded-lg w-full max-w-sm h-44 text-left"
+                        style="background-image: url('/images/glowbg.png');">
+                        <img src="/icons/Icon5.png" alt="icons">
+                        <h3 class="text-body-medium-semibold text-white mt-4">Elite Certifications & Badges</h3>
+                        <p class="text-body-small text-white mt-2">Display your high-rank status in global rankings.</p>
+                    </div>
+                    <div class="bg-black border border-white p-4 rounded-lg w-full max-w-sm h-44 text-left"
+                        style="background-image: url('/images/glowbg.png');">
+                        <img src="/icons/Icon6.png" alt="icons">
+                        <h3 class="text-body-medium-semibold text-white mt-4">Leaderboards = Space Readiness</h3>
+                        <p class="text-body-small text-white mt-2">Your progress is a direct pathway to mission
+                            selection.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 flex items-center justify-center">
+            <div class="rounded-lg relative" style=" border: 2px solid rgba(210, 103, 219, 0.8)">
+                <div
+                    class="px-6 py-4 rounded-lg text-center [background-image:linear-gradient(to_right,rgba(0,0,0,10),rgba(0,0,0,1),rgba(112,55,117,0.5),rgba(0,0,0,1),rgba(0,0,0,1))]">
+                    <p class="text-white text-body-small-semibold">
+                        <span class="text-[#D267DB]">Rise</span>
+                        to the top.
+                        <span class="text-[#D267DB]">Secure</span>
+                        your mission. The future of space belongs to those who prepare.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-2 my-5 justify-center items-center">
+            <div class="text-body-2xsmall-semibold mt-8 text-center">
+                <a data-i18n=""
+                    class="bg-blue-700 text-white mt-4 px-[76px] py-3 rounded-full hover:bg-blue shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">View
+                    Leaderboard
+                </a>
+            </div>
+            <div class="text-body-2xsmall-semibold mt-8 text-center">
+                <a data-i18n=""
+                    class="bg-black text-white mt-4 px-[76px] py-3 rounded-full hover:bg-blue shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start
+                    Training
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Social Media Section -->
+    <!-- <section class="social-media-section bg-black py-6 text-white text-center">
+        <h2 class="text-2xl font-bold mb-4">Follow Us</h2>
+        <div class="flex justify-center gap-6">
+            <a href="#" id="twitter-link" target="_blank" class="hover:text-blue-400 transition-colors"
+                aria-label="Twitter">🐦 Twitter</a>
+            <a href="#" id="facebook-link" target="_blank" class="hover:text-blue-400 transition-colors"
+                aria-label="Facebook">📘 Facebook</a>
+            <a href="#" id="instagram-link" target="_blank" class="hover:text-blue-400 transition-colors"
+                aria-label="Instagram">📷 Instagram</a>
+            <a href="#" id="linkedin-link" target="_blank" class="hover:text-blue-400 transition-colors"
+                aria-label="LinkedIn">💼 LinkedIn</a>
+            <a href="#" id="telegram-link" target="_blank" class="hover:text-blue-400 transition-colors"
+                aria-label="Telegram">📢 Telegram</a>
+            <a href="#" id="tiktok-link" target="_blank" class="hover:text-blue-400 transition-colors"
+                aria-label="TikTok">🎵
+                TikTok</a>
+            <a href="#" id="youtube-link" target="_blank" class="hover:text-blue-400 transition-colors"
+                aria-label="YouTube">▶️ YouTube</a>
+        </div>
+    </section> -->
+
+
+
+    <!-- Training Module Scripts -->
+    <script type="module">
+        import { initializeTrainingModules } from '/js/modules/training/index.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTrainingModules({
+                modules: ['physical', 'technical', 'simulation'],
+                endpoints: {
+                    physical: '/api/training/modules/physical',
+                    technical: '/api/training/modules/technical',
+                    simulation: '/api/training/modules/simulation'
+                }
+            });
+            const currentLang = localStorage.getItem('preferredLanguage') || 'en';
+            document.documentElement.setAttribute('lang', currentLang);
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script type="module" src="/js/modules/core/index.js"></script>
+</body>
+
+</html>

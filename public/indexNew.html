@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Train for space with AI-powered modules at SharedStars Academy." />
-      
-        <!-- ✅ Content Security Policy (Enhanced for Security) -->
-        <meta http-equiv="Content-Security-Policy" content="
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Train for space with AI-powered modules at SharedStars Academy." />
+
+  <!-- ✅ Content Security Policy (Enhanced for Security) -->
+  <meta http-equiv="Content-Security-Policy" content="
           default-src 'self'; 
           script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
           style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
@@ -16,706 +17,804 @@
           child-src 'self' https://www.sora.com;
           connect-src 'self' https://api.openai.com https://api.sharedstars.com;
         ">
-      
-        <!-- ✅ Stylesheets -->
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
-        <link href="/css/tailwind.css" rel="stylesheet">
-        <!-- <link rel="stylesheet" href="/css/global.css"> -->
-        <link rel="stylesheet" href="/css/ai-assistant.css" />
-        
-        <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
-        <!-- <script src="/js/languageSelection.js" defer></script> -->
-        <script src="/js/languageManager.js" defer></script>
-        <script type="module" src="/js/countdown1.js"></script>
-        <script type="module" src="/js/HomepageHandler.js"></script>  
-    
-    </head>  
-    
-    <body class="bg-black">
-    <!-- Header (Navigation & Language Selector) -->
-    <header class="site-header absolute w-full flex items-center justify-between z-50 px-[120px]">
 
-        <!-- Logo -->
-        <div class="py-8">
-          <a href="/" aria-label="SharedStars Homepage" class="group">
-            <img src="/images/SharedStars.png" alt="SharedStars Logo" class="h-10 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+  <!-- ✅ Stylesheets -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+  <link href="/css/tailwind.css" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="/css/global.css"> -->
+  <link rel="stylesheet" href="/css/ai-assistant.css" />
+
+  <!-- ✅ JavaScript Files (Defer & Modules for Performance) -->
+  <!-- <script src="/js/languageSelection.js" defer></script> -->
+  <script src="/js/languageManager.js" defer></script>
+  <script type="module" src="/js/countdown1.js"></script>
+  <script type="module" src="/js/HomepageHandler.js"></script>
+
+</head>
+
+<body class="bg-black">
+  <!-- Header (Navigation & Language Selector) -->
+  <header class="site-header absolute w-full z-50 px-6 md:px-[120px] py-4 bg-transparent">
+    <!-- Flex container -->
+    <div class="flex items-center justify-between">
+      <!-- Logo -->
+      <a href="/" aria-label="SharedStars Homepage" class="group">
+        <img src="/images/SharedStars.png" alt="SharedStars Logo"
+          class="h-10 transition-all duration-300 group-hover:drop-shadow-[0_0_25px_rgba(59,130,246,0.7)]" />
+      </a>
+
+      <!-- Mobile menu toggle -->
+      <button id="menuToggle" class="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <img src="/icons/options.png" alt="Menu" class="w-6 h-6" />
+      </button>
+
+      <!-- Desktop Navigation -->
+      <ul class="hidden md:flex flex-wrap items-center gap-4 text-body-small-medium font-body text-white-700 ml-10">
+        <li class="relative group py-4">
+          <a href="/" class="px-4 hover:text-white">Home</a>
+          <div
+            class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+          </div>
+        </li>
+        <li class="relative group py-4">
+          <a href="/" class="px-4 hover:text-white">Academy</a>
+          <div
+            class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+          </div>
+        </li>
+        <li class="relative group py-4">
+          <a href="/" class="px-4 hover:text-white">About</a>
+          <div
+            class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+          </div>
+        </li>
+        <li class="relative group py-4">
+          <a href="/" class="px-4 hover:text-white">Leaderboard</a>
+          <div
+            class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+          </div>
+        </li>
+        <li class="relative group py-4">
+          <a href="/" class="px-4 hover:text-white">Subscribe</a>
+          <div
+            class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out">
+          </div>
+        </li>
+      </ul>
+
+      <!-- Right section (language + button) -->
+      <div class="hidden md:flex items-center gap-4">
+        <!-- Language Selector -->
+        <div class="relative">
+          <button id="langDropdownBtn"
+            class="flex items-center gap-2 bg-gray-700 px-3 py-2 text-white rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+            <img src="/images/USflag.png" alt="Selected Language Flag" class="w-4" />
+            <img src="/icons/chevron-down.png" alt="Dropdown" class="w-4" />
+          </button>
+          <!-- Dropdown Menu -->
+          <ul id="langDropdownMenu"
+            class="hidden absolute bg-white text-black shadow-lg rounded-lg mt-2 py-2 w-40 z-50">
+            <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="en"><img src="/images/USflag.png"
+                  class="w-4 mr-2" /> English</button></li>
+            <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="zh"><img
+                  src="/images/ChinaFlag.png" class="w-4 mr-2" /> 中文</button></li>
+            <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="ko"><img
+                  src="/images/KoreaFlag.png" class="w-4 mr-2" /> 한국어</button></li>
+            <li><button class="dropdown-item flex items-center px-4 py-2" data-lang="es"><img
+                  src="/images/ChinaFlag.png" class="w-4 mr-2" /> Español</button></li>
+          </ul>
+        </div>
+
+        <!-- Get Started Button -->
+        <button
+          class="bg-brand-700 text-white text-body-2xsmall-semibold px-5 py-2 rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4)]">
+          Get Started
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobileMenu"
+      class="md:hidden hidden flex-col items-start gap-4 mt-4 text-white text-sm font-medium transition-all duration-300">
+      <ul class="flex flex-col gap-2 w-full">
+        <li><a href="/" class="block px-4 py-2">Home</a></li>
+        <li><a href="/" class="block px-4 py-2">Academy</a></li>
+        <li><a href="/" class="block px-4 py-2">About</a></li>
+        <li><a href="/" class="block px-4 py-2">Leaderboard</a></li>
+        <li><a href="/" class="block px-4 py-2">Subscribe</a></li>
+      </ul>
+
+      <!-- Mobile lang + button -->
+      <div class="flex flex-col gap-4 px-4 mt-4">
+        <button
+          class="bg-brand-700 text-white text-sm px-5 py-2 rounded-full w-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4)]">
+          Get Started
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+
+  <section id="hero" class="relative min-h-screen flex items-start justify-center text-center pt-24">
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+      <source src="/videos/academy10.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
+    <div class="absolute inset-0 w-full h-full bg-black pointer-events-none bg-opacity-75"></div>
+
+    <div class="relative flex flex-col py-10 lg:mt-28 items-center justify-start lg:max-w-5xl w-96 px-4 z-20">
+      <h1 data-i18n="hero.title" class="hero-text font-aeonik text-heading1 lg:text-heading3 text-white px-20 mb-6">
+        World's Largest AI-
+        Powered Space Training Platform<h1>
+          <p data-i18n="hero.subtitle" class="text-body-medium-medium max-w-2xl text-white mb-8">
+            In 36 months, humanity splits into two groups: Those who have prepared for space and those who watch from
+            Earth.
+          </p>
+          <div class="flex flex-col lg:flex-row  lg:w-full lg:gap-4 gap-2 px-4 lg:px-0 text-body-2xsmall-semibold">
+            <a data-i18n="hero.startTraining" href="/signup"
+              class="bg-black text-white px-6 py-3 z-30 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start
+              Training Now</a>
+            <a data-i18n="hero.seeCountdown" href="/signup"
+              class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">See
+              Your Countdown to Space</a>
+            <a data-i18n="hero.exploreMembership" href="/signup"
+              class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Explore
+              Membership Plans</a>
+          </div>
+    </div>
+  </section>
+
+  <!-- Progress Section -->
+  <section class="min-h-screen px-6 lg:px-[120px] pt-[120px] pb-[88px]">
+    <div class="bg-black text-white">
+      <!-- Progress Label -->
+      <span
+        class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+        Progress
+      </span>
+
+      <div class="flex flex-col lg:flex-row justify-between">
+        <div class="lg:w-1/2">
+          <h2 class="text-heading2 text-white font-aeonik mt-5" data-i18n="progress.title">Your path to space</h2>
+          <p class="text-white-800 mt-5 lg:pr-36">
+            In 36 months, humanity splits into two groups: Those who prepare for space and those who watch from
+            Earth.
+          </p>
+        </div>
+        <div class="flex items-end mt-4 lg:mt-0 ">
+          <button class="px-6 py-3 text-white bg-black text-body-2xsmall-semibold rounded-full 
+                shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)]">
+            Subscribe now →
+          </button>
+        </div>
+      </div>
+
+      <!-- Countdown Timer -->
+      <div class="grid grid-cols-3 lg:grid-cols-7 gap-6 text-center mt-14">
+        <div
+          class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+          <span class="text-heading1 font-aeonik" data-countdown="years">13</span>
+          <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+          <p class="text-body-base">Years</p>
+        </div>
+        <div
+          class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+          <span class="text-6xl font-bold" data-countdown="months">08</span>
+          <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+          <p class=" text-[16px]">Months</p>
+        </div>
+        <div
+          class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+          <span class="text-6xl font-bold" data-countdown="weeks">02</span>
+          <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+          <p class=" text-[16px]">Weeks</p>
+        </div>
+        <div
+          class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+          <span class="text-6xl font-bold" data-countdown="days">17</span>
+          <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+          <p class=" text-[16px]">Days</p>
+        </div>
+        <div
+          class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+          <span class="text-6xl font-bold" data-countdown="hours">06</span>
+          <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+          <p class=" text-[16px]">Hours</p>
+        </div>
+        <div
+          class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+          <span class="text-6xl font-bold" data-countdown="minutes">23</span>
+          <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+          <p class=" text-[16px]">Minutes</p>
+        </div>
+        <div
+          class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+          <span class="text-6xl font-bold" data-countdown="seconds">45</span>
+          <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+          <p class=" text-[16px]">Seconds</p>
+        </div>
+      </div>
+
+      <span class="flex w-full mt-14 border-b border-white-200"></span>
+
+      <div class="flex items-center justify-start bg-black gap-8 mt-14">
+        <!-- Video Container -->
+        <div class=" w-[160px] h-[90px] rounded-lg p-1 bg-black border-2 border-white-200 overflow-hidden">
+          <!-- Video Element -->
+          <video id="videoPlayer" class="rounded-md">
+            <source src="/videos/space1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div class="flex flex-col items-start justify-between space-y-6">
+          <p class="text-body-base-semibold max-w-64 tetx-white ">Learn how you can accelerate their journey?</p>
+          <a href="https://example.com" class="text-brand-700 hover:underline text-body-2xsmall-semibold font-medium">
+            Learn More →
           </a>
         </div>
-    
-        <!-- Navigation Links -->
-        <ul class="flex flex-wrap items-center justify-between gap-2 text-body-small-medium font-body text-white-700">
-            <li class="relative group py-8">
-                <a href="/" data-i18n="nav.home" class="px-4 text-white-700 hover:text-white">Home</a>
-                <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
-            </li>
-            <li class="relative group py-8">
-                <a href="/" data-i18n="nav.academy" class="px-4 py-6 hover:text-white">Academy</a>
-                <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
-            </li>
-            <li class="relative group py-8">
-                <a href="/" data-i18n="nav.about" class="px-4 py-6 hover:text-white">About</a>
-                <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
-            </li>
-            <li class="relative group py-8">
-                <a href="/" data-i18n="nav.leaderboard" class="px-4 py-6 hover:text-white">Leaderboard</a>
-                <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
-            </li>
-            <li class="relative group py-8">
-                <a href="/" data-i18n="nav.subscribe" class="px-4 py-6 hover:text-white">Subscribe</a>
-                <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-trafrom-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></div>
-            </li>
-        </ul>
-    
-        <!-- Language Selector -->
-         <div class="flex relative items-center justify-between gap-6">
-          <div class="relative">
-            <button id="langDropdownBtn" class="flex items-center justify-between gap-2 bg-gray-700 px-3 py-3 text-white rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]" aria-label="Language Selection">
-              <!-- <img id="selectedLangIcon" src="/images/USflag.png" alt="US country flag" class="w-4" /> -->
-              <img id="selectedLangIcon" src="/images/USflag.png" alt="Selected Language Flag" class="w-4" />
-              <!-- <span id="selectedLangIcon">🇺🇸</span> -->
-              <!-- <span id="selectedLangText">English</span> -->
-              <img src="/icons/chevron-down.png" alt="DropeDOwn button" class="w-4 max-w-xl" />
-            </button>
-            <ul id="langDropdownMenu" class="hidden absolute bg-white shadow-lg rounded-lg mt-2 py-2 w-40">
-              <li>
-                <button class="dropdown-item flex items-center px-4 py-2" data-lang="en" data-flag="/images/USflag.png" aria-label="Switch to English">
-                  <img src="/images/USflag.png" alt="English Flag" class="w-4 mr-2" /> English
-                </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Your personal astronaut trainer -->
+  <section class="min-h-screen flex items-center lg:px-[120px] px-8 pt-12 lg:pt-[104px] pb-12 lg:pb-[120px]">
+    <div class="bg-black text-white shadow-lg">
+      <span
+        class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+        Your Personal AI Space Coach
+      </span>
+
+      <div class="flex flex-col lg:flex-row justify-between">
+        <div class="lg:w-1/2">
+          <h2 class="text-heading2 text-white font-aeonik mt-5">Your personal astronaut trainer</h2>
+          <p class="text-white-800 mt-5 lg:pr-36">
+            Like Tesla’s FSD revolutionized driving, our AI Space Coach revolutionizes astronaut training.
+          </p>
+        </div>
+        <div class="flex items-end">
+          <button class="px-6 py-3 text-white bg-black text-body-2xsmall-semibold rounded-full 
+                shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)]">
+            Go to academy →
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero Section -->
+      <div class=" lg:w-full h-[564px] my-14 border-2 border-white-300 rounded-xl p-4 bg-black">
+        <video class="w-full h-full object-cover rounded-lg" autoplay loop muted playsinline>
+          <source src="/videos/ai-training.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <!-- Features Section -->
+      <div class="flex flex-col lg:flex-row justify-center gap-14 mt-14 mx-auto">
+        <div class="flex basis-1/3 min-w-0 items-start gap-6 shadow-lg">
+          <div
+            class="w-12 h-12 flex items-center justify-center rounded-lg shadow-lg border-2  border-white-300 bg-gradient-to-br from-black via-transparent to-white-200 shrink-0">
+            <img src="/icons/training1.png" class="w-6" alt="AI Dynamivally">
+          </div>
+          <div>
+            <h3 class="text-body-medium-semibold">AI dynamically adapts training <br /> in Real-Time</h3>
+            <p class="text-body-small text-white-800 mt-2">AI dynamically adjusts training in real- <br> time,
+              optimizing learning based on <br> performance and user needs.</p>
+          </div>
+        </div>
+        <div class="flex basis-1/3 min-w-0 items-start gap-6 shadow-lg">
+          <div
+            class="w-12 h-12 flex items-center justify-center rounded-lg shadow-lg border-2 border-white-300 bg-gradient-to-br from-black via-transparent to-white-200 shrink-0">
+            <img src="/icons/training2.png" class="w-6" alt="AI Dynamivally">
+          </div>
+          <div>
+            <h3 class="text-body-medium-semibold">Adaptive AI Tracks, Predicts & Coaches</h3>
+            <p class="text-body-small text-white-800 mt-2">Tracks training progress, predicts user <br> weak spots, and
+              offers adaptive <br> coaching.</p>
+          </div>
+        </div>
+        <div class="flex basis-1/3 min-w-0 items-start gap-6 shadow-lg">
+          <div
+            class="w-12 h-12 flex items-center justify-center rounded-lg shadow-lg border-2  border-white-300 bg-gradient-to-br from-black via-transparent to-white-200 shrink-0">
+            <img src="/icons/training3.png" class="w-6" alt="AI Dynamivally">
+          </div>
+          <div>
+            <h3 class="text-body-medium-semibold">Mission Feedback, Tech Evaluation & Risk Analysis</h3>
+            <p class="text-body-small text-white-800 mt-2">Provides mission simulation feedback, technical evaluations,
+              and risk <br> assessments.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 flex items-center justify-center">
+        <div class="rounded-lg relative" style=" border: 2px solid rgba(210, 103, 219, 0.8)">
+          <div
+            class="px-6 py-4 rounded-lg text-center [background-image:linear-gradient(to_right,rgba(0,0,0,10),rgba(0,0,0,1),rgba(112,55,117,0.5),rgba(0,0,0,1),rgba(0,0,0,1))]">
+            <p class="text-white font-semibold">
+              Every astronaut must master spacecraft
+              <span class="text-[#D267DB]">systems, mission protocols, and emergency response</span> - your AI assistant
+              ensures you do.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Core value propositions -->
+  <section class="min-h-screen lg:px-[120px] px-8 pt-12 lg:pt-[104px] pb-12 lg:pb-[120px]">
+    <div class="bg-black text-white">
+      <span
+        class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+        Core value
+      </span>
+
+      <div class="flex flex-col lg:flex-row justify-between">
+        <div class="lg:w-1/2">
+          <h2 class="text-heading2 text-white font-aeonik mt-5">Core value <br>propositions</h2>
+          <p class="text-white-800 mt-5">
+            Unique benefits: real-time tracking, AI training, guaranteed space path.
+          </p>
+        </div>
+      </div>
+
+      <div>
+
+      </div>
+      <div class="flex flex-col lg:flex-row mx-auto gap-4 mt-14">
+        <div class="p-6 flex flex-col border rounded-2xl">
+          <div class="flex gap-4">
+            <span class="text-white-400 text-body-medium-semibold">01.</span>
+
+            <div class="text-start">
+              <h1 class="text-body-large-semibold text-white text-white-1000">Space Isn't Waiting</h1>
+              <p class="mt-4 text-body-small text-white-800">
+                Every day without training is another seat claimed. Every hour you wait is
+                another opportunity lost. The space revolution needs pioneers—not
+                dreamers who waited too long.
+              </p>
+            </div>
+          </div>
+
+          <!-- Seat Counter -->
+          <div class="mt-10 self-center lg:w-1/4 relative">
+            <div
+              class="relative flex flex-col p-4 bg-black rounded-lg gap-6 text-center justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+
+              <!-- Fading Diagonal Line -->
+              <span class="absolute top-4 right-0 w-[50px] h-[8px] bg-white rotate-45 blur-[16px] "></span>
+
+              <span class="text-heading2 py-2 px-2">243</span>
+              <span
+                class="relative h-[2px] w-full bg-gradient-to-r from-transparent via-[#0060FF] to-transparent"></span>
+              <p class="text-body-base text-white">Seats Left</p>
+
+            </div>
+          </div>
+
+
+          <!-- Warning Message -->
+          <div class="mt-6 flex justify-center">
+            <div class="rounded-lg relative" style=" border: 2px solid rgba(210, 103, 219, 0.8)">
+              <div class="px-6 py-3 rounded-lg text-center"
+                style="background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1), rgba(112, 55, 117, 0.6),rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));">
+                <p class="text-white text-body-small-semibold">
+                  Seats are filling up fast! Secure your space now.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA Button -->
+          <button
+            class="relative w-1/2 mt-6 self-center bg-brand-700 text-white text-body-2xsmall-semibold px-5 py-3 rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4)]">
+            Join the Space Revolution
+          </button>
+        </div>
+
+        <div class="flex flex-col gap-4">
+          <div class="flex bg-black text-white p-6 rounded-2xl border">
+            <!-- Left Content -->
+            <div class="flex gap-4">
+              <div class="">
+                <span class="text-white-400 text-body-medium-semibold">02.</span>
+              </div>
+
+              <div class="text-start">
+                <h1 class="text-body-large-semibold text-white text-white-1000">Training Like Never Before</h1>
+                <p class="mt-4 text-body-small text-white-800">
+                  Our AI-powered space coach adapts in real- <br> time, ensuring you master the skills you need
+                  for
+                  space.
+                </p>
+              </div>
+            </div>
+
+            <!-- Right Image -->
+            <div class="flex items-center justify-center">
+              <img src="/images/robot.png" alt="AI Training" class="w-40 h-full object-cover">
+            </div>
+          </div>
+
+          <div class="flex flex-col bg-black text-white p-6 rounded-2xl border">
+            <!-- Left Content -->
+            <div class="flex gap-x-4">
+              <span class="text-white-400 text-body-medium-semibold">03.</span>
+              <div class="text-start">
+                <h1 class="text-body-large-semibold text-white text-white-1000">Your Countdown Has Started</h1>
+                <p class="mt-4 text-body-small text-white-800">
+                  Unlike traditional astronaut programs with a 0.1% acceptance rate, SharedStars
+                  guarantees a space seat, if you’re willing to earn it. Every certification, credit, and
+                  milestone gets you closer.
+                </p>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 lg:grid-cols-6 gap-3 text-center mt-6">
+              <div
+                class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+                <span class="text-heading6 font-aeonik" data-countdown="years">13</span>
+                <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+                <p class="text-body-base">Years</p>
+              </div>
+              <div
+                class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+                <span class="text-heading6 font-bold" data-countdown="months">08</span>
+                <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+                <p class=" text-[16px]">Months</p>
+              </div>
+              <div
+                class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+                <span class="text-heading6 font-bold" data-countdown="days">17</span>
+                <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+                <p class=" text-[16px]">Days</p>
+              </div>
+              <div
+                class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+                <span class="text-heading6 font-bold" data-countdown="hours">06</span>
+                <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+                <p class=" text-[16px]">Hours</p>
+              </div>
+              <div
+                class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+                <span class="text-heading6 font-bold" data-countdown="minutes">23</span>
+                <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+                <p class=" text-[16px]">Minutes</p>
+              </div>
+              <div
+                class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
+                <span class="text-heading6 font-bold" data-countdown="seconds">45</span>
+                <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
+                    before:h-full before:bg-gradient-to-r before:from-transparent 
+                    before:via-[#0060FF] before:to-transparent"></span>
+                <p class=" text-[16px]">Seconds</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social proof & Technolody innovation -->
+  <section class="flex items-center w-full px-8 lg:px-[120px] pt-12 lg:pt-[104px] pb-12 lg:pb-[120px]">
+    <div class="bg-black text-white shadow-lg">
+      <span
+        class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+        Social proof
+      </span>
+
+      <div class="flex flex-col lg:flex-row justify-between">
+        <div class="lg:w-1/2">
+          <h2 class="text-heading2 text-white font-aeonik mt-5">Social proof & technology innovation</h2>
+        </div>
+        <div class="flex mt-4 lg:mt-0 items-end">
+          <button class="px-6 py-3 text-white bg-black text-body-2xsmall-semibold rounded-full 
+              shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)]">
+            Join Now →
+          </button>
+        </div>
+      </div>
+
+      <!-- Video Section -->
+      <div class="relative w-full h-[564px] my-12 border-2 border-white-300 rounded-xl p-4 bg-black">
+        <video class="w-full h-full object-cover rounded-lg" autoplay loop muted playsinline>
+          <source src="/videos/ai-training1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black/30">
+
+          <!-- Background Image with Icon Overlay -->
+          <div class="relative w-12 h-12">
+            <img src="/icons/bg-sparkles.png" class="w-full h-full object-cover" alt="Background">
+            <img src="/icons/sparkles.png"
+              class="absolute top-1/2 left-1/2 w-6 h-6 transform -translate-x-1/2 -translate-y-1/2" alt="Overlay Icon">
+          </div>
+
+          <!-- Main Content -->
+          <h2 class="text-heading6 text-white mt-3">AI Leadership Statement</h2>
+          <p class="text-body-small-medium mt-3 mx-8 lg:mx-0 max-w-xl">Just as Tesla leads autonomous driving,
+            SharedStars leads
+            autonomous space training. Our AI system doesn’t just guide you—it evolves with you, adapting training
+            protocols in real-time for optimal space readiness</p>
+        </div>
+
+      </div>
+
+      <div class="min-h-screen mx-auto grid grid-cols-1 lg:grid-cols-2 gap-x-6 items-center text-white">
+
+        <!-- Left Content Block -->
+        <!-- Icon & Heading -->
+        <div class="flex items-start gap-x-6 mb-8 lg:mb-0">
+          <div class="shrink-0">
+            <img src="/icons/robocheck.png" alt="Industry Panel" class="w-12 h-12">
+          </div>
+          <div>
+            <h2 class="text-body-large-semibold font-semibold text-white">Industry Validation Panel</h2>
+            <p class="text-body-small text-gray-400 mt-4 pr-2">The AI Revolution in Space Training, First platform
+              integrating autonomous AI guidance for astronaut training.</p>
+            <!-- Checkmark List -->
+            <ul class="space-y-4 mt-6">
+              <li class="flex items-center gap-2">
+                <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Real-time biometric monitoring &
+                performance adaptation.
               </li>
-              <li>
-                <button class="dropdown-item flex items-center px-4 py-2" data-lang="zh" data-flag="/images/ChinaFlag.png" aria-label="Switch to Chinese">
-                  <img src="/images/ChinaFlag.png" alt="Chinese Flag" class="w-4 mr-2" /> 中文
-                </button>
+              <li class="flex items-center gap-2">
+                <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> NASA-inspired training protocols enhanced
+                by machine learning.
               </li>
-              <li>
-                <button class="dropdown-item flex items-center px-4 py-2" data-lang="ko" data-flag="/images/KoreaFlag.png" aria-label="Switch to Korean">
-                  <img src="/images/KoreaFlag.png" alt="Korean Flag" class="w-4 mr-2" /> 한국어
-                </button>
-              </li>
-              <li>
-                <button class="dropdown-item flex items-center px-4 py-2" data-lang="es" data-flag="/images/CHinaFlag.png" aria-label="Switch to Spanish">
-                  <img src="/images/ChinaFlag.png" alt="Spanish Flag" class="w-4 mr-2" /> Español
-                </button>
+              <li class="flex items-center gap-2">
+                <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Predictive analytics for mission
+                readiness
+                assessment.
               </li>
             </ul>
           </div>
-
-            <button class="relative bg-brand-700 text-white text-body-2xsmall-semibold px-5 py-3 rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4)]">
-                Get Started
-            </button>
-         </div>
-    </header>
-
-    <!-- Hero Section -->
-   
-    <section id="hero" class="relative min-h-screen flex items-start justify-center text-center pt-24">
-      <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-        <source src="/videos/academy10.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-  
-      <div class="absolute inset-0 w-full h-full bg-black pointer-events-none bg-opacity-75"></div>
-
-      <div class="relative flex flex-col mt-28 items-center justify-start max-w-5xl px-4 z-20">
-        <h1 data-i18n="hero.title" class="hero-text font-aeonik text-heading1 text-white px-20 mb-6">World's Largest AI- Powered Space Training Platform<h1>
-        <p data-i18n="hero.subtitle" class="text-body-medium-medium max-w-2xl text-white mb-8">
-          In 36 months, humanity splits into two groups: Those who have prepared for space and those who watch from Earth.
-        </p>
-        <div class="w-full space-x-4 text-body-2xsmall-semibold">
-          <a data-i18n="hero.startTraining" href="/signup" class="bg-black text-white px-6 py-3 z-30 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start Training Now</a>
-          <a data-i18n="hero.seeCountdown" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">See Your Countdown to Space</a>
-          <a data-i18n="hero.exploreMembership" href="/signup" class="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Explore Membership Plans</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Progress Section -->
-    <section class="min-h-screen px-[120px] pt-[120px] pb-[88px]">
-        <div class="bg-black text-white">
-            <!-- Progress Label -->
-            <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-                Progress
-            </span>
-    
-            <div class="flex justify-between">
-              <div class="w-1/2">
-                <h2 class="text-heading2 text-white font-aeonik mt-5" data-i18n="progress.title">Your path to space</h2>
-                <p class="text-white-800 mt-5 pr-36">
-                  In 36 months, humanity splits into two groups: Those who prepare for space and those who watch from
-                  Earth.
-                </p>
-              </div>
-              <div class="flex items-end">
-                <button class="px-6 py-3 text-white bg-black text-body-2xsmall-semibold rounded-full 
-                shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)]">
-                  Subscribe now →
-                </button>
-              </div>
-            </div>    
-    
-            <!-- Countdown Timer -->
-            <div class="grid grid-cols-7 gap-6 text-center mt-14">
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading1 font-aeonik" data-countdown="years">13</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class="text-body-base">Years</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="months">08</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>         
-                    <p class=" text-[16px]">Months</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="weeks">02</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Weeks</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="days">17</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Days</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="hours">06</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Hours</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="minutes">23</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Minutes</p>
-                </div>
-                <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-6 h-[178px] justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-6xl font-bold" data-countdown="seconds">45</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Seconds</p>
-                </div>
-            </div>
-    
-            <span class="flex w-full mt-14 border-b border-white-200"></span>
-    
-            <div class="flex items-center justify-start bg-black gap-8 mt-14">
-              <!-- Video Container -->
-              <div class=" w-[160px] h-[90px] rounded-lg p-1 bg-black border-2 border-white-200 overflow-hidden">
-                <!-- Video Element -->
-                  <video id="videoPlayer" class="rounded-md">
-                    <source src="/videos/space1.mp4" type="video/mp4">
-                      Your browser does not support the video tag.
-                  </video>
-              </div>
-            
-              <div class="flex flex-col items-start justify-between space-y-6">
-                  <p class="text-body-base-semibold max-w-64 tetx-white ">Learn how you can accelerate their journey?</p>
-                  <a href="https://example.com" class="text-brand-700 hover:underline text-body-2xsmall-semibold font-medium">
-                      Learn More →
-                  </a>
-              </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Your personal astronaut trainer -->
-    <section class="min-h-screen flex items-center px-[120px] pt-[104px] pb-[120px]">
-        <div class="bg-black text-white shadow-lg">
-          <span
-            class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-            Your Personal AI Space Coach
-          </span>
-
-          <div class="flex justify-between">
-            <div class="w-1/2">
-              <h2 class="text-heading2 text-white font-aeonik mt-5">Your personal astronaut trainer</h2>
-              <p class="text-white-800 mt-5 pr-36">
-                Like Tesla’s FSD revolutionized driving, our AI Space Coach revolutionizes astronaut training.
-              </p>
-            </div>
-            <div class="flex items-end">
-              <button class="px-6 py-3 text-white bg-black text-body-2xsmall-semibold rounded-full 
-                shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)]">
-                Go to academy →
-              </button>
-            </div>
-          </div>
-
-          <!-- Hero Section -->
-          <div class="w-full h-[564px] my-14 border-2 border-white-300 rounded-xl p-4 bg-black">
-            <video class="w-full h-full object-cover rounded-lg" autoplay loop muted playsinline>
-                  <source src="/videos/ai-training.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-            </video>
-          </div>
-      
-          <!-- Features Section -->
-          <div class="flex justify-center gap-14 mt-14 mx-auto">
-            <div class="flex basis-1/3 min-w-0 items-start gap-6 shadow-lg">
-             <div class="w-12 h-12 flex items-center justify-center rounded-lg shadow-lg border-2  border-white-300 bg-gradient-to-br from-black via-transparent to-white-200 shrink-0">
-              <img src="/icons/training1.png" class="w-6" alt="AI Dynamivally">
-             </div>
-              <div>
-                <h3 class="text-body-medium-semibold">AI dynamically adapts training <br/> in Real-Time</h3>
-                <p class="text-body-small text-white-800 mt-2">AI dynamically adjusts training in real- <br> time, optimizing learning based on <br> performance and user needs.</p>
-              </div>
-            </div>
-            <div class="flex basis-1/3 min-w-0 items-start gap-6 shadow-lg">
-              <div class="w-12 h-12 flex items-center justify-center rounded-lg shadow-lg border-2 border-white-300 bg-gradient-to-br from-black via-transparent to-white-200 shrink-0">
-                <img src="/icons/training2.png" class="w-6" alt="AI Dynamivally">
-               </div>
-              <div>
-                <h3 class="text-body-medium-semibold">Adaptive AI Tracks, Predicts & Coaches</h3>
-                <p class="text-body-small text-white-800 mt-2">Tracks training progress, predicts user <br> weak spots, and offers adaptive <br> coaching.</p>
-              </div>
-            </div>
-            <div class="flex basis-1/3 min-w-0 items-start gap-6 shadow-lg">
-              <div class="w-12 h-12 flex items-center justify-center rounded-lg shadow-lg border-2  border-white-300 bg-gradient-to-br from-black via-transparent to-white-200 shrink-0">
-                <img src="/icons/training3.png" class="w-6" alt="AI Dynamivally">
-               </div>
-              <div>
-                <h3 class="text-body-medium-semibold">Mission Feedback, Tech Evaluation & Risk Analysis</h3>
-                <p class="text-body-small text-white-800 mt-2">Provides mission simulation feedback, technical evaluations, and risk <br> assessments.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-12 flex items-center justify-center">
-            <div class="rounded-lg relative" style=" border: 2px solid rgba(210, 103, 219, 0.8)">
-              <div class="px-6 py-4 rounded-lg text-center [background-image:linear-gradient(to_right,rgba(0,0,0,10),rgba(0,0,0,1),rgba(112,55,117,0.5),rgba(0,0,0,1),rgba(0,0,0,1))]">
-                <p class="text-white font-semibold">
-                  Every astronaut must master spacecraft
-                  <span class="text-[#D267DB]">systems, mission protocols, and emergency response</span> - your AI assistant ensures you do.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-    </section>
-
-
-    <!-- Core value propositions -->
-    <section class="min-h-screen px-[120px] pt-[100px] pb-[120px]">
-        <div class="bg-black text-white">
-          <span
-            class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-            Core value
-          </span>
-
-          <div class="flex justify-between">
-            <div class="w-1/2">
-              <h2 class="text-heading2 text-white font-aeonik mt-5">Core value <br>propositions</h2>
-              <p class="text-white-800 mt-5">
-                Unique benefits: real-time tracking, AI training, guaranteed space path.
-              </p>
-            </div>
-          </div>
-
-          <div>
-
-          </div>
-          <div class="flex mx-auto gap-4 mt-14">
-            <div class="p-6 flex flex-col border rounded-2xl">
-              <div class="flex gap-4">
-                <span class="text-white-400 text-body-medium-semibold">01.</span>
-
-                <div class="text-start">
-                  <h1 class="text-body-large-semibold text-white text-white-1000">Space Isn't Waiting</h1>
-                  <p class="mt-4 text-body-small text-white-800">
-                    Every day without training is another seat claimed. Every hour you wait is
-                    another opportunity lost. The space revolution needs pioneers—not
-                    dreamers who waited too long.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Seat Counter -->
-              <div class="mt-10 self-center w-1/4 relative">
-                <div class="relative flex flex-col p-4 bg-black rounded-lg gap-6 text-center justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                  
-                  <!-- Fading Diagonal Line -->
-                  <span class="absolute top-4 right-0 w-[50px] h-[8px] bg-white rotate-45 blur-[16px] "></span>
-                  
-                  <span class="text-heading2 py-2 px-2">243</span> 
-                  <span class="relative h-[2px] w-full bg-gradient-to-r from-transparent via-[#0060FF] to-transparent"></span>
-                  <p class="text-body-base text-white">Seats Left</p>
-              
-                </div>
-              </div>
-
-
-              <!-- Warning Message -->
-              <div class="mt-6 flex justify-center">
-                <div class="rounded-lg relative" style=" border: 2px solid rgba(210, 103, 219, 0.8)">
-                  <div class="px-6 py-3 rounded-lg text-center"
-                    style="background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1), rgba(112, 55, 117, 0.6),rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));">
-                    <p class="text-white text-body-small-semibold">
-                      Seats are filling up fast! Secure your space now.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- CTA Button -->
-              <button class="relative w-1/2 mt-6 self-center bg-brand-700 text-white text-body-2xsmall-semibold px-5 py-3 rounded-full shadow-[inset_2px_2px_5px_rgba(255,255,255,0.4)]">
-                Join the Space Revolution
-              </button>
-            </div>
-
-            <div class="flex flex-col gap-4">
-              <div class="flex bg-black text-white p-6 rounded-2xl border">
-                <!-- Left Content -->
-                <div class="flex gap-4">
-                  <div class="">
-                    <span class="text-white-400 text-body-medium-semibold">02.</span>
-                  </div>
-
-                  <div class="text-start">
-                    <h1 class="text-body-large-semibold text-white text-white-1000">Training Like Never Before</h1>
-                    <p class="mt-4 text-body-small text-white-800">
-                      Our AI-powered space coach adapts in real- <br> time, ensuring you master the skills you need
-                      for
-                      space.
-                    </p>
-                  </div>
-                </div>
-
-                <!-- Right Image -->
-                <div class="flex items-center justify-center">
-                  <img src="/images/robot.png" alt="AI Training" class="w-40 h-full object-cover">
-                </div>
-              </div>
-
-              <div class="flex flex-col bg-black text-white p-6 rounded-2xl border">
-                <!-- Left Content -->
-                <div class="flex gap-x-4">
-                <span class="text-white-400 text-body-medium-semibold">03.</span>
-                <div class="text-start">
-                  <h1 class="text-body-large-semibold text-white text-white-1000">Your Countdown Has Started</h1>
-                  <p class="mt-4 text-body-small text-white-800">
-                      Unlike traditional astronaut programs with a 0.1% acceptance rate, SharedStars
-                      guarantees a space seat, if you’re willing to earn it. Every certification, credit, and
-                      milestone gets you closer.
-                  </p>
-                </div>
-                </div>
-                <div class="grid grid-cols-6 gap-3 text-center mt-6">
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-aeonik" data-countdown="years">13</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class="text-body-base">Years</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="months">08</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>         
-                    <p class=" text-[16px]">Months</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="days">17</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Days</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="hours">06</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Hours</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="minutes">23</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Minutes</p>
-                  </div>
-                  <div class="flex flex-col p-4 countdown-box bg-black rounded-lg gap-y-5 justify-center shadow-[inset_1px_1px_5px_rgba(255,255,255,0.4)]">
-                    <span class="text-heading6 font-bold" data-countdown="seconds">45</span>
-                    <span class="relative h-[2px] w-full before:content-[''] before:absolute before:left-0 before:right-0 before:top-0 
-                    before:h-full before:bg-gradient-to-r before:from-transparent 
-                    before:via-[#0060FF] before:to-transparent"></span>
-                    <p class=" text-[16px]">Seconds</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    </section>
-
-    <!-- Social proof & Technolody innovation -->
-    <section class="flex items-center w-full px-[120px] pt-[104px] pb-[120px]">
-      <div class="bg-black text-white shadow-lg">
-        <span
-          class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-          Social proof
-        </span>
-
-        <div class="flex justify-between">
-          <div class="w-1/2">
-            <h2 class="text-heading2 text-white font-aeonik mt-5">Social proof & technology innovation</h2>
-          </div>
-          <div class="flex items-end">
-            <button class="px-6 py-3 text-white bg-black text-body-2xsmall-semibold rounded-full 
-              shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)]">
-              Join Now →
-            </button>
-          </div>
         </div>
 
-        <!-- Video Section -->
-        <div class="relative w-full h-[564px] my-12 border-2 border-white-300 rounded-xl p-4 bg-black">
-          <video class="w-full h-full object-cover rounded-lg" autoplay loop muted playsinline>
-                <source src="/videos/ai-training1.mp4" type="video/mp4">
-                Your browser does not support the video tag.
+        <!-- Right Side Video -->
+        <div class="rounded-lg p-2 bg-black border-2 border-white-200 overflow-hidden mb-8 lg:mb-0">
+          <!-- Video Element -->
+          <video id="videoPlayer" class="rounded-md" autoplay loop muted playsinline>
+            <source src="/videos/pioneer1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
           </video>
-          <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black/30">
-    
-            <!-- Background Image with Icon Overlay -->
-            <div class="relative w-12 h-12">
-              <img src="/icons/bg-sparkles.png" class="w-full h-full object-cover" alt="Background">
-              <img src="/icons/sparkles.png" class="absolute top-1/2 left-1/2 w-6 h-6 transform -translate-x-1/2 -translate-y-1/2" alt="Overlay Icon">
-            </div>
-        
-            <!-- Main Content -->
-            <h2 class="text-heading6 text-white mt-3">AI Leadership Statement</h2>
-            <p class="text-body-small-medium mt-3 max-w-xl">Just as Tesla leads autonomous driving, SharedStars leads autonomous space training. Our AI system doesn’t just guide you—it evolves with you, adapting training protocols in real-time for optimal space readiness</p>
-          </div>
-        
         </div>
 
-        <div class="min-h-screen mx-auto grid grid-cols-1 lg:grid-cols-2 gap-x-6 items-center text-white">
-          <!-- Left Content Block -->
-            <!-- Icon & Heading -->
-            <div class="flex items-start gap-x-6">
-              <div class="shrink-0">
-                <img src="/icons/robocheck.png" alt="Industry Panel" class="w-12 h-12">
-              </div>
-              <div>
-                <h2 class="text-body-large-semibold font-semibold text-white">Industry Validation Panel</h2>
-                <p class="text-body-small text-gray-400 mt-4 pr-2">The AI Revolution in Space Training, First platform integrating autonomous AI guidance for astronaut training.</p>
-                <!-- Checkmark List -->
-                <ul class="space-y-4 mt-6">
-                  <li class="flex items-center gap-2">
-                    <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Real-time biometric monitoring & performance adaptation.
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> NASA-inspired training protocols enhanced by machine learning.
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Predictive analytics for mission readiness assessment.
-                  </li>
-                </ul>
-              </div>
-            </div>
-        
-          <!-- Right Side Video -->
-          <div class="rounded-lg p-2 bg-black border-2 border-white-200 overflow-hidden">
-            <!-- Video Element -->
-              <video id="videoPlayer" class="rounded-md" autoplay loop muted playsinline>
-                <source src="/videos/pioneer1.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-              </video>
-          </div>
-        
-          <!-- Left Image -->
-          <div class="rounded-lg p-2 bg-black border-2 border-white-200 overflow-hidden">
-            <!-- Video Element -->
-              <video id="videoPlayer" class="rounded-md" autoplay loop muted playsinline>
-                <source src="/videos/trainingmods1.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-              </video>
-          </div>
-        
-          <!-- Right Content Block -->
-            <!-- Icon & Heading -->
-            <div class="flex items-start gap-x-6">
-              <div class="shrink-0">
-                <img src="/icons/progress.png" alt="Progress" class="w-12 h-12">
-              </div>
-              <div>
-                <h2 class="text-body-large-semibold font-semibold text-white">Dynamic Progress Visualization</h2>
-                <p class="text-body-small text-gray-400 mt-4">Your AI-Tracked Journey to Space</p>
-                <!-- Checkmark List -->
-                <ul class="space-y-4 mt-6">
-                  <li class="flex items-center gap-2">
-                    <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Real-time Personal Readiness Score.
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Certification Progress.
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Time to Space Qualification.
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Credit Accumulation Rate.
-                  </li>
-                </ul>
-              </div>
-            </div>
+
+
+        <!-- Left Image -->
+        <div class="rounded-lg p-2 bg-black border-2 border-white-200 overflow-hidden mb-8 lg:mb-0">
+          <!-- Video Element -->
+          <video id="videoPlayer" class="rounded-md" autoplay loop muted playsinline>
+            <source src="/videos/trainingmods1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
         </div>
-      </div>
-    </section>
 
-    <section class="flex items-center justify-center mx-[120px] py-20">
-      <div class="flex flex-col items-center justify-between text-white">
-          <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-            Space Timeline
-          </span>
-          <h2 class="text-body-medium md:text-heading2 text-white mt-4">Space Access Timeline</h2>
-          <p class="text-body-base text-white-800 mt-2">Traditional Space Tourism vs. Your SharedStars Timeline</p>
-
-        <div class="mt-14 lg:ml-80">
-          <div class="flex items-start justify-center gap-6">
-              <div class="-mt-2">
-                  <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-                      2022
-                  </span>
-              </div>
-              <div class="px-6 border-l border-white-300">
-                  <p class="text-body-medium-semibold -mt-2">$750,000+ Per seat</p>
-                  <p class="text-body-small text-white-800">Space travel is highly exclusive and expensive, reserved for the ultra-wealthy.</p>
-      
-                  <!-- Fixed Image Container -->
-                  <div class="relative w-1/2 border border-white-300 rounded-lg overflow-hidden p-4 mt-3 mb-8">
-                      <!-- Background Image -->
-                      <img class="rounded-lg w-full" src="/images/timelinebg.png" alt="Background">
-      
-                      <!-- Foreground (Number Image) -->
-                      <img class="absolute inset-0 w-3/4 h-auto m-auto" src="/images/timeline1.png" alt="">
-                  </div>
-              </div>
+        <!-- Right Content Block -->
+        <!-- Icon & Heading -->
+        <div class="flex items-start gap-x-6">
+          <div class="shrink-0">
+            <img src="/icons/progress.png" alt="Progress" class="w-12 h-12">
           </div>
-  
-          <div class="flex items-start justify-center gap-6">
-            <div>
-                <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-                    2029
-                </span>
-            </div>
-            <div class="px-6 border-l border-white-300">
-                <p class="text-body-medium-semibold">$100,000 Per seat</p>
-                <p class="text-body-small text-white-800">Space travel is highly exclusive and expensive, reserved for the ultra-wealthy.</p>
-    
-                <!-- Fixed Image Container -->
-                <div class="relative w-1/2 border border-white-300 rounded-lg overflow-hidden p-4 mt-3 mb-10">
-                    <!-- Background Image -->
-                    <img class="rounded-lg w-full" src="/images/timelinebg.png" alt="Background">
-    
-                    <!-- Foreground (Number Image) -->
-                    <img class="absolute inset-0 w-3/4 h-auto m-auto" src="/images/timeline2.png" alt="">
-                </div>
-            </div>
-          </div>
-  
-          <div class="flex items-start justify-center gap-6 -mt-3">
           <div>
-              <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-                  2039
-              </span>
-          </div>
-          <div class="px-6">
-              <p class="text-body-medium-semibold">$5,000 - Mass Market Accessibility Reached!</p>
-              <p class="text-body-small text-white-800">Costs decrease as technology evolves, but still out of reach for most people.</p>
-  
-              <!-- Fixed Image Container -->
-              <div class="relative w-1/2 border border-white-300 rounded-lg overflow-hidden p-4 mt-3">
-                  <!-- Background Image -->
-                  <img class="rounded-lg w-full" src="/images/timelinebg.png" alt="Background">
-  
-                  <!-- Foreground (Number Image) -->
-                  <img class="absolute inset-0 w-3/4 h-auto m-auto" src="/images/timeline3.png" alt="">
-              </div>
-          </div>
+            <h2 class="text-body-large-semibold font-semibold text-white">Dynamic Progress Visualization</h2>
+            <p class="text-body-small text-gray-400 mt-4">Your AI-Tracked Journey to Space</p>
+            <!-- Checkmark List -->
+            <ul class="space-y-4 mt-6">
+              <li class="flex items-center gap-2">
+                <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Real-time Personal Readiness Score.
+              </li>
+              <li class="flex items-center gap-2">
+                <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Certification Progress.
+              </li>
+              <li class="flex items-center gap-2">
+                <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Time to Space Qualification.
+              </li>
+              <li class="flex items-center gap-2">
+                <img src="/icons/checklist.png" class="w-5 h-5" alt="Check"> Credit Accumulation Rate.
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section class="mx-[120px] py-16 relative">
-      <div class="text-center">
-        <span class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
-          Testimonials & Training Experience
-        </span>
-        <h2 class="text-heading6 md:text-heading2 text-white font-aeonik mt-4">Hear from Our Trainees!</h2>
-      </div>
 
-      <!-- Carousel Wrapper -->
-       <div class="flex items-center justify-center gap-4 mt-14 text-white">
-        <div class="flex flex-col gap-6 p-6 border border-white-300 rounded-lg" id="carousel">
-          <img class="w-10" src="/images/quotes.png" alt="Quotes">
-          <p>The AI-powered training modules were a game-changer! The personalized roadmap helped me adapt to Zero-G conditions quickly. The countdown timers kept me motivated, and I felt fully prepared for my final evaluation!</p>
-          <p>- Alex Carey</p>
-        </div>
-        <div class="flex flex-col gap-6 p-6 border border-white-300 rounded-lg" id="carousel">
-          <img class="w-10" src="/images/quotes.png" alt="Quotes">
-          <p>The AI-powered training modules were a game-changer! The personalized roadmap helped me adapt to Zero-G conditions quickly. The countdown timers kept me motivated, and I felt fully prepared for my final evaluation!</p>
-          <p>- Alex Carey</p>
-        </div>
       </div>
-
-      <div class="flex items-center justify-center gap-2 mt-10">
-        <img src="/images/prev.png" alt="previous" id="prevBtn" class="w-16 cursor-pointer">
-        <img src="/images/next.png" alt="next" id="nextBtn" class="w-16 cursor-pointer">
-      </div>
+    </div>
   </section>
 
-  <section class=" mx-[120px] px-6 py-16">
+  <section class="flex items-center justify-center lg:mx-[120px] mx-8 py-20">
+    <div class="flex flex-col items-center justify-between text-white">
+      <span
+        class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+        Space Timeline
+      </span>
+      <h2 class="text-body-medium md:text-heading2 text-white mt-4">Space Access Timeline</h2>
+      <p class="text-body-base text-white-800 mt-2">Traditional Space Tourism vs. Your SharedStars Timeline</p>
+
+      <div class="mt-14 lg:ml-80">
+        <div class="flex items-start justify-center gap-6">
+          <div class="-mt-2">
+            <span
+              class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+              2022
+            </span>
+          </div>
+          <div class="px-6 border-l border-white-300">
+            <p class="text-body-medium-semibold -mt-2">$750,000+ Per seat</p>
+            <p class="text-body-small text-white-800">Space travel is highly exclusive and expensive, reserved for the
+              ultra-wealthy.</p>
+
+            <!-- Fixed Image Container -->
+            <div class="relative w-1/2 border border-white-300 rounded-lg overflow-hidden p-4 mt-3 mb-8">
+              <!-- Background Image -->
+              <img class="rounded-lg w-full" src="/images/timelinebg.png" alt="Background">
+
+              <!-- Foreground (Number Image) -->
+              <img class="absolute inset-0 w-3/4 h-auto m-auto" src="/images/timeline1.png" alt="">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start justify-center gap-6">
+          <div>
+            <span
+              class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+              2029
+            </span>
+          </div>
+          <div class="px-6 border-l border-white-300">
+            <p class="text-body-medium-semibold">$100,000 Per seat</p>
+            <p class="text-body-small text-white-800">Space travel is highly exclusive and expensive, reserved for the
+              ultra-wealthy.</p>
+
+            <!-- Fixed Image Container -->
+            <div class="relative w-1/2 border border-white-300 rounded-lg overflow-hidden p-4 mt-3 mb-10">
+              <!-- Background Image -->
+              <img class="rounded-lg w-full" src="/images/timelinebg.png" alt="Background">
+
+              <!-- Foreground (Number Image) -->
+              <img class="absolute inset-0 w-3/4 h-auto m-auto" src="/images/timeline2.png" alt="">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start justify-center gap-6 -mt-3">
+          <div>
+            <span
+              class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+              2039
+            </span>
+          </div>
+          <div class="px-6">
+            <p class="text-body-medium-semibold">$5,000 - Mass Market Accessibility Reached!</p>
+            <p class="text-body-small text-white-800">Costs decrease as technology evolves, but still out of reach for
+              most people.</p>
+
+            <!-- Fixed Image Container -->
+            <div class="relative w-1/2 border border-white-300 rounded-lg overflow-hidden p-4 mt-3">
+              <!-- Background Image -->
+              <img class="rounded-lg w-full" src="/images/timelinebg.png" alt="Background">
+
+              <!-- Foreground (Number Image) -->
+              <img class="absolute inset-0 w-3/4 h-auto m-auto" src="/images/timeline3.png" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lg:mx-[120px] mx-8 py-16 relative">
+    <div class="text-center">
+      <span
+        class="text-brand-600 bg-black px-3 py-1 text-body-2xsmall-semibold rounded-lg shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)]">
+        Testimonials & Training Experience
+      </span>
+      <h2 class="text-heading6 md:text-heading2 text-white font-aeonik mt-4">Hear from Our Trainees!</h2>
+    </div>
+
+    <!-- Carousel Wrapper -->
+    <div class="flex flex-col lg:flex-row items-center justify-center gap-4 mt-14 text-white">
+      <div class="flex flex-col gap-6 p-6 border border-white-300 rounded-lg" id="carousel">
+        <img class="w-10" src="/images/quotes.png" alt="Quotes">
+        <p>The AI-powered training modules were a game-changer! The personalized roadmap helped me adapt to Zero-G
+          conditions quickly. The countdown timers kept me motivated, and I felt fully prepared for my final evaluation!
+        </p>
+        <p>- Alex Carey</p>
+      </div>
+      <div class="flex flex-col gap-6 p-6 border border-white-300 rounded-lg" id="carousel">
+        <img class="w-10" src="/images/quotes.png" alt="Quotes">
+        <p>The AI-powered training modules were a game-changer! The personalized roadmap helped me adapt to Zero-G
+          conditions quickly. The countdown timers kept me motivated, and I felt fully prepared for my final evaluation!
+        </p>
+        <p>- Alex Carey</p>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-center gap-2 mt-10">
+      <img src="/images/prev.png" alt="previous" id="prevBtn" class="w-16 cursor-pointer">
+      <img src="/images/next.png" alt="next" id="nextBtn" class="w-16 cursor-pointer">
+    </div>
+  </section>
+
+  <section class="lg:mx-[120px] mx-2 px-6 py-16">
     <!-- Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-white">
-        <!-- Row 1 -->
-        <div class="p-6 rounded-lg shadow-lg border border-white-300">
-            <p class="text-body-medium-semibold mb-6">Leads to Academy page with currently available training modules.</p>
-            <a data-i18n="" href="/signup" class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start Training Now</a>
-        </div>
+      <!-- Row 1 -->
+      <div class="p-6 rounded-lg shadow-lg border border-white-300">
+        <p class="text-body-medium-semibold mb-6">Leads to Academy page with currently available training modules.</p>
+        <a data-i18n="" href="/signup"
+          class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Start
+          Training Now</a>
+      </div>
 
-        <div class="p-6 rounded-lg shadow-lg border border-white-300">
-            <p class="text-body-medium-semibold mb-6">Adjusts based on subscription tier & credits earned.</p>
-            <a data-i18n="" href="/signup" class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">See Your Personalized Countdown</a>
-        </div>
+      <div class="p-6 rounded-lg shadow-lg border border-white-300">
+        <p class="text-body-medium-semibold mb-6">Adjusts based on subscription tier & credits earned.</p>
+        <a data-i18n="" href="/signup"
+          class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">See
+          Your Personalized Countdown</a>
+      </div>
 
-        <div class="p-6 rounded-lg shadow-lg border border-white-300">
-            <p class="text-body-medium-semibold mb-6">Takes users to Mission Control, where AI guides their first training steps.</p>
-            <a data-i18n="" href="/signup" class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Explore AI Assisted Training</a>
-        </div>
+      <div class="p-6 rounded-lg shadow-lg border border-white-300">
+        <p class="text-body-medium-semibold mb-6">Takes users to Mission Control, where AI guides their first training
+          steps.</p>
+        <a data-i18n="" href="/signup"
+          class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Explore
+          AI Assisted Training</a>
+      </div>
     </div>
 
     <!-- Row 2 (Centered Cards) -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 place-items-center text-white">
-        <div class="p-6 rounded-lg shadow-lg border border-white-300 w-2/3">
-            <p class="text-body-medium-semibold mb-6">Redirects to active pricing & credit system breakdown.</p>
-            <a data-i18n="" href="/signup" class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">See Subscriptoin Plans</a>
-        </div>
+      <div class="p-6 rounded-lg shadow-lg border border-white-300 lg:w-2/3">
+        <p class="text-body-medium-semibold mb-6">Redirects to active pricing & credit system breakdown.</p>
+        <a data-i18n="" href="/signup"
+          class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">See
+          Subscriptoin Plans</a>
+      </div>
 
-        <div class="p-6 rounded-lg shadow-lg border border-white-300 w-2/3">
-            <p class="text-body-medium-semibold mb-6">AI assigns a starting pathway based on user profile.</p>
-            <a data-i18n="" href="/signup" class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Join The Space Pioneers</a>
-        </div>
+      <div class="p-6 rounded-lg shadow-lg border border-white-300 lg:w-2/3">
+        <p class="text-body-medium-semibold mb-6">AI assigns a starting pathway based on user profile.</p>
+        <a data-i18n="" href="/signup"
+          class="bg-blue-700 text-white px-6 py-3 rounded-full hover:bg-blue-700 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),_inset_-2px_-2px_5px_rgba(0,0,0,0.2),_2px_2px_6px_rgba(0,0,0,0.3)] transition">Join
+          The Space Pioneers</a>
+      </div>
     </div>
-</section>
+  </section>
 
 
-    
-    <!-- Training Dashboard (Hidden by Default) -->
-    <!-- <section id="training-dashboard" class="py-16 bg-gray-900 hidden">
+
+  <!-- Training Dashboard (Hidden by Default) -->
+  <!-- <section id="training-dashboard" class="py-16 bg-gray-900 hidden">
       <div class="container mx-auto px-4">
         <div class="progress-tracker mb-8">
           <div class="progress-bar"></div>
@@ -728,61 +827,76 @@
       </div>
     </section> -->
 
-    <!-- Social Media Section -->
-    <section class="social-media-section bg-gray-900 py-6 text-white text-center">
-      <h2 class="text-2xl font-bold mb-4">Follow Us</h2>
-      <div class="flex justify-center gap-6">
-        <a href="#" id="twitter-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Twitter">🐦 Twitter</a>
-        <a href="#" id="facebook-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Facebook">📘 Facebook</a>
-        <a href="#" id="instagram-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Instagram">📷 Instagram</a>
-        <a href="#" id="linkedin-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="LinkedIn">💼 LinkedIn</a>
-        <a href="#" id="telegram-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="Telegram">📢 Telegram</a>
-        <a href="#" id="tiktok-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="TikTok">🎵 TikTok</a>
-        <a href="#" id="youtube-link" target="_blank" class="hover:text-blue-400 transition-colors" aria-label="YouTube">▶️ YouTube</a>
-      </div>
-    </section>
+  <!-- Social Media Section -->
+  <section class="social-media-section bg-gray-900 py-6 px-4 text-white text-center">
+    <h2 class="text-2xl font-bold mb-4">Follow Us</h2>
+    <div class="flex flex-wrap justify-center gap-x-4 gap-y-3 text-base">
+      <a href="#" id="twitter-link" target="_blank"
+        class="block min-w-[120px] text-center py-2 hover:text-blue-400 transition-colors" aria-label="Twitter">🐦
+        Twitter</a>
+      <a href="#" id="facebook-link" target="_blank"
+        class="block min-w-[120px] text-center py-2 hover:text-blue-400 transition-colors" aria-label="Facebook">📘
+        Facebook</a>
+      <a href="#" id="instagram-link" target="_blank"
+        class="block min-w-[120px] text-center py-2 hover:text-blue-400 transition-colors" aria-label="Instagram">📷
+        Instagram</a>
+      <a href="#" id="linkedin-link" target="_blank"
+        class="block min-w-[120px] text-center py-2 hover:text-blue-400 transition-colors" aria-label="LinkedIn">💼
+        LinkedIn</a>
+      <a href="#" id="telegram-link" target="_blank"
+        class="block min-w-[120px] text-center py-2 hover:text-blue-400 transition-colors" aria-label="Telegram">📢
+        Telegram</a>
+      <a href="#" id="tiktok-link" target="_blank"
+        class="block min-w-[120px] text-center py-2 hover:text-blue-400 transition-colors" aria-label="TikTok">🎵
+        TikTok</a>
+      <a href="#" id="youtube-link" target="_blank"
+        class="block min-w-[120px] text-center py-2 hover:text-blue-400 transition-colors" aria-label="YouTube">▶️
+        YouTube</a>
+    </div>
+  </section>
 
-    <!-- Training Module Scripts -->
-    <script type="module">
-      import { initializeTrainingModules } from '/js/modules/training/index.js';
+  <!-- Training Module Scripts -->
+  <script type="module">
+    import { initializeTrainingModules } from '/js/modules/training/index.js';
 
-      document.addEventListener('DOMContentLoaded', () => {
-        initializeTrainingModules({
-          modules: ['physical', 'technical', 'simulation'],
-          endpoints: {
-            physical: '/api/training/modules/physical',
-            technical: '/api/training/modules/technical',
-            simulation: '/api/training/modules/simulation'
-          }
-        });
-        const currentLang = localStorage.getItem('preferredLanguage') || 'en';
-        document.documentElement.setAttribute('lang', currentLang);
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeTrainingModules({
+        modules: ['physical', 'technical', 'simulation'],
+        endpoints: {
+          physical: '/api/training/modules/physical',
+          technical: '/api/training/modules/technical',
+          simulation: '/api/training/modules/simulation'
+        }
       });
-    </script>
-    <script type="module">
-      const carousel = document.getElementById("carousel");
-      const prevBtn = document.getElementById("prevBtn");
-      const nextBtn = document.getElementById("nextBtn");
+      const currentLang = localStorage.getItem('preferredLanguage') || 'en';
+      document.documentElement.setAttribute('lang', currentLang);
+    });
+  </script>
+  <script type="module">
+    const carousel = document.getElementById("carousel");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
 
-      console.log("COming Here::)))")
+    console.log("COming Here::)))")
 
-      let index = 0;
+    let index = 0;
 
-      nextBtn.addEventListener("click", () => {
-          index = (index + 1) % 2; // Total 2 testimonials
-          updateCarousel();
-      });
+    nextBtn.addEventListener("click", () => {
+      index = (index + 1) % 2; // Total 2 testimonials
+      updateCarousel();
+    });
 
-      prevBtn.addEventListener("click", () => {
-          index = (index - 1 + 2) % 2;
-          updateCarousel();
-      });
+    prevBtn.addEventListener("click", () => {
+      index = (index - 1 + 2) % 2;
+      updateCarousel();
+    });
 
-      function updateCarousel() {
-          carousel.style.transform = `translateX(-${index * 100}%)`;
-      }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script type="module" src="/js/modules/core/index.js"></script>
-  </body>
+    function updateCarousel() {
+      carousel.style.transform = `translateX(-${index * 100}%)`;
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script type="module" src="/js/modules/core/index.js"></script>
+</body>
+
 </html>
